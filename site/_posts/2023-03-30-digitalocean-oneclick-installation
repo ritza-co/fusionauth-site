@@ -1,0 +1,99 @@
+---
+layout: blog-post
+title: Deploying FusionAuth on DigitalOcean using the One-click Installer
+description: Revised version of the guide from the DigitalOcean Marketplace
+author: Dean Rodman
+category: blog
+excerpt_separator: "<!--more-->"
+---
+
+In this tutorial, you will install FusionAuth onto a Kubernetes cluster hosted on DigitalOcean. You can install FusionAuth with one click from the DigitalOcean marketplace, but you will need to follow some additional steps in order to host your FusionAuth instance on a publicly accessible IP. 
+
+## Prerequisites
+
+In order to follow along with this tutorial, you need to have a DigitalOcean account, which you can sign up for [here](https://www.google.com/aclk?sa=l&ai=DChcSEwiX4oH7zM79AhUIeSoKHTzkCwkYABAAGgJ0bQ&sig=AOD64_1yAqjFdUJvrvqVgqJXxLS9WJK05g&q&adurl&ved=2ahUKEwjcovr6zM79AhVIyGEKHSEDBgkQ0Qx6BAgLEAE). You will also need to install the following three command line tools:
+
+- `doctl`, the DigitalOcean command line interface
+- `kubectl`, the Kubernetes command line interface
+- `helm`, a helpful third-party tool for managing Kubernetes applications.
+
+All three of these packages can be installed with the package manager of your choice.
+
+## Installation
+
+You can install FusionAuth by clicking the `Install App` button at [this link](https://marketplace.digitalocean.com/apps/fusionauth).
+
+{% include _image.liquid src="/assets/img/blogs/digitalocean/digitalocean-install-app.png" alt="Install FusionAuth from DigitalOcean marketplace" class="img-fluid" figure=false %}
+
+On the following screen, select `Install`. By default, this will install FusionAuth on a new Kubernetes cluster, though you can install it on a pre-existing one if you have it. 
+
+{% include _image.liquid src="/assets/img/blogs/digitalocean/digitalocean-select-cluster.png" alt="Select Kubernetes cluster to install FusionAuth on" class="img-fluid" figure=false %}
+
+You will then be taken to the cluster configuration page. The default values here are all fine, so you can scroll down to the bottom of the page and click `Create Cluster`. You should have at least three nodes in order for FusionAuth to work properly: one for the database, one for elasticsearch, and one for the FusionAuth API.
+
+{% include _image.liquid src="/assets/img/blogs/digitalocean/digitalocean-create-cluster.png" alt="Settings configuration for new Kubernetes cluster" class="img-fluid" figure=false %}
+
+FusionAuth may take several minutes to install. Once it does, you can execute the command found in page two, `Connecting to Kubernetes`, in the the `Overview` panel with the appropriate value for `<YOUR_CLUSTER_ID>`.
+
+```sh
+doctl kubernetes cluster kubeconfig save <YOUR_CLUSTER_ID>
+```
+
+That command should return the following.
+
+```sh
+Notice: Adding cluster credentials to kubeconfig file found in "/Users/<USERNAME>/.kube/config"
+Notice: Setting current-context to <YOUR_CLUSTER_NAME>
+```
+
+At this point, you can simply continue following [the steps in the installation guide](https://marketplace.digitalocean.com/apps/fusionauth), though this tutorial will also cover the necessary remaining steps.
+
+FusionAuth is now running on a publically accessible IP address. To retrieve this address, run the following command.
+
+```sh
+export SERVICE_IP=$(kubectl get svc --namespace fusionauth fusionauth -o jsonpath='{.status.loadBalancer.ingress[0].ip}') \
+echo http://$SERVICE_IP:9011/
+```
+
+This command will output URL address to the console. Copy it into your address bar and hit enter. You will be taken to the FusionAuth Setup Wizard. [Complete these steps](https://fusionauth.io/blog/2019/02/05/using-the-setup-wizard) to start using FusionAuth on your public Kubernetes cluster, provisioned by DigitalOcean.
+
+## Starting Over
+
+If, for any reason, you decide to start from scratch, you need to follow a few steps to ensure that everything happens as described above.
+
+First, you can destroy your kubernetes cluster by clicking `Actions` and then `Destroy`.
+
+{% include _image.liquid src="/assets/img/blogs/digitalocean/digitalocean-destroy-cluster.png" alt="Destroy the Kubernetes cluster" class="img-fluid" figure=false %}
+
+Then, return to [the installation page](https://marketplace.digitalocean.com/apps/fusionauth) and click `Install App`. Create your new cluster as normal. FusionAuth will attempt to install, but will ultimately display a general `Installation Failed` error. 
+
+{% include _image.liquid src="/assets/img/blogs/digitalocean/digitalocean-installation-failed.png" alt="Installation failed after destroying old cluster" class="img-fluid" figure=false %}
+
+This is because the kubernetes namespace `fusionauth` is still taken up by the previous installation. You need to delete this namespace in order to install FusionAuth again, but since you've already deleted your cluster, `kubectl delete` will not be able to connect and execute. 
+
+To fix this, you can set the Kubernetes context to the new cluster that you've just created. To do that, run the command found in page two, `Connecting to Kubernetes`, in the the `Overview` panel with the appropriate value for `<YOUR_CLUSTER_ID>`.
+
+```sh
+doctl kubernetes cluster kubeconfig save <YOUR_CLUSTER_ID>
+```
+
+{% include _image.liquid src="/assets/img/blogs/digitalocean/digitalocean-connecting-to-kubernetes.png" alt="command line prompt to connect to your Kubernetes cluster" class="img-fluid" figure=false %}
+
+That command should return the following.
+
+```sh
+Notice: Adding cluster credentials to kubeconfig file found in "/Users/<USERNAME>/.kube/config"
+Notice: Setting current-context to <YOUR_CLUSTER_NAME>
+```
+
+Now that you've set the context to your new cluster, you can execute `kubectl delete` to free up the `fusionauth` namespace.
+
+```sh
+kubectl delete namespace fusionauth
+```
+
+At this point, you can return to the `Marketplace` tab and click `Try again` to continue the installation as normal.
+
+## Next steps
+
+You've now deployed a FusionAuth instance on a public Kubernetes cluster hosted on DigitalOcean. From here, you can [create an application](https://fusionauth.io/docs/v1/tech/core-concepts/applications) and [register users to it](https://fusionauth.io/docs/v1/tech/tutorials/register-user-login-api) to implement a login page. Be sure to check out the [guides](https://fusionauth.io/docs/v1/tech/guides/) for more information about how to implement FusionAuth's many features into your application.
