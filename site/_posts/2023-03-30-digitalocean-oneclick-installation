@@ -15,7 +15,7 @@ In order to follow along with this tutorial, you need to have a DigitalOcean acc
 
 - `doctl`, the DigitalOcean command line interface
 - `kubectl`, the Kubernetes command line interface
-- `helm`, a helpful third-party tool for managing Kubernetes applications.
+- (optional) `helm`, a helpful third-party tool for managing Kubernetes applications.
 
 All three of these packages can be installed with the package manager of your choice.
 
