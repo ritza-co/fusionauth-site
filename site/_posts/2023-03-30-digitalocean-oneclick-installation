@@ -2,7 +2,7 @@
 layout: blog-post
 title: Deploying FusionAuth on DigitalOcean using the One-click Installer
 description: Revised version of the guide from the DigitalOcean Marketplace
-author: Dean Rodman
+author: Dean Rodman, Bradley Van Aardt
 category: blog
 excerpt_separator: "<!--more-->"
 ---
