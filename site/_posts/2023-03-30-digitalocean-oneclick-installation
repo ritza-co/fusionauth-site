@@ -48,6 +48,18 @@ Notice: Setting current-context to <YOUR_CLUSTER_NAME>
 
 At this point, you can simply continue following [the steps in the installation guide](https://marketplace.digitalocean.com/apps/fusionauth), though this tutorial will also cover the necessary remaining steps.
 
+Optionally, you can confirm that all three deployments, `db`, `fusionauth`, and `search`, are running with the following command:
+
+```sh
+helm list -n fusionauth
+```
+
+You can also check the status of all running pods with the following command:
+
+```sh
+kubectl get pods -n fusionauth
+```
+
 FusionAuth is now running on a publically accessible IP address. To retrieve this address, run the following command.
 
 ```sh
@@ -57,9 +69,78 @@ echo http://$SERVICE_IP:9011/
 
 This command will output URL address to the console. Copy it into your address bar and hit enter. You will be taken to the FusionAuth Setup Wizard. [Complete these steps](https://fusionauth.io/blog/2019/02/05/using-the-setup-wizard) to start using FusionAuth on your public Kubernetes cluster, provisioned by DigitalOcean.
 
-## Starting Over
+###Upgrading FusionAuth
 
-If, for any reason, you decide to start from scratch, you need to follow a few steps to ensure that everything happens as described above.
+To upgrade FusionAuth to the latest version, you can use this command.
+
+```sh
+#!/bin/sh
+
+set -e
+
+################################################################################
+# repo
+################################################################################
+helm repo add stable https://charts.helm.sh/stable
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add fusionauth https://fusionauth.github.io/charts
+helm repo update > /dev/null
+
+
+################################################################################
+# chart
+################################################################################
+STACK="fusionauth"
+CHART="fusionauth/fusionauth"
+NAMESPACE="fusionauth"
+
+if [ -z "${MP_KUBERNETES}" ]; then
+  # use local version of values.yml
+  ROOT_DIR=$(git rev-parse --show-toplevel)
+  VALUES="$ROOT_DIR/stacks/fusionauth/values.yml"
+else
+  # use github hosted master version of values.yml
+  VALUES="https://raw.githubusercontent.com/digitalocean/marketplace-kubernetes/master/stacks/fusionauth/values.yml"
+fi
+
+# Retrieve current passwords and set them again during upgrade.
+DB_FUSIONAUTH_USER_PASSWORD=$(kubectl -n $NAMESPACE get secrets fusionauth-credentials -o jsonpath='{.data.password}' | base64 -d)
+DB_POSTGRES_USER_PASSWORD=$(kubectl -n $NAMESPACE get secrets fusionauth-credentials -o jsonpath='{.data.rootpassword}' | base64 -d)
+
+helm upgrade "$STACK" "$CHART" \
+--namespace "$NAMESPACE" \
+--values "$VALUES" \
+--set database.password="$DB_FUSIONAUTH_USER_PASSWORD" \
+--set database.root.password="$DB_POSTGRES_USER_PASSWORD"
+```
+
+### Uninstalling FusionAuth
+
+To uninstall FusionAuth, you can use the following command.
+
+```sh
+#!/bin/sh
+
+set -e
+
+################################################################################
+# chart
+################################################################################
+STACK="fusionauth"
+NAMESPACE="fusionauth"
+
+helm uninstall -n "$NAMESPACE" search
+helm uninstall -n "$NAMESPACE" db
+helm uninstall "$STACK" --namespace "$NAMESPACE"
+
+helm repo remove fusionauth
+
+kubectl delete ns fusionauth
+```
+
+## What to do if your cluster is destroyed
+
+If, for any reason, you destroy your kubernetes cluster without properly uninstalling FusionAuth first, you will need to follow some steps to ensure that subsequent installs work as above. 
 
 First, you can destroy your kubernetes cluster by clicking `Actions` and then `Destroy`.
 
@@ -69,7 +150,7 @@ Then, return to [the installation page](https://marketplace.digitalocean.com/app
 
 {% include _image.liquid src="/assets/img/blogs/digitalocean/digitalocean-installation-failed.png" alt="Installation failed after destroying old cluster" class="img-fluid" figure=false %}
 
-This is because the kubernetes namespace `fusionauth` is still taken up by the previous installation. You need to delete this namespace in order to install FusionAuth again, but since you've already deleted your cluster, `kubectl delete` will not be able to connect and execute. 
+This is because the kubernetes namespace `fusionauth` is still taken up by the previous installation. You need to delete this namespace in order to install FusionAuth again, but since you've already deleted your cluster, the `helm` and `kubectl` commands from the uninstall script above will not be able to connect and execute.  
 
 To fix this, you can set the Kubernetes context to the new cluster that you've just created. To do that, run the command found in page two, `Connecting to Kubernetes`, in the the `Overview` panel with the appropriate value for `<YOUR_CLUSTER_ID>`.
 
