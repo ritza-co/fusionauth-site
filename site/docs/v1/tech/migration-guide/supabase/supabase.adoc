@@ -39,7 +39,7 @@ Supabase includes a Postgres database and authentication service, storage, and E
 
 Attached below is a screenshot of the SQL Query Editor in Supabase:
 
-image::sql-editor.png
+image::https://github.com/Awaneji/fusionauth-site/blob/supabase-migration-guide/site/docs/v1/tech/migration-guide/supabase/images/sql-editor.png
 
 === Generating Json User Data
 
