@@ -7,7 +7,7 @@ description: How to migrate your users to FusionAuth from Supabase.
 
 :migration_source_name: supabase
 :migration_source_dir: supabase
-:imagesdir: images
+:imagesdir: ./images
 
 
 == Overview
