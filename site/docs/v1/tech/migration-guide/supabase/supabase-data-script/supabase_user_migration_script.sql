@@ -24,8 +24,7 @@ BEGIN
           END as "password",
       CASE WHEN u.encrypted_password = '' THEN null
                 ELSE 'bcrypt'
-          END as "encryptionScheme",
-      '955a8687-0376-45cb-2f49-26e66050dea2' as "tenant",  -- provide your tenant id here from FusionAuth       
+          END as "encryptionScheme",    
       true as email_verified
     FROM auth.users u JOIN auth.identities i 
     ON u.id = i.user_id
