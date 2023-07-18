@@ -7,9 +7,10 @@ if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo "Usage: $0 [command]"
     echo "Tool to help building and running containers to compile (default action) or serve the website"
     echo "Commands:"
-    echo "  -h, --help  Display this help and exit"
-    echo "  --recreate  Rebuild docker image"
-    echo "  --serve     Serve the website instead of building it"
+    echo "  -h, --help      Display this help and exit"
+    echo "  --recreate      Rebuild docker image"
+    echo "  --serve         Serve the website instead of building it"
+    echo "  --incremental   Build or serve only changes (much faster, but dangerous, do not use for production)"
     exit
 fi
 
@@ -26,11 +27,17 @@ if [ "$1" = "--recreate" ] || [ "$(docker images -q "${IMAGE_NAME}" 2> /dev/null
 fi
 
 # Default command is "sb compile" from the image
-COMMAND=""
+COMMAND="sb "
 if [ "$1" = "--serve" ]; then
     echo "Will serve at http://localhost:4000/"
     COMMAND="sb serve"
 fi
+
+if echo " $@ " | grep -q " --incremental "; then
+    COMMAND="${COMMAND} -incremental"
+fi
+
+echo $COMMAND
 
 docker run --rm \
     -v "${PWD}:/srv/jekyll" \
