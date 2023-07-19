@@ -8,7 +8,8 @@
 - [What Happens After a User Action](#what-happens-after-a-user-action)
   - [Webhooks](#webhooks)
   - [Emails to the actioned user](#emails-to-the-actioned-user)
-- [Setting Up User Actions](#setting-up-user-actions)
+- [Creating Actions](#creating-actions)
+  - [Using the FusionAuth Administration Website](#using-the-fusionauth-administration-website)
   - [Creating an API key](#creating-an-api-key)
   - [APIs](#apis)
   - [Creating a User Action via the API (create both types)](#creating-a-user-action-via-the-api-create-both-types)
@@ -22,7 +23,7 @@
 - [Further reading](#further-reading)
 
 ## Introduction
-User Actions in FusionAuth are ways to interact with, reward, and discipline users. For example, you could use them to temporarily disable a user's login, email a user, or call another application when a certain event occurs. From here on we'll just refer to User Actions as Actions.
+User Actions in FusionAuth are ways to interact with, reward, and discipline users. For example, you could use them to temporarily disable a user's login, email a user, or call another application when a certain event occurs. From here on we'll refer to User Actions just as Actions.
 
 An Action can be used for all tenants or just a few. Below is a reminder of [Tenants, Groups, and Applications](https://fusionauth.io/docs/v1/tech/core-concepts/).
 
@@ -36,21 +37,21 @@ flowchart BT
     Registration-->User
     Registration-->Application
     User-->Role
+    Entity-->Application
 ```
 
 ## Definitions
+Below are all definitions related to an Action.
+- Action - Has three parts:
+  - the event, or condition, that triggers the action,
+  - the action taken (running some code),
+  - and the user on whom the action is performed.
+- Actioner -
+- Actionee -
+- Actioning a user -
+- Temporal -
+- ... -
 
-https://fusionauth.io/docs/v1/tech/apis/user-actions
-https://fusionauth.io/docs/v1/tech/apis/actioning-users
-https://fusionauth.io/blog/2023/04/20/using-user-actions
-https://fusionauth.io/docs/v1/tech/apis/user-action-reasons
-
-action
-actioner
-actionee
-actioning a user
-temporal
-... anything else
 
 ## Types of User Actions
 Add a table of the types:
@@ -88,15 +89,26 @@ nothing, just a record that it happened and who did it.
 
 ### Emails to the actioned user
 
-## Setting Up User Actions
+## Creating Actions
 Tell a story here (or introduce it above and expand on it below). You already have the subscription example, so let's tell the story of Pied Piper expanding into media and building out both a subscription and a lightweight user happiness system for their customer service agents. Goal is to make it like this: https://fusionauth.io/docs/v1/tech/guides/multi-tenant in terms of telling a real world story.
+
+### Using the FusionAuth Administration Website
+You can create an Action on the website at **Settings** — **User Actions**.
+![Creating an Action on the website](../../../../assets/img/docs/guides/user-actions/user-actions-edit-email.png)
 
 ### Creating an API key
 
 ### APIs
-- Creating user actions (e.g. defining them, without actually applying them)
-- Applying a user action to a user
-- Apply reasons to an action.
+Three separate APIs manage Actions. Each has its own documentation.
+- [User Actions](https://fusionauth.io/docs/v1/tech/apis/user-actions)
+  - Defines an action, updates it, and deletes it.
+- [Applying User Actions](https://fusionauth.io/docs/v1/tech/apis/actioning-users)
+  - Applies an Action to a User.
+- [User Action Reasons](https://fusionauth.io/docs/v1/tech/apis/user-action-reasons)
+  - Allows you to
+
+
+
 
 ### Creating a User Action via the API (create both types)
 
