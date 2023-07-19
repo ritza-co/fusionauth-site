@@ -21,24 +21,36 @@
 - [Localization -- extract all the localization stuff to here](#localization----extract-all-the-localization-stuff-to-here)
 - [Further reading](#further-reading)
 
+## Introduction
+User Actions in FusionAuth are ways to interact with, reward, and discipline users. For example, you could use them to temporarily disable a user's login, email a user, or call another application when a certain event occurs. From here on we'll just refer to User Actions as Actions.
+
+An Action can be used for all tenants or just a few. Below is a reminder of [Tenants, Groups, and Applications](https://fusionauth.io/docs/v1/tech/core-concepts/).
+
+```mermaid
+flowchart BT
+    User-->Tenant
+    Application-->Tenant
+    Group-->Tenant
+    Role-->Application
+    User-->Group
+    Registration-->User
+    Registration-->Application
+    User-->Role
+```
+
+## Definitions
+
 https://fusionauth.io/docs/v1/tech/apis/user-actions
 https://fusionauth.io/docs/v1/tech/apis/actioning-users
 https://fusionauth.io/blog/2023/04/20/using-user-actions
 https://fusionauth.io/docs/v1/tech/apis/user-action-reasons
 
-## Introduction
-User Actions in FusionAuth are ways to interact with, reward, and discipline users. For example, you could use them to temporarily disable a user's login, or email a user, when a certain event occurs. (From here on we'll just refer to User Actions as Actions.)
-
-Highly customizable events that invoke an action on a user, User Actions can be created and executed using API calls and are sent to external applications using the FusionAuth Webhooks.
-
-With User Actions you can do things such as coordinating events around a customer purchase, permanently disable user access following an infringement, or temporarily disable access when their account is due for a review.
-
-A User Action is a tenant scoped event that can be sent to all tenants or to one or more specified tenants.
-
-what is user action
-what can you do with them
-
-## Definitions
+action
+actioner
+actionee
+actioning a user
+temporal
+... anything else
 
 ## Types of User Actions
 Add a table of the types:
@@ -50,14 +62,8 @@ And an explanation of how you use these in general:
 
 create a user action
 apply it to users via the API or admin UI (actioning)
-Also mention/define any other jargon:
 
-action
-actioner
-actionee
-actioning a user
-temporal
-... anything else
+
 
 ### Time Based User Actions
 add a diagram of the flow:
