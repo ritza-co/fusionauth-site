@@ -42,20 +42,19 @@ flowchart BT
 
 ## Definitions
 Below are all definitions related to an Action.
-- Action — Has three parts:
+- Action — Has three main parts:
   - the event, or condition, that triggers the action,
-  - the action taken (running some code),
-  - and the user on whom the action is performed.
-- Actioner —
-- Actionee —
-- Actioning a user —
-- Time-based — Time-based actions have a duration, as opposed to instantaneous actions. Once expired, a time-based action will no longer be considered active and will not affect the user. However, you can apply a time-based action to a user indefinitely with no end date. An action that prevents login must be time-based.
+  - the user on whom the action is taken,
+  - and the action itself (running some code or sending a notification).
+- Actionee — The user on whom action is taken. This is a required field.
+- Actioner — The user that applies the Action. This is a required field.
+- Time-based — Time-based actions have a duration, as opposed to instantaneous actions. Once expired, a time-based action will no longer be considered active and will not affect the user. However, you can apply a time-based action to a user indefinitely by setting a very distant end date. An action that prevents login must be time-based.
 
     A time-based action is one that may be cancelled or modified, unlike an instantaneous action, which cannot be. An example of an instantaneous action would be a reward, such as sending a user a coupon.
 
-- Webhook —
+- Webhook — TODO **Settings** — **Webhooks**
 - Option — . Time-based actions do not use Options.
-- Localization
+- Localization —
 
 ## Types of User Actions
 Add a table of the types:
@@ -115,6 +114,8 @@ Three separate APIs manage Actions. Each has its own documentation.
 
 ### Set up the Email
 Set up sending a thank you email to the user when their interaction has been recorded.
+
+An Email Template for Actions can be created in the FusionAuth website at **Customizations** - **Email Templates**.
 
 ### Executing the User Action (execute both)
 
