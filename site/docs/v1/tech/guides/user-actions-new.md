@@ -25,7 +25,7 @@
 ## Introduction
 User Actions in FusionAuth are ways to interact with, reward, and discipline users. For example, you could use them to temporarily disable a user's login, email a user, or call another application when a certain event occurs. From here on we'll refer to User Actions just as Actions.
 
-An Action can be used for all tenants or just a few. Below is a reminder of [Tenants, Groups, and Applications](https://fusionauth.io/docs/v1/tech/core-concepts/).
+An Action can be used for all tenants or just a few. Below is a visual reminder of [Tenants, Groups, and Applications](https://fusionauth.io/docs/v1/tech/core-concepts/).
 
 ```mermaid
 flowchart BT
@@ -42,16 +42,20 @@ flowchart BT
 
 ## Definitions
 Below are all definitions related to an Action.
-- Action - Has three parts:
+- Action — Has three parts:
   - the event, or condition, that triggers the action,
   - the action taken (running some code),
   - and the user on whom the action is performed.
-- Actioner -
-- Actionee -
-- Actioning a user -
-- Temporal -
-- ... -
+- Actioner —
+- Actionee —
+- Actioning a user —
+- Time-based — Time-based actions have a duration, as opposed to instantaneous actions. Once expired, a time-based action will no longer be considered active and will not affect the user. However, you can apply a time-based action to a user indefinitely with no end date. An action that prevents login must be time-based.
 
+    A time-based action is one that may be cancelled or modified, unlike an instantaneous action, which cannot be. An example of an instantaneous action would be a reward, such as sending a user a coupon.
+
+- Webhook —
+- Option — . Time-based actions do not use Options.
+- Localization
 
 ## Types of User Actions
 Add a table of the types:
@@ -95,20 +99,15 @@ Tell a story here (or introduce it above and expand on it below). You already ha
 ### Using the FusionAuth Administration Website
 You can create an Action on the website at **Settings** — **User Actions**.
 ![Creating an Action on the website](../../../../assets/img/docs/guides/user-actions/user-actions-edit-email.png)
+But to apply an Action to a User you cannot use the website. It can be done only using the APIs.
 
 ### Creating an API key
 
 ### APIs
 Three separate APIs manage Actions. Each has its own documentation.
-- [User Actions](https://fusionauth.io/docs/v1/tech/apis/user-actions)
-  - Defines an action, updates it, and deletes it.
-- [Applying User Actions](https://fusionauth.io/docs/v1/tech/apis/actioning-users)
-  - Applies an Action to a User.
-- [User Action Reasons](https://fusionauth.io/docs/v1/tech/apis/user-action-reasons)
-  - Allows you to
-
-
-
+- [User Actions](https://fusionauth.io/docs/v1/tech/apis/user-actions) — Defines an action, updates it, and deletes it.
+- [Applying User Actions](https://fusionauth.io/docs/v1/tech/apis/actioning-users) —  Applies an existing Action to a User. Can also update or cancel the Action.
+- [User Action Reasons](https://fusionauth.io/docs/v1/tech/apis/user-action-reasons) — Attaches the reason the Action was taken to the Action. Having a Reason is optional.
 
 ### Creating a User Action via the API (create both types)
 
