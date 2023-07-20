@@ -30,12 +30,12 @@
 - insert screenshots
 
 ## Introduction
-User Actions in FusionAuth are ways to interact with, reward, and discipline users. For example, you could use them to temporarily disable a user's login, email a user, or call another application when a certain event occurs.
+User Actions in FusionAuth are ways to interact with, reward, and discipline users. For example, you could use them to email a user, call another application when a user does something, or temporarily disable a user's login.
 
-In this guide we'll refer to User Actions just as Actions. In the first half you'll learn about all the parts related to an Action and the sequences of events. In the second half you'll learn ways to create and apply different types of Actions.
+This guide refers to User Actions simply as Actions. In the first section you'll learn about all the parts related to an Action and their sequences of events. In the second section you'll learn ways to create and apply different types of Actions.
 
 ## Definitions
-Below are all the terms you'll encounter when working with Actions. They are listed in order of understanding, not alphabetically.
+Below are the terms you'll encounter when working with Actions. They are listed in order of understanding, not alphabetically.
 
 - Action — Can be created on FusionAuth at **Settings**—**User Actions**. It has three main parts:
   - the event, or condition, that triggers the action,  (TODO review)
@@ -50,8 +50,8 @@ Below are all the terms you'll encounter when working with Actions. They are lis
 - Temporal Actions — Temporal, or time-based, Actions have a duration, as opposed to instantaneous Actions. Once expired, a temporal Action will no longer be considered active and will not affect the user. However, you can apply a temporal Action to a user indefinitely by setting a very distant end date. An Action that prevents login must be temporal.
 
     A temporal Action may be cancelled or modified, unlike an instantaneous Action, which cannot be. An example of an instantaneous Action would be a reward, such as sending a user a discount coupon.
-- Option — A custom field that you can add to an instantaneous Action. Temporal Actions cannot have Options. Options can be sent through emails or webhooks. Why do they not have name/value pairs?? why can't temporal actions have option?
-- Localization — A text field with an associated language. It's a way of providing more information about an Action name, Reason, or Option to users and administrators who speak different languages. They might be sent in an email or through a webhook to people and systems outside FusionAuth.
+- Option — A custom field that you can add to an instantaneous Action. Temporal Actions cannot have Options. Options can be sent through emails or webhooks. Why do they not have name/value pairs?? why can't temporal actions have options?
+- Localization — A text field with an associated language. It's a way of providing more information about an Action name, Reason, or Option to users and administrators who speak different languages. Localizations might be sent in an email or through a webhook to people and systems outside FusionAuth.
 - Tenant — An Action can be used for all tenants or just a few. Below is a visual reminder of [Tenants, Groups, and Applications](https://fusionauth.io/docs/v1/tech/core-concepts/).
 
     ```mermaid
