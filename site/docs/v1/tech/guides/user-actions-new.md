@@ -1,8 +1,9 @@
 - [Introduction](#introduction)
 - [Definitions](#definitions)
-- [Types of User Actions](#types-of-user-actions)
-  - [Time Based User Actions](#time-based-user-actions)
-    - [Time based action](#time-based-action)
+- [What Triggers an Action?](#what-triggers-an-action)
+- [Types of Actions](#types-of-actions)
+  - [Temporal Actions](#temporal-actions)
+    - [Temporal action](#temporal-action)
   - [Option Based](#option-based)
     - [Option based action](#option-based-action)
 - [What Happens After a User Action](#what-happens-after-a-user-action)
@@ -23,40 +24,48 @@
 - [Further reading](#further-reading)
 
 ## Introduction
-User Actions in FusionAuth are ways to interact with, reward, and discipline users. For example, you could use them to temporarily disable a user's login, email a user, or call another application when a certain event occurs. From here on we'll refer to User Actions just as Actions.
+User Actions in FusionAuth are ways to interact with, reward, and discipline users. For example, you could use them to temporarily disable a user's login, email a user, or call another application when a certain event occurs.
 
-An Action can be used for all tenants or just a few. Below is a visual reminder of [Tenants, Groups, and Applications](https://fusionauth.io/docs/v1/tech/core-concepts/).
-
-```mermaid
-flowchart BT
-    User-->Tenant
-    Application-->Tenant
-    Group-->Tenant
-    Role-->Application
-    User-->Group
-    Registration-->User
-    Registration-->Application
-    User-->Role
-    Entity-->Application
-```
+In this guide we'll refer to User Actions just as Actions. In the first half you'll learn about all the parts related to an Action and the sequences of events. In the second half you'll learn ways to create and apply different types of Actions.
 
 ## Definitions
-Below are all definitions related to an Action.
-- Action — Has three main parts:
+Below are all the terms you'll encounter when working with Actions.
+
+- Action — Has three main parts: (TODO review these 3)
   - the event, or condition, that triggers the action,
   - the user on whom the action is taken,
   - and the action itself (running some code or sending a notification).
-- Actionee — The user on whom action is taken. This is a required field.
-- Actioner — The user that applies the Action. This is a required field.
-- Time-based — Time-based actions have a duration, as opposed to instantaneous actions. Once expired, a time-based action will no longer be considered active and will not affect the user. However, you can apply a time-based action to a user indefinitely by setting a very distant end date. An action that prevents login must be time-based.
+- Actionee — The user on whom action is taken.
+- Actioner — The user that applies the Action. Every Action has to have an Actioner, even if the Action is automatically generated.
+- Temporal actions — Temporal, or time-based, actions have a duration, as opposed to instantaneous actions. Once expired, a temporal action will no longer be considered active and will not affect the user. However, you can apply a temporal action to a user indefinitely by setting a very distant end date. An action that prevents login must be temporal.
 
-    A time-based action is one that may be cancelled or modified, unlike an instantaneous action, which cannot be. An example of an instantaneous action would be a reward, such as sending a user a coupon.
+    A temporal action may be cancelled or modified, unlike an instantaneous action, which cannot be. An example of an instantaneous action would be a reward, such as sending a user a coupon.
 
-- Webhook — TODO **Settings** — **Webhooks**
-- Option — . Time-based actions do not use Options.
+- Webhook — A webhook is another name for sending a single HTTP request to an API. It's used to inform an external system of some event, and can be triggered by an Action. An example is FusionAuth calling a web app support service, like [Intercom](https://intercom.com), to start the customer email onboarding process when the user has verified their email in FusionAuth. Webhooks can be managed in FusionAuth at **Settings** — **Webhooks**.
+
+    Note that web companies, like FusionAuth, call a trigger to _send_ data a _webhook_, but when they _receive_ data over HTTP they call it an _API_. So if you're looking for a destination for a FusionAuth webhook in an external system, you won't find it under their webhook documentation, you'll find it under API documentation. This is why they are sometimes known as a _reverse API_.
+
+- Option — . Temporal actions do not use Options.
 - Localization —
+- Reason —
+- Tenant — An Action can be used for all tenants or just a few. Below is a visual reminder of [Tenants, Groups, and Applications](https://fusionauth.io/docs/v1/tech/core-concepts/).
 
-## Types of User Actions
+    ```mermaid
+    flowchart BT
+        User-->Tenant
+        Application-->Tenant
+        Group-->Tenant
+        Role-->Application
+        User-->Group
+        Registration-->User
+        Registration-->Application
+        User-->Role
+        Entity-->Application
+    ```
+
+## What Triggers an Action?
+
+## Types of Actions
 Add a table of the types:
 Type | Use | example
 Time based | When you want to apply something for a given period of time. | subscription access, forum ban
@@ -69,13 +78,13 @@ apply it to users via the API or admin UI (actioning)
 
 
 
-### Time Based User Actions
+### Temporal Actions
 add a diagram of the flow:
 started -> modified (could loop to this) -> ended
 \ (or)
 ---> cancelled
 
-#### Time based action
+#### Temporal action
 Example of the subscription from the blog.
 
 ### Option Based
