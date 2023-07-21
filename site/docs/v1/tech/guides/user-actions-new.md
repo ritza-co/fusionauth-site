@@ -15,6 +15,9 @@
   - [Using the FusionAuth Administration Website](#using-the-fusionauth-administration-website)
   - [Creating an API key](#creating-an-api-key)
   - [APIs](#apis)
+  - [Action parameters](#action-parameters)
+  - [Action instance parameters](#action-instance-parameters)
+  - [Action Reason parameters](#action-reason-parameters)
   - [Creating a User Action via the API (create both types)](#creating-a-user-action-via-the-api-create-both-types)
   - [Setting up a Webhook -- why? so we can feed the subscription and happiness info into our other systems? have an audit trail?](#setting-up-a-webhook----why-so-we-can-feed-the-subscription-and-happiness-info-into-our-other-systems-have-an-audit-trail)
   - [Set up the Email](#set-up-the-email)
@@ -24,9 +27,6 @@
   - [Querying Action Status on a User (query both) and explain why you'd do this](#querying-action-status-on-a-user-query-both-and-explain-why-youd-do-this)
 - [Localization -- extract all the localization stuff to here](#localization----extract-all-the-localization-stuff-to-here)
 - [Further reading](#further-reading)
-- [Addendum A — List of all Action parameters](#addendum-a--list-of-all-action-parameters)
-- [Addendum A — List of all Action instance parameters](#addendum-a--list-of-all-action-instance-parameters)
-- [Addendum A — List of all Reason parameters](#addendum-a--list-of-all-reason-parameters)
 - [Todos](#todos)
 
 ## Introduction
@@ -37,9 +37,9 @@ This guide refers to User Actions simply as Actions. In the first section you'll
 ## Definitions
 Below are the terms you'll encounter when working with Actions. They are listed in order of understanding, not alphabetically.
 
-- Action — Can be created on FusionAuth at **Settings**—**User Actions**. An Action is a state or event that can be applied to User in the future. It is reusable for many Users in many Applications. The actual application of the Action to a specific user is called an Action instance. This is similar to the programming, where you have classes (definitions) and objects (actual instances). Actions and instances are managed by two different APIs.
+- Action — Can be created on FusionAuth at **Settings**—**User Actions**. An Action is a state or event that can be applied to User in the future. It is reusable for many Users in many Applications. The actual application of the Action to a specific user is called an Action instance. (This is similar to programming, where you have classes (definitions) and objects (instances)). Actions and instances are managed by two different APIs.
 
-    At its most simple, an Action comprises: one User applying the Action to another User, the time of the Action, and the name of the Action.
+    At its most simple, an Action is just a name, and an Action instance comprises: one User applying the Action to another User, the time of the Action, and the Id of the Action.
 - Actionee — The user on whom Action is taken.
 - Actioner — The user that applies the Action. Every Action has to have an Actioner, even if the instance is automatically applied, in which case the Actioner can be set to the Application's administrator.
 - Reason — A text description of why an Action was taken. You don't have to set a Reason when applying an Action, but it's useful for auditing. Reasons can be created on FusionAuth at **Settings**—**User Actions** by clicking the **Reasons** button at the top right.
@@ -52,8 +52,8 @@ Below are the terms you'll encounter when working with Actions. They are listed 
 - Active — An active Action can be applied to Users. In contrast, an inactive Action is like a deleted Action, meaning it cannot be applied, but it is still viewable in the list of inactive Actions in FusionAuth. An inactive Action can be reactivated if you want to use it again.
 
     If a temporal Action instance has ended we do not say it is inactive. _Active_ relates to the Action definition, and _expiry_ relates to a particular instance of the Action.
-- Option — A custom text field that you can add to an instantaneous Action. Temporal Actions cannot have Options. You can add multiple options to an Action definition, but choose only one for an instance of the Action. Options can be sent through emails or webhooks.
-- Localization — A text field with an associated language. It's a way of providing more information to users and administrators who speak different languages. Localizations can be added for an Action name, Reason, and Option.
+- Option — A custom text field that you can add to an instantaneous Action, but not to temporal Actions. You can add multiple options to an Action definition, but choose only one for an instance of the Action. Options can be sent through emails or webhooks.
+- Localization — A text field with an associated language. It's a way of providing more information to users and administrators who speak different languages. Localizations can be added for an Action name, Reason, and Options.
 - Tenant — You can make an Action available to all Tenants or just a few. Below is a visual reminder of [Tenants, Groups, and Applications](https://fusionauth.io/docs/v1/tech/core-concepts/).
 
     ```mermaid
@@ -126,9 +126,45 @@ But to apply an Action to a User you cannot use the website. It can be done only
 
 ### APIs
 Three separate APIs manage Actions. Each has its own documentation.
-- [User Actions](https://fusionauth.io/docs/v1/tech/apis/user-actions) — Defines an action, updates it, and deletes it. The path is `/api/user-action`.
-- [Applying User Actions](https://fusionauth.io/docs/v1/tech/apis/actioning-users) — Applies an existing Action to a User. Can also update or cancel the Action. The path is `/api/user/action`.
-- [User Action Reasons](https://fusionauth.io/docs/v1/tech/apis/user-action-reasons) — Attaches the reason the Action was taken to the Action. Having a Reason is optional. The path is `/api/user-action-reason`.
+- [Actions](https://fusionauth.io/docs/v1/tech/apis/user-actions) — Defines an Action, updates it, and deletes it. The API path is `/api/user-action`.
+- [Action instances](https://fusionauth.io/docs/v1/tech/apis/actioning-users) — Applies an existing Action to a User. Can also update or cancel the Action instance. The API path is `/api/user/action`.
+- [Action Reasons](https://fusionauth.io/docs/v1/tech/apis/user-action-reasons) — Attaches the reason the Action was taken to the Action. Having a Reason is optional. The API path is `/api/user-action-reason`.
+
+Actions and Actions Reasons can be managed on the FusionAuth website. Only Action instances require you to use their API — you cannot apply an Action to a User on the website.
+
+The API documentation is long, and repeats the same parameters for each type of request. For easier understanding, the parameters listed there are grouped and summarized below for each API. Parameters, such as Ids and names, whose purpose is obvious from the preceding <Definitions> section are not described.
+
+### Action parameters
+These are used when creating an Action definition.
+- `userActionId`
+- `name`, `localizedNames`
+- `startEmailTemplateId`, `cancelEmailTemplateId`, `modifyEmailTemplateId`, `endEmailTemplateId`, — The Id of the email template that is used when the Action starts, is cancelled, is modified, or expires. Temporal Actions have all four events, whereas instantaneous actions have only the start event.
+- `includeEmailInEventJSON` — Whether to include the email information in the JSON that is sent to the webhook when a user action is taken.
+- `options`, `options[x].name`, `options[x].localizedNames`
+- `preventLogin` — User may not log in if true until the Action expires.
+- `sendEndEvent` — Whether to call webhooks when this Action instance expires.
+- `temporal` — if the Action is temporal.
+- `userEmailingEnabled`, `userNotificationsEnabled` — notify doesn't contact the user, it just adds a `notifyUser` field to JSON sent to webhooks.
+
+### Action instance parameters
+These are used when applying an Action to a User.
+- `userActionId`
+- `actioneeUserId`
+- `actionerUserId`
+- `applicationIds` — The Action can be applied to the User for multiple Applications.
+- `broadcast` — Should the Action trigger webhooks
+- `comment` — A note by the actioner if they want to add information in addition to the Reason.
+- `emailUser` — Should the user be emailed at instance creation.
+- `expiry` — Time after which this temporal Action should end.
+- `notifyUser` — Should the literal text value, "`notifyUser`", be sent to webhooks, for them to act on as they wish.
+- `option` — The option the Actioner chose for this instance of the Action.
+- `reasonId`
+
+### Action Reason parameters
+These are used when creating an Action Reason.
+- `userActionReasonId`
+- `text`, `localizedTexts` — The description of the Reason that a human can understand, possibly in many languages.
+- `code` — A short text string to categorize the Reason for software to process.
 
 ### Creating a User Action via the API (create both types)
 
@@ -156,42 +192,6 @@ emails (point to email templates docs, no need to build this out entirely), but 
 anything else
 
 ## Further reading
-
-## Addendum A — List of all Action parameters
-- userActionId — UUID
-- name -
-- localizedNames -
-
-- cancelEmailTemplateId, modifyEmailTemplateId, endEmailTemplateId, startEmailTemplateId - The Id of the Email Template that is used when the Action is cancelled, modified, or expires, etc. Temporal Actions have all four events, whereas instantaneous actions have only the start event.
-
-- includeEmailInEventJSON - Whether to include the email information in the JSON that is sent to the Webhook when a user action is taken.
-s
-- options - Not available for temporal actions
-- options[x].name
-- options[x].localizedNames
-- preventLogin - for temporal Actions only
-
-- sendEndEvent - Whether FusionAuth sends events to registered Webhooks when this Action expires.
-- temporal - if the Action is temporal
-
-- userEmailingEnabled, userNotificationsEnabled - notify doesn't contact the user, it just adds a `notifyUser` field to JSON sent to webhooks.
-
-## Addendum A — List of all Action instance parameters
-- userActionId
-- actioneeUserId, actionerUserId
-- applicationIds - The action can be applied to the user for multiple applications.
-- comment - A note by the actioner.
-- emailUser - Should the user be emailed.
-- expiry - Time after which this temporal Action should end.
-- notifyUser - Should `notifyUser` be sent to webhooks.
-- option - The option the Actioner chose for this application of the Action.
-- reasonId - The reason for this Action instance.
-- broadcast - Should the Action be sent to webhooks
-
-## Addendum A — List of all Reason parameters
-- userActionReasonId
-- text, localizedTexts
-- code - A short text string used to identify the Reason quickly.
 
 ## Todos
 - screenshots
