@@ -1,12 +1,12 @@
 - [Introduction](#introduction)
 - [Definitions](#definitions)
-- [Types of Actions](#types-of-actions)
+- [Types of Actions and Their Use](#types-of-actions-and-their-use)
   - [Temporal Actions](#temporal-actions)
     - [Temporal action](#temporal-action)
   - [Option Based](#option-based)
     - [Option based action](#option-based-action)
-- [The Sequence of Events of an Action](#the-sequence-of-events-of-an-action)
-- [What Happens After a User Action](#what-happens-after-a-user-action)
+- [What Triggers an Action \& what is the sequence of events](#what-triggers-an-action--what-is-the-sequence-of-events)
+  - [What Happens After a User Action](#what-happens-after-a-user-action)
   - [Webhooks](#webhooks)
   - [Emails to the actioned user](#emails-to-the-actioned-user)
 - [Creating Actions](#creating-actions)
@@ -26,8 +26,6 @@
 - [Localization -- extract all the localization stuff to here](#localization----extract-all-the-localization-stuff-to-here)
 - [Further reading](#further-reading)
 - [Todos](#todos)
-- [What Can You Use Actions For?](#what-can-you-use-actions-for)
-- [What Triggers an Action?](#what-triggers-an-action)
 
 ## Introduction
 User Actions in FusionAuth are ways to interact with, reward, and discipline users. For example, you could use them to email a user, call another application when a user does something, or temporarily disable a user's login.
@@ -69,23 +67,22 @@ Below are the terms you'll encounter when working with Actions. They are listed 
         Entity-->Application
     ```
 
-## Types of Actions
+## Types of Actions and Their Use
 There are two main types of Actions: temporal Actions and instantaneous Actions with options. They are summarized below.
 
 | Type | Purpose | Example of use
 | ----------- | ----------- | -----------
 | Temporal | When you want to apply a state to a user for a period of time. | Subscription access · Expiring software trial · Forum ban
-| Options | When you want to apply a state to a user at a single point in time, recording who did so, perhaps with comments. | User surveyed by another user and was happy/indifferent/frustrated · User has earned a sufficient level of trust on your forum and been given an award (possibility increasing their access rights)
+| Options | When you want to apply a state to a user at a single point in time, recording who did so, perhaps with comments. | User surveyed and was happy/indifferent/frustrated · User has earned a sufficient level of trust on your forum and been given an award (possibility increasing their access rights)
 
-FusionAuth's primary purpose is to simplify authentication (verifying a user's identity) and authorization (giving your app a user's roles). Actions are an additional feature that you might want to use in your app. They are in effect a premade way for you to store extra user fields in FusionAuth instead of your own database, at a specified time, and notify people or systems if these fields change. Since FusionAuth has no way to receive payments, and no automated subscription features, you need to decide carefully whether you want to write the code you need to manage such features in FusionAuth using Actions, or in your own app without using Actions, or using an entirely external system that specializes in that work if your needs are very complex.
+FusionAuth's primary purpose is to simplify authentication (verifying a user's identity) and authorization (giving your app a user's roles). Actions are an additional feature that you might want to use in your app. Think of them as a premade way for you to store extra user fields in FusionAuth instead of your own database, at a specified time, and notify people or systems if these fields change. But FusionAuth has no way to receive payments, and no automated subscription features. So you need to decide carefully if you want to write the code you need to manage such features in FusionAuth using Actions, or in your own app without using Actions, or using an entirely external system that specializes in that work if your needs are complex.
 
+If you decide that Actions are the right solution for your need, the general way you use them is to
+- create the Action in the FusionAuth website,
+- create any Reasons that you might want to link to the Action in the website,
+- apply the Action to a User using the User Action API, possibly giving it an expiry date.
 
-And an explanation of how you use these in general:
-
-create a user action
-apply it to users via the API or admin UI (actioning)
-
-
+You'll see some examples of this process later in this guide.
 
 ### Temporal Actions
 add a diagram of the flow:
@@ -103,9 +100,11 @@ add a diagram of the flow: added -> removed
 #### Option based action
 Another example. How about an option that records interaction with a user and a customer service rep, assigns it a impact rating (high, medium, low) and includes a comment.
 
-## The Sequence of Events of an Action
+## What Triggers an Action & what is the sequence of events
+list of all places
+- multiple incorrect password entered
 
-## What Happens After a User Action
+### What Happens After a User Action
 nothing, just a record that it happened and who did it.
 
 ### Webhooks
@@ -199,10 +198,3 @@ anything else
 - add sections from last user actions doc
 - check that all outline is in the doc that dan wanted - https://github.com/FusionAuth/fusionauth-site/pull/2223#pullrequestreview-1523177347
 
-
-## What Can You Use Actions For?
-temporal actions - can act as statuses flags over time - to mark subscriptions or any other state you want to keep on a user in fusionauth instead of your own app that you can check.
-
-## What Triggers an Action?
-list of all places
-- multiple incorrect password entered
