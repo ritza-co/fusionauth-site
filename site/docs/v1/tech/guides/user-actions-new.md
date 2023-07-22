@@ -98,7 +98,7 @@ flowchart LR
 ```
 
 #### Subscription Example
-Let's take a temporal Action example where a user purchases a month's subscription to a newspaper website that you manage. You have already created a temporal Action named "Subscription" in FusionAuth. Once the user has made their purchase (either on your newspaper site or through some payment gateway) your code will call the FusionAuth API to apply the Action to the User, and give the Action instance an end-date one month from now. The user will now have access to read the newspaper when authenticated on your site with FusionAuth.
+Let's take a temporal Action example where a user purchases a month's subscription to a newspaper website that you manage. Assume you have already created a temporal Action named "Subscription" in FusionAuth. Once the user has made their purchase (either on your newspaper site or through some payment gateway) your code will call the FusionAuth API to apply the Action to the User, and give the Action instance an end-date one month from now. The user will now have access to read the newspaper when authenticated on your site with FusionAuth.
 
 The creation of this Action instance will be the **Started** event shown above. You can set it to trigger the welcome email template that is sent to the user, and a webhook that sends the user's information to another subscription site you manage. That site could then use that email address to advertise to the user, or for targeting Facebook adverts.
 
@@ -118,9 +118,11 @@ flowchart LR
 ```
 
 #### Survey action
-Let's take an instantaneous Action example where a user gives feedback on their interaction with customer support, assigns a rating of high, medium, or low, and gives a comment.
+Let's take an instantaneous Action example where a user gives feedback on their interaction with customer support by assigning a rating, and giving a comment.
 
-TODO
+Assume you have already created an instantaneous Action named "Feedback" in FusionAuth, with Options of "High", "Medium", and "Low". Your user chooses "High" in your application's interface and enters the comment "Problem solved quickly". When saving the form your code will call the Action API and create an Action instance for the User with the option "High" and populate the `comment` field. The `actioner` of the instance will be set to the support User who helped the customer.
+
+At any point in the future you can retrieve this saved Action instance using the API to create a report on the customer support agent's performance, or your app's approval ratings in general. You could also use a webhook to send this data immediately to an external system when the Action is saved.
 
 ## What Triggers an Action & what is the sequence of events
 list of all places
