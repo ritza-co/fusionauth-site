@@ -6,18 +6,15 @@
   - [Instantaneous Actions](#instantaneous-actions)
     - [Survey Example](#survey-example)
 - [Applying an Action Automatically](#applying-an-action-automatically)
-- [What Happens After a User Action?](#what-happens-after-a-user-action)
-- [Webhooks](#webhooks)
-- [Emails to the actioned user](#emails-to-the-actioned-user)
 - [Creating Actions](#creating-actions)
+  - [APIs](#apis)
+    - [Action parameters](#action-parameters)
+    - [Action instance parameters](#action-instance-parameters)
+    - [Action Reason parameters](#action-reason-parameters)
   - [Using the FusionAuth Administration Website](#using-the-fusionauth-administration-website)
   - [Creating an API key](#creating-an-api-key)
-  - [APIs](#apis)
-  - [Action parameters](#action-parameters)
-  - [Action instance parameters](#action-instance-parameters)
-  - [Action Reason parameters](#action-reason-parameters)
   - [Creating a User Action via the API (create both types)](#creating-a-user-action-via-the-api-create-both-types)
-  - [Setting up a Webhook -- why? so we can feed the subscription and happiness info into our other systems? have an audit trail?](#setting-up-a-webhook----why-so-we-can-feed-the-subscription-and-happiness-info-into-our-other-systems-have-an-audit-trail)
+  - [Creating a Webhook -- why? so we can feed the subscription and happiness info into our other systems? have an audit trail?](#creating-a-webhook----why-so-we-can-feed-the-subscription-and-happiness-info-into-our-other-systems-have-an-audit-trail)
   - [Set up the Email](#set-up-the-email)
   - [Executing the User Action (execute both)](#executing-the-user-action-execute-both)
     - [Webhook Example](#webhook-example)
@@ -85,7 +82,7 @@ The general process to use an Action is to
 You'll see some detailed examples of this process later in this guide.
 
 ### Temporal Actions
-Temporal action instances have four states they can be in. Each state can trigger an email or webhook.
+Temporal action instances have four states they can be in. Each state can trigger a webhook or an email to the user.
 
 ```mermaid
 flowchart LR
@@ -107,7 +104,7 @@ Once the Action instance expires (the **Ended** event) it will trigger a goodbye
 - use a webhook at the end of the Action to change the User's Role in FusionAuth and disallow that role in your site,
 - or use a webhook at the end of the Action to call your code to create another temporal Action in FusionAuth with an indefinite end date and `preventLogin` set to true.
 
-The last option is probably the simplest and most idiomatic way to use FusionAuth in most cases.
+The last option is probably the simplest and most idiomatic way to use FusionAuth in most cases. In fact, using an Action to prevent login is the most common use case for Actions.
 
 ### Instantaneous Actions
 An instantaneous Action instance has an Option that can be chosen from a list, but no temporal states. Once you set the Action for a User it is either remains or is removed.
@@ -125,37 +122,24 @@ Assume you have already created an instantaneous Action named "Feedback" in Fusi
 At any point in the future you can use the API to retrieve this saved Action instance and create a report of the customer support agent's performance, or your app's approval ratings in general. You could also use a webhook to send this data immediately to an external system when the Action was created.
 
 ## Applying an Action Automatically
-You have seen that you can apply an Action using the API. FusionAuth can also automatically apply an account lockout Action to a User in the case of repeatedly failing authentication. For more information see this [guide](https://fusionauth.io/docs/v1/tech/tutorials/gating/setting-up-user-account-lockout).
-
-## What Happens After a User Action?
-Once a temporal Action instance has ended, or an instantaneous Action instance has been applied, no further changes occur. The record of the instance will remain in FusionAuth to be queried in the future.
-
-## Webhooks
-
-## Emails to the actioned user
+You have seen that you can apply an Action using the API. FusionAuth can also automatically apply a temporary `preventLogin` Action to a User in the case of repeatedly failing authentication. For more information see this [guide](https://fusionauth.io/docs/v1/tech/tutorials/gating/setting-up-user-account-lockout).
 
 ## Creating Actions
-Tell a story here (or introduce it above and expand on it below). You already have the subscription example, so let's tell the story of Pied Piper expanding into media and building out both a subscription and a lightweight user happiness system for their customer service agents. Goal is to make it like this: https://fusionauth.io/docs/v1/tech/guides/multi-tenant in terms of telling a real world story.
-
-### Using the FusionAuth Administration Website
-You can create an Action on the website at **Settings** — **User Actions**.
-![Creating an Action on the website](../../../../assets/img/docs/guides/user-actions/user-actions-edit-email.png)
-But to apply an Action to a User you cannot use the website. It can be done only using the APIs.
-
-### Creating an API key
-https://fusionauth.io/docs/v1/tech/apis/authentication#managing-api-keys
+The remainder of this guide will demonstrate a practical example of using Actions that you can follow. Let's start with a brief tour of the APIs you'll use in the example.
 
 ### APIs
 Three separate APIs manage Actions. Each has its own documentation.
 - [Actions](https://fusionauth.io/docs/v1/tech/apis/user-actions) — Defines an Action, updates it, and deletes it. The API path is `/api/user-action`.
 - [Action instances](https://fusionauth.io/docs/v1/tech/apis/actioning-users) — Applies an existing Action to a User. Can also update or cancel the Action instance. The API path is `/api/user/action`.
-- [Action Reasons](https://fusionauth.io/docs/v1/tech/apis/user-action-reasons) — Attaches the reason the Action was taken to the Action. Having a Reason is optional. The API path is `/api/user-action-reason`.
+- [Action Reasons](https://fusionauth.io/docs/v1/tech/apis/user-action-reasons) — Attaches the reason the Action was taken to the Action instance. Having a Reason is optional. The API path is `/api/user-action-reason`.
 
 Actions and Actions Reasons can be managed on the FusionAuth website. Only Action instances require you to use their API — you cannot apply an Action to a User on the website.
 
-The API documentation is long, and repeats the same parameters for each type of request. For easier understanding, the parameters listed there are grouped and summarized below for each API. Parameters, such as Ids and names, whose purpose is obvious from the earlier [Definitions](#definitions) section are not described.
+It is faster to use FusionAuth's API wrappers rather than make HTTP calls directly. You can read how to use them in the [client library guide](https://fusionauth.io/docs/v1/tech/client-libraries/) before continuing.
 
-### Action parameters
+The Actions API reference documentation is long, and repeats the same parameters for each type of request. For easier understanding, the parameters listed there are grouped and summarized below for each API. Parameters, such as Ids and names, whose purpose is obvious from the earlier [Definitions](#definitions) section are not described here.
+
+#### Action parameters
 These are used when creating an Action definition.
 - `userActionId`
 - `name`, `localizedNames`
@@ -167,12 +151,12 @@ These are used when creating an Action definition.
 - `temporal` — if the Action is temporal.
 - `userEmailingEnabled`, `userNotificationsEnabled` — notify doesn't contact the user, it just adds a `notifyUser` field to JSON sent to webhooks.
 
-### Action instance parameters
+#### Action instance parameters
 These are used when applying an Action to a User.
 - `userActionId`
 - `actioneeUserId`
 - `actionerUserId`
-- `applicationIds` — The Action can be applied to the User for multiple Applications.
+- `applicationIds` — The Action can be applied to the actionee for multiple Applications.
 - `broadcast` — Should the Action trigger webhooks
 - `comment` — A note by the actioner if they want to add information in addition to the Reason.
 - `emailUser` — Should the user be emailed at instance creation.
@@ -181,15 +165,53 @@ These are used when applying an Action to a User.
 - `option` — The option the Actioner chose for this instance of the Action.
 - `reasonId`
 
-### Action Reason parameters
+#### Action Reason parameters
 These are used when creating an Action Reason.
 - `userActionReasonId`
 - `text`, `localizedTexts` — The description of the Reason that a human can understand, possibly in many languages.
 - `code` — A short text string to categorize the Reason for software to process.
 
+### Using the FusionAuth Administration Website
+
+TODO - continue writing from here
+
+Tell a story here (or introduce it above and expand on it below). You already have the subscription example, so let's tell the story of Pied Piper expanding into media and building out both a subscription and a lightweight user happiness system for their customer service agents. Goal is to make it like this: https://fusionauth.io/docs/v1/tech/guides/multi-tenant in terms of telling a real world story.
+
+
+
+You can create an Action on the website at **Settings** — **User Actions**.
+![Creating an Action on the website](../../../../assets/img/docs/guides/user-actions/user-actions-edit-email.png)
+But to apply an Action to a User you cannot use the website. It can be done only using the APIs.
+
+### Creating an API key
+https://fusionauth.io/docs/v1/tech/apis/authentication#managing-api-keys
+
+
+
 ### Creating a User Action via the API (create both types)
 
-### Setting up a Webhook -- why? so we can feed the subscription and happiness info into our other systems? have an audit trail?
+### Creating a Webhook -- why? so we can feed the subscription and happiness info into our other systems? have an audit trail?
+To set up a webhook to use with an Action, navigate to [breadcrumb]#Settings -> Webhooks# and click the [uielement]#Add# button. You can optionally give the webhook an [field]#Id# and complete the [field]#description# field. Add the fully qualified [field]#URL# of the webhook’s endpoint that will accept the event requests from FusionAuth and set the required timeout durations.
+
+image::guides/user-actions/user-actions-add-webhook.png[Adding a new webhook from your RequestBin.",width=1200px, role=bottom-cropped]
+
+Scroll down and make sure that the [uielement]#user.action# event is enabled.
+
+image::guides/user-actions/user-actions-webhook-switch.png[Ensuring that the user.action webhook event switch is enabled,width=1200px, role=bottom-cropped]
+
+Next, click on the [breadcrumb]#Tenants# tab and select the tenant the Action will be associated with or select [uielement]#All tenants#.
+
+image::guides/user-actions/user-actions-webhook-tenant.png[Enabling Webhook for Tenant,width=1200px,role=bottom-cropped]
+
+Navigate to [breadcrumb]#Tenants -> Your tenant#, and select the [breadcrumb]#Webhooks# tab. Make sure that the webhook is enabled. If you selected [uielement]#All tenants# on the webhook page, this checkbox will be disabled.
+
+image::guides/user-actions/user-actions-tenants-webhooks.png[Viewing the enabled webhooks on the Tenant page,width=1200px, role=bottom-cropped]
+
+Scroll down and make sure the [uielement]#user.action# event is enabled here too.
+
+image::guides/user-actions/user-actions-tenants-switch.png[Ensuring that the user.action Webhook event switch is enabled,width=1200px, role=bottom-cropped]
+
+Yes, it's a bit weird that you have to configure a webhook to listen for events in two places, but this gives you fine-grained control across tenants.
 
 ### Set up the Email
 Set up sending a thank you email to the user when their interaction has been recorded.
@@ -217,8 +239,7 @@ anything else
 ## Todos
 - screenshots
 - diagrams
-- how do you link a specific Action to a specific Webhook? Looks like webhook definition can just have 'user action' as an event and that's it.
 - what does the json that gets sent to a webhook look like
 - add sections from last user actions doc
-- check that all outline is in the doc that dan wanted - https://github.com/FusionAuth/fusionauth-site/pull/2223#pullrequestreview-1523177347
+- review the stylesheet readme
 
