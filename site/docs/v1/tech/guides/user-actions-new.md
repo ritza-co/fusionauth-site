@@ -9,8 +9,8 @@
 - [Creating Actions](#creating-actions)
   - [APIs](#apis)
     - [Action parameters](#action-parameters)
-    - [Action instance parameters](#action-instance-parameters)
     - [Action Reason parameters](#action-reason-parameters)
+    - [Action instance parameters](#action-instance-parameters)
   - [Using the FusionAuth Administration Website](#using-the-fusionauth-administration-website)
   - [Creating an API key](#creating-an-api-key)
   - [Creating a User Action via the API (create both types)](#creating-a-user-action-via-the-api-create-both-types)
@@ -34,7 +34,7 @@ Below are the terms you'll encounter when working with Actions. They are listed 
 
 - Action — Can be created on FusionAuth at **Settings**—**User Actions**. An Action is a state or event that can be applied to User. It is reusable for many Users in many Applications. Actually applying Action to a specific User is called an Action instance. This is similar to programming, where you have classes (Actions) and objects (Action instances).
 
-    At its most simple, an Action is just a name, and an Action instance comprises: one User applying the Action to another User, the time of the Action, and the name of the Action.
+    At its most simple, an Action is just a name, and an Action instance comprises: one User applying the Action on another User, the time of the Action, and the name of the Action.
 - Actionee — The user on whom Action is taken.
 - Actioner — The user that applies the Action. Every Action has to have an Actioner, even if the instance is automatically applied, in which case the Actioner can be set to the Application's administrator.
 - Reason — A text description of why an Action was taken. You don't have to set a Reason when applying an Action, but it's useful for auditing. Reasons can be created on FusionAuth at **Settings**—**User Actions** by clicking the **Reasons** button at the top right.
@@ -72,7 +72,7 @@ There are two main types of Actions: temporal Actions and instantaneous Actions 
 | Temporal | When you want to apply a state to a user for a period of time. | Subscription access · Expiring software trial · Forum ban
 | Instantaneous (with options) | When you want to apply a state to a user at a single point in time, recording who did so, perhaps with comments. | User surveyed and was happy/indifferent/frustrated · User has earned a sufficient level of trust on your forum and been given an award (possibility increasing their access rights)
 
-> FusionAuth's primary purpose is to simplify authentication (verifying a user's identity) and authorization (giving your app a user's roles). Actions are an additional feature that you might want to use in your app. Think of them as a premade way for you to store extra user fields in FusionAuth instead of your own database, at a specified time, and notify people or systems if these fields change. But FusionAuth has no way to receive payments, and no automated subscription features. So you need to decide carefully if you want to write the code you need to manage such features in FusionAuth using Actions, or in your own app with more custom code, or using an entirely external system that specializes in that work, if your needs are complex.
+> FusionAuth's primary purpose is to simplify authentication (verifying a user's identity) and authorization (giving your app a user's roles). Actions are an additional feature that you might want to use in your app. Think of them as a premade way for you to store extra user fields in FusionAuth instead of your own database, at a specified time, and notify people or systems if these fields change. But FusionAuth has no way to receive payments, and no automated subscription features. So you need to decide carefully if you want to write the code you need to manage such features in FusionAuth using Actions, or in your own app with custom code, or using an entirely external system that specializes in that process, if your needs are complex.
 
 The general process to use an Action is to
 - create the Action in the FusionAuth website,
@@ -125,7 +125,7 @@ At any point in the future you can use the API to retrieve this saved Action ins
 You have seen that you can apply an Action using the API. FusionAuth can also automatically apply a temporary `preventLogin` Action to a User in the case of repeatedly failing authentication. For more information see this [guide](https://fusionauth.io/docs/v1/tech/tutorials/gating/setting-up-user-account-lockout).
 
 ## Creating Actions
-The remainder of this guide will demonstrate a practical example of using Actions that you can follow. Let's start with a brief tour of the APIs you'll use in the example.
+The remainder of this guide will demonstrate a practical example of using Actions that you can follow. Let's start with a brief tour of the APIs that you'll use in the example.
 
 ### APIs
 Three separate APIs manage Actions. Each has its own documentation.
@@ -151,8 +151,14 @@ These are used when creating an Action definition.
 - `temporal` — if the Action is temporal.
 - `userEmailingEnabled`, `userNotificationsEnabled` — notify doesn't contact the user, it just adds a `notifyUser` field to JSON sent to webhooks.
 
+#### Action Reason parameters
+These are used when creating an Action Reason.
+- `userActionReasonId`
+- `text`, `localizedTexts` — The description of the Reason that a human can understand, possibly in many languages.
+- `code` — A short text string to categorize the Reason for software to process.
+
 #### Action instance parameters
-These are used when applying an Action to a User.
+These are used when applying an Action to a User, possibly with a Reason.
 - `userActionId`
 - `actioneeUserId`
 - `actionerUserId`
@@ -164,12 +170,6 @@ These are used when applying an Action to a User.
 - `notifyUser` — Should the literal text value, "`notifyUser`", be sent to webhooks, for them to act on as they wish.
 - `option` — The option the Actioner chose for this instance of the Action.
 - `reasonId`
-
-#### Action Reason parameters
-These are used when creating an Action Reason.
-- `userActionReasonId`
-- `text`, `localizedTexts` — The description of the Reason that a human can understand, possibly in many languages.
-- `code` — A short text string to categorize the Reason for software to process.
 
 ### Using the FusionAuth Administration Website
 
