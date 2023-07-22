@@ -4,7 +4,7 @@
   - [Temporal Actions](#temporal-actions)
     - [Subscription Example](#subscription-example)
   - [Instantaneous Action](#instantaneous-action)
-    - [Survey action](#survey-action)
+    - [Survey Example](#survey-example)
 - [What Triggers an Action \& what is the sequence of events](#what-triggers-an-action--what-is-the-sequence-of-events)
   - [What Happens After a User Action?](#what-happens-after-a-user-action)
   - [Webhooks](#webhooks)
@@ -117,7 +117,7 @@ flowchart LR
     Added-.->Removed
 ```
 
-#### Survey action
+#### Survey Example
 Let's take an instantaneous Action example where a user gives feedback on their interaction with customer support by assigning a rating, and giving a comment.
 
 Assume you have already created an instantaneous Action named "Feedback" in FusionAuth, with Options of "High", "Medium", and "Low". Your user chooses "High" in your application's interface and enters the comment "Problem solved quickly". When saving the form your code will call the Action API and create an Action instance for the User with the option "High" and populate the `comment` field. The `actioner` of the instance will be set to the support User who helped the customer.
