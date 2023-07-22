@@ -2,7 +2,7 @@
 - [Definitions](#definitions)
 - [Types of Actions and Their Purpose](#types-of-actions-and-their-purpose)
   - [Temporal Actions](#temporal-actions)
-    - [Temporal Action Subscription Example](#temporal-action-subscription-example)
+    - [Subscription Example](#subscription-example)
   - [Instantaneous Action](#instantaneous-action)
     - [Option based action](#option-based-action)
 - [What Triggers an Action \& what is the sequence of events](#what-triggers-an-action--what-is-the-sequence-of-events)
@@ -77,12 +77,12 @@ There are two main types of Actions: temporal Actions and instantaneous Actions 
 
 > FusionAuth's primary purpose is to simplify authentication (verifying a user's identity) and authorization (giving your app a user's roles). Actions are an additional feature that you might want to use in your app. Think of them as a premade way for you to store extra user fields in FusionAuth instead of your own database, at a specified time, and notify people or systems if these fields change. But FusionAuth has no way to receive payments, and no automated subscription features. So you need to decide carefully if you want to write the code you need to manage such features in FusionAuth using Actions, or in your own app with more custom code, or using an entirely external system that specializes in that work, if your needs are complex.
 
-If you decide that Actions are the right solution for your need, the general way you use them is to
+The general process to use an Action is to
 - create the Action in the FusionAuth website,
-- create any Reasons that you might want to link to the Action in the website,
+- create any Reasons that you might want to link to the Action instance on the website,
 - apply the Action to a User using the User Action API, possibly giving it an expiry date.
 
-You'll see some examples of this process later in this guide.
+You'll see some detailed examples of this process later in this guide.
 
 ### Temporal Actions
 Temporal action instances have four states they can be in. Each state can trigger an email or webhook.
@@ -97,11 +97,20 @@ flowchart LR
     Modified-.->Modified
 ```
 
-#### Temporal Action Subscription Example
-Example of the subscription from the blog. TODO
+#### Subscription Example
+Let's take an example where a user purchases a month's subscription to a newspaper website that you manage. You have already created a temporal Action named "Subscription" in FusionAuth. Once the user has made their purchase (either on your newspaper site or through some payment gateway) your code will call the FusionAuth API to apply the Action to the User, and give the Action instance an end-date one month from now. The user will now have access to read the newspaper when authenticated on your site with FusionAuth.
+
+The creation of this Action instance will be the **Started** event shown above. You can set it to trigger the welcome email template that is sent to the user, and a webhook that sends the user's information to another subscription site you manage. That site could then use that email address to advertise to the user, or for targeting Facebook adverts.
+
+Once the Action instance expires (the **Ended** event) it will trigger a goodbye email to the user, and any webhooks that you configured. To prevent the user accessing your site after this date you could either
+- check the subscription state of the Action for the User in FusionAuth from your site's code when the user attempts to log in,
+- use a webhook at the end of the Action to change the User's Role in FusionAuth and disallow that role in your site,
+- or use a webhook at the end of the Action to call your code to create another temporal Action in FusionAuth with an indefinite end date and `preventLogin` set to true.
+
+The last option is probably the simplest and most idiomatic way to use FusionAuth in most cases.
 
 ### Instantaneous Action
-An instantaneous Action instance has an Option that can be set, but no states. Once it is either set for a User it is either left or removed.
+An instantaneous Action instance has an Option that can be set, but no states. Once it is set for a User it is either remains or is removed.
 
 ```mermaid
 flowchart LR
@@ -110,7 +119,7 @@ flowchart LR
 
 #### Option based action
 TODO
-Another example. How about an option that records interaction with a user and a customer service rep, assigns it a impact rating (high, medium, low) and includes a comment.
+Another example. How about an option that records interaction with a user and a customer service rep, assigns it an impact rating (high, medium, low) and includes a comment.
 
 ## What Triggers an Action & what is the sequence of events
 list of all places
