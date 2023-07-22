@@ -4,7 +4,7 @@
   - [Temporal Actions](#temporal-actions)
     - [Subscription Example](#subscription-example)
   - [Instantaneous Action](#instantaneous-action)
-    - [Option based action](#option-based-action)
+    - [Survey action](#survey-action)
 - [What Triggers an Action \& what is the sequence of events](#what-triggers-an-action--what-is-the-sequence-of-events)
   - [What Happens After a User Action?](#what-happens-after-a-user-action)
   - [Webhooks](#webhooks)
@@ -33,7 +33,7 @@ User Actions in FusionAuth are ways to interact with, reward, and discipline use
 This guide refers to User Actions simply as Actions. In the first section you'll learn about all the parts of an Action and their sequences of events. In the second section you'll learn ways to create and apply different types of Actions.
 
 ## Definitions
-Below are the terms you'll encounter when working with Actions. They are listed in order of understanding, not alphabetically.
+Below are the terms you'll encounter when working with Actions. They are listed in order of increasing understanding, not alphabetically.
 
 - Action — Can be created on FusionAuth at **Settings**—**User Actions**. An Action is a state or event that can be applied to User. It is reusable for many Users in many Applications. Actually applying Action to a specific User is called an Action instance. This is similar to programming, where you have classes (Actions) and objects (Action instances).
 
@@ -98,7 +98,7 @@ flowchart LR
 ```
 
 #### Subscription Example
-Let's take an example where a user purchases a month's subscription to a newspaper website that you manage. You have already created a temporal Action named "Subscription" in FusionAuth. Once the user has made their purchase (either on your newspaper site or through some payment gateway) your code will call the FusionAuth API to apply the Action to the User, and give the Action instance an end-date one month from now. The user will now have access to read the newspaper when authenticated on your site with FusionAuth.
+Let's take a temporal Action example where a user purchases a month's subscription to a newspaper website that you manage. You have already created a temporal Action named "Subscription" in FusionAuth. Once the user has made their purchase (either on your newspaper site or through some payment gateway) your code will call the FusionAuth API to apply the Action to the User, and give the Action instance an end-date one month from now. The user will now have access to read the newspaper when authenticated on your site with FusionAuth.
 
 The creation of this Action instance will be the **Started** event shown above. You can set it to trigger the welcome email template that is sent to the user, and a webhook that sends the user's information to another subscription site you manage. That site could then use that email address to advertise to the user, or for targeting Facebook adverts.
 
@@ -110,16 +110,17 @@ Once the Action instance expires (the **Ended** event) it will trigger a goodbye
 The last option is probably the simplest and most idiomatic way to use FusionAuth in most cases.
 
 ### Instantaneous Action
-An instantaneous Action instance has an Option that can be set, but no states. Once it is set for a User it is either remains or is removed.
+An instantaneous Action instance has an Option that can be chosen from a list, but no temporal states. Once you set the Action for a User it is either remains or is removed.
 
 ```mermaid
 flowchart LR
     Added-.->Removed
 ```
 
-#### Option based action
+#### Survey action
+Let's take an instantaneous Action example where a user gives feedback on their interaction with customer support, assigns a rating of high, medium, or low, and gives a comment.
+
 TODO
-Another example. How about an option that records interaction with a user and a customer service rep, assigns it an impact rating (high, medium, low) and includes a comment.
 
 ## What Triggers an Action & what is the sequence of events
 list of all places
