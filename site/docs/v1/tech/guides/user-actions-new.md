@@ -3,12 +3,12 @@
 - [Types of Actions and Their Purpose](#types-of-actions-and-their-purpose)
   - [Temporal Actions](#temporal-actions)
     - [Subscription Example](#subscription-example)
-  - [Instantaneous Action](#instantaneous-action)
+  - [Instantaneous Actions](#instantaneous-actions)
     - [Survey Example](#survey-example)
-- [What Triggers an Action \& what is the sequence of events](#what-triggers-an-action--what-is-the-sequence-of-events)
-  - [What Happens After a User Action?](#what-happens-after-a-user-action)
-  - [Webhooks](#webhooks)
-  - [Emails to the actioned user](#emails-to-the-actioned-user)
+- [Applying an Action Automatically](#applying-an-action-automatically)
+- [What Happens After a User Action?](#what-happens-after-a-user-action)
+- [Webhooks](#webhooks)
+- [Emails to the actioned user](#emails-to-the-actioned-user)
 - [Creating Actions](#creating-actions)
   - [Using the FusionAuth Administration Website](#using-the-fusionauth-administration-website)
   - [Creating an API key](#creating-an-api-key)
@@ -30,7 +30,7 @@
 ## Introduction
 User Actions in FusionAuth are ways to interact with, reward, and discipline users. For example, you could use them to email a user, call another application when a user does something, or temporarily disable a user's login.
 
-This guide refers to User Actions simply as Actions. In the first section you'll learn about all the parts of an Action and their sequences of events. In the second section you'll learn ways to create and apply different types of Actions.
+This guide refers to User Actions simply as Actions. In the first half you'll learn about all the parts of an Action and their sequences of events. In the second half you'll learn ways to create and apply Actions.
 
 ## Definitions
 Below are the terms you'll encounter when working with Actions. They are listed in order of increasing understanding, not alphabetically.
@@ -109,7 +109,7 @@ Once the Action instance expires (the **Ended** event) it will trigger a goodbye
 
 The last option is probably the simplest and most idiomatic way to use FusionAuth in most cases.
 
-### Instantaneous Action
+### Instantaneous Actions
 An instantaneous Action instance has an Option that can be chosen from a list, but no temporal states. Once you set the Action for a User it is either remains or is removed.
 
 ```mermaid
@@ -118,22 +118,21 @@ flowchart LR
 ```
 
 #### Survey Example
-Let's take an instantaneous Action example where a user gives feedback on their interaction with customer support by assigning a rating, and giving a comment.
+Let's take an instantaneous Action example where a user gives feedback on their interaction with customer support by assigning a rating and giving a comment.
 
-Assume you have already created an instantaneous Action named "Feedback" in FusionAuth, with Options of "High", "Medium", and "Low". Your user chooses "High" in your application's interface and enters the comment "Problem solved quickly". When saving the form your code will call the Action API and create an Action instance for the User with the option "High" and populate the `comment` field. The `actioner` of the instance will be set to the support User who helped the customer.
+Assume you have already created an instantaneous Action named "Feedback" in FusionAuth, with Options of "High", "Medium", and "Low". Your user chooses "High" in your application's form and enters the comment "Problem solved quickly". When saving the form your code will call the Action API and create an Action instance for the User with the option "High" and populate the `comment` field. The `actioner` of the instance will be set to the support User who helped the customer.
 
-At any point in the future you can retrieve this saved Action instance using the API to create a report on the customer support agent's performance, or your app's approval ratings in general. You could also use a webhook to send this data immediately to an external system when the Action is saved.
+At any point in the future you can use the API to retrieve this saved Action instance and create a report of the customer support agent's performance, or your app's approval ratings in general. You could also use a webhook to send this data immediately to an external system when the Action was created.
 
-## What Triggers an Action & what is the sequence of events
-list of all places
-- multiple incorrect password entered
+## Applying an Action Automatically
+You have seen that you can apply an Action using the API. FusionAuth can also automatically apply an account lockout Action to a User in the case of repeatedly failing authentication. For more information see this [guide](https://fusionauth.io/docs/v1/tech/tutorials/gating/setting-up-user-account-lockout).
 
-### What Happens After a User Action?
-Once a temporal Action instance has ended, or an instantaneous Action instance has been taken, no further changes occur. The record of the instance will remain in FusionAuth to be queried in the future.
+## What Happens After a User Action?
+Once a temporal Action instance has ended, or an instantaneous Action instance has been applied, no further changes occur. The record of the instance will remain in FusionAuth to be queried in the future.
 
-### Webhooks
+## Webhooks
 
-### Emails to the actioned user
+## Emails to the actioned user
 
 ## Creating Actions
 Tell a story here (or introduce it above and expand on it below). You already have the subscription example, so let's tell the story of Pied Piper expanding into media and building out both a subscription and a lightweight user happiness system for their customer service agents. Goal is to make it like this: https://fusionauth.io/docs/v1/tech/guides/multi-tenant in terms of telling a real world story.
