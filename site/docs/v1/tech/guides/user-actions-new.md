@@ -172,6 +172,8 @@ These are used when applying an Action to a User, possibly with a Reason.
 - `reasonId`
 
 ### Using the FusionAuth Administration Website
+You are now going to create the subscription and survey examples discussed earlier.
+
 
 TODO - continue writing from here
 
