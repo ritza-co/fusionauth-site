@@ -118,7 +118,7 @@ flowchart LR
 #### Survey Example
 Let's take an instantaneous Action example where a user gives feedback on their interaction with customer support by assigning a rating and giving a comment.
 
-Assume you have already created an instantaneous Action named "Feedback" in FusionAuth, with Options of "High", "Medium", and "Low". Your user chooses "High" in your application's form and enters the comment "Problem solved quickly". When saving the form your code will call the Action API and create an Action instance for the User with the option "High" and populate the `comment` field. The `actioner` of the instance will be set to the support User who helped the customer.
+Assume you have already created an instantaneous Action named "Feedback" in FusionAuth, with Options of "Bad", "Neutral", and "Good". Your user chooses "Good" in your application's form and enters the comment "Problem solved quickly". When saving the form your code will call the Action API and create an Action instance for the User with the option "High" and populate the `comment` field. The `actioner` of the instance will be set to the support User who helped the customer.
 
 At any point in the future you can use the API to retrieve this saved Action instance and create a report of the customer support agent's performance, or your app's approval ratings in general. You could also use a webhook to send this data immediately to an external system when the Action was created.
 
@@ -219,19 +219,19 @@ sequenceDiagram
     participant I as Intercom
     participant S as Slack
 
-    %% subscription flow
     U->>PP: Pay for a month subscription
     PP->>FA: Apply subscription Action
     FA->>U: Send welcome email
     FA->>I: Send subscription notification
+
     break One month passes
         U-->PP: Subscription expires
     end
+
     FA->>U: Send goodbye email
     FA->>PP: Send expiry notification
     PP->>FA: Apply preventLogin Action
 
-    %% survey flow
     U->>PP: Complete customer survey form
     PP->>FA: Apply survey Action
     FA->>S: Send survey notification
