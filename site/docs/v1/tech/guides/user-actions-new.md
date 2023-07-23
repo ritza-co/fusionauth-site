@@ -16,6 +16,7 @@ This guide refers to User Actions simply as Actions. In the first half you'll le
     - [Action parameters](#action-parameters)
     - [Action Reason parameters](#action-reason-parameters)
     - [Action instance parameters](#action-instance-parameters)
+  - [Starting the PiedPiper newspaper company](#starting-the-piedpiper-newspaper-company)
   - [Using the FusionAuth Administration Website](#using-the-fusionauth-administration-website)
   - [Creating an API key](#creating-an-api-key)
   - [Creating a User Action via the API (create both types)](#creating-a-user-action-via-the-api-create-both-types)
@@ -143,8 +144,8 @@ The Actions API reference documentation is long, and repeats the same parameters
 These are used when creating an Action definition.
 - `userActionId`
 - `name`, `localizedNames`
-- `startEmailTemplateId`, `cancelEmailTemplateId`, `modifyEmailTemplateId`, `endEmailTemplateId`, — The Id of the email template that is used when the Action starts, is cancelled, is modified, or expires. Temporal Actions have all four events, whereas instantaneous actions have only the start event.
-- `includeEmailInEventJSON` — Whether to include the email information in the JSON that is sent to the webhook when a user action is taken.
+- `startEmailTemplateId`, `cancelEmailTemplateId`, `modifyEmailTemplateId`, `endEmailTemplateId`, — The Id of the email template that is used when the Action starts, is cancelled, is modified, or expires. Temporal Actions have all four events, whereas instantaneous Actions have only the start event.
+- `includeEmailInEventJSON` — Whether to include the email information in the JSON that is sent to the webhook when an Action is taken.
 - `options`, `options[x].name`, `options[x].localizedNames`
 - `preventLogin` — User may not log in if true until the Action expires.
 - `sendEndEvent` — Whether to call webhooks when this Action instance expires.
@@ -167,13 +168,77 @@ These are used when applying an Action to a User, possibly with a Reason.
 - `comment` — A note by the actioner if they want to add information in addition to the Reason.
 - `emailUser` — Should the user be emailed at instance creation.
 - `expiry` — Time after which this temporal Action should end.
-- `notifyUser` — Should the literal text value, "`notifyUser`", be sent to webhooks, for them to act on as they wish.
+- `notifyUser` — Should the literal text value, `notifyUser`, be sent to webhooks, for them to act on as they wish.
 - `option` — The option the Actioner chose for this instance of the Action.
 - `reasonId`
 
-### Using the FusionAuth Administration Website
-You are now going to create the subscription and survey examples discussed earlier.
+### Starting the PiedPiper newspaper company
+You are now going to create the subscription and survey examples discussed earlier, for a paid newspaper website called _PiedPiper_.
 
+Below is a summary of the steps you'll be completing.
+- FusionAuth work:
+  - Install FusionAuth
+  - Create PiedPiper Application
+  - Create administrative User (actioner)
+  - Create subscriber User (actionee)
+  - Create API key
+  - Subscription work:
+    - Create welcome email template
+    - Create expiry email template
+    - Create expired Reason
+    - Create preventlogin Action
+    - Create signup webhook to Intercom
+    - Create subscription Action
+  - Survey work:
+    - Create survey webhook to Slack
+    - Create survey Actions with options
+    - Create localization for options
+- PiedPiper work:
+  - Install Node.js
+  - Create app folder with Typescript client library
+  - Create mock Intercom API
+  - Create mock Slack API
+  - Create PiedPiper API to listen for expiry and call preventLogin Action
+  - Create mock email service
+- Testing:
+  - Call subscription Action
+  - Check welcome and expiry emails arrive
+  - Check Intercom is called
+  - Check preventLogin Action was created
+  - Call survey Action
+  - Check negative survey response was sent to Slack
+  - Retrieve all survey Action instances for this User
+
+Below is a diagram of how the system will be used.
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant PP as PiedPiper
+    participant FA as FusionAuth
+    participant I as Intercom
+    participant S as Slack
+
+    %% subscription flow
+    U->>PP: Pay for a month subscription
+    PP->>FA: Apply subscription Action
+    FA->>U: Send welcome email
+    FA->>I: Send subscription notification
+    break One month passes
+        U-->PP: Subscription expires
+    end
+    FA->>U: Send goodbye email
+    FA->>PP: Send expiry notification
+    PP->>FA: Apply preventLogin Action
+
+    %% survey flow
+    U->>PP: Complete customer survey form
+    PP->>FA: Apply survey Action
+    FA->>S: Send survey notification
+    PP->>FA: Retrieve all Actions for the User
+```
+
+### Using the FusionAuth Administration Website
 
 TODO - continue writing from here
 
