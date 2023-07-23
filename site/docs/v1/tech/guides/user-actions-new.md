@@ -1,3 +1,8 @@
+## Introduction
+User Actions in FusionAuth are ways to interact with, reward, and discipline users. For example, you could use them to email a user, call another application when a user does something, or temporarily disable a user's login.
+
+This guide refers to User Actions simply as Actions. In the first half you'll learn about all the parts of an Action and their sequences of events. In the second half you'll learn ways to create and apply Actions.
+
 - [Introduction](#introduction)
 - [Definitions](#definitions)
 - [Types of Actions and Their Purpose](#types-of-actions-and-their-purpose)
@@ -24,11 +29,6 @@
 - [Further reading](#further-reading)
 - [Todos](#todos)
 
-## Introduction
-User Actions in FusionAuth are ways to interact with, reward, and discipline users. For example, you could use them to email a user, call another application when a user does something, or temporarily disable a user's login.
-
-This guide refers to User Actions simply as Actions. In the first half you'll learn about all the parts of an Action and their sequences of events. In the second half you'll learn ways to create and apply Actions.
-
 ## Definitions
 Below are the terms you'll encounter when working with Actions. They are listed in order of increasing understanding, not alphabetically.
 
@@ -38,9 +38,9 @@ Below are the terms you'll encounter when working with Actions. They are listed 
 - Actionee — The user on whom Action is taken.
 - Actioner — The user that applies the Action. Every Action has to have an Actioner, even if the instance is automatically applied, in which case the Actioner can be set to the Application's administrator.
 - Reason — A text description of why an Action was taken. You don't have to set a Reason when applying an Action, but it's useful for auditing. Reasons can be created on FusionAuth at **Settings**—**User Actions** by clicking the **Reasons** button at the top right.
-- Webhook — A webhook is another name for sending a single HTTP request to an API. It's used to inform an external system of some event, and can be triggered by an Action. An example is FusionAuth calling a customer-support service, like [Intercom](https://intercom.com), to start the customer onboarding process when the user has verified their email in FusionAuth. Another example would be posting a message to a [Slack](https://slack.com) channel whenever a new customer signs up. Webhooks can be managed in FusionAuth at **Settings** — **Webhooks** and can be triggered by Actions.
+- Webhook — A webhook is another name for sending a single HTTP request to an API. It's used to inform an external system of some event, and can be triggered by an Action. An example is FusionAuth calling a customer-support service, like _Intercom.com_, to start the customer onboarding process when the user has verified their email in FusionAuth. Another example would be posting a message to a _Slack.com_ channel whenever a new customer signs up. Webhooks can be managed in FusionAuth at **Settings** — **Webhooks** and can be triggered by Actions.
 
-    The webhook/API terminology can be confusing. Note that most web companies, including FusionAuth, call a trigger to _send_ data a _webhook_, but when they _receive_ data they call it an _API_. So if you're looking for a destination for a FusionAuth webhook in an external system, you won't find it under their webhook documentation; you'll find it under API documentation. This is why they are sometimes known as a _reverse API_. However, some companies, like [Slack](https://api.slack.com/messaging/webhooks), also call incoming requests "incoming webhooks".
+    The webhook/API terminology can be confusing. Note that most web companies, including FusionAuth, call a trigger to _send_ data a _webhook_, but when they _receive_ data they call it an _API_. So if you're looking for a destination for a FusionAuth webhook in an external system, you won't find it under their webhook documentation; you'll find it under API documentation. This is why they are sometimes known as a _reverse API_. However, some companies, like _Slack_, also call incoming requests "incoming webhooks".
 - Temporal Actions — Temporal, or time-based, Actions have a duration, as opposed to instantaneous Actions, which have only a start time. Once a temporal Action expires, meaning that it ends automatically, it will no longer be considered active and will not affect the user. However, you can apply a temporal Action to a user indefinitely by setting a very distant end date. An Action that prevents login must be temporal.
 
     A temporal Action may be cancelled or modified, unlike an instantaneous Action, which cannot be. An example of an instantaneous Action would be a reward, such as sending a user a discount coupon.
@@ -72,7 +72,7 @@ There are two main types of Actions: temporal Actions and instantaneous Actions 
 | Temporal | When you want to apply a state to a user for a period of time. | Subscription access · Expiring software trial · Forum ban
 | Instantaneous (with options) | When you want to apply a state to a user at a single point in time, recording who did so, perhaps with comments. | User surveyed and was happy/indifferent/frustrated · User has earned a sufficient level of trust on your forum and been given an award (possibility increasing their access rights)
 
-> FusionAuth's primary purpose is to simplify authentication (verifying a user's identity) and authorization (giving your app a user's roles). Actions are an additional feature that you might want to use in your app. Think of them as a premade way for you to store extra user fields in FusionAuth instead of your own database, at a specified time, and notify people or systems if these fields change. But FusionAuth has no way to receive payments, and no automated subscription features. So you need to decide carefully if you want to write the code you need to manage such features in FusionAuth using Actions, or in your own app with custom code, or using an entirely external system that specializes in that process, if your needs are complex.
+> FusionAuth's primary purpose is to simplify authentication (verifying a user's identity) and authorization (giving your app a user's roles). Actions are an additional feature that you might want to use in your app. Think of them as a premade way for you to store extra user fields in FusionAuth instead of your own database, at a specified time, and notify people or systems if these fields change. But FusionAuth has no way to receive payments, and no automated subscription features. So you need to decide carefully if you want to write the code you need to manage such features in FusionAuth using Actions, or in your own app with custom code, or using an external system that specializes in that process, if your needs are complex.
 
 The general process to use an Action is to
 - create the Action in the FusionAuth website,
@@ -130,8 +130,8 @@ The remainder of this guide will demonstrate a practical example of using Action
 ### APIs
 Three separate APIs manage Actions. Each has its own documentation.
 - [Actions](https://fusionauth.io/docs/v1/tech/apis/user-actions) — Defines an Action, updates it, and deletes it. The API path is `/api/user-action`.
-- [Action instances](https://fusionauth.io/docs/v1/tech/apis/actioning-users) — Applies an existing Action to a User. Can also update or cancel the Action instance. The API path is `/api/user/action`.
-- [Action Reasons](https://fusionauth.io/docs/v1/tech/apis/user-action-reasons) — Attaches the reason the Action was taken to the Action instance. Having a Reason is optional. The API path is `/api/user-action-reason`.
+- [Action Reasons](https://fusionauth.io/docs/v1/tech/apis/user-action-reasons) — Defies the reason an Action can be taken. The API path is `/api/user-action-reason`.
+- [Action instances](https://fusionauth.io/docs/v1/tech/apis/actioning-users) — Applies an existing Action to a User, optionally with a Reason. Can also update or cancel the Action instance. The API path is `/api/user/action`.
 
 Actions and Actions Reasons can be managed on the FusionAuth website. Only Action instances require you to use their API — you cannot apply an Action to a User on the website.
 
@@ -191,27 +191,6 @@ https://fusionauth.io/docs/v1/tech/apis/authentication#managing-api-keys
 ### Creating a User Action via the API (create both types)
 
 ### Creating a Webhook -- why? so we can feed the subscription and happiness info into our other systems? have an audit trail?
-To set up a webhook to use with an Action, navigate to [breadcrumb]#Settings -> Webhooks# and click the [uielement]#Add# button. You can optionally give the webhook an [field]#Id# and complete the [field]#description# field. Add the fully qualified [field]#URL# of the webhook’s endpoint that will accept the event requests from FusionAuth and set the required timeout durations.
-
-image::guides/user-actions/user-actions-add-webhook.png[Adding a new webhook from your RequestBin.",width=1200px, role=bottom-cropped]
-
-Scroll down and make sure that the [uielement]#user.action# event is enabled.
-
-image::guides/user-actions/user-actions-webhook-switch.png[Ensuring that the user.action webhook event switch is enabled,width=1200px, role=bottom-cropped]
-
-Next, click on the [breadcrumb]#Tenants# tab and select the tenant the Action will be associated with or select [uielement]#All tenants#.
-
-image::guides/user-actions/user-actions-webhook-tenant.png[Enabling Webhook for Tenant,width=1200px,role=bottom-cropped]
-
-Navigate to [breadcrumb]#Tenants -> Your tenant#, and select the [breadcrumb]#Webhooks# tab. Make sure that the webhook is enabled. If you selected [uielement]#All tenants# on the webhook page, this checkbox will be disabled.
-
-image::guides/user-actions/user-actions-tenants-webhooks.png[Viewing the enabled webhooks on the Tenant page,width=1200px, role=bottom-cropped]
-
-Scroll down and make sure the [uielement]#user.action# event is enabled here too.
-
-image::guides/user-actions/user-actions-tenants-switch.png[Ensuring that the user.action Webhook event switch is enabled,width=1200px, role=bottom-cropped]
-
-Yes, it's a bit weird that you have to configure a webhook to listen for events in two places, but this gives you fine-grained control across tenants.
 
 ### Set up the Email
 Set up sending a thank you email to the user when their interaction has been recorded.
