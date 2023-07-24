@@ -1,0 +1,177 @@
+== Overview:
+
+This guide is designed to provide instructions for Customer Service
+representatives on using FusionAuth, an authentication provider, to
+support users with their authentication needs. Customer Service
+representatives play a vital role in assisting users who may encounter
+issues related to login, password resets, and account lockouts.
+FusionAuth simplifies these processes by allowing Customer Service
+representatives to manage user accounts and perform necessary actions
+without having to rebuild common authentication components. By following
+this guide, you will learn how to use FusionAuth's Admin UI to reset
+passwords, verify user information, log users out, remove actions that
+locked accounts, and perform soft delete/undelete operations.
+
+
+* <<Overview:>>
+* <<Who is this Document For?>>
+* <<Setting up the FusionAuth Admin UI for Customer Service Reps:>>
+
+* <<Basic Operations for User Account Manager:>>
+* <<Send Password Reset:>>
+* <<Add A Comment:>>
+* <<Lock Account:>>
+* <<Require Password Change:>>
+
+== Who is this Document For?
+
+This document is intended for Customer Service representatives who are
+responsible for assisting users with authentication-related issues.
+Customer Service representatives typically interact with users who may
+have trouble accessing their accounts, forgetting passwords, or
+experiencing other login-related challenges. By using FusionAuth's
+features, Customer Service representatives can efficiently address these
+concerns, enhance user experience, and help maintain a secure
+authentication environment.
+
+Now without wasting much of your time, let's dive into the step-by-step instructions for setting up the
+Admin UI and the common operations performed by Customer Service
+representatives using FusionAuth's Admin UI:
+
+== Setting up the FusionAuth Admin UI for Customer Service Reps:
+
+* Log in to the FusionAuth Admin UI using your admin credentials.
+
+image::admin-guide/user-support-guide/image1.png[image,width=1200,role=bottom-cropped top-cropped]
+
+You will be presented with the interface that looks like the one below:
+
+image::admin-guide/user-support-guide/image2.png[image,width=1200,role=bottom-cropped top-cropped]
+
+And since you  have the admin role, you will be presented with the entire dashboard with operations related to this role.
+
+* Navigate to "Users" in the left sidebar.
+
+image::admin-guide/user-support-guide/image3.png[image,width=1200,role=bottom-cropped top-cropped]
+
+And navigate to the user listed in the result page. Click on that blue
+icon under the Action column in that result set to “Manage” the User.
+
+image::admin-guide/user-support-guide/image4.png[image,width=1200,role=bottom-cropped top-cropped]
+
+* And on the top bar with the current route namely User/Home/Users navigate to the green + icon which is the “Add User” button. Click on that green icon and you will get a form to add a new user:
+
+image::admin-guide/user-support-guide/image5.1.png[image,width=1200,role=bottom-cropped top-cropped]
+
+image::admin-guide/user-support-guide/image5.png[image,width=1200,role=bottom-cropped top-cropped]
+
+Set the user’s password if you want but there is also an option to let the user set the password by allowing the the system to send the email to the user containing steps to set the password. For simplicity we are going to set the password for them.
+
+* Click on the blue save icon in the top right corner and your user is created.
+
+The next step is to assign the user that we created a specific role, in this case we are going to assign “user support manager” role to this user.
+
+* Navigate to “Users” and on the user that we created, under the “Action” column click on the blue icon to “Manage” the user.
+* Scroll down and press on the “Add registration” button
+
+
+image::admin-guide/user-support-guide/image6.png[image,width=1200,role=bottom-cropped top-cropped]
+
+You will get a form like this:
+
+
+image::admin-guide/user-support-guide/image7.png[image,width=1200,role=bottom-cropped top-cropped]
+
+* Scroll down and view the entire Roles panel.
+* Tick on the role named "user support manager".
+
+
+image::admin-guide/user-support-guide/image8.png[image,width=1200,role=bottom-cropped top-cropped]
+
+Go ahead and save your changes and review the newly created user as below
+
+image::admin-guide/user-support-guide/image8.1.png[image,width=1200,role=bottom-cropped top-cropped]
+
+logout and try to login using the newly created account
+
+image::admin-guide/user-support-guide/image8.2.png[image,width=1200,role=bottom-cropped top-cropped]
+
+image::admin-guide/user-support-guide/image8.3.png[image,width=1200,role=bottom-cropped top-cropped]
+
+We are now logged in as Sarah with the role of user support manager. If you look closely on the left side bar for Sarah, she now have a view with limited information based on her role that we assigned her.
+She also have limited Operations that she can do as a user support manager that we are going to look at in a bit.
+
+To create another user with the role “user support viewer” we just follow the same steps as above an assign the role to “user_support_viewer”.
+
+image::admin-guide/user-support-guide/image8.4.png[image,width=1200,role=bottom-cropped top-cropped]
+
+For a "user support viewer" role there isn’t much the user can do in terms of operation, all he or she can do is to view and is not allowed to make any changes whatsoever.
+So we are going to look at the operations what the user account manager can do.
+
+
+== Basic Operations for User Account Manager:
+
+The FusionAuth Admin UI provides a user-friendly interface for performing basic operations. Here are some common tasks a user account manager can perform:
+
+
+=== Send Password Reset:
+
+This operation focuses on helping users regain access to their accounts by resetting their passwords in case they forget or have issues loging in with their credentials.
+
+* Log in to the FusionAuth Admin UI.
+
+* Search for the user whose password needs to be reset.
+
+* Click on the user's name to open their user details page.
+
+* Under the "Actions" tab, click on "Send Password Reset"
+
+* Submit your request to reset the user's password.
+
+image::admin-guide/user-support-guide/image9.png[image,width=1200,role=bottom-cropped top-cropped]
+
+image::admin-guide/user-support-guide/image10.png[image,width=1200,role=bottom-cropped top-cropped]
+
+=== Add A Comment:
+
+The support manager can add an informative comment on the user of the system which can then appear as a note when the commented user logged in
+
+* Log in to the FusionAuth Admin UI.
+* Search for the user who you want to leave a comment for.
+* Click on the user's name to open their user details page.
+*Click on “Add a comment” option.
+
+
+image::admin-guide/user-support-guide/image9.png[image,width=1200,role=bottom-cropped top-cropped]
+
+image::admin-guide/user-support-guide/image11.png[image,width=1200,role=bottom-cropped top-cropped]
+
+
+
+=== Lock Account:
+
+We might need to lock a user account for security or troubleshooting purposes. And there is also an option for that, all you have to do is:
+
+* Log in to the FusionAuth Admin UI.
+* Search for the user whose account need to be locked.
+* Click on the user's name to open their user details page.
+* Under the "Actions" tab, click on "Lock account."
+* Confirm the action to lock the user account.
+
+
+image::admin-guide/user-support-guide/image9.png[image,width=1200,role=bottom-cropped top-cropped]
+
+image::admin-guide/user-support-guide/image12.png[image,width=1200,role=bottom-cropped top-cropped]
+
+=== Require Password Change:
+
+We might need the users to change their passwords once in a while for security reasons. The user support manager can force the user to change the password the next time they login
+
+* Log in to the FusionAuth Admin UI.
+* Search for the user whose account is locked.
+* Click on the user's name to open their user details page.
+* Under the "Actions" tab, click on “Require password change”.
+
+image::admin-guide/user-support-guide/image9.png[image,width=1200,role=bottom-cropped top-cropped]
+
+image::admin-guide/user-support-guide/image13.png[image,width=1200,role=bottom-cropped top-cropped]
