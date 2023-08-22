@@ -15,7 +15,7 @@ When using the PATCH method, you can either use the same request body documentat
 
 When using the PATCH method, use the same request body documentation that is provided for the PUT request.
 The PATCH method will merge the provided request parameters into the existing object, this means all parameters are optional when using the PATCH method and you only provide the values you want changed.
-A `null` value can be used to remove a value.
+A `null` value, or an empty string in some cases, can be used to remove a value.
 Patching an `Array` will result in all values from the new list being appended to the existing list, this is a known limitation to the current implementation of PATCH.
 ____
 
