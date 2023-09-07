@@ -95,26 +95,19 @@ You can log in to the [FusionAuth admin UI](http://localhost:9011/admin) and loo
 
 Next, you'll set up a basic Express app. While this guide builds a new Express project, you can use the same method to integrate your existing project with FusionAuth.
 
-Create the default Express starter project.
+You create the default Express starter project in a folder called `mysite`. You also add a few npm packages to help with authentication.
 
 ```shell
-npx create-express@latest mysite
-```
-
-Choose the following options:
-- Just the basics
-- Express App Server
-- TypeScript
-- Yes (to running `npm install`)
-
-Add additional npm packages the site will use using the commands below.
-
-```shell
+npx express-generator@latest mysite --view=ejs
 cd mysite
-npm install dotenv express-auth express-auth-oauth2 jwt-decode
-```
+npm install
+npm audit fix --force # run this only if npm reports security vulnerabilities
 
-The two Express authentication packages allow you to use FusionAuth without needing to know how OAuth works. The JWT package will provide your app with the user details returned from FusionAuth. The `dotenv` package allows the app to read configuration details from a `.env` environment file.
+npm install dotenv # to read your .env files with passwords
+npm install passport passport-oauth2  # to authenticate with FusionAuth
+npm install jwt-decode # to get the email address from the JWT returned by FusionAuth
+npm install express-session # to maintain the user's session once logged in
+```
 
 Now create the `.env` file in your `mysite` folder and add the following to it (note that this is a different environment file to the one in the root folder used by Docker for FusionAuth).
 
@@ -123,21 +116,12 @@ Now create the `.env` file in your `mysite` folder and add the following to it (
 
 ### Preliminary Setup
 
-Before you configure authentication, you need to change the default files created by Express.
+Before you configure authentication, you need to change the default file created by Express.
 
-Replace the contents of the file `mysite/app/root.tsx` with the following code.
+At the top of `mysite/app.js`, add the following line.
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-javascript-express-web/main/complete-application/app/root.tsx"
- lang="typescript" />
-
-Make these changes to the existing file:
-- Add some styling with `import css from "~/css/changebank.css";` at the top.
-- Specify the `<head>` content for the page (title and CSS link) in the two functions at the bottom.
-
-At the top of the file `mysite/app/entry.server.tsx`, add the following line.
-
-```tsx
-import 'dotenv/config';
+```js
+require('dotenv/config');
 ```
 
 This allows any other file run on the server to use settings from `.env`.
@@ -227,9 +211,9 @@ Now that authentication is done, the last task is to create two example pages th
 Copy over some CSS and an image from the example app.
 
 ```shell
-mkdir app/css
-cp ../complete-application/app/css/changebank.css ./app/css/changebank.css
-cp ../complete-application/public/money.jpg ./public/money.jpg
+cp ../complete-application/public/stylesheets/changebank.css ./mysite/public/stylesheets/changebank.css
+cp ../complete-application/public/images/money.jpg ./mysite/public/images/money.jpg
+rm ./mysite/public/stylesheets/style.css
 ```
 
 Add the account page `mysite/app/routes/account.tsx` with the following code.
@@ -253,7 +237,7 @@ This page has identical Express and authentication functionality to the Account 
 Start the Express server.
 
 ```shell
-npm run dev
+npm run starst
 ```
 
 You can now browse to [the app](http://localhost:3000).
@@ -284,10 +268,9 @@ FusionAuth gives you the ability to customize just about everything to do with t
 
 ### Express Authentication
 
-- [Express Docs](https://express.run/docs)
+- [Express security best practice](https://expressjs.com/en/advanced/best-practice-security.html)
 - [Passport.js authentication concepts](https://www.passportjs.org/concepts/authentication/downloads/html/)
-- [Express Auth](https://github.com/sergiodxa/express-auth)
-- [Express-Auth-Oauth2 Docs](https://github.com/sergiodxa/express-auth-oauth2)
+- [Passport.js Oauth2](https://www.passportjs.org/packages/passport-oauth2/)
 
 
 ## Troubleshooting
