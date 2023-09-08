@@ -95,7 +95,7 @@ You can log in to the [FusionAuth admin UI](http://localhost:9011/admin) and loo
 
 Next, you'll set up a basic Express app. While this guide builds a new Express project, you can use the same method to integrate your existing project with FusionAuth.
 
-You create the default Express starter project in a folder called `mysite`. You also add a few npm packages to help with authentication.
+You create the default Express starter project in a folder called `mysite`, with the EJS view template engine. You also add a few npm packages to help with authentication.
 
 ```shell
 npx express-generator@latest mysite --view=ejs
@@ -118,91 +118,77 @@ Now create the `.env` file in your `mysite` folder and add the following to it (
 
 Before you configure authentication, you need to change the default file created by Express.
 
-At the top of `mysite/app.js`, add the following line.
+On line 21 of `mysite/app.js`, just before it adds the first route, insert the following line.
 
 ```js
-require('dotenv/config');
+require('./services/authentication')(app);
 ```
 
-This allows any other file run on the server to use settings from `.env`.
+You can also delete the lines that relate to the users route. This app won't need them.
+
+```js
+var usersRouter = require('./routes/users'); // delete line 8
+
+app.use('/users', usersRouter); // delete line 23
+```
 
 ## Authentication
 
 Authentication in Express requires two parts:
 
-- An Authenticator service to handle communication with FusionAuth.
-- Routes (login, logout, callback) that talk to the Authenticator.
+- An Authenticator service to handle communication with FusionAuth. For this you will use Passport.js.
+- Routes (`login`, `logout`, `callback`) that talk to the Authenticator and FusionAuth.
 
-### Services
-
-The `app` folder in the `mysite` project holds all your code. In Express, the designated `routes` folder contains your application pages. Let's make a `services` folder to keep your authentication code separate.
+The line you added above, `require('./authentication')(app);`, imports a function to add authentication to the Express app instance, and calls it. Let's create that file now.
 
 ```shell
-mkdir app/services
+mkdir mysite/services
 ```
 
-In this `services` folder, add a file called `session.server.ts` and copy in the following code (this guide follows the example from the [Express Auth README](https://github.com/sergiodxa/express-auth)).
+In this `services` folder, add the file `authentication.js`, and copy in the following code.
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-javascript-express-web/main/complete-application/app/services/session.server.ts"
+<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-javascript-express-web/main/complete-application/services/authentication.js"
  lang="typescript" />
 
-Next, create an authentication file in the services folder, `auth.server.ts`, that uses the session provider you just created.
+The first line, `require('dotenv/config');`, allows the file to use settings from `.env`.
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-javascript-express-web/main/complete-application/app/services/auth.server.ts"
- lang="typescript" />
+Almost the entire file consists of the configuration function `setupPassport(app)`. It links Passport.js to the instance of the Express app. You could put this code directly in `app.js`, but it would be more cluttered.
 
-In the line `new Authenticator<User>`, you can specify which user details you want to keep in the session. This example uses a single string containing the user's email, but you could define an object with more details or just a user Id. To do so, you would change the definition of `User`, update the object returned in the authentication method (`return token.email`), and update the routes you are about to create to use the new object instead of just an email.
-
-Note that the `User` must have a value. If the Authenticator returns nothing to store in the session, then a user will not stay logged in.
+The function starts by telling the app to use cookie-based sessions in `app.use(session({`, provided by express-session.js. Passport is set to use this session too, with `app.use(passport.session());`.
 
 In `authOptions`, you specify the FusionAuth URLs stored in the `.env` file, which match those created by Kickstart when you ran the Docker command to start FusionAuth.
 
-Finally, `authStrategy` returns the user's email, decoded from the JWT returned by FusionAuth.
+You then tell Passport what strategy to use for authentication. Passport itself just keeps the user details in a session once logged in. It cannot authenticate anyone without a strategy — a way of interacting with some authentication system, such as OAuth, Facebook login, or simple username and password. In this case, you use passport-oauth2.js.
+
+This strategy will direct the user to FusionAuth for authentication. Once that is complete, `callback(null, token.email);` returns the user's email to the session for storage. You can specify which user details you want to keep in the session. This example uses a single string containing the user's email, but you could define an object with more details or just a user Id. To do so, you would update the object returned in the authentication method, and update the routes you are about to create to use the new object instead of just an email.
+
+Note that the callback must return a value. If the authenticator returns nothing to store in the session, then a user will not stay logged in.
+
+The `serializeUser` and `deserializeUser` allow you to specify what you want to store in the user's session when logged in, and what to get out of the session cookie on each request. In this example you just pass around the user's email.
 
 ### Routes
 
-First replace the homepage of your app in `mysite/app/routes/_index.tsx` with the following code.
+Replace the homepage of your app in `mysite/routes/index.js` with the following code.
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-javascript-express-web/main/complete-application/app/routes/_index.tsx"
+<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-javascript-express-web/main/complete-application/routes/index.js"
  lang="typescript" />
 
-If you have not worked with React before, there are a few differences from normal HTML to note:
-- The `class` attribute is replaced by `className`, as `class` is a reserved word in JavaScript.
-- To add JavaScript values into your HTML, you wrap the value in `{  }`.
-- The `style` values are not strings but object literals in braces, wrapped in more braces.
+All the `router` functions above are server-side HTTP handlers for GET and POST requests. The handlers all follow the standard Express.js pattern `function (req, res, next)`, where
+- `req` is the HTTP request,
+- `res` is the HTTP result to return, and
+- `next` is another function, with the same parameters, that runs after this one.
 
-Express extends React with a few more custom elements that automatically hide the difference between client and server from the programmer. For example, the line `<Link to="/login" className="button-lg">Login</Link>` allows Express to load the linked page in the background without a separate page refresh.
+Your functions can choose to return a result to the user, or perform some middleware function, like logging, or checking the user is authenticated, before calling `next()` to let the next function in the stack handle returning the actual result.
 
-The `_index.tsx` file imports the Authenticator service you created in the previous section, checks if the user has a session, and redirects the user to their profile if they do. This `isAuthenticated` function does not call FusionAuth but checks the user's cookie instead.
+You use this capability to create a middleware function, `checkAuthenticated`, that uses the function provided by Passport, `req.isAuthenticated()`, to redirect the user to the login page if necessary, and otherwise to let the next handler run.
 
-<Aside type="note">
-Note that this code runs in a Express `loader` function on the server, not the client. Remember that Express provides two functions that run only on the server: `loader` for GET requests and `action` for POST, PATCH, and UPDATE requests. These functions will always run before any HTML is returned to the client. By contrast, the `default` function (that returns HTML) is exported from a route and runs only in the browser (unless the user browses directly to the route without already being on the site). Since Express mixes server-side and client-side code in the same file, it is essential not to put any authentication handling or secrets in the client-side code.
-</Aside>
+The function, `router.get('/login'`, calls Passport, which sends the user to FusionAuth. Once authenticated, FusionAuth redirects the page to `router.get('/auth/callback'`, which finally sends the user to the account page. Note that this second function calls `passport.authenticate` too. This is not a redundancy — if you remove it the user will not be properly logged in. OAuth uses two tokens to manage authentication and needs both calls.
 
-The link you created looks for a login route, so let's code it. Create the file `mysite/app/routes/login.tsx` and add the following code to it.
+The logout function calls the Passport function `req.logOut`, which clears the user's session, and redirects them to the home page.
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-javascript-express-web/main/complete-application/app/routes/login.tsx"
- lang="typescript" />
+The `router.get('/account'` and `change` pages both use the middleware created earlier, `checkAuthenticated`, to prevent the user from seeing these pages unless logged in. Both get the user's email to display from the session in the request, `req.user`.
 
-This route is purely server-side, as it exports no default function. Instead, the GET loader function redirects the user to FusionAuth. (The user will automatically be logged in without FusionAuth if they already have a session cookie in their browser).
-
-Now create the file `mysite/app/routes/logout.tsx` and add the following code to it.
-
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-javascript-express-web/main/complete-application/app/routes/logout.tsx"
- lang="typescript" />
-
-When a user browses to this route, they will be logged out by the Authenticator clearing their session, and redirected to the home page.
-
-The final route to create is `mysite/app/routes/auth.callback.tsx`.
-
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-javascript-express-web/main/complete-application/app/routes/auth.callback.tsx"
- lang="typescript" />
-
-This is where FusionAuth is configured to direct the user after authentication. It may look like this code is doing yet another authentication with `authenticator.authenticate`, but the Authenticator will already have created a session for the user, so no call to FusionAuth will be made here. It is just a way to direct the user to the appropriate page after login.
-
-<Aside type="tip">
-If you are wondering why `auth.callback.tsx` has two dots, it's because Express routing treats the first dot as a slash in the URL, `/auth/callback`.
-</Aside>
+The last two handlers are for the same URL, `change`. The GET handler displays the page at first. The POST handler will calculate change for the user and render the page with more data.
 
 ## Customization
 
@@ -216,28 +202,33 @@ cp ../complete-application/public/images/money.jpg ./mysite/public/images/money.
 rm ./mysite/public/stylesheets/style.css
 ```
 
-Add the account page `mysite/app/routes/account.tsx` with the following code.
+Change the index page `mysite/views/index.ejs` with the following code.
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-javascript-express-web/main/complete-application/app/routes/account.tsx"
+<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-javascript-express-web/main/complete-application/views/index.ejs"
  lang="typescript" />
 
-The `loader` function at the top of the page prohibits the user from viewing this page if they are not authenticated. Any page you create that needs the user to be authenticated requires this function.
+This page allows the user to log in by offering a link to the route you created in the previous section, `<a href="/login">`.
 
-The line `const email: string = useLoaderData<typeof loader>();` provides whatever data the loader function returns for use in the HTML. It's used in the line `<p className="header-email">{email}</p>`.
+Next, add the `account.ejs` view.
 
-The final page you need is `mysite/app/routes/change.tsx`, with the following code.
-
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-javascript-express-web/main/complete-application/app/routes/change.tsx"
+<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-javascript-express-web/main/complete-application/views/account.ejs"
  lang="typescript" />
 
-This page has identical Express and authentication functionality to the Account page and some pure React code that updates the DOM whenever the state changes.
+ You can see that email returned from FusionAuth is shown in the line `<%= email %>`.
+
+ Finally, add the `change.ejs` view.
+
+ <RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-javascript-express-web/main/complete-application/views/change.ejs"
+ lang="typescript" />
+
+This page has a form at the bottom that allows the user to call the POST version of the page when clicked. The server route calculates the change and renders it using the `state` variable. Depending on the result, different sections of the page are shown, by conditional code like `<% if (state.error && state.hasChange) { %>`
 
 ## Run The Application
 
 Start the Express server.
 
 ```shell
-npm run starst
+npm run start
 ```
 
 You can now browse to [the app](http://localhost:3000).
@@ -289,5 +280,5 @@ cd fusionauth-quickstart-javascript-express-web
 docker-compose up -d
 cd complete-application
 npm install
-npm run dev
+npm run start
 ```
