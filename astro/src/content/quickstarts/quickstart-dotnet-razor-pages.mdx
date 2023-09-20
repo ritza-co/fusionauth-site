@@ -115,12 +115,15 @@ To configure the OIDC middleware, add a `Startup.cs` file to the root of  to the
 
 <RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Startup.cs"
 
-Then, update the `Program.cs` file to use the `Startup.cs` file you just created. Replace the `Program.cs` file with the following code:
+Then, update the `Program.cs` file to call the `Startup.cs` file you just created. Replace the `Program.cs` file with the following code:
 
 <RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Program.cs"
 lang="c#" />
 
-The `Startup.cs` file configures the OIDC middleware to use the FusionAuth OIDC settings from the `appsettings.json` file. The `Program.cs` file configures the application to use the `Startup.cs` file.
+The `Startup.cs` file configures the OIDC middleware to use the FusionAuth OIDC settings from the `appsettings.json` file. Note a few things in the `Startup.cs` file:
+
+- The `Scope` is set to `openid`. This will give the app the permission to read the user's profile information, including name. 
+- The line `options.GetClaimsFromUserInfoEndpoint = true;`. As only the user's email address is returned in the token itself, the app needs to make an additional call after receiving the token to the FusionAuth userinfo endpoint to get the user's other profile information. This line configures the .NET OIDC middleware to make this call.
 
 The application is now configured to use FusionAuth for authentication. Next, you'll add some pages to the application.
 
