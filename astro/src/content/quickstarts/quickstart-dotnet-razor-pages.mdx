@@ -21,7 +21,7 @@ You'll be building it for [ChangeBank](https://www.youtube.com/watch?v=pkH-kD73Q
 It'll have areas reserved for users who have logged in as well as public facing sections.
 
 The docker compose file and source code for a complete application are available at
-https://github.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages
+https://github.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages
 
 ## Prerequisites
 
@@ -55,7 +55,7 @@ In this section, you'll get FusionAuth up and running and use {frontmatter.techn
 First off, grab the code from the repository and change into that directory.
 
 ```shell
-git clone https://github.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages.git
+git clone https://github.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages.git
 cd fusionauth-quickstart-dotnet-razor-pages
 ```
 
@@ -105,42 +105,49 @@ dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
 
 Next, update your `appsettings.json` file with FusionAuth OpenID Connect (OIDC) environment specific settings.
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/appsettings.json"/>
+<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/appsettings.json" lang="json"/>
 
 Note that the client secret is not added to the `appsettings.json` file. This is because it is sensitive and should not be committed to source control. Instead, the client secret is provided on the command line via an environment variable, which we will provide when we run the application.
 
 To configure the OIDC middleware, add a `Startup.cs` file to the root of  to the project with the following code:
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Startup.cs" />
-
-Then, update the `Program.cs` file to call the `Startup.cs` file you just created. Replace the `Program.cs` file with the following code:
-
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Program.cs"
-lang="c#" />
+<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Startup.cs" lang="c#" />
 
 The `Startup.cs` file configures the OIDC middleware to use the FusionAuth OIDC settings from the `appsettings.json` file. Note a few things in the `Startup.cs` file:
 
-- The `Scope` is set to `openid`. This will give the app the permission to read the user's profile information, including name. 
+- The `Scope` is set to `openid`. This will give the app the permission to read the user's profile information, including name.
 - The line `options.GetClaimsFromUserInfoEndpoint = true;`. As only the user's email address is returned in the token itself, the app needs to make an additional call after receiving the token to the FusionAuth userinfo endpoint to get the user's other profile information. This line configures the .NET OIDC middleware to make this call.
+
+Then, update the `Program.cs` file to call the `Startup.cs` file you just created. Replace the code in the `Program.cs` file with the following code:
+
+<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Program.cs"
+lang="c#" />
 
 The application is now configured to use FusionAuth for authentication. Next, you'll add some pages to the application.
 
 ## Customization
 
-In this section, you'll turn your application into a trivial banking application with some styling.
+In this section, you'll turn your application into a ChangeBank application with some styling.
 
-### Add A Stylesheet
+### Add A Stylesheet And Images
 
-Before adding any pages, modify the stylesheet to make the HTML you will add later look nice. Replace the `wwwroot/css/site.css` file with the following code:
+Before adding any pages, modify the stylesheet to make the HTML you will add later look nice. Replace the css code in the `wwwroot/css/site.css` file with the following code:
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/wwwroot/css/site.css" lang="css" />
+<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/wwwroot/css/site.css" lang="css" />
 
+Now, add some images with the following shell commands:
 
-### Add A Login and Logout Link
+```shell
+mkdir wwwroot/img
+curl -o wwwroot/img/example_bank_logo.svg https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/wwwroot/img/example_bank_logo.svg
+curl -o wwwroot/img/money.jpg https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/wwwroot/img/money.jpg
+```
 
-The application will need to display a login link and logout link, depending on whether the user is logged in or not. To add these links across all pages, modify the `_Layout.cshtml` file. Replace the `Pages/Shared/_Layout.cshtml` file with the following code:
+### Add A Login And Logout Link
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/Shared/_Layout.cshtml" lang="c#" />
+The application will need to display a login link and logout link, depending on whether the user is logged in or not. To add these links across all pages, modify the `_Layout.cshtml` file. Replace the code in the `Pages/Shared/_Layout.cshtml` file with the following code:
+
+<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/Shared/_Layout.cshtml" lang="c#" />
 
 ### Add A Logout Page
 
@@ -148,23 +155,23 @@ To complete the logout process, create a `Logout.cshtml` file and `Logout.cshtml
 
 Add the following code to the `Pages/Logout.cshtml` file:
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/Logout.cshtml" lang="c#" />
+<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/Logout.cshtml" lang="c#" />
 
 Add the following code to the `Pages/Logout.cshtml.cs` file:
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/Logout.cshtml.cs" lang="c#" />
+<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/Logout.cshtml.cs" lang="c#" />
 
-### Add A default page
+### Add A Default Page
 
 When a user first visits the application, they will be directed to the default `Index` page. This page will display a welcome message and a few links to register and login. These links will redirect the user to FusionAuth to complete the registration and login process.
 
 Update the `Pages/Index.cshtml` file with the following code:
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/Index.cshtml" lang="c#" />
+<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/Index.cshtml" lang="c#" />
 
 Update the `Pages/Index.cshtml.cs` file with the following code:
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/Index.cshtml.cs" lang="c#" />
+<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/Index.cshtml.cs" lang="c#" />
 
 ### Add An Account Page
 
@@ -176,13 +183,13 @@ Add a `Account.cshtml` file and `Account.cshtml.cs` file in the `Pages` folder. 
 
 Add the following code to the `Pages/Account.cshtml` file:
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/Account.cshtml" lang="c#" />
+<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/Account.cshtml" lang="c#" />
 
 This layout file shows new menu items for logged in users. The main one is the "Make Change" link, which links to a page that posts back to the server to make a change. The "Make Change" page will be added in the next section.
 
 Add the following code to the `Pages/Account.cshtml.cs` file:
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/Account.cshtml.cs" lang="c#" />
+<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/Account.cshtml.cs" lang="c#" />
 
 This code behind file has the important `[Authorize]` attribute decorating the page model, which ensures that only logged in users can access this page. 
 
@@ -194,11 +201,11 @@ Add a `MakeChange.cshtml` file and `MakeChange.cshtml.cs` file in the `Pages` fo
 
 Update the `Pages/MakeChange.cshtml` file with the following code:  
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/MakeChange.cshtml" lang="c#" />
+<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/MakeChange.cshtml" lang="c#" />
 
 This page has a form that accepts a user input and posts back to the server. The server will then calculate the correct amount of coins to return to the user. Add the backend logic to the `Pages/MakeChange.cshtml.cs` file:
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/MakeChange.cshtml.cs" lang="c#" />
+<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/Pages/MakeChange.cshtml.cs" lang="c#" />
 
 The controller also has a `[Authorize]` attribute, which ensures that only logged in users can access this core banking functionality.
 
@@ -208,7 +215,7 @@ Before running the app in a development environment, you'll need to add a develo
 
 The port that the .NET application runs on should also match the port set in the `kickstart.json` file used to set up FusionAuth. To set both the port and allow an HTTP connection to FusionAuth, modify `appsettings.Development.json` in the root of the project with the following code:
 
-<RemoteCode url="https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/appsettings.Development.json" lang="c#" />
+<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages/main/complete-app/MyApp/appsettings.Development.json" lang="c#" />
 
 Now the application can be run. There are multiple ways of [deploying a .NET application](https://docs.microsoft.com/en-us/dotnet/core/deploying/), but publishing ensures your deployment process is repeatable. Here’s the command to publish a standalone executable for macOS:
 
@@ -227,7 +234,7 @@ ASPNETCORE_ENVIRONMENT=Development FusionAuth__ClientSecret=super-secret-secret-
 
 `ASPNETCORE_ENVIRONMENT` is set to `Development` to ensure the application uses the `appsettings.Development.json` file.
 
-`FusionAuth__ClientSecret` is the client secret, which was defined by the [FusionAuth Kickstart Script](#run-fusionauth-via-docker) step. You don't want to commit secrets like this to version control, so use an environment variable.
+`FusionAuth__ClientSecret` is the Client Secret, which was defined by the [FusionAuth Kickstart Script](#run-fusionauth-via-docker) step. You don't want to commit secrets like this to version control, so use an environment variable.
 
 You can also run the project from Visual Studio if you prefer.
 
@@ -282,11 +289,10 @@ This indicates that .NET OpenIDConnect is unable to call FusionAuth to validate 
 You can always pull down a complete running application and compare what's different.
 
 ```shell
-git clone https://github.com/ritza-co/fusionauth-quickstart-dotnet-razor-pages.git
+git clone https://github.com/FusionAuth/fusionauth-quickstart-dotnet-razor-pages.git
 cd fusionauth-quickstart-dotnet-razor-pages
 docker compose up -d
-cd complete-app
-cd MyApp
+cd complete-app/MyApp
 dotnet publish -r osx-x64 
 ASPNETCORE_ENVIRONMENT=Development FusionAuth__ClientSecret=super-secret-secret-that-should-be-regenerated-for-production bin/Debug/net7.0/osx-x64/publish/MyApp
 ```
