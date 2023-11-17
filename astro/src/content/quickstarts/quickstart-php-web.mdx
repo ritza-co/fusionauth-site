@@ -19,77 +19,6 @@ import LoginBefore from '../../diagrams/quickstarts/login-before.astro';
 import RemoteCode from '/src/components/RemoteCode.astro';
 
 
----
-
-```bash
-# install dependencies in vendor
-docker run --rm -v ./your-application:/app composer require   vlucas/phpdotenv   jerryhopper/oauth2-fusionauth
-
-
-# No, just use docker compose file
-# docker build -t phpimage .
-# docker run -it --volume ./your-application:/var/www/html --name phpbox -p 9012:80 phpimage
-# docker start -ai phpbox
-
-docker exec -it phpbox /bin/bash
-
-
-
-
-# cp nginx.conf /etc/nginx/http.d/default.conf
-
-service apache2 status
-cat /etc/apache2/apache2.conf
-```
-
-
-RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
-RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/apache2.conf
-
-  php:
-    build:
-      context: .
-      dockerfile: phpimage.Dockerfile
-    container_name: phpbox
-    ports:
-      - 9012:80
-    volumes:
-      - ./your-application:/var/www/html
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    depends_on:
-      - fusionauth
-
-https://github.com/jerryhopper/oauth2-fusionauth
-
-
-
-
-read more at https://oauth2-client.thephpleague.com/usage/
-
-need to add session_start()
-need to save user details to session
-
-explain CSRF token get /post same origin difference
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-----
-
 In this quickstart, you will build an application with {frontmatter.technology} and integrate it with FusionAuth. The application is for [ChangeBank](https://www.youtube.com/watch?v=pkH-kD73QUM), a global leader in converting dollars into coins. It will have areas reserved for logged in users and public-facing sections.
 
 Find the Docker Compose file and source code for the complete application at <a href={frontmatter.url}>{frontmatter.url}</a>.
@@ -98,10 +27,11 @@ Find the Docker Compose file and source code for the complete application at <a 
 
 For this Quickstart, you'll need:
 
-* [PHP](https://www.php.net/manual/en/install.php) 8.1
-* [Composer](https://getcomposer.org/)
-* [Nodejs](https://nodejs.org/)
 * [Docker](https://www.docker.com), version 20 or later, which is the quickest way to start FusionAuth. (There are [other ways](/docs/v1/tech/installation-guide/)).
+
+You will also run PHP 8, Composer, and Apache in Docker. Using Docker allows this tutorial to be usable on Windows, Linux, and MacOS.
+
+If you are experienced in PHP, you are welcome to install everything on your host machine instead, but you will have to convert some commands to work on your operating system.
 
 ## General Architecture
 
@@ -126,13 +56,14 @@ Start with getting FusionAuth up and running and creating a new {frontmatter.tec
 First, grab the code from the repository and change into that folder.
 
 ```shell
-git clone https://github.com/FusionAuth/fusionauth-quickstart-php-laravel-web.git
-cd fusionauth-quickstart-php-laravel-web
+git clone https://github.com/FusionAuth/fusionauth-quickstart-php-web.git
+cd fusionauth-quickstart-php-web
+mkdir your-application
 ```
 
 All shell commands in this guide can be entered in a terminal in this folder. On Windows, you need to replace forward slashes with backslashes in paths.
 
-All the files you'll create in this guide already exist in the `complete-application` subfolder, if you prefer to copy them.
+All the files you'll create in this guide already exist in the `complete-application` subfolder, if you prefer to copy them to `your-application`.
 
 ### Run FusionAuth Via Docker
 
@@ -144,7 +75,7 @@ Assuming you have Docker installed, you can start FusionAuth on your machine wit
 docker compose up -d
 ```
 
-This will start three containers, one each for FusionAuth, Postgres, and Elasticsearch.
+This will start four containers, one each for FusionAuth, Postgres, Elasticsearch, and PHP.
 
 Here you are using a bootstrapping feature of FusionAuth, called [Kickstart](/docs/v1/tech/installation-guide/kickstart). When FusionAuth starts for the first time, it will look at the `kickstart/kickstart.json` file and configure FusionAuth to your specified state.
 
@@ -168,140 +99,64 @@ You can log in to the [FusionAuth admin UI](http://localhost:9011/admin) and loo
 
 ### The Basic {frontmatter.technology} Application
 
-
-
-
-
-The `--volume .://var/www/html` parameter shares your current folder with the container, so both your physical machine and Docker can read and write the same files.
-
-
+The `--volume ./your-application://var/www/html` parameter shares your current folder with the container, so both your physical machine and Docker can read and write the same files.
 
 While this guide builds a new {frontmatter.technology} project, you can use the same method to integrate your existing project with FusionAuth.
 
-To create a new {frontmatter.technology} project run the following command. There are other ways of creating the project as suggested in the {frontmatter.technology} [documentation](https://laravel.com/docs/10.x#your-first-laravel-project).
+Before starting coding, you need to install the PHP module for FusionAuth communication. Run the following code in a terminal.
 
-```shell
-composer create-project laravel/laravel your-application && cd your-application
+```bash
+docker run --rm -v ./your-application:/app composer require   vlucas/phpdotenv   jerryhopper/oauth2-fusionauth
 ```
 
-Composer will initialize the project and add all the starter app files in `your-application` directory.
+<Aside type="note">
+Note that the Dockerfile configures Apache to use the `public` directory as what is available on the web, to hide `vendor` and configuration files. If you're not using Docker, you will have to do this yourself.
 
-If you are not familiar with Laravel, here's a brief explanation of its structure:
-
-- `app` — contains the lowest level code: models, controllers, and middleware.
-- `bootstrap` — the starting point for execution.
-- `config` — contains all settings.
-- `database` — contains all database migration scripts.
-- `public` — contains static resources (images, css) available to anyone on the web.
-- `resources` — similar to `public`, but contains Blade templates, and files are adapted by the server before serving.
-- `routes` — contains the server code to respond to URLs called by a browser.
-- `storage` — cache folder managed by Laravel when running.
-- `tests` — where you write your tests.
-- `vendor` — contains all Composer packages.
+```Dockerfile
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/apache2.conf
+```
+</Aside>
 
 ## Authentication
 
-Authentication in {frontmatter.technology} is managed by [Socialite](https://laravel.com/docs/10.x/socialite). For this application, you need the [FusionAuth Socialite provider](https://github.com/SocialiteProviders/FusionAuth). To install it, run the following command.
+Authentication in {frontmatter.technology} is managed by [Jerry Hopper's Provider](https://github.com/jerryhopper/oauth2-fusionauth) for [The League's OAuth library.](https://github.com/thephpleague/oauth2-client)
 
-```shell
-composer require socialiteproviders/fusionauth
-```
 
-In `your-application/.env`, insert the following lines.
+Make the file `your-application/.env`, and insert the following lines.
 
-```
-FUSIONAUTH_CLIENT_ID="E9FDB985-9173-4E01-9D73-AC2D60D1DC8E"
-FUSIONAUTH_CLIENT_SECRET="super-secret-secret-that-should-be-regenerated-for-production"
-FUSIONAUTH_BASE_URL="http://localhost:9011"
-FUSIONAUTH_REDIRECT_URL="http://localhost:8000/auth/callback"
-# FUSIONAUTH_TENANT_ID=
-```
+<RemoteCode
+  url={frontmatter.codeRoot + "/complete-application/your-application/.env"}
+  lang="php"
+  tags="fusionauth" />
+
+<Aside type="note">
+If you're not using Docker, you can change the server URL to match the browser URL, as all network communication will be you on your physical machine.
+</Aside>
 
 This tells {frontmatter.technology} where to find and connect to FusionAuth.
 
-This quickstart will use a [SQLite](https://www.sqlite.org/index.html) database. SQLite is a small, fast, self-contained database engine, but you can use MySQL or Postgres if you have them installed on your machine.
+Authentication is handled by two files: `login.php` and `logout.php`.
 
-Create a SQLite database by running the following command from `your-application` directory.
+The login file is based almost exactly on Jerry Hopper's code, but does two extra things: start a session, and save user details to the session after login.
 
-```shell
-touch database/database.sqlite
-```
-
-In the `your-application/.env` file, comment out the values for the following keys as shown here.
-
-```
-# DB_CONNECTION=mysql
-# DB_HOST=127.0.0.1
-# DB_PORT=3306
-# DB_DATABASE=laravel
-# DB_USERNAME=root
-# DB_PASSWORD=
-```
-
-Add the following key above the keys you just commented out.
-
-```
-DB_CONNECTION=sqlite
-```
-
-This enables {frontmatter.technology} to connect to the SQLite database.
-
-In the file `your-application/config/services.php`, add one more item to the array being returned with the code below.
+Make the file `your-application/public/login.php` and insert the following code.
 
 <RemoteCode
-  url={frontmatter.codeRoot + "/complete-application/config/services.php"}
+  url={frontmatter.codeRoot + "/complete-application/your-application/public/login.php"}
   lang="php"
   tags="fusionauth" />
 
-Now the configuration files have all the settings you need. Next, you'll change your provider to be aware of FusionAuth.
 
-In the file `your-application/app/Providers/EventServiceProvider.php`, replace the `$listen` array with the code below.
 
-<RemoteCode
-  url={frontmatter.codeRoot + "/complete-application/app/Providers/EventServiceProvider.php"}
-  lang="php"
-  tags="fusionauth" />
 
-Finally, update your User model to have FusionAuth fields.
-
-In the file `your-application/app/Models/User.php`, add the FusionAuth items to the `$fillable` and `$hidden` properties with the code below.
+Make the file `your-application/public/logout.php` and insert the following code.
 
 <RemoteCode
-  url={frontmatter.codeRoot + "/complete-application/app/Models/User.php"}
-  lang="php"
-  tags="fusionauth" />
-
-Every model in {frontmatter.technology} uses the database, so you need to update the database table to match your new model.
-
-Create a file named `your-application/database/migrations/2023_11_03_112258_add_fusionauth_fields_user_table.php` or run the command below to create it.
-
-<Aside type="note">
-  Running the command below will create the file with a slightly different name depending on the date you are running the command.
-</Aside>
-
-```shell
-php artisan make:migration add_fusionauth_fields_user_table
-```
-
-The result is the same whether you create the database scripts manually or with this command, so you can use your preferred method.
-
-Add the code below to the file.
-
-<RemoteCode
-  url={frontmatter.codeRoot + "/complete-application/database/migrations/2023_11_03_112258_add_fusionauth_fields_user_table.php"}
+  url={frontmatter.codeRoot + "/complete-application/your-application/public/logout.php"}
   lang="php" />
 
-Install the following package required to allow manipulation of columns.
-
-```shell
-composer require doctrine/dbal
-```
-
-Run the command below to update your database with the new User definition.
-
-```shell
-php artisan migrate
-```
+This eradicates the session on the server for this user and redirects her back to the homepage.
 
 ## Customization
 
@@ -351,6 +206,8 @@ Next, create a `change.blade.php` file.
 touch resources/views/change.blade.php
 ```
 
+
+
 Paste the following code into the file.
 
 <RemoteCode
@@ -378,6 +235,8 @@ Logout ends the session with `Auth::logout();`.
 The account and change routes both include the user's email in the page template data, `return view('account', ['email' => Auth::user()->email]);`. Both routes use middleware to prevent users without a session from seeing the page, `})->middleware('auth');`.
 
 Finally, the change route has both a GET and a POST version. Both versions return the same view, but the POST route does a calculation and includes more template data.
+
+csrf eexplanation
 
 ## Run The Application
 
@@ -415,6 +274,9 @@ FusionAuth gives you the ability to customize just about everything to do with t
 ### {frontmatter.technology} Authentication
 
 - [Laravel Socialite concepts](https://laravel.com/docs/10.x/socialite)
+TODO
+https://github.com/jerryhopper/oauth2-fusionauth
+read more at https://oauth2-client.thephpleague.com/usage/
 
 ## Troubleshooting
 
