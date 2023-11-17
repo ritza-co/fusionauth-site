@@ -112,7 +112,7 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/apache2.conf
 ```
 </Aside>
 
-Before starting coding, you need to install the PHP module for FusionAuth communication. Run the following code in a terminal.
+Before starting coding, you need to install the PHP module for FusionAuth communication. Run the following code.
 
 ```bash
 docker run --rm -v ./your-application:/app composer require   vlucas/phpdotenv   jerryhopper/oauth2-fusionauth
@@ -137,7 +137,7 @@ If you're not using Docker, you can change the server URL to match the browser U
 
 Authentication is handled by two files: `login.php` and `logout.php`.
 
-The login file is based almost exactly on Jerry Hopper's code, but does two extra things: start a session, and save user details to the session after login.
+The login file is based almost exactly on Jerry Hopper's code, but is split into neater function and does two extra things: start a session, and save user details to the session after login.
 
 Make the file `your-application/public/login.php` and insert the following code.
 
@@ -146,11 +146,11 @@ Make the file `your-application/public/login.php` and insert the following code.
   lang="php"
   tags="1" />
 
-This setup code does a few things:
-- Prevent errors from being displayed in the browser, for security.
-- Load all vendor modules into PHP so you can use them.
-- Read your variable from the `.env` file.
-- Start a new session, using HTTP (since you're on localhost), and ensuring your user id cookie will not be accessible by JavaScript.
+This setup code:
+- Prevents errors from being displayed in the browser, for security.
+- Loads all vendor modules into PHP so you can use them.
+- Reads your variables from the `.env` file.
+- Starts a new session, using HTTP not HTTPS (since you're on localhost), and ensuring your user Id cookie will not be accessible by JavaScript.
 
 Next comes the FusionAuth handlers. Add the following lines to the file.
 
@@ -168,7 +168,7 @@ This code:
 
 The user's session is linked to their browser automatically by PHP returning a cookie for the site, that is sent with every subsequent request.
 
-The login page handles both the initial user request to start the login process, and the server callback request from FusionAuth to complete the authentication process.
+The login page handles both the initial user request to start the login process, and the server callback request from FusionAuth to complete the authentication.
 
 Logging out is much simpler. Make the file `your-application/public/logout.php` and insert the following code.
 
@@ -273,7 +273,7 @@ You can always pull down a complete running application and compare what's diffe
 ```shell
 git clone https://github.com/FusionAuth/fusionauth-quickstart-php-web.git
 cd fusionauth-quickstart-php-laravel-web/complete-application
-docker compose up -d
+docker compose up
 ```
 
 Browse to the app at http://localhost:9012.
