@@ -10,7 +10,7 @@ language: PHP
 icon: /img/icons/php.svg
 faIcon: fa-php
 url: https://github.com/ritza/fusionauth-quickstart-php-web
-codeRoot: https://raw.githubusercontent.com/ritza/fusionauth-quickstart-php-web/main
+codeRoot: https://raw.githubusercontent.com/ritza-co/fusionauth-quickstart-php-web/main
 ---
 
 import Aside from '/src/components/Aside.astro';
@@ -72,7 +72,7 @@ You'll find a Docker Compose file `docker-compose.yml` and an environment variab
 Assuming you have Docker installed, you can start FusionAuth on your machine with the following.
 
 ```shell
-docker compose up -d
+docker compose up
 ```
 
 This will start four containers, one each for FusionAuth, Postgres, Elasticsearch, and PHP.
@@ -103,12 +103,6 @@ The `--volume ./your-application://var/www/html` parameter shares your current f
 
 While this guide builds a new {frontmatter.technology} project, you can use the same method to integrate your existing project with FusionAuth.
 
-Before starting coding, you need to install the PHP module for FusionAuth communication. Run the following code in a terminal.
-
-```bash
-docker run --rm -v ./your-application:/app composer require   vlucas/phpdotenv   jerryhopper/oauth2-fusionauth
-```
-
 <Aside type="note">
 Note that the Dockerfile configures Apache to use the `public` directory as what is available on the web, to hide `vendor` and configuration files. If you're not using Docker, you will have to do this yourself.
 
@@ -118,23 +112,28 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/apache2.conf
 ```
 </Aside>
 
+Before starting coding, you need to install the PHP module for FusionAuth communication. Run the following code in a terminal.
+
+```bash
+docker run --rm -v ./your-application:/app composer require   vlucas/phpdotenv   jerryhopper/oauth2-fusionauth
+```
+
 ## Authentication
 
-Authentication in {frontmatter.technology} is managed by [Jerry Hopper's Provider](https://github.com/jerryhopper/oauth2-fusionauth) for [The League's OAuth library.](https://github.com/thephpleague/oauth2-client)
+Authentication in {frontmatter.technology} is managed by [Jerry Hopper's FusionAuth Provider](https://github.com/jerryhopper/oauth2-fusionauth) for [The League's OAuth library.](https://github.com/thephpleague/oauth2-client)
 
 
 Make the file `your-application/.env`, and insert the following lines.
 
 <RemoteCode
   url={frontmatter.codeRoot + "/complete-application/your-application/.env"}
-  lang="php"
-  tags="fusionauth" />
+  lang="php" />
+
+This tells {frontmatter.technology} where to find and connect to FusionAuth.
 
 <Aside type="note">
 If you're not using Docker, you can change the server URL to match the browser URL, as all network communication will be you on your physical machine.
 </Aside>
-
-This tells {frontmatter.technology} where to find and connect to FusionAuth.
 
 Authentication is handled by two files: `login.php` and `logout.php`.
 
@@ -145,108 +144,89 @@ Make the file `your-application/public/login.php` and insert the following code.
 <RemoteCode
   url={frontmatter.codeRoot + "/complete-application/your-application/public/login.php"}
   lang="php"
-  tags="fusionauth" />
+  tags="1" />
 
+This setup code does a few things:
+- Prevent errors from being displayed in the browser, for security.
+- Load all vendor modules into PHP so you can use them.
+- Read your variable from the `.env` file.
+- Start a new session, using HTTP (since you're on localhost), and ensuring your user id cookie will not be accessible by JavaScript.
 
+Next comes the FusionAuth handlers. Add the following lines to the file.
 
+<RemoteCode
+  url={frontmatter.codeRoot + "/complete-application/your-application/public/login.php"}
+  lang="php"
+  tags="2" />
 
-Make the file `your-application/public/logout.php` and insert the following code.
+This code:
+- Creates a Jerry Hopper provider with your environment variables.
+- Sends the user to the account page if they already have a login cookie.
+- Sends them to the FusionAuth URL if they are not logged in.
+- Checks their FusionAuth token if they are not logged in, but are returning from FusionAuth.
+- Gets their user details from the FusionAuth token and saves them to the server-side session. This also generates a new session/cookie Id for the user for security. The user then redirects to their account page.
+
+The user's session is linked to their browser automatically by PHP returning a cookie for the site, that is sent with every subsequent request.
+
+The login page handles both the initial user request to start the login process, and the server callback request from FusionAuth to complete the authentication process.
+
+Logging out is much simpler. Make the file `your-application/public/logout.php` and insert the following code.
 
 <RemoteCode
   url={frontmatter.codeRoot + "/complete-application/your-application/public/logout.php"}
   lang="php" />
 
-This eradicates the session on the server for this user and redirects her back to the homepage.
+This eradicates the session on the server for this user and redirects them back to the homepage.
 
 ## Customization
 
-Now that authentication is done, the last task is to create example pages that a user can access only when logged in.
+Now that authentication is done, the last task is to create example pages that a user can browse.
 
 ### CSS And HTML
 
-Copy over some CSS and images from the example app.
+Copy CSS and images from the example app.
 
 ```shell
-cp ../complete-application/public/changebank.css public/changebank.css
-cp ../complete-application/public/money.jpg public/money.jpg
-cp ../complete-application/public/changebank.svg public/changebank.svg
+cp complete-application/your-application/public/static/changebank.css your-application/public/static/changebank.css
+cp complete-application/your-application/public/static/money.jpg      your-application/public/static/money.jpg
+cp complete-application/your-application/public/static/changebank.svg your-application/public/static/changebank.svg
 ```
 
-Next, create an `index.blade.php` file.
-
-```shell
-touch resources/views/index.blade.php
-```
-
-Paste the following code into the file.
+You'll create three pages. The first is the home page, `index.php`. Paste the following code into the file.
 
 <RemoteCode
-  url={frontmatter.codeRoot + "/complete-application/resources/views/index.blade.php"}
+  url={frontmatter.codeRoot + "/complete-application/your-application/public/index.php"}
   lang="php" />
 
-The index page contains nothing to note except a link to the login page `<a href="/login">`.
+The index page contains nothing to note except a link to the login page `<a href="login.php">`.
 
-Next, create an `account.blade.php` file.
-
-```shell
-touch resources/views/account.blade.php
-```
-
-Paste the following code into the file.
+Next, create an `account.php` file. Paste the following code into the file.
 
 <RemoteCode
-  url={frontmatter.codeRoot + "/complete-application/resources/views/account.blade.php"}
+  url={frontmatter.codeRoot + "/complete-application/your-application/public/account.php"}
   lang="php" />
 
-The account page displays the user's email from FusionAuth, as you'll see later when you create the route `<p class="header-email">{{$email}}</p>`.
+The account page displays the user's email from FusionAuth. with `<p class="header-email"><?= $_SESSION['email'] ?></p>`.
 
-Next, create a `change.blade.php` file.
+It also is visible only to logged-in users. If a session Id is not found, the user is redirected back to login.
 
-```shell
-touch resources/views/change.blade.php
-```
-
-
-
-Paste the following code into the file.
+Finally, create a `change.php` file. Paste the following code into the file.
 
 <RemoteCode
-  url={frontmatter.codeRoot + "/complete-application/resources/views/change.blade.php"}
+  url={frontmatter.codeRoot + "/complete-application/your-application/public/change.php"}
   lang="php" />
 
-The change page uses some Blade conditional statements to display different divs depending on the state returned by the form POST `@if ($state['error'] && $state['hasChange'])`.
+In addition to verifying login, the code at the top of this page also checks if the CSRF token is valid on POST requests. The CSRF token is hidden in the form in the HTML, `<input type="hidden" name="csrftoken" value="<?= $_SESSION["csrftoken"] ?>" />`. Although any attacker can make a POST request on behalf of a logged-in user, a server will reject a GET request if not made from the same origin (URL). Thus including this CSRF token in your page requires any attacker to make a GET request to obtain it, before making the POST request. This is impossible for them.
 
-The change page also includes a `@csrf` anti-forgery token in the form at the bottom to prevent {frontmatter.technology} throwing page expired errors.
+The `calculateChange()` method takes the amount given in the form, and returns a `$state` array with the amount in nickels and pennies.
 
-### Route
-
-In the file `your-application/routes/web.php`, overwrite everything with the code below.
-
-<RemoteCode
-  url={frontmatter.codeRoot + "/complete-application/routes/web.php"}
-  lang="php" />
-
-The homepage route `/` checks whether you are logged in and redirects you to your account page if you are.
-
-After login, FusionAuth redirects you to the `/auth/callback` route. Use Socialite to update the user model in the database with `$user = User::updateOrCreate([`, then start a session for the user with `Auth::login($user);`.
-
-Logout ends the session with `Auth::logout();`.
-
-The account and change routes both include the user's email in the page template data, `return view('account', ['email' => Auth::user()->email]);`. Both routes use middleware to prevent users without a session from seeing the page, `})->middleware('auth');`.
-
-Finally, the change route has both a GET and a POST version. Both versions return the same view, but the POST route does a calculation and includes more template data.
-
-csrf eexplanation
+The HTML at the bottom of the file displays a blank form when first loading the page (GET), or the result of the calculation when returning (POST).
 
 ## Run The Application
 
-From the `your-application` directory, run the following command.
+The application is already being served by Apache in Docker.
 
-```shell
-php artisan serve
-```
-
-Browse to [the app](http://localhost:8000) at http://localhost:8000. Log in using `richard@example.com` and `password`. The change page will allow you to enter a number. Log out and verify that you can't browse to the [account page](http://localhost:8000/account).
+Browse to the app at http://localhost:9012. Log in using `richard@example.com` and `password`. The change page allows you to enter a number. Log out and verify that you can't browse to the [account page](http://localhost:9012/account).
 
 ## Next Steps
 
@@ -273,17 +253,14 @@ FusionAuth gives you the ability to customize just about everything to do with t
 
 ### {frontmatter.technology} Authentication
 
-- [Laravel Socialite concepts](https://laravel.com/docs/10.x/socialite)
-TODO
-https://github.com/jerryhopper/oauth2-fusionauth
-read more at https://oauth2-client.thephpleague.com/usage/
+- [The League OAuth overview](https://oauth2-client.thephpleague.com/usage/)
+- [Jerry Hopper's FusionAuth provider](https://github.com/jerryhopper/oauth2-fusionauth)
 
 ## Troubleshooting
 
 - I get "This site can’t be reached localhost refused to connect" when I click the Login button.
 
 Ensure FusionAuth is running in the Docker container. You should be able to log in as the admin user `admin@example.com` with a password of `password` at [http://localhost:9011/admin](http://localhost:9011/admin).
-
 
 - {frontmatter.technology} says there is an invalid state exception.
 
@@ -294,14 +271,9 @@ Browse to the homepage, log out, and try to log in again. If that still doesn't 
 You can always pull down a complete running application and compare what's different.
 
 ```shell
-git clone https://github.com/FusionAuth/fusionauth-quickstart-php-laravel-web.git
-cd fusionauth-quickstart-php-laravel-web
+git clone https://github.com/FusionAuth/fusionauth-quickstart-php-web.git
+cd fusionauth-quickstart-php-laravel-web/complete-application
 docker compose up -d
-cd complete-application
-composer install
-touch database/database.sqlite
-php artisan migrate
-php artisan serve
 ```
 
-Browse to the app at http://localhost:8000.
+Browse to the app at http://localhost:9012.
