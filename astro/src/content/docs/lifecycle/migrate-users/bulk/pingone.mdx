@@ -1,0 +1,81 @@
+---
+title: Migration From Ping Identity
+description: Learn how to migrate your users to FusionAuth from Ping Identity.
+section: lifecycle
+subcategory: migrate users
+tertcategory: bulk
+---
+import MappingUserAttributes from 'src/content/docs/lifecycle/migrate-users/bulk/_mapping-user-attributes.mdx';
+import SocialLoginNote from 'src/content/docs/lifecycle/migrate-users/bulk/_social-login-note.mdx';
+import SocialLoginMigration from 'src/content/docs/lifecycle/migrate-users/bulk/_social-login-migration.mdx';
+import OtherEntitiesIntro from 'src/content/docs/lifecycle/migrate-users/bulk/_other-entities-intro.mdx';
+import Aside from 'src/components/Aside.astro';
+import InlineField from 'src/components/InlineField.astro';
+import ScrollRef from 'src/components/ScrollRef.astro';
+import SetUpFusionauth from 'src/content/docs/lifecycle/migrate-users/bulk/_set-up-fusionauth.mdx';
+import CreateTestTenant from 'src/content/docs/lifecycle/migrate-users/bulk/_create-test-tenant.mdx';
+import CreateTestApplication from 'src/content/docs/lifecycle/migrate-users/bulk/_create-test-application.mdx';
+import CreateApiKeySocial from 'src/content/docs/lifecycle/migrate-users/bulk/_create-api-key-social.mdx';
+import InlineUIElement from 'src/components/InlineUIElement.astro';
+import GetScript from 'src/content/docs/lifecycle/migrate-users/bulk/_get-script.mdx';
+import VerifyImport from 'src/content/docs/lifecycle/migrate-users/bulk/_verify-import.mdx';
+import FinalDestination from 'src/content/docs/lifecycle/migrate-users/bulk/_final-destination.mdx';
+import WhatNext from 'src/content/docs/lifecycle/migrate-users/bulk/_what-next.mdx';
+import AdditionalSupport from 'src/content/docs/lifecycle/migrate-users/bulk/_additional-support.mdx';
+
+export const migration_source_name = 'Ping Identity';
+export const migration_source_dir = 'ping';
+export const script_supports_social_logins = 'true';
+export const add_tenant_image_role = 'bottom-cropped';
+
+## Overview
+
+This document will help you migrate from Ping Identity to FusionAuth.
+
+This guide assumes you have installed FusionAuth. If you have not, please [view our installation guides](/docs/get-started/download-and-install) and install FusionAuth before you begin. For more general migration information, please view the [FusionAuth migration guide](/docs/lifecycle/migrate-users/bulk/general).
+
+There are a number of different ways applications can be integrated with Ping IdentityServer, and it would be difficult to cover them all. This guide focuses on migrating user data, including profile data and passwords. However, Ping IdentityServer does not allow for password hash export. Therefore, you must perform a slow migration if you don’t want to force users to reset their passwords.
+
+Alternatively, you can do a bulk migration and force everyone to reset their passwords. This option is discussed below, but the primary focus of this guide is enabling you to migrate your users from Ping IdentityServer without requiring any password resets.
+
+## Planning Considerations
+
+### Slow Migration or Bulk Migration
+
+To preserve your users' passwords, you need to perform a slow migration. Users log in to FusionAuth with their Ping IdentityServer credentials, and FusionAuth transparently migrates their data. Slow migrations in FusionAuth use Connectors, a paid feature.
+
+If, on the other hand, resetting user passwords is acceptable, a <ScrollRef target="Bulk Migration" /> can work for you. Review that section for more details on the required steps. You may also perform a bulk migration after a slow migration has run for a while. Active users can be transparently migrated and infrequent users may not mind resetting their password.
+
+You can learn more about the [types of migrations that FusionAuth supports here](/docs/lifecycle/migrate-users/bulk/general#types-of-migrations).
+
+### Mapping User Attributes
+
+<MappingUserAttributes migration_source_name={migration_source_name} />
+
+### One Tenant or Many
+
+The PingIdentity platform uses an organization-based model to define tenant accounts and their related entities. The organization is the top-level identifier. It defines your entire enterprise within the platform.
+(https://docs.pingidentity.com/r/en-us/pingone/p1_c_introduction). FusionAuth also has the concept of [Tenants](/docs/get-started/core-concepts/tenants). Both of these include data about users, applications and other configuration.
+
+Each tenant in FusionAuth is a distinct user space. You may choose to merge multiple PingOne organizations into one FusionAuth tenant or keep them separate.
+
+Learn more about [FusionAuth tenants](/docs/extend/examples/multi-tenant).
+
+### Identity Providers
+
+With PingIdentity , you can use the PingOne user directory or an external identity provider (IdP). Using an external IdP allows linked users to authenticate using the credentials provided by the external IdP. An external IdP includes mapping PingOne user attributes to attributes from the IdP(https://docs.pingidentity.com/r/en-us/pingone/p1_c_identityproviders). 
+With FusionAuth, these are also called [Identity Providers](/docs/lifecycle/authenticate-users/identity-providers/).
+
+Review the supported FusionAuth [Identity Providers](/docs/lifecycle/authenticate-users/identity-providers/) to ensure any you need are supported. At this time, while there is considerable overlap between the supported identity providers, there are a number of differences.
+
+If not supported explicitly, a provider may work with an OIDC or SAML connection. Otherwise, please open a [feature request](https://github.com/fusionauth/fusionauth-issues/).
+
+<Aside type="note">
+Importing PingIdentity users stored in an external identity provider is more straightforward because you can use the Import API; you don't have to perform a slow migration. Many of the steps in <ScrollRef target="Bulk Migration" /> will apply.
+</Aside>
+
+To retrieve the user information, use the approach documented in the <ScrollRef target="Export User Data From PingIdentity" /> section.
+
+<SocialLoginNote migration_source_name={migration_source_name} script_supports_social_logins={script_supports_social_logins} />
+
+<SocialLoginMigration />
