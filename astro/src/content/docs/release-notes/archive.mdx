@@ -19,7 +19,7 @@ Looking for release notes newer than 1.22.2? Look at the latest [release notes](
 <ReleaseNoteHeading version="1.22.2" releaseDate="December 10th, 2020" />
 
 ### Fixed
-* When using a connector, if the provided password does not meet the configured password constraints the login attempt will fail. This is by design, however because FusionAuth is not the Source of Record (SoR) it should not be required that the password to meet the configured password constraints. The current SoR should enforce their own own password constraints. If the connector is configured to migrate the user, and the tenant policy is configured to validate password constraints on login, the password will be validated according to this policy.
+* When using a connector, if the provided password does not meet the configured password constraints the login attempt will fail. This is by design, however because FusionAuth is not the Source of Record (SoR) it should not be required that the password to meet the configured password constraints. The current SoR should enforce their own password constraints. If the connector is configured to migrate the user, and the tenant policy is configured to validate password constraints on login, the password will be validated according to this policy.
   * Resolves [GitHub Issue #1020](https://github.com/FusionAuth/fusionauth-issues/issues/1020), thanks to [@ckolbeck-streem](https://github.com/ckolbeck-streem) for the help!
 * Using the Verify Email workflow on the FusionAuth themed pages when the email address has a plus sign (`+`) in the local part of the address may fail to send the user an email.
   * Resolves [GitHub Issue #1034](https://github.com/FusionAuth/fusionauth-issues/issues/1034)
@@ -93,7 +93,7 @@ Looking for release notes newer than 1.22.2? Look at the latest [release notes](
 
 ### Fixed
 * Beginning in version 1.9.0, if you are using the SAML IdP configuration to connect to a third party SAML v2 IdP and you are not using the FusionAuth login pages, you must initiate this request with FusionAuth by using the [Start Login Request](/docs/apis/identity-providers/samlv2#start-a-saml-v2-login-request) API. When making this start request w/out any additional custom data on the API request, an exception may occur. Review the linked issue for a workaround if you are unable to update to this patch release.
-  * Resolves https://github.com/FusionAuth/fusionauth-issues/issues/963[GitHub Issue #963]
+  * Resolves [GitHub Issue #963](https://github.com/FusionAuth/fusionauth-issues/issues/963)
 * Using Bcrypt as the default hashing scheme may cause an exception to occur in some circumstances.
   * [GitHub Issue #966](https://github.com/FusionAuth/fusionauth-issues/issues/966), thanks to [@wasdennnoch](https://github.com/wasdennnoch) for reporting the issue and providing great debug info.
 * Add custom data on the Consent object to the view dialog in the UI, and fix some possible issues with editing Consent and other similar objects with custom data in the UI. In some cases, editing an object such as a Consent in the UI will cause you to lose any custom data you had previously stored.
@@ -102,7 +102,7 @@ Looking for release notes newer than 1.22.2? Look at the latest [release notes](
 ### Enhancements
 * The location of the XML signature in the SAML response may be configured to be a child of the `Assertion` element, or the `Response`. The default location is `Assertion` which is the same as the previous behavior to ensure backwards compatibility. In most cases the default configuration is adequate, if you have a SAML v2 Service Provider that requires the signature as a child element of the Response use this configuration to satisify this requirement.
   * Resolves [GitHub Issue #365](https://github.com/FusionAuth/fusionauth-issues/issues/365), thanks to [@mikerees](https://github.com/mikerees) for requesting this feature.
-* The PKCE extension will now be used by the the OpenID Connect IdP configuration that allows you to connect to third party OpenID Connect identity providers. This allows FusionAuth to be compatible with identity providers that may require PKCE. This change is compatible even if your identity provider does not require or does not support PKCE.
+* The PKCE extension will now be used by the OpenID Connect IdP configuration that allows you to connect to third party OpenID Connect identity providers. This allows FusionAuth to be compatible with identity providers that may require PKCE. This change is compatible even if your identity provider does not require or does not support PKCE.
   * [GitHub Issue #968](https://github.com/FusionAuth/fusionauth-issues/issues/968), thanks to [@jandillmann](https://github.com/jandillmann) for the request!
 * Add the `application` domain object to email templates when available. This will allow you to use the Application name using `${application.name}` in your template.
   * Resolves [GitHub Issue #976](https://github.com/FusionAuth/fusionauth-issues/issues/976)
@@ -142,7 +142,7 @@ Looking for release notes newer than 1.22.2? Look at the latest [release notes](
 +
 In order to run on `alpine` without including the GNU C Library (`glibc`) we had to use a custom build of OpenJDK compiled using the `musl` C library. Due to some possible performance concerns, we have moved to an official build of JDK provide by AdoptOpenJDK compiled using `glibc`. The `ubuntu:focal` base image added ~ 30 MB in size compared to our previous (compressed) image size, but until we can obtain builds from AdoptOpenJDK based upon the `musl` C library, we will not likely ship an official image on `alpine`.
 +
-  * [fusionauth-containers / docker / fusionauth / fusionauth-app / Dockerfile](https://github.com/FusionAuth/fusionauth-containers/blob/master/docker/fusionauth/fusionauth-app/Dockerfile)
+  * [fusionauth-containers / docker / fusionauth / fusionauth-app / Dockerfile](https://github.com/FusionAuth/fusionauth-containers/blob/main/docker/fusionauth/fusionauth-app/Dockerfile)
   * [hub.docker.com / fusionauth / fusionauth-app](https://hub.docker.com/r/fusionauth/fusionauth-app/tags)
 
 ### Fixed
@@ -186,7 +186,7 @@ In order to run on `alpine` without including the GNU C Library (`glibc`) we had
 +
 Thanks to a bunch of our FusionAuth MVPs including, but not limited to [@jerryhopper](https://github.com/jerryhopper), [@arslanakhtar61](https://github.com/arslanakhtar61), and [@ceefour](https://github.com/ceefour), for helping with this work through code, advice and domain knowledge that we don't have!
 +
-  * [fusionauth-containers / docker / fusionauth / fusionauth-app / Dockerfile](https://github.com/FusionAuth/fusionauth-containers/blob/master/docker/fusionauth/fusionauth-app/Dockerfile)
+  * [fusionauth-containers / docker / fusionauth / fusionauth-app / Dockerfile](https://github.com/FusionAuth/fusionauth-containers/blob/main/docker/fusionauth/fusionauth-app/Dockerfile)
   * [Multi-Architecture Builds](https://github.com/FusionAuth/fusionauth-containers#multi-architecture-builds)
   * [GitHub [fusionauth-containers\](https://github.com/FusionAuth/fusionauth-containers/issues/49) Issue #49]
 
@@ -368,7 +368,7 @@ There a few changes in this release that you will need to be aware of, please re
   * [GitHub Issue #810](https://github.com/FusionAuth/fusionauth-issues/issues/810)
   * [GitHub Issue #828](https://github.com/FusionAuth/fusionauth-issues/issues/828)
   * [GitHub Issue #829](https://github.com/FusionAuth/fusionauth-issues/issues/829)
-* Both the Login Success and Login Failed events are triggered during a failed login attempt. This bug was likely introduced in version version 1.18.0.
+* Both the Login Success and Login Failed events are triggered during a failed login attempt. This bug was likely introduced in version 1.18.0.
   * Resolves [GitHub Issue #838](https://github.com/FusionAuth/fusionauth-issues/issues/838)
 
 
@@ -646,7 +646,7 @@ There a few changes in this release that you will need to be aware of, please re
   * Resolves [GitHub Issue #423](https://github.com/FusionAuth/fusionauth-issues/issues/423), thanks to [@downagain](https://github.com/downagain) for reporting this issue and for the excellent debug.
 * A validation error in the OAuth2 Token endpoint returns a general error instead of the appropriate validation error.
   * Resolves [GitHub Issue #546](https://github.com/FusionAuth/fusionauth-issues/issues/546), thanks to [@mgetka](https://github.com/mgetka) for reporting the issue.
-* When using the Facebook login, it is possible that Facebook will send back an Image URL from the `/me/picture` API that will exceed `255` characters. If this occurs the login failed and an an exception was logged.
+* When using the Facebook login, it is possible that Facebook will send back an Image URL from the `/me/picture` API that will exceed `255` characters. If this occurs the login failed and an exception was logged.
   * Resolves [GitHub Issue #583](https://github.com/FusionAuth/fusionauth-issues/issues/583), thanks to our friends at [famous.co](https://famous.co/) and [frontdoorhome.com](https://www.frontdoorhome.com/) for letting us know.
 * Attempting to validate or save an Email template that contains a reference to a value stored in user data may cause an exception. For example `${user.data.company_name}` is a valid usage, but this would fail validation or cause an exception during validation.
   * Resolves [GitHub Issue #598](https://github.com/FusionAuth/fusionauth-issues/issues/598)
@@ -864,7 +864,7 @@ The following issues were fixed that only affect those running version 1.16.0-RC
 * FusionAuth Reactor &#8482;. FusionAuth Reactor is available with all paid editions of FusionAuth. The first feature in the Reactor suite will be breached password detection. All passwords will be checked against a breached list during all password change events, and optionally during login based upon your configuration.
 * New webhook event for use with FusionAuth Reactor breached password detection. This event when enabled will be fired during login if the user is using a vulnerable password.
   * User Password Breach (`user.password.breach`), see [Webhook Events](/docs/extend/events-and-webhooks/events/) for additional information.
-* New Tenant configuration in support of FusionAuth Reactor and additional password validation rules. This configuration can be found in the Password tab of the Tenant configuration on on the [Tenant](/docs/apis/tenants) API.
+* New Tenant configuration in support of FusionAuth Reactor and additional password validation rules. This configuration can be found in the Password tab of the Tenant configuration on the [Tenant](/docs/apis/tenants) API.
   * `tenant.passwordValidationRules.validateOnLogin` - When enabled the user's password will be validated during login. If the password does not meet the currently configured validation rules the user will be required to change their password. Prior to this release password validation was only ever performed during a change event, you may now optionally enforce your password policy during login.
   * `tenant.passwordValidationRules.breachDetection` - A new object to provide configuration per tenant for password breach detection.
 * During login, if the user is required to change their password, the Login API, Authorization Code Grant, Implicit Grant and Password Grant will now also return a change reason. This additional value in the response will indicate why the user is being required to change their password.
@@ -1000,18 +1000,13 @@ It is recommended that you audit your theme for any usage of `?html` and  ensure
   * New themed template `OAuth2 wait`. Starting with version 1.12.0, templates will no longer be automatically migrated into an existing theme. We believe this is a safer choice overall. Instead your theme will be marked as requiring upgrade when viewed in the UI. You will be prompted to complete the missing templates when you edit and you will be provided with the option to copy in the default template as a starting point.
 * The following theme messages were added. Until these values have been translated they will be rendered in English. At your earliest convenience you will want to add these new keys to your existing themes. You may wish to review the community provided translations which may already contain these new messages. https://github.com/FusionAuth/fusionauth-localization
 
-++++
-<blockquote>
-<pre class="pygments highlight">
-<code>
+```
 wait-title=Complete login on your external device
 waiting=Waiting
 
 [ExternalAuthenticationExpired]=Your external authentication request has expired, please re-attempt authentication.
-</code>
-</pre>
-</blockquote>
-++++
+```
+
 * A change has been made to how an event is sent to Webhooks when the Transaction configuration does not require any webhooks to succeed. Prior to this version each webhook would be called in order and once the status was collected from each webhook a decision was made to return to the caller or fail the request. In order to increase the performance of webhooks, when the Transaction configuration does not require any webhooks to succeed each webhook will be called in a separate thread (asynchronously) and the request will return immediately. In this scenario any failed requests will not be retried. See Webhooks for more information.
 
 ### New
@@ -1029,7 +1024,7 @@ waiting=Waiting
 * The [JWT Validate](/docs/apis/jwt#validate-a-jwt) endpoint returns the wrong precision for `iat` and `exp` claims.
   * Resolves [GitHub Issue #347](https://github.com/FusionAuth/fusionauth-issues/issues/347), thanks to [@uncledent](https://github.com/uncledent) for reporting and providing detailed information.
 * When using the one time password returned from the Change Password API when a Refresh Token was provided during the change request a Refresh Token is not returned from the Login API.
-  * Resolves [GitHub Issue #382](https://github.com/FusionAuth/fusionauth-issues/issues/382), thanks to to [@colingm](https://github.com/colingm) for reporting the issue.
+  * Resolves [GitHub Issue #382](https://github.com/FusionAuth/fusionauth-issues/issues/382), thanks to [@colingm](https://github.com/colingm) for reporting the issue.
 * A "null" Origin header is allowed in the w3 spec, and when this occurs it may cause an exception when validating authorized origins.
   * Resolves [GitHub Issue #379](https://github.com/FusionAuth/fusionauth-issues/issues/379), thanks to [@karice](https://github.com/karice) for reporting and excellent assist!
 * Better handling on the Start Passwordless API when a user does not exist
@@ -1078,10 +1073,7 @@ waiting=Waiting
   * New themed template `OAuth device`. This template has been added to each of your existing themes. As part of your migration please review this template to ensure it matches your intended style.
 * The following theme messages were added. Until these values have been translated they will be rendered in English. At your earliest convenience you will want to add these new keys to your existing themes. You may wish to review the community provided translations which may already contain these new messages. https://github.com/FusionAuth/fusionauth-localization
 
-++++
-<blockquote>
-<pre class="pygments highlight">
-<code>
+```
 device-form-title=Device login
 device-login-complete=Successfully connected device
 device-title=Connect Your Device
@@ -1090,24 +1082,14 @@ userCode=Enter your user code
 
 [blank]user_code=Required
 [invalid]user_code=Invalid user code
-</code>
-</pre>
-</blockquote>
-++++
+```
 
-* The following hidden fields were added and you will need to update your `[#macro oauthHiddenFields]` in the theme "Helpers" of existing Themes if you intend to to utilize the Device Grant or `response_mode` in the Authorization grant:
+* The following hidden fields were added and you will need to update your `[#macro oauthHiddenFields]` in the theme "Helpers" of existing Themes if you intend to utilize the Device Grant or `response_mode` in the Authorization grant:
 
-
-++++
-<blockquote>
-<pre class="pygments highlight">
-<code>
+```
 [@hidden name="response_mode"/]
 [@hidden name="user_code"/]
-</code>
-</pre>
-</blockquote>
-++++
+```
 
 * An update has been made to the `[@link]` macro in the Helpers template. If you intend to utilize the Device Grant you will need to add the missing parameters to your macro or copy the updated macro and usage from the default FusionAuth theme. The `user_code` request parameter has been added to this macro.
 
@@ -1172,19 +1154,13 @@ userCode=Enter your user code
   * New themed template `OAuth logout`. This template has been added to each of your existing themes. As part of your migration please review this template to ensure it matches your intended style.
 * The following theme messages were added. Until these values have been translated they will be rendered in English. At your earliest convenience you will want to add these new keys to your existing themes. You may wish to review the community provided translations which may already contain these new messages. https://github.com/FusionAuth/fusionauth-localization
 
-++++
-<blockquote>
-<pre class="pygments highlight">
-<code>
+```
 logging-out=Logging out&amphellip;
 logout-title=Logging out
 or=Or
 
 [ExternalAuthenticationException]=&#37;1&#36;s The login request failed.
-</code>
-</pre>
-</blockquote>
-++++
+```
 
 ### New
 * Support for the OpenID Connect Front Channel logout
@@ -1300,7 +1276,7 @@ Thanks to all of our community members who take the time to open features, repor
 * A public key may also be retrieved by `kid` in addition to the `applicationId` when using the [Public Key API](/docs/apis/jwt#retrieve-public-keys). This resolves [GitHub Issue #227](https://github.com/FusionAuth/fusionauth-issues/issues/227).
 * PKCE support for use during the Implicit Grant
 * New [User Email Verified](/docs/extend/events-and-webhooks/events/user-email-verified) and [User Registration Verified](/docs/extend/events-and-webhooks/events/user-registration-verified) events. Resolves [GitHub Issue #163](https://github.com/FusionAuth/fusionauth-issues/issues/163), thanks to [@unkis](https://github.com/unkis), [@prabhakarreddy1234](https://github.com/prabhakarreddy1234) and [@davidmw](https://github.com/davidmw) for the great feedback!
-* Email Verification, Registration Verification, Change Password, Setup Password and Passwordless Login can be be optionally configured to use codes made up of digits instead of long strings. This may be helpful if you wish the user to type in a code during an interactive workflow.
+* Email Verification, Registration Verification, Change Password, Setup Password and Passwordless Login can be optionally configured to use codes made up of digits instead of long strings. This may be helpful if you wish the user to type in a code during an interactive workflow.
   * Resolves [GitHub Issue #269](https://github.com/FusionAuth/fusionauth-issues/issues/269), thanks to [@zbruhnke](https://github.com/zbruhnke) for helping us get this one delivered.
 
 ### Fixed
@@ -1403,7 +1379,7 @@ Thanks to all of our community members who take the time to open features, repor
 * Some timezones may not be correctly discovered during login. When this occurs an `undefined` value is set which may cause an error during login to the FusionAuth UI.
 * Support importing Bcrypt hashes that contain a `.` (dot). The Bcrypt Base64 encoding uses a non standard character set which includes a `.` (dot) instead of a `+` (plus) as in the standard character set. Thank you to Diego Souza Rodrigues for discovering this issue and letting us know!.
 * Better support for third party 2FA devices such as an RSA key fob. When providing FusionAuth with a secret to enable Two Factor authentication we will accept a string in a Bas32 or Base64 encoded format. The documentation has been updated to further clarify this behavior. Previously if you brought your own secret to FusionAuth to enable 2FA, depending upon the format of the key, you may not have been successful in enabling 2FA for a user.
-* Managed domains were not being returned properly for a SAML v2 IdP configuration. This means that that you could not limit the SAML v2 IdP configuration to users with a specific email domain.
+* Managed domains were not being returned properly for a SAML v2 IdP configuration. This means that you could not limit the SAML v2 IdP configuration to users with a specific email domain.
 
 ### Enhancement
 * The User Registration object is now available as a top level object in the Verify Registration email template. The registration was previously available in the `user` object, but it will now also be a top level object `registration`.
@@ -1707,7 +1683,6 @@ ____
 </ReleaseNotesSelector>
 
 {/*
-++++
 <script>
 var options = '';
 var elements = document.querySelectorAll('section.release-note h2');
@@ -1722,5 +1697,4 @@ select.addEventListener('change', function() {
   window.location.hash = select.options[select.selectedIndex].value;
 });
 </script>
-++++
 */}

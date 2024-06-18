@@ -1,0 +1,73 @@
+---
+title: Datadog Setup
+description: Learn how to set up Datadog to work with FusionAuth.
+navcategory: admin
+section: operate
+subcategory: secure and monitor
+---
+import Aside from 'src/components/Aside.astro';
+import InlineField from 'src/components/InlineField.astro';
+
+
+ [Introduction](#introduction)
+- [Datadog Setup](#datadog-setup)
+- [FusionAuth Metrics](#fusionauth-metrics)
+  - [Audit Log](#audit-log)
+  - [The Event Log](#the-event-log)
+  - [Login Records](#login-records)
+  - [Logs](#logs)
+- [Mapping FusionAuth Metrics To Datadog Metrics](#mapping-fusionauth-metrics-to-datadog-metrics)
+- [Import Data To Datadog With The API](#import-data-to-datadog-with-the-api)
+  - [Write A Custom Service To Send Data To The API](#write-a-custom-service-to-send-data-to-the-api)
+- [Import Data To Data With The OpenTelemetry Linux Collector](#import-data-to-datadog-with-the-opentelemetry-linux-collector)
+  - [OpenTelemetry Dashboard](#opentelemetry-dashboard)
+- [Import Data To Datadog With Logs](#import-data-to-datadog-with-logs)
+- [Further Reading](#further-reading)
+- [TODO](#todo)
+
+## Introduction
+
+In this guide, we will explain how to connect FusionAuth to Datadog through docker: 
+-	with the use of an OpenTelemetry Linux collector
+- 	by using the Datadog Agent 
+-       and adding logs or events using the Datadog API. 
+We will create and set up a Datadog account and create a dashboard to monitor FusionAuth metrics.
+
+> [Datadog integrates and automates infrastructure monitoring, application performance monitoring, log management, real-user monitoring, and many other capabilities to provide unified, real-time observability and security for our customers’ entire technology stack. Datadog is used by organizations of all sizes and across a wide range of industries to enable digital transformation and cloud migration, drive collaboration among development, operations, security and business teams, accelerate time to market for applications, reduce time to problem resolution, secure applications and infrastructure, understand user behavior, and track key business metrics.](https://docs.datadoghq.com/getting_started/application/)
+
+
+## Datadog Setup
+
+## Further Reading
+
+- FusionAuth metrics — https://fusionauth.io/docs/operate/secure-and-monitor/monitor#metrics.
+- OpenTelemetry documentation — https://opentelemetry.io/docs/what-is-opentelemetry.
+- OpenTelemetry Java documentation — https://github.com/open-telemetry/opentelemetry-java-instrumentation
+- Datadog OpenTelemetry documentation — https://docs.datadoghq.com/opentelemetry/collector_exporter/
+- https://github.com/FusionAuth/fusionauth-containers/blob/master/docker/fusionauth/fusionauth-app/Dockerfile
+- TODO Docker OpenTelemtryCollector - https://docs.splunk.com/observability/en/gdi/opentelemetry/collector-linux/install-linux-manual.html#linux-docker
+- TODO Ports exposed by OpenTelemetry container - https://docs.splunk.com/observability/en/gdi/opentelemetry/exposed-endpoints.html
+- Getting Started with the Datadog Agent  - https://docs.datadoghq.com/getting_started/agent/
+
+
+## TODO
+Questions to answer
+[Note: you don’t need to explicitly answer these questions, but the reader should have a good understanding of the answers after reading through the final document]
+What Fusionauth data can be viewed in Datadog
+What Fusionauth data makes sense in a Datadog context? Only metrics or also logs etc?
+How does Fusionauth feed data to Datadog? Pull, Push? Both options? 
+Outline
+Setting up the integration
+Viewing Fusionauth data in Datadog
+Steps
+Sign up for a Datadog 14 day trial - Shout at Gareth if it needs credit card etc
+Figure out how Fusionauth metrics work. Given this it might be a bit tricky
+> ​​You can pull system metrics from the System API. The format of these metrics are evolving and thus are not documented.
+Figure out how to ingest these into Datadog. This might require something like 
+Create a basic Dashboard and show the Fusionauth metrics from fusionauth.ritza.co on Datadog
+Write guide about how you did it and add it as a sibling page to https://fusionauth.io/docs/operate/secure-and-monitor/prometheus
+Resources
+Monitoring FusionAuth https://fusionauth.io/docs/operate/secure-and-monitor/monitor
+Datadog https://datadoghq.com
+Custom Metrics https://docs.datadoghq.com/metrics/custom_metrics/
+2500

@@ -57,9 +57,9 @@ Identity proofing provides several ways to verify a user’s identity, such as p
 
 ### Identity Document Verification
 
-Identity document verification can be a physical process or done digitally. Physical identity proofing occurs when a customer performs a face-to-face transaction at a company location and presents identity documents such as an ID card, passport, or driver’s license. A company employee compares the photograph on the documents with the person standing in front of them and validates the information supplied against an authoritative source, such as government or credit records. Once identity is established, documents are copied and physically stored. 
+Identity document verification can be a physical process or done digitally. Physical identity proofing occurs when a customer performs a face-to-face transaction at a company location and presents identity documents such as an Id card, passport, or driver’s license. A company employee compares the photograph on the documents with the person standing in front of them and validates the information supplied against an authoritative source, such as government or credit records. Once identity is established, documents are copied and physically stored. 
 
-Businesses needing to establish real-world identity with online users can verify documentation using a scan of a valid passport or ID along with other verifiable personal information, like an address or phone number. To ensure that scanned documents aren’t stolen, businesses sometimes ask users to submit a selfie of themselves holding the documents. 
+Businesses needing to establish real-world identity with online users can verify documentation using a scan of a valid passport or Id along with other verifiable personal information, like an address or phone number. To ensure that scanned documents aren’t stolen, businesses sometimes ask users to submit a selfie of themselves holding the documents. 
 
 ### Knowledge-Based Authentication
 
@@ -75,9 +75,9 @@ Out-of-band (OOB) authentication uses another channel besides an online process 
 
 OOB, also a form of MFA, increases security by requiring the person to have access to an external account or  another device in their possession. Using a separate channel makes it more difficult for an attacker to circumvent or intercept the proofing process  because the attacker would have to access and compromise two separate communication mechanisms.
 
-### Biometric Verification
+### Biometric Verification and Passkeys
 
-Biometric verification is used to identify individuals based on unique physical characteristics such as fingerprints, voiceprints, retina scans, signature comparisons, and DNA. Once only common in the most stringent security settings, these types of verification are becoming regular features in the latest smartphones and digital devices. 
+Biometric verification is used to identify individuals based on unique physical characteristics such as fingerprints, voiceprints, retina scans, signature comparisons, and DNA. Once only common in the most stringent security settings, these types of verification are becoming regular features in the latest smartphones and digital devices. As [passkeys](/tech-papers/why-passkeys-improve-user-security-how-to-implement-them) see wider adoption, the use of biometrics continues to rise as well. 
 
 Biometrics give greater assurance that a person is who they say they are. The verification is used in several industries, including healthcare to identify patients, law enforcement to track people in the judicial system, and government entities for voter registration. 
 

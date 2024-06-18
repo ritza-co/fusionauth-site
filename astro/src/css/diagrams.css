@@ -15,8 +15,8 @@
 }
 
 .mermaid-diagram .marker {
-  fill: red !important;
-  stroke: red !important;
+  fill: black !important;
+  stroke: black !important;
 }
 
 .mermaid-diagram .marker.cross {
@@ -217,4 +217,8 @@
 .dark .mermaid-diagram line {
   stroke: #64748b !important;
   fill: #64748b !important;
+}
+
+foreignObject {
+  overflow: visible;
 }

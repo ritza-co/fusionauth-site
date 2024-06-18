@@ -216,7 +216,7 @@ Each of these types of lambda tests is outlined below.
 
 ### Test Library
 
-There are many JavaScript test libraries available, and everyone has their preference. This guide uses a simple library for demonstration so that you can generalize the tests to your favorite library. The tests below use [`tape`](https://github.com/ljharb/tape), which implements the [Test Anything Protocol (TAP)](https://en.wikipedia.org/wiki/Test_Anything_Protocol), a language-agnostic specification for running tests that's been in use since 1987. The tests also use [fetch-mock](https://www.wheresrhys.co.uk/fetch-mock/) to mock `fetch` calls from your lambda, [`faucet`](https://www.npmjs.com/package/faucet) to to give neat output from `tape`, [`jsonwebtoken`](https://www.npmjs.com/package/jsonwebtoken) to decode the JWT, and [`uuid`](https://www.npmjs.com/package/uuid) to make a random user Id.
+There are many JavaScript test libraries available, and everyone has their preference. This guide uses a simple library for demonstration so that you can generalize the tests to your favorite library. The tests below use [`tape`](https://github.com/ljharb/tape), which implements the [Test Anything Protocol (TAP)](https://en.wikipedia.org/wiki/Test_Anything_Protocol), a language-agnostic specification for running tests that's been in use since 1987. The tests also use [fetch-mock](https://www.wheresrhys.co.uk/fetch-mock/) to mock `fetch` calls from your lambda, [`faucet`](https://www.npmjs.com/package/faucet) to give neat output from `tape`, [`jsonwebtoken`](https://www.npmjs.com/package/jsonwebtoken) to decode the JWT, and [`uuid`](https://www.npmjs.com/package/uuid) to make a random user Id.
 
 Install the following packages in your test app terminal.
 
@@ -242,7 +242,7 @@ Make a new file called `userCreator.js` in the app folder and paste the followin
 
 The code above has two functions:
 
-- The `createRandomUser` function, which creates a User request object with `const request` and then sends it to `fusion.register()`. Details on this can be found in the [TypeScript client library interface](https://github.com/FusionAuth/fusionauth-typescript-client/blob/master/src/FusionAuthClient.ts).
+- The `createRandomUser` function, which creates a User request object with `const request` and then sends it to `fusion.register()`. Details on this can be found in the [TypeScript client library interface](https://github.com/FusionAuth/fusionauth-typescript-client/blob/main/src/FusionAuthClient.ts).
 - The `deleteUser` function, which you can use in the tests to delete the user just created.
 
 Run the code to test user creation with the following command.

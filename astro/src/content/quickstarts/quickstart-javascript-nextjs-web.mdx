@@ -18,7 +18,7 @@ import Intro from '/src/components/quickstarts/Intro.astro';
 import LoginArchitectureWeb from '/src/components/quickstarts/LoginArchitectureWeb.astro';
 import NextSteps from '/src/components/quickstarts/NextSteps.astro';
 import {RemoteCode} from '@fusionauth/astro-components';
-
+import QuickstartTshirtCTA from '/src/components/quickstarts/QuickstartTshirtCTA.astro'
 
 <Intro technology={frontmatter.technology}
        repositoryUrl="https://github.com/FusionAuth/fusionauth-quickstart-javascript-nextjs-web"/>
@@ -169,7 +169,7 @@ Finally, we'll add some business logic for logged in users to make change with t
 <RemoteCode url={frontmatter.codeRoot + "/complete-application/src/app/makechange/page.tsx"}
   lang="ts" />
 
-If the user session is not present the user is redirect back the the homepage at the base route. If the user is present then the `MakeChangeForm` is presented. Create a new file located at `/src/components/MakeChangeForm.tsx` with the below code. This component has all of the business logic needed for taking in a dollar amount of money and returning the correct amount of each coin.
+If the user session is not present the user is redirect back the homepage at the base route. If the user is present then the `MakeChangeForm` is presented. Create a new file located at `/src/components/MakeChangeForm.tsx` with the below code. This component has all of the business logic needed for taking in a dollar amount of money and returning the correct amount of each coin.
 
 <RemoteCode url={frontmatter.codeRoot + "/complete-application/src/components/MakeChangeForm.tsx"}
   lang="ts" />
@@ -188,6 +188,8 @@ This will take you through the `NextAuth.js` authentication flow. First promptin
 You can then login to FusionAuth with Email: `richard@example.com` Password: `password` (as you might expect not ideal for production.)
 
 This will then take you back to the application in the API route it will check for a session and appropriately redirect you to the `/account` route when your session has been established.
+
+<QuickstartTshirtCTA/>
 
 ## Next Steps
 

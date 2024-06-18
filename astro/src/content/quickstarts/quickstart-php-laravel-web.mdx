@@ -18,6 +18,7 @@ import Intro from '/src/components/quickstarts/Intro.astro';
 import LoginArchitectureWeb from '/src/components/quickstarts/LoginArchitectureWeb.astro';
 import NextSteps from '/src/components/quickstarts/NextSteps.astro';
 import {RemoteCode} from '@fusionauth/astro-components';
+import QuickstartTshirtCTA from '/src/components/quickstarts/QuickstartTshirtCTA.astro'
 
 <Intro technology={frontmatter.technology}
        repositoryUrl={frontmatter.url}/>
@@ -28,7 +29,7 @@ For this Quickstart, you'll need:
 
 * [PHP](https://www.php.net/manual/en/install.php) 8.1
 * [Composer](https://getcomposer.org/)
-* [Nodejs](https://nodejs.org/)
+* [Node.js](https://nodejs.org/)
 * [Docker](https://www.docker.com), version 20 or later, which is the quickest way to start FusionAuth. (There are [other ways](/docs/get-started/download-and-install)).
 
 ## General Architecture
@@ -74,7 +75,7 @@ If you are not familiar with Laravel, here's a brief explanation of its structur
 - `bootstrap` — the starting point for execution.
 - `config` — contains all settings.
 - `database` — contains all database migration scripts.
-- `public` — contains static resources (images, css) available to anyone on the web.
+- `public` — contains static resources (images, CSS) available to anyone on the web.
 - `resources` — similar to `public`, but contains Blade templates, and files are adapted by the server before serving.
 - `routes` — contains the server code to respond to URLs called by a browser.
 - `storage` — cache folder managed by Laravel when running.
@@ -239,7 +240,7 @@ Paste the following code into the file.
   url={frontmatter.codeRoot + "/complete-application/resources/views/change.blade.php"}
   lang="php" />
 
-The change page uses some Blade conditional statements to display different divs depending on the state returned by the form POST `@if ($state['error'] && $state['hasChange'])`.
+The change page uses some Blade conditional statements to display different `div`s depending on the state returned by the form POST `@if ($state['error'] && $state['hasChange'])`.
 
 The change page also includes a `@csrf` anti-forgery token in the form at the bottom to prevent {frontmatter.technology} throwing page expired errors.
 
@@ -270,6 +271,8 @@ php artisan serve
 ```
 
 Browse to [the app](http://localhost:8000) at http://localhost:8000. Log in using `richard@example.com` and `password`. The change page will allow you to enter a number. Log out and verify that you can't browse to the [account page](http://localhost:8000/account).
+
+<QuickstartTshirtCTA/>
 
 ## Next Steps
 

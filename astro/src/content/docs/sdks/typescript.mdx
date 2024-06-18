@@ -8,6 +8,7 @@ import Aside from 'src/components/Aside.astro';
 import ExampleApps from 'src/content/docs/sdks/examples/_example-footer.astro';
 import HowToUseClientLibraries from 'src/content/docs/sdks/_how-to-use-client-libraries.mdx';
 import PublicClientNote from 'src/content/docs/sdks/_public-client-note.mdx';
+import SdkUpgradePolicy from 'src/content/docs/sdks/_upgrade-policy.mdx';
 
 ## Typescript Client Library
 
@@ -28,12 +29,12 @@ Regardless of the fact that this is written in TypeScript, this client supports 
 To install the FusionAuth Typescript Client package run:
 
 ```bash
-$ npm install @fusionauth/typescript-client
+npm install @fusionauth/typescript-client
 ```
 
 #### Browser bundle:
 
-We also release a prebundled version of the client for the browser on our github releases page. This version can be simply included as an html `<script>` and `FusionAuthClient` will be available to any scripts on the page.
+We also release a prebundled version of the client for the browser on our GitHub releases page. This version can be simply included as an HTML `<script>` and `FusionAuthClient` will be available to any scripts on the page.
 
 * https://github.com/FusionAuth/fusionauth-typescript-client/releases
 
@@ -58,7 +59,7 @@ client.retrieveUserByEmail('user@example.com')
       }).catch(console.error);
 ```
 
-You can also find this example's [source code](https://github.com/FusionAuth/fusionauth-typescript-client/tree/master/examples/node-example) in the [typescript repo](https://github.com/FusionAuth/fusionauth-typescript-client).
+You can also find this example's [source code](https://github.com/FusionAuth/fusionauth-typescript-client/tree/main/examples/node-example) in the [typescript repo](https://github.com/FusionAuth/fusionauth-typescript-client).
 
 #### Browser
 
@@ -75,11 +76,11 @@ client.retrieveUserByEmail('user@example.com')
 </script>
 ```
 
-You can also find this example's [source code](https://github.com/FusionAuth/fusionauth-typescript-client/tree/master/examples/browser-example) in the [typescript repo](https://github.com/FusionAuth/fusionauth-typescript-client).
+You can also find this example's [source code](https://github.com/FusionAuth/fusionauth-typescript-client/tree/main/examples/browser-example) in the [typescript repo](https://github.com/FusionAuth/fusionauth-typescript-client).
 
 #### Hybrid
 
-You can write the hybrid exactly the same as the NodeJS example (but keep in mind that API keys will be exported so it is not recommended to use API keys at all). The key difference in this case is the build script. Instead of just using `tsc` to compile and running nodejs on the resulting javascript, you will instead use a tool like `browserify` or `webpack` to build your script. This example uses `browserify` for simplicity.
+You can write the hybrid exactly the same as the NodeJS example (but keep in mind that API keys will be exported so it is not recommended to use API keys at all). The key difference in this case is the build script. Instead of just using `tsc` to compile and running NodeJS on the resulting JavaScript, you will instead use a tool like `browserify` or `webpack` to build your script. This example uses `browserify` for simplicity.
 
 We can easily build a hybrid project using one of two commands, each associated with the target
 
@@ -92,7 +93,7 @@ npm run build-browser
 npx browserify example.ts --debug -p tsify -t browserify-shim -o dist/example-browser.js
 ```
 
-You can also find this example's [source code](https://github.com/FusionAuth/fusionauth-typescript-client/tree/master/examples/hybrid-example) in the [typescript repo](https://github.com/FusionAuth/fusionauth-typescript-client).
+You can also find this example's [source code](https://github.com/FusionAuth/fusionauth-typescript-client/tree/main/examples/hybrid-example) in the [typescript repo](https://github.com/FusionAuth/fusionauth-typescript-client).
 
 ### Usage Suggestions
 
@@ -105,3 +106,6 @@ You can also find this example's [source code](https://github.com/FusionAuth/fus
 ### Example Apps
 <ExampleApps language="javascript" />
 
+## Upgrade Policy
+
+<SdkUpgradePolicy/>

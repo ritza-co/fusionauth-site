@@ -6,6 +6,7 @@ section: sdks
 ---
 import ExampleApps from 'src/content/docs/sdks/examples/_example-footer.astro';
 import HowToUseClientLibraries from 'src/content/docs/sdks/_how-to-use-client-libraries.mdx';
+import SdkUpgradePolicy from 'src/content/docs/sdks/_upgrade-policy.mdx';
 
 ## Ruby Client Library
 
@@ -22,7 +23,7 @@ Gem:
 To install the FusionAuth Ruby Gem package run:
 
 ```bash
-$ gem install fusionauth_client
+gem install fusionauth_client
 ```
 
 The following code assumes FusionAuth is running on `http://localhost:9011` and uses an API key `6b87a398-39f2-4692-927b-13188a81a9a3`, you will need to supply your own API key, and if you are not running FusionAuth locally, your host parameter may be different.
@@ -82,3 +83,6 @@ end
 ### Example Apps
 <ExampleApps language="ruby" />
 
+## Upgrade Policy
+
+<SdkUpgradePolicy/>

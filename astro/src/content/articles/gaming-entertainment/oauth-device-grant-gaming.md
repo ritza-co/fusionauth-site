@@ -62,8 +62,8 @@ git clone https://github.com/FusionAuth/fusionauth-example-gaming-device-grant.g
 Once Docker Desktop is running, open your terminal and type the following commands: 
 
 ```
-curl -o docker-compose.yml https://raw.githubusercontent.com/FusionAuth/fusionauth-containers/master/docker/fusionauth/docker-compose.yml
-curl -o .env https://raw.githubusercontent.com/FusionAuth/fusionauth-containers/master/docker/fusionauth/.env
+curl -o docker-compose.yml https://raw.githubusercontent.com/FusionAuth/fusionauth-containers/main/docker/fusionauth/docker-compose.yml
+curl -o .env https://raw.githubusercontent.com/FusionAuth/fusionauth-containers/main/docker/fusionauth/.env
 docker compose up
 ```
 
@@ -99,7 +99,7 @@ This CORS configuration is only necessary because the game is running in the bro
  
 Next, configure and run the demo app project downloaded from the GitHub repository.
 
-Open the project with an editor of your choosing (for example, Visual Studio Code or Sublime), then go to the `main.js` file and modify the `clientId` to match the clientId of your `test Grant` application on FusionAuth.
+Open the project with an editor of your choosing (for example, Visual Studio Code or Sublime), then go to the `main.js` file and modify the `clientId` to match the Client Id of your `test Grant` application on FusionAuth.
 
 ```javascript
 var baseFusionAuthURL = 'http://localhost:9011/oauth2/device_authorize';

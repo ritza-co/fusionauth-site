@@ -6,6 +6,7 @@ section: sdks
 ---
 import ExampleApps from 'src/content/docs/sdks/examples/_example-footer.astro';
 import HowToUseClientLibraries from 'src/content/docs/sdks/_how-to-use-client-libraries.mdx';
+import SdkUpgradePolicy from 'src/content/docs/sdks/_upgrade-policy.mdx';
 import StaticPatchNote from 'src/content/docs/sdks/_static-patch-note.mdx';
 
 ## Java Client Library
@@ -24,7 +25,7 @@ Maven Dependency
   <version>${fusionauth.version}</version>
 </dependency>
 ```
-When building your application, utilize the version that corresponds to the version of FusionAuth your running. View all available versions on https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22io.fusionauth%22%20AND%20a%3A%22fusionauth-java-client%22[https://search.maven.org]
+When building your application, utilize the version that corresponds to the version of FusionAuth your running. View all available versions on [https://search.maven.org](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22io.fusionauth%22%20AND%20a%3A%22fusionauth-java-client%22).
 
 ## Using the FusionAuth and consuming the ClientResponse
 
@@ -119,3 +120,6 @@ As you can see, using the lambda delegate requires less code to handle the succe
 ### Example Apps
 <ExampleApps language="java" />
 
+## Upgrade Policy
+
+<SdkUpgradePolicy/>

@@ -49,7 +49,7 @@ Always review the license for any solution.
 
 In a true open-source solution, the "community" is responsible for submitting fixes they want to see included in the project. Feature requests from the community tend to need to be contributed to by the community itself, meaning you as the customer bear more of the maintenance burden. The amount of testing done for a new release varies based on the effort the community puts forth.
 
-On the flip side, it could mean you have more say in the product roadmap if you're able to contribute fixes in a way that is acceptable to the community. Heck, you could even pay a developer to spend most of their day writing code for this system, which would buy you a lot of influence. Consider how much bandwidth your team has to contribute to this process; it might be a dealbreaker.
+On the flip side, it could mean you have more say in the product roadmap if you're able to contribute fixes in a way that is acceptable to the community. Heck, you could even pay a developer to spend most of their day writing code for this system, which would buy you a lot of influence. Consider how much bandwidth your team has to contribute to this process; it might be a deal-breaker.
 
 You can also, if you need to, make a change in your own version of the project. You can then submit it to the maintainers. If it meets their quality standards and goal for the project, it can be integrated; this is also known as upstreaming. However, if it doesn't get incorporated, you are stuck supporting a critical feature and making sure that future releases don't break it.
 
@@ -59,7 +59,7 @@ Open-source projects [may be more secure, especially over time](https://www.info
 
 However, there are also [instances of vulnerabilities remaining open for months](https://github.com/keycloak/keycloak/pull/7612). But if the bug is severe and an open-source project is well supported or popular, the timeline may shrink to days or weeks.
 
-In the end, you (and the maintainers) are ultimately responsible for the security of the software. Just like with maintenance responsibility, if you don't have time for your team to frequently review the security issues as they're reported and fixed and then upgrade your system, this may mean that open source isn't the best option for you.
+In the end, you (and the maintainers) are ultimately responsible for the security of the software. Is [your blue team](/articles/security/blue-team-red-team-purple-team) up for maintaining this system and educating your developers on issues? Just like with maintenance responsibility, if you don't have time for your team to frequently review the security issues as they're reported and fixed and then upgrade your system, this may mean that open source isn't the best option for you.
 
 ### Cost
 
@@ -119,7 +119,7 @@ However, some commercial software offers free tiers with limited support. For ex
 
 Another item to consider is the pricing structure of the commercial solution. Some commercial products may prove cost-effective to large corporations, with high usage, but terribly improbable for a startup wanting a lowering buy-in point. Or more commonly, commercial providers provide different tiers depending on usage. This may make some use cases untenable as your product scales.
 
-Depending on what stage your company is in, this monetary expense can either be something you can absorb or a dealbreaker. You should weigh this cost against the time and effort needed to maintain an open source solution.
+Depending on what stage your company is in, this monetary expense can either be something you can absorb or a deal-breaker. You should weigh this cost against the time and effort needed to maintain an open source solution.
 
 ## The Final Showdown
 

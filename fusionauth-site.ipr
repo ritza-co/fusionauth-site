@@ -254,9 +254,6 @@
     </profile>
     <version value="1.0" />
   </component>
-  <component name="JavaScriptLibraryMappings">
-    <file url="file://$PROJECT_DIR$" libraries="{Node.js Core}" />
-  </component>
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
   </component>
@@ -1544,6 +1541,7 @@
         <w>elasticsearch</w>
         <w>fusionauth</w>
         <w>gapped</w>
+        <w>graal</w>
         <w>guice</w>
         <w>hypr</w>
         <w>intelli</w>
