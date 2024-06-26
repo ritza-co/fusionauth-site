@@ -129,3 +129,5 @@ xkcd
 Yubico
 YubiKey
 Zendesk
+[Dd]atadog
+[Pp]rometheus
