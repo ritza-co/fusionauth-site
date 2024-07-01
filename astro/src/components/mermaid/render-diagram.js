@@ -37,7 +37,7 @@ export default async function renderDiagram({ code, id, nostyle=true }) {
       } catch (error) {
         console.log(error);
         console.log(error.message);
-        return { status: 'error', error, message: error.message };
+        return Promise.reject({ status: 'error', error, message: error.message });
       }
     },
     config,
