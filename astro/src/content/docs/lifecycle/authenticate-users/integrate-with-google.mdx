@@ -17,6 +17,18 @@ import InlineUIElement from 'src/components/InlineUIElement.astro';
 You don't want to use the Google Identity Provider because it doesn't support the prompt URL parameter.
 Use the OIDC Identity Provider with the prompt parameter set to select_account to let the users pick different accounts
 
+## Run code
+
+```sh
+cd ~/code/rjeritza/16_faGoogleConnect
+docker compose up
+# new terminal
+cd completeApplication
+npm install  # todo use docker here too
+npm run start
+
+```
+
 ## Todo
 
 
