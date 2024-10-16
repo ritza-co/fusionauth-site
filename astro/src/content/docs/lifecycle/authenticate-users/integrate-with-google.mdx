@@ -1,0 +1,38 @@
+---
+title: Get Google account details and contacts through FusionAuth
+description: Learn how to get a user's Google contacts to send referral emails.
+navcategory: developer
+section: lifecycle
+subcategory: authenticate users
+codeRoot: TODOhttps://raw.githubusercontent.com/FusionAuth/fusionauth-example-node-sso/main
+---
+import Aside from 'src/components/Aside.astro';
+import IconButton from 'src/components/IconButton.astro';
+import Breadcrumb from 'src/components/Breadcrumb.astro';
+import InlineField from 'src/components/InlineField.astro';
+import InlineUIElement from 'src/components/InlineUIElement.astro';
+
+## Introduction
+
+You don't want to use the Google Identity Provider because it doesn't support the prompt URL parameter.
+Use the OIDC Identity Provider with the prompt parameter set to select_account to let the users pick different accounts
+
+## Todo
+
+
+- https://drafts.cc.ritza.co/s/CIi3qE_d0#
+- read:
+  - https://fusionauth.io/community/forum/topic/2569/how-do-i-call-a-google-api-or-retrieve-the-google-credentials
+  - https://fusionauth.io/community/forum/topic/2659/access-google-calendars-of-multiple-google-accounts-with-user-permission
+
+- take old express js changebank app i wrote
+- update with modern `light` quickstart kickstart code - https://github.com/FusionAuth/fusionauth-example-docker-compose/light
+
+- goal: get user's contacts' email addresses from google
+- process:
+  - user logs in to changebank/fusionauth with username/password
+  - in the changebank app, there’s an ‘connect to Google’ button
+  - button calls FA identity provider login OIDC API to login to google (i assume https://fusionauth.io/docs/apis/identity-providers/openid-connect)
+    - login uses Google scope https://www.googleapis.com/auth/contacts.readonly
+  - after login, application gets refresh token from FA.
+  - app gets contact list from google api with refresh token
