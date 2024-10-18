@@ -29,6 +29,14 @@ npm run start
 
 ```
 
+https://fusionauth.io/docs/lifecycle/authenticate-users/identity-providers/
+says go [Settings -> Identity Providers ](http://localhost:9011/admin/identity-provider)
+`Add OpenID Connect`, not `Add Google`.  You don't want to use the Google Identity Provider because it doesn't support the `prompt` URL parameter.
+
+
+
+
+
 ## Todo
 
 
@@ -37,14 +45,12 @@ npm run start
   - https://fusionauth.io/community/forum/topic/2569/how-do-i-call-a-google-api-or-retrieve-the-google-credentials
   - https://fusionauth.io/community/forum/topic/2659/access-google-calendars-of-multiple-google-accounts-with-user-permission
 
-- take old express js changebank app i wrote
-- update with modern `light` quickstart kickstart code - https://github.com/FusionAuth/fusionauth-example-docker-compose/light
-
 - goal: get user's contacts' email addresses from google
 - process:
-  - user logs in to changebank/fusionauth with username/password
-  - in the changebank app, there’s an ‘connect to Google’ button
+  - user logs in to changebank/fusionauth with username/password (this with email or google button though?)
   - button calls FA identity provider login OIDC API to login to google (i assume https://fusionauth.io/docs/apis/identity-providers/openid-connect)
     - login uses Google scope https://www.googleapis.com/auth/contacts.readonly
   - after login, application gets refresh token from FA.
   - app gets contact list from google api with refresh token
+
+- fa account must be linked to one or more google accounts
