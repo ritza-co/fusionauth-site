@@ -33,6 +33,8 @@ npm run start
 
 - First register the domain you want to use with Google here - https://search.google.com/search-console/about
   - For testing purposes if you want to make a free domain, use https://www.cloudns.net, and point it to a free Google Sites website
+- Configure Google as shown here - https://fusionauth.io/docs/lifecycle/authenticate-users/identity-providers/social/google
+- Delete insturctions below
 - https://console.cloud.google.com
 - new project - fago
 - In the API Library, enable Google People API
@@ -51,7 +53,7 @@ npm run start
 - Create Credentials - OAuth Client ID
 - Web application
 - Name: fago
-- Add https://localhost:3000 for `Authorized JavaScript origins` and `Authorized redirect URIs`
+- Add https://localhost:3000 for `Authorized JavaScript origins` and `Authorized redirect URIs`. Add redirect URI `http://localhost:9011/oauth2/callbackflowName=GeneralOAuthFlow` and `http://localhost:9011`
 - Create
 - Save client id and secret
 
@@ -59,15 +61,22 @@ npm run start
 
 https://fusionauth.io/docs/lifecycle/authenticate-users/identity-providers/
 says go [Settings -> Identity Providers ](http://localhost:9011/admin/identity-provider)
-`Add OpenID Connect`, not `Add Google`.  You don't want to use the Google Identity Provider because it doesn't support the `prompt` URL parameter.
+`Add OpenID Connect`, not `Add Google`. You don't want to use the Google Identity Provider because it doesn't support the `prompt` URL parameter.
 - id 26481189-e3f7-433f-804b-9643a025806a
 - name connectgoo
 - Client Id - enter from google console
 - Client secret - enter from google console
 - Enable `Discover endpoints`
+- Enter `https://accounts.google.com` for Issuer
+- For Scope, enter `profile email https://www.googleapis.com/auth/contacts.readonly`
+- For `Linking strategy`, set to `Create a pending link`
+- Enable `Debug enabled`
+- Enabled `Enabled` for `Example app`
+- Click the Save icon at the top right
 
-
-
+- https://fusionauth.io/docs/lifecycle/authenticate-users/identity-providers/social/google#custom-parameters
+- `access_type=offline` if you want a refresh token from Google.
+- `prompt=select_account` if you want to force an account selection screen.
 
 ## Todo
 
