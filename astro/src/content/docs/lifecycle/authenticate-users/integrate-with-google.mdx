@@ -36,8 +36,6 @@ npm run start
 - https://console.cloud.google.com
 - new project - fago
 - In the API Library, enable Google People API
-- APIs & Services - Credentials
-- Create Credentials - OAuth Client ID
 - Configure Consent Screen
 - Choose user type `External` unless you want Internal users only (https://support.google.com/cloud/answer/10311615#user-type&zippy=%2Cexternal%2Cinternal)
 - App name `fago`
@@ -49,6 +47,13 @@ npm run start
 - Add your own gmail address as a test user
 - Save and continue
 - If it says ` Ineligible accounts not added. The following email addresses are either not associated with a Google Account or the account is not eligible for designation as a test user` ignore it
+- APIs & Services - Credentials
+- Create Credentials - OAuth Client ID
+- Web application
+- Name: fago
+- Add https://localhost:3000 for `Authorized JavaScript origins` and `Authorized redirect URIs`
+- Create
+- Save client id and secret
 
 ## Set up identity provider in FusionAuth
 
@@ -57,7 +62,9 @@ says go [Settings -> Identity Providers ](http://localhost:9011/admin/identity-p
 `Add OpenID Connect`, not `Add Google`.  You don't want to use the Google Identity Provider because it doesn't support the `prompt` URL parameter.
 - id 26481189-e3f7-433f-804b-9643a025806a
 - name connectgoo
-
+- Client Id - enter from google console
+- Client secret - enter from google console
+- Enable `Discover endpoints`
 
 
 
