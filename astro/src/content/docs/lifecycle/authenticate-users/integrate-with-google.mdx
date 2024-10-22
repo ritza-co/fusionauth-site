@@ -78,6 +78,14 @@ says go [Settings -> Identity Providers ](http://localhost:9011/admin/identity-p
 - `access_type=offline` if you want a refresh token from Google.
 - `prompt=select_account` if you want to force an account selection screen.
 
+## Add login button in app
+
+- http://localhost:9011/api/identity-provider/login
+- url:
+  - https://accounts.google.com/o/oauth2/v2/auth?client_id=535042435541-eridnie9d09pa69dsq1hh066ushvp4e0.apps.googleusercontent.com&redirect_uri=http://localhost:9011/api/identity-provider/login&response_type=code&scope=openid%20email%20profile%20https://www.googleapis.com/auth/contacts.readonly&state=STATE&idp_hint=26481189-e3f7-433f-804b-9643a025806a
+
+redirects to: `http://localhost:9011/api/identity-provider/login?state=STATE&code=4/0AVG7fiTXd3CnP6OxUg_iSelh4f2VqB9DNGqueD9jL5ElbzR7D-ff3ga7Zs5BXgHoUbvnPw&scope=email%20profile%20https://www.googleapis.com/auth/contacts.readonly%20openid%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/userinfo.email&authuser=1&hd=ritza.co&prompt=consent`
+
 ## Todo
 
 
