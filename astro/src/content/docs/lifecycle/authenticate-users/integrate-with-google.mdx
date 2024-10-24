@@ -63,7 +63,7 @@ https://fusionauth.io/docs/lifecycle/authenticate-users/identity-providers/
 says go [Settings -> Identity Providers ](http://localhost:9011/admin/identity-provider)
 `Add OpenID Connect`, not `Add Google`. You don't want to use the Google Identity Provider because it doesn't support the `prompt` URL parameter.
 - id 26481189-e3f7-433f-804b-9643a025806a
-- name connectgoo
+- name fago
 - Client Id - enter from google console
 - Client secret - enter from google console
 - Enable `Discover endpoints`
@@ -91,6 +91,8 @@ redirects to: `http://localhost:9011/api/identity-provider/login?state=STATE&cod
 note the api key types here https://fusionauth.io/docs/apis/authentication. e.g. completel login requires on authentication.
 
 TODO - change redirect url to my app instead of FA, and call API manually - https://fusionauth.io/docs/apis/identity-providers/openid-connect#complete-an-openid-connect-login
+
+you can get users list of google users with this script - https://github.com/FusionAuth/fusionauth-example-scripts/blob/main/full-user-search/ssostats.sh. there is no place in the FA web interface to see all Google users.
 
 ## Todo
 
