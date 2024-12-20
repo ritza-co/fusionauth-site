@@ -12,24 +12,23 @@ Happy coding!
 
 We are currently using Astro for our SSG technology. We aren't leveraging any Astro components really because we wanted a template that would make it simple for someone to extract our HTML, CSS, and JavaScript and port it to anything (Jekyll, Hugo, Next, etc).
 
-To run the project, just type this:
+To run the site in dev, so file changes are picked up, run:
 
+```sh
+docker run --rm  -p 3000:3000 -v ".:/app" -w "/app" ai/mcp-puppeteer:latest sh -c  "npm install && npm run dev"
 ```
+
+or without Docker:
+
+```sh
 npm install
-```
-
-Then, generate your pages:
-
-```
-npm run start
-```
-
-## Dev
-
-To run in dev, so file changes are picked up:
-
-```
 npm run dev
+```
+
+To fully generate the site, run :
+
+```sh
+npm run start
 ```
 
 ## Linting

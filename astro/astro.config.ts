@@ -21,6 +21,7 @@ if (!process.env.DEV) {
 const siteMapFilter = (page) => !page.startsWith('https://fusionauth.io/landing')
 
 const config = defineConfig({
+  server: { host: true},
   build: {
     format: 'file'
   },
