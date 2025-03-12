@@ -3,7 +3,7 @@ publish_date: 2025-03-12
 title: Multi-factor Authentication (MFA)
 description: What is MFA, and how to integrate it with FusionAuth
 authors: Dan Moore
-image: /img/blogs/ciam-vs-iam/ciam-vs-iam.png
+image: ./img/blogs/ciam-vs-iam/ciam-vs-iam.png
 categories: Education, Product
 tags: mfa authentication
 excerpt_separator: "{/* more */}"
@@ -63,7 +63,7 @@ This additional step significantly reduces the risk of unauthorized access, ensu
 
 Below is a flowchart representation of how MFA works:
 
-![Flowchart representation of how MFA works](/img/mfa-flowchart.png)
+![Flowchart representation of how MFA works](./img/mfa-flowchart.png)
 
 > You must have an alert system that immediately notifies the user if MFA fails. This allows them to take necessary actions to secure their account, such as resetting their password, since a failed MFA attempt often indicates that an attacker has obtained their password.
 
@@ -129,7 +129,7 @@ To enable MFA, follow these steps:
 
 In this example, the MFA policy is set to Required at Login, meaning users must configure MFA before gaining access.
 
-![MFA Policies Activation](/img/mfa-policies-activation.png)
+![MFA Policies Activation](./img/mfa-policies-activation.png)
 
 **Step 2: Configuring MFA Methods**
 
@@ -143,19 +143,19 @@ Under the **Multi-Factor Settings** tab, select the authentication methods you w
 
 Once the configuration is complete, every time a user attempts to log in, they will be redirected to a page prompting them to complete the MFA process after a successful login.
 
-![Login MFA activation options](/img/login-mfa-activation.png)
+![Login MFA activation options](./img/login-mfa-activation.png)
 
 In the screenshot above, the user can set up MFA using the TOTP or the Email method.
 
 If the user selects the **Authenticator App** option, they will be redirected to a page displaying a QR code. The user must scan this QR code using an app like Google Authenticator. After scanning, they enter the generated TOTP code to proceed.
 
-![TOTP MFA](/img/totp-mfa.png)
+![TOTP MFA](./img/totp-mfa.png)
 
 After successfully entering the verification code, FusionAuth will display some recovery codes that users can use to recover their accounts.
 
 If the user selects the Email Authentication option, a one-time passcode (OTP) is sent directly to their registered email. The user enters this code on the login page to verify their identity.
 
-![Email MFA](/img/email-mfa.png)
+![Email MFA](./img/email-mfa.png)
 
 Once the MFA step is successfully completed, the user gains access to their account.
 
@@ -173,7 +173,7 @@ Using the API provides better control over the authentication flow and allows us
 
 For this example, the [FusionAuth Express Starter](https://github.com/FusionAuth/fusionauth-example-express-start-here) repository is extended to include a settings page where users can manage their MFA settings.
 
-![Settings MFA](/img/settings-mfa.png)
+![Settings MFA](./img/settings-mfa.png)
 
 On the settings page, users can select from the following MFA methods:
 
@@ -227,7 +227,7 @@ At this point, the user is presented with a QR code setup page, where they can s
 
 On the setup page, a QR code is displayed for the user to scan with an authentication app (e.g., Google Authenticator, Yubikey). Alternatively, they can manually enter the Base32-encoded secret key.
 
-![MFA Code Setup](/img/mfa-code-setup.png)
+![MFA Code Setup](./img/mfa-code-setup.png)
 
 **Step 4: Verifying the TOTP Code**
 
@@ -268,7 +268,7 @@ app.post('/mfa/verify-authenticator', async (req, res) => {
 
 If the verification is successful, MFA is now enabled for the user and recovery codes are displayed to the user.
 
-![Recovery Codes](/img/recvovery-codes.png)
+![Recovery Codes](./img/recvovery-codes.png)
 
 The same process applies when enabling Email MFA or SMS MFA without Qr code scanning. When the user selects one of these methods, a one-time verification code is sent to their email or phone number, which they must enter to complete the MFA setup.
 
@@ -310,7 +310,7 @@ app.get('/mfa/email', async (req, res) => {
 
 Here is how the page might look like.
 
-![Email MFA Code Page](/img/email-mfa-code.png)
+![Email MFA Code Page](./img/email-mfa-code.png)
 
 Once the user receives the verification code, they enter it on the page. The backend then validates the code using the FusionAuth API:
 
