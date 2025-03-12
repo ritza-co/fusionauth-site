@@ -103,7 +103,7 @@ FusionAuth provides a flexible and developer-friendly MFA solution. Whether usin
 
 Whether you're looking for increased security through an authenticator app, SMS, or email, FusionAuth provides a seamless way to implement MFA with minimal effort. FusionAuth supports three MFA methods:
 
-- Authenticator App (Google Authenticator, Yubikey, etc.).
+- Authenticator App (Google Authenticator, Yubikey).
 
 - SMS (with built-in Twilio integration).
 
@@ -115,7 +115,7 @@ If you're interested in **passwordless authentication**, FusionAuth can authenti
 
 ### Setting Up MFA from the Admin Dashboard
 
-MFA in FusionAuth is configured at the **tenant level**, meaning all applications under a tenant inherit its MFA settings by default. If you want to configure MFA at the application level, this requires the **Enterprise Plan**. [Learn more about application-specific MFA settings](#).
+MFA in FusionAuth is configured at the **tenant level**, meaning all applications under a tenant inherit its MFA settings by default. If you want to configure MFA at the application level, this requires the **Enterprise plan**. [Learn more about application-specific MFA settings](#).
 
 **Step 1: Enabling MFA for the Tenant**
 
@@ -159,11 +159,11 @@ If the user selects the Email Authentication option, a one-time passcode (OTP) i
 
 Once the MFA step is successfully completed, the user gains access to their account.
 
-We recommend using the Admin UI for MFA in the following cases:
+We recommend using the admin UI for MFA in the following cases:
 
-- You have a small number of users – The Admin UI provides a fast and simple way to enable MFA without needing API integration. If you're managing a limited user base, handling MFA via the dashboard is efficient.
+- You have a small number of users – The admin UI provides a fast and simple way to enable MFA without needing API integration. If you're managing a limited user base, handling MFA via the dashboard is efficient.
 
-- You need direct control over MFA settings – The Admin UI allows administrators to enforce MFA policies and configure settings without additional development work.
+- You need direct control over MFA settings – The admin UI allows administrators to enforce MFA policies and configure settings without additional development work.
 
 However, if you're implementing a custom authentication workflow, using the FusionAuth API becomes more practical.
 
