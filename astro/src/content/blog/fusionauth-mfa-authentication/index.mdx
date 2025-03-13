@@ -27,8 +27,6 @@ MFA is one of the most effective ways to protect user accounts, but many busines
 
 MFA should be simple to implement. If it feels complicated, the issue isn't MFA but the providers. Poorly designed MFA solutions create friction and unnecessary costs, causing businesses to avoid the security they actually need.
 
-FusionAuth provides a flexible and developer-friendly MFA solution. Whether using the admin UI or API, businesses can integrate TOTP, email, SMS, and WebAuthn authentication in minutes.
-
 ## What is MFA?
 
 MFA operates on a simple premise: a password alone is not enough. To strengthen authentication, an extra step is required to verify an identity. This is commonly referred to as two-factor authentication (2FA), where a user provides both a password and a second factor (OTP code) before gaining access.
@@ -105,6 +103,8 @@ In the previous example, the MFA method used was email verification, but many ot
 - **Adaptive Authentication:** This method analyzes user behavior, location, and device risk to adjust security dynamically. You should use this if your application serves a global user base, ensuring that suspicious logins—such as those from a different country or unusual device—trigger additional verification steps.
 
 Each method offers a different balance between security and user convenience, and you should implement multiple options based on your needs.
+
+FusionAuth provides a flexible and developer-friendly MFA solution. Whether using the admin UI or API, businesses can integrate TOTP, email, SMS, and WebAuthn authentication in minutes.
 
 ## How to Integrate MFA with FusionAuth
 
