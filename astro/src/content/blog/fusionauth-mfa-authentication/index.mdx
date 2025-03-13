@@ -90,15 +90,15 @@ Whether you're looking for increased security through an authenticator app, SMS,
 - SMS (with built-in Twilio integration).
 - Email (works with any provider).
 
-Depending on your use case, you can enable MFA through the **Admin Dashboard** for quick configuration or via the **API** if you manage authentication from your own UI. The admin dashboard is ideal for quick setups, manual management, or enabling MFA for users without writing code. You can use the API to integrate MFA into custom authentication flows within your application or custom UI.
+Depending on your use case, you can enable MFA through the Admin Dashboard for quick configuration or via the API if you manage authentication from your own UI. The admin dashboard is ideal for quick setups, manual management, or enabling MFA for users without writing code. You can use the API to integrate MFA into custom authentication flows within your application or custom UI.
 
 If you're interested in **passwordless authentication**, FusionAuth can authenticate users without requiring a traditional password. For more details, see our [passwordless authentication guide](/blog/comprehensive-guide-to-passwordless-authentication).
 
-For this example, the [FusionAuth Express Starter](https://github.com/FusionAuth/fusionauth-example-express-start-here) repository is extended to include a settings page where users can manage their MFA settings. The complete application can be found [here](https://github.com/FusionAuth/fusionauth-example-express-mfa)
+For this example, the [FusionAuth Express Starter](https://github.com/FusionAuth/fusionauth-example-express-start-here) repository is extended to include a settings page where users can manage their MFA settings. The completed application can be found [here](https://github.com/FusionAuth/fusionauth-example-express-mfa).
 
 ### Setting Up MFA from the Admin Dashboard
 
-MFA in FusionAuth can be configured at the **tenant level**, meaning all applications under a tenant inherit its MFA settings by default. If you want to configure MFA at the application level, this requires the **Enterprise plan**. Application level settings will take precedence if configured. [Learn more about application-specific MFA settings](/docs/lifecycle/authenticate-users/multi-factor-authentication#application-set-up).
+MFA in FusionAuth can be configured at the tenant level, meaning all applications under a tenant inherit its MFA settings by default. If you want to configure MFA at the application level, this requires the **Enterprise plan**. Application level settings will take precedence if configured. [Learn more about application-specific MFA settings](/docs/lifecycle/authenticate-users/multi-factor-authentication#application-set-up).
 
 **Step 1: Enabling MFA for the Tenant**
 
@@ -106,7 +106,7 @@ To enable MFA, follow these steps:
 
 1. Go to **Tenants** on the FusionAuth admin UI sidebar.
 2. Select the tenant.
-3. Navigate to the **Multi-Factor** settings tab.
+3. Navigate to the **Multi-Factor** tab.
 
 In this example, the MFA policy is set to Required at Login, meaning users must configure MFA before gaining access.
 
@@ -117,8 +117,8 @@ In this example, the MFA policy is set to Required at Login, meaning users must 
 Under the **Multi-Factor** tab, select the authentication methods you want to support:
 
 - Authenticator settings: This allows users to authenticate using TOTP-based apps like Google Authenticator or Yubikey.
-- Email settings: This configuration requires an email provider. Ensure your email server is configured under the **Email** tab on your Tenant page.
-- SMS settings: On the **Settings -> Messengers** page, you can configure Twilio for automatic integration or manually set up a custom SMS gateway.
+- Email settings: This configuration requires an email provider and a FusionAuth license. Ensure your email server is configured under the **Email** tab on your tenant page.
+- SMS settings: This configuration requires a FusionAuth license. On the **Settings -> Messengers** page, you can configure Twilio for automatic integration or manually set up a custom SMS gateway.
 
 Once the configuration is complete, every time a user attempts to log in, they will be redirected to a page prompting them to complete the MFA process after a successful login.
 
@@ -126,13 +126,13 @@ Once the configuration is complete, every time a user attempts to log in, they w
 
 In the screenshot above, the user can set up MFA using the TOTP or the Email method.
 
-If the user selects the **Authenticator App** option, they will be presented with a QR code. The user must scan this QR code using an authenticator app like Google Authenticator. After scanning, they enter the generated TOTP code to proceed.
+If the user selects the **Authenticator app** option, they will be presented with a QR code. The user must scan this QR code using an authenticator app like Google Authenticator. After scanning, they enter the generated TOTP code to proceed.
 
 ![TOTP MFA](./img/totp-mfa.png)
 
 After successfully entering the verification code, FusionAuth will display some recovery codes that users can use to recover their accounts.
 
-If the user selects the Email Authentication option, a one-time passcode (OTP) is sent directly to their registered email. The user enters this code on the login page to verify their identity.
+If the user selects the **Email** MFA option, a one-time passcode (OTP) is sent directly to their registered email. The user enters this code on the login page to verify their identity.
 
 ![Email MFA](./img/email-mfa.png)
 
@@ -147,7 +147,7 @@ However, if you're implementing a custom authentication workflow, using the Fusi
 
 ### Implementing MFA Using the FusionAuth API
 
-Using the API provides better control over the authentication flow and allows users to enable MFA within their own settings page rather than being required to set it up during login. In most real-world scenarios, users can log in normally and configure MFA later from their account settings.
+Using the API provides better control over the authentication flow and allows users to enable MFA within their own settings page rather than being required to set it up during login. In most real-world scenarios, users can log in normally and configure MFA later from their account settings. The application used in the example below can be found [here](https://github.com/FusionAuth/fusionauth-example-express-mfa).
 
 ![Settings MFA](./img/settings-mfa.png)
 
