@@ -110,7 +110,7 @@ In addition to the browser and server components from the first design, there is
 
 Since the OAuth tokens are never sent to the browser, they cannot be stolen by malicious JavaScript on the client side. The initial code redirected from the OAuth server is in the browser, and is thus vulnerable to client-side attacks, but the code can't be used to get access tokens by any server other than web service because the OAuth will reject other URLs.
 
-If you have a web app and have been using an authentication gateway, like FusionAuth or KeyCloak, this is probably the flow you currently use.
+If you have a web app and have been using an authentication gateway, like FusionAuth or Keycloak, this is probably the flow you currently use.
 
 In the design above, OAuth is used to authenticate the user on the app's web service, not for an external service (the resource server) on the client's behalf. If the web service were to make requests to an external server, it would send that server the access token. Once again, that token would never be sent to the browser. This design would look as follows.
 
