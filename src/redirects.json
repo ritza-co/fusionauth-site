@@ -35,6 +35,7 @@
     "/docs/lifecycle/migrate-users/bulk/supabase": "/docs/lifecycle/migrate-users/provider-specific/supabase",
     "/docs/lifecycle/migrate-users/bulk/tutorial": "/docs/lifecycle/migrate-users/genericmigration",
     "/docs/lifecycle/migrate-users/provider-specific/tutorial": "/docs/lifecycle/migrate-users/genericmigration",
+    "/docs/lifecycle/genericmigration": "/docs/lifecycle/migrate-users/genericmigration",
     "/docs/lifecycle/migrate-users/general-migration": "/docs/lifecycle/migrate-users",
     "/docs/sdks/ios-sdk": "/docs/sdks/swift-sdk",
     "/docs/sdks/javascript": "/docs/sdks/typescript",
