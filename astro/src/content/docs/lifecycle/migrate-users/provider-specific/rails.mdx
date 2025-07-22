@@ -36,7 +36,7 @@ export const add_tenant_image_role = 'bottom-cropped';
 
 This document will help you migrate your users from a Ruby on Rails application to FusionAuth.
 
-This guide assumes you have installed FusionAuth. If you have not, please [view our installation guides](/docs/get-started/download-and-install) and install FusionAuth before you begin. For more general migration information, please view the [FusionAuth migration guide](/docs/lifecycle/migrate-users/general-migration).
+This guide assumes you have installed FusionAuth. If you have not, please [view our installation guides](/docs/get-started/download-and-install) and install FusionAuth before you begin. For more general migration information, please view the [FusionAuth migration guide](/docs/lifecycle/migrate-users/genericmigration).
 
 Rails applications can implement authentication in several different ways, and this guide covers the three most common approaches:
 
@@ -107,7 +107,7 @@ If you need users to access applications, you can also set the `user.registratio
 
 #### Identifiers
 
-<Identifiers />
+<Identifiers migration_source_name={migration_sources_tools} />
 
 ## Exporting Users
 
@@ -132,29 +132,29 @@ puts "Found #{User.count} users to export"
 
 users_data = User.all.map do |user|
   puts "Exporting user: #{user.email}"
-  
+
   # Parse bcrypt hash according to FusionAuth requirements:
   # Example: $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
   # Should be split to:
   # factor: 10 (the cost factor)
   # salt: N9qo8uLOickgx2ZMRZoMye (first 22 chars of the base64 string)
   # password: IjZAgcfl7p92ldGxad68LJZdL17lhWy (remaining chars)
-  
+
   bcrypt_factor = 10  # default cost factor
   bcrypt_salt = ""
   bcrypt_password = ""
-  
+
   if user.encrypted_password&.match(/^\$2[aby]\$(\d+)\$(.+)$/)
     bcrypt_factor = $1.to_i
     salt_and_hash = $2
-    
+
     # FusionAuth expects the salt and password to be split:
     # - Salt: first 22 characters (in bcrypt base64 format)
     # - Password: remaining characters (in bcrypt base64 format)
     bcrypt_salt = salt_and_hash[0, 22]
     bcrypt_password = salt_and_hash[22..-1]
   end
-  
+
   user_data = {
     email: user.email,
     username: user.email,
@@ -181,7 +181,7 @@ users_data = User.all.map do |user|
       current_sign_in_ip: user.respond_to?(:current_sign_in_ip) ? user.current_sign_in_ip : nil
     }
   }
-  
+
   user_data
 end
 
@@ -214,7 +214,7 @@ puts "Found #{User.count} users to export"
 
 users_data = User.all.map do |user|
   puts "Exporting user: #{user.email} (#{user.provider})"
-  
+
   {
     email: user.email,
     username: user.email,
@@ -269,29 +269,29 @@ puts "Found #{User.count} users to export"
 
 users_data = User.all.map do |user|
   puts "Exporting user: #{user.email}"
-  
+
   # Parse bcrypt hash according to FusionAuth requirements:
   # Example: $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
   # Should be split to:
   # factor: 10 (the cost factor)
   # salt: N9qo8uLOickgx2ZMRZoMye (first 22 chars of the base64 string)
   # password: IjZAgcfl7p92ldGxad68LJZdL17lhWy (remaining chars)
-  
+
   bcrypt_factor = 10  # default cost factor
   bcrypt_salt = ""
   bcrypt_password = ""
-  
+
   if user.password_digest&.match(/^\$2[aby]\$(\d+)\$(.+)$/)
     bcrypt_factor = $1.to_i
     salt_and_hash = $2
-    
+
     # FusionAuth expects the salt and password to be split:
     # - Salt: first 22 characters (in bcrypt base64 format)
     # - Password: remaining characters (in bcrypt base64 format)
     bcrypt_salt = salt_and_hash[0, 22]
     bcrypt_password = salt_and_hash[22..-1]
   end
-  
+
   user_data = {
     email: user.email,
     username: user.email,
@@ -316,7 +316,7 @@ users_data = User.all.map do |user|
       original_user_id: user.id
     }
   }
-  
+
   user_data
 end
 
@@ -438,7 +438,7 @@ Import completed successfully!
 You may also want to migrate additional data. Currently, the following attributes are migrated:
 
 * `email`
-* `username` 
+* `username`
 * `fullName` (when available)
 * `verified`
 * `active`
