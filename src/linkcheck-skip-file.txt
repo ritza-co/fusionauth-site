@@ -7,7 +7,7 @@
 /features/.*
 /license-faq
 /platform/.*
-/pricing
+/pricing2
 /pricing
 /security
 /security-data-compliance
