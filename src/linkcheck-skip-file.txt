@@ -8,6 +8,7 @@
 /license-faq
 /platform/.*
 /pricing
+/pricing
 /security
 /security-data-compliance
 .+#https://www.facebook.com/.+
