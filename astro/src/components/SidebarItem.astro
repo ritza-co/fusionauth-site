@@ -24,11 +24,10 @@ const markdownifiedTitle = remark.parseInline(node.title);
   <details class="group/folder" open={node.isOpen}>
     <summary class="sidebar-summary">
       {node.href ? (
-        <a 
+        <a
           href={`${node.href}/`}
           class={`sidebar-link ${stateClasses}`}
           aria-current={isCurrent ? "page" : undefined}
-          onclick="const det = this.closest('details'); if (!det.open) { event.preventDefault(); det.open = true; }"
           set:html={markdownifiedTitle}
         >
         </a>
