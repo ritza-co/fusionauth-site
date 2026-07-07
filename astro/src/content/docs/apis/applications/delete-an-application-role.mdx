@@ -19,11 +19,13 @@ When deleting a role on a universal application, a global API key is required. A
 
 ## Request
 
-<API method="DELETE" uri="/api/application/{applicationId}/role/{roleId}" authentication={["api-key"]} title="Delete an Application Role by Id"/>
+Delete an Application Role by Id, or by name.
+
+<API method="DELETE" uri="/api/application/{applicationId}/role/{roleId}" authentication={["api-key"]} title="Delete an Application Role by Id" headingLevel="h3"/>
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="applicationId" type="UUID" required>
@@ -34,11 +36,11 @@ When deleting a role on a universal application, a global API key is required. A
   </APIField>
 </APIBlock>
 
-<API method="DELETE" uri="/api/application/{applicationId}/role?name={name}" authentication={["api-key"]} title="Delete an Application Role by name"/>
+<API method="DELETE" uri="/api/application/{applicationId}/role?name={name}" authentication={["api-key"]} title="Delete an Application Role by name" headingLevel="h3"/>
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="applicationId" type="UUID" required>

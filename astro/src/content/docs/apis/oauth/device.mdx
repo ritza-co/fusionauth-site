@@ -118,9 +118,9 @@ This endpoint is intended to validate the end-user provided **user_code** and re
 
 This endpoint is equivalent to the [Device Validate](#device-validate) endpoint, but it will return meta-data for the **user_code** in a JSON body.
 
-<API method="POST" uri="/oauth2/device/user-code" title="Validate and retrieve a user_code using client credentials"/>
+<API method="POST" uri="/oauth2/device/user-code" title="Validate and retrieve a user_code using client credentials" headingLevel="h3"/>
 
-### Request Headers
+#### Request Headers
 
 <APIBlock>
   <AuthorizationHeader />
@@ -129,7 +129,7 @@ This endpoint is equivalent to the [Device Validate](#device-validate) endpoint,
   </APIField>
 </APIBlock>
 
-### Request Parameters
+#### Request Parameters
 
 Ensure you are sending these parameters as form encoded data in the request body, do not send these parameters in a query string.
 
@@ -153,9 +153,9 @@ Ensure you are sending these parameters as form encoded data in the request body
   </APIField>
 </APIBlock>
 
-<API method="POST" uri="/oauth2/device/user-code" authentication={["api-key"]} title="Validate and retrieve a user_code using an API key"/>
+<API method="POST" uri="/oauth2/device/user-code" authentication={["api-key"]} title="Validate and retrieve a user_code using an API key" headingLevel="h3"/>
 
-### Request Headers
+#### Request Headers
 
 <APIBlock>
   <APIField name="Content-Type" type="String" required>
@@ -163,7 +163,7 @@ Ensure you are sending these parameters as form encoded data in the request body
   </APIField>
 </APIBlock>
 
-### Request Parameters
+#### Request Parameters
 
 Ensure you are sending these parameters as form encoded data in the request body, do not send these parameters in a query string.
 
