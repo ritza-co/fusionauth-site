@@ -18,12 +18,12 @@ After you install FusionAuth, [create an API key with the correct permissions](/
 
 ## CORS setup
 
-To make in-browser API calls from the explorer, you need to configure CORS on your local FusionAuth instance. This is not required if you only use the generated curl commands to call the API from the command line.
+To make in-browser API calls from the explorer, you need to configure CORS on your local FusionAuth instance. This is not required if you only use the generated curl commands to call the API from the command line. See the [CORS reference](/docs/operate/secure/cors) for details on each setting below.
 
 To set up CORS:
 
 1. Log in to your FusionAuth administrative user interface.
-2. Navigate to <Breadcrumb>Settings -> System</Breadcrumb>.
+2. Navigate to <Breadcrumb>Settings -> System -> CORS</Breadcrumb>.
 3. Enable **CORS**.
 4. Update **Allowed headers** to include `authorization`, `accept`, and `content-type`.
 5. Check all the **Allowed methods**.
