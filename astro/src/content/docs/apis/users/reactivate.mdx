@@ -11,11 +11,13 @@ import UserResponseBody from 'src/content/docs/apis/_user-response-body.mdx';
 import XFusionauthTenantIdHeaderScopedOperation from 'src/content/docs/apis/_x-fusionauth-tenant-id-header-scoped-operation.mdx';
 import TryInExplorer from 'src/components/api/TryInExplorer.astro';
 
-This API is used to reactivate an inactive Users. You must specify the Id of the User on the URI.
+This API is used to reactivate an inactive User. You must specify the Id of the User on the URI.
 
 <TryInExplorer method="PUT" path="/api/user/{userId}" />
 
 ## Request
+
+Identify the User to reactivate by Id on the URI.
 
 <API method="PUT" uri="/api/user/{userId}?reactivate=true" authentication={["api-key"]} title="Reactivate the User"/>
 
