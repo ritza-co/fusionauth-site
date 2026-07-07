@@ -24,13 +24,17 @@ To create a universal application, you must use a global API key. A tenant-scope
 
 ## Request
 
+Create an Application with a new set of values, or create an Application by copying an existing Application.
+
+### Create an Application
+
 <API method="POST" uri="/api/application" authentication={["api-key"]} title="Create an Application with a randomly generated Id"/>
 
 <API method="POST" uri="/api/application/{applicationId}" authentication={["api-key"]} title="Create an Application with the provided unique Id"/>
 
 <XFusionauthTenantIdHeaderCreateOperation />
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="applicationId" type="UUID" optional immutable defaults="a generated UUID">
@@ -39,6 +43,8 @@ To create a universal application, you must use a global API key. A tenant-scope
 </APIBlock>
 
 <ApplicationRequestBody is_create />
+
+### Create an Application from an existing Application
 
 <Aside type="version">
 This API has been available since 1.43.0
@@ -54,7 +60,7 @@ This API has been available since 1.43.0
 
 <XFusionauthTenantIdHeaderCreateOperation />
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="applicationId" type="UUID" optional immutable defaults="a generated UUID">

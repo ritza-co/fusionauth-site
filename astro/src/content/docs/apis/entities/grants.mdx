@@ -36,6 +36,8 @@ This is an upsert operation. If the grant to this Entity for the specified User 
 
 ### Request
 
+Create a Grant, or update an existing Grant.
+
 <API method="POST" uri="/api/entity/{entityId}/grant" authentication={["api-key"]} title="Create a Grant"/>
 
 #### Request Parameters
@@ -81,6 +83,8 @@ This API is used to retrieve Grants. Specifying only an **entityId** on the URI 
 Adding a parameter of **userId** or **recipientEntityId** filters the returned Grants. It limits them to those made to the User or recipient Entity, respectively.
 
 ### Request
+
+Retrieve all Grants to this Entity, Grants to this Entity for a User, or Grants for another Entity.
 
 <API method="GET" uri="/api/entity/{entityId}/grant" authentication={["api-key"]} title="Retrieve All Grants To This Entity"/>
 
@@ -133,6 +137,8 @@ This API is used to delete a Grant from an Entity. This is also known as revokin
 
 ### Request
 
+Delete a Grant for a User, or for a Recipient Entity.
+
 <API method="DELETE" uri="/api/entity/{entityId}/grant?userId={userId}" authentication={["api-key"]} title="Delete a Grant for a User"/>
 
 #### Request Parameters
@@ -175,6 +181,8 @@ This API does not return a JSON response body.
 This API is used to search for Entity Grants. This API may be called using the `GET` or `POST` HTTP methods. Examples of each are provided below. The `POST` method is provided to allow for a richer request object without worrying about exceeding the maximum length of a URL. Calling this API with either the `GET` or `POST` HTTP method will provide the same search results given the same query parameters.
 
 ### Request
+
+Send the search criteria as query parameters on a `GET` request or as a JSON body on a `POST` request.
 
 <API method="GET" uri="/api/entity/grant/search?entityId={uuid}" authentication={["global-api-key"]} title="Search for Grants by Entity Id"/>
 

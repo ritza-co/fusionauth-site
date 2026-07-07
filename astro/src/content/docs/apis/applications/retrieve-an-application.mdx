@@ -18,6 +18,10 @@ This API is used to retrieve one or all of the configured Applications. Specifyi
 
 ## Request
 
+Retrieve all Applications, or a single Application by Id.
+
+### Retrieve all Applications
+
 <API method="GET" uri="/api/application" authentication={["api-key"]} title="Retrieve all of the active Applications"/>
 
 <XFusionauthTenantIdHeaderScopedOperation />
@@ -26,7 +30,7 @@ This API is used to retrieve one or all of the configured Applications. Specifyi
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="inactive" type="Boolean" optional>
@@ -34,11 +38,11 @@ This API is used to retrieve one or all of the configured Applications. Specifyi
   </APIField>
 </APIBlock>
 
-<API method="GET" uri="/api/application/{applicationId}" authentication={["api-key"]} title="Retrieve a single Application by Id"/>
+<API method="GET" uri="/api/application/{applicationId}" authentication={["api-key"]} title="Retrieve a single Application by Id" headingLevel="h3"/>
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="applicationId" type="UUID" optional>

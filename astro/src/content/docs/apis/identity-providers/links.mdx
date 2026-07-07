@@ -31,6 +31,10 @@ This API is used to create a link between a FusionAuth User and a user in a 3rd 
 
 ### Request
 
+Link a User using the current request body format, or using the deprecated request body format.
+
+#### Link a User
+
 <Aside type="version">
 Available since version `1.43.0`
 </Aside>
@@ -39,7 +43,7 @@ Available since version `1.43.0`
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-#### Request Body
+##### Request Body
 
 <APIBlock>
   <APIField name="identityProviderLink.displayName" type="String" optional>
@@ -63,6 +67,8 @@ Available since version `1.43.0`
 
 <JSON title="Example Request JSON" src="identity-providers/links/request.json" />
 
+#### Link a User (deprecated request body)
+
 <Aside type="note">
 Deprecated in version `1.43.0`
 
@@ -73,7 +79,7 @@ While this API is still functional, its usage is discouraged. When available ple
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-#### Request Body
+##### Request Body
 
 <APIBlock>
   <APIField name="displayName" type="String" optional since="1.28.1">
@@ -106,6 +112,10 @@ This API is used complete a pending link. If an identity provider is configured 
 
 ### Request
 
+Complete a pending Link using the current request body format, or using the deprecated request body format.
+
+#### Complete a pending Link
+
 <Aside type="version">
 Available Since Version `1.43.0`
 </Aside>
@@ -113,7 +123,7 @@ Available Since Version `1.43.0`
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-#### Request Body
+##### Request Body
 
 <APIBlock>
   <APIField name="pendingIdPLinkId" type="String" required>
@@ -126,6 +136,8 @@ Available Since Version `1.43.0`
 
 <JSON title="Example Request JSON" src="identity-providers/links/pending-request.json" />
 
+#### Complete a pending Link (deprecated request body)
+
 <Aside type="note">
 Deprecated in version 1.43.0.
 
@@ -136,7 +148,7 @@ While this API is still functional, its usage is discouraged. When available ple
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-#### Request Body
+##### Request Body
 
 <APIBlock>
   <APIField name="pendingIdPLinkId" type="String" required>
@@ -160,6 +172,8 @@ While this API is still functional, its usage is discouraged. When available ple
 This API is used to retrieve a single Link, all Links for a specific identity provider and user, or all Links for a user.
 
 ### Request
+
+Retrieve a single link, all links for a specific user by identity provider, or all links for a user.
 
 <API method="GET" uri="/api/identity-provider/link?identityProviderId={identityProviderId}&identityProviderUserId={identityProviderUserId}&userId={userId}" authentication={["api-key"]} title="Retrieve a single link"/>
 
@@ -226,6 +240,8 @@ Retrieving this link may be useful if you are building your own login pages, and
 
 ### Request
 
+Retrieve a pending Link by its Id.
+
 <API method="GET" uri="/api/identity-provider/link/pending/{pendingLinkId}?userId={userId}" authentication={["api-key"]} title="Retrieve a single pending link by Id"/>
 
 <XFusionauthTenantIdHeaderScopedOperation />
@@ -254,6 +270,8 @@ Retrieving this link may be useful if you are building your own login pages, and
 This API is used to remove a link between a FusionAuth User and a 3rd party identity provider.
 
 ### Request
+
+Unlink a User from a 3rd party identity provider by providing the identity provider and user Ids.
 
 <API method="DELETE" uri="/api/identity-provider/link?identityProviderId={identityProviderId}&identityProviderUserId={identityProviderUserId}&userId={userId}" authentication={["api-key"]} title="Delete the Link with the given Id"/>
 

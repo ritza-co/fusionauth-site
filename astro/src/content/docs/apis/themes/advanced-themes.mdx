@@ -39,11 +39,15 @@ This API is used to create a new Theme.
 
 ### Request
 
+This API supports two ways to create an Advanced Theme, either as a brand new Theme or by copying an existing Theme's settings.
+
+#### Create a New Advanced Theme
+
 <API method="POST" uri="/api/theme" authentication={["global-api-key"]} title="Create a new Theme with a randomly generated Id"/>
 
 <API method="POST" uri="/api/theme/{themeId}" authentication={["global-api-key"]} title="Create a Theme with the provided unique Id"/>
 
-#### Request Parameters
+##### Request Parameters
 
 <APIBlock>
   <APIField name="themeId" type="UUID" optional defaults="secure random UUID">
@@ -51,7 +55,7 @@ This API is used to create a new Theme.
   </APIField>
 </APIBlock>
 
-#### Request Body
+##### Request Body
 
 <APIBlock>
   <Aside type="note">
@@ -63,11 +67,13 @@ This API is used to create a new Theme.
 
 <ThemeRequestBodySuffix />
 
+#### Copy an Existing Advanced Theme
+
 <API method="POST" uri="/api/theme" authentication={["global-api-key"]} title="Create a Theme from an existing Theme with a randomly generated Id"/>
 
 <API method="POST" uri="/api/theme/{themeId}" authentication={["global-api-key"]} title="Create a Theme from an existing Theme with the provided unique Id"/>
 
-#### Request Parameters
+##### Request Parameters
 
 <APIBlock>
   <APIField name="themeId" type="UUID" optional defaults="secure random UUID">
@@ -91,6 +97,8 @@ This API is used to create a new Theme.
 This API is used to retrieve a single Theme by unique Id or all of the Themes.
 
 ### Request
+
+Retrieve all of the Themes, or provide an Id to retrieve a single Theme.
 
 <API method="GET" uri="/api/theme" authentication={["global-api-key"]} title="Retrieve all of the Themes"/>
 
@@ -132,6 +140,8 @@ This API is used to search for Themes and may be called using the `GET` or `POST
 
 ### Request
 
+Send the search criteria as query parameters on a `GET` request or as a JSON body on a `POST` request.
+
 <API method="GET" uri="/api/theme/search?name={name}" authentication={["global-api-key"]} title="Search for Themes"/>
 
 #### Request Parameters
@@ -166,6 +176,8 @@ The response for this API contains the Themes matching the search criteria in pa
 <GenericUpdateExplanationFragment capitalized_object_name="Theme" />
 
 ### Request
+
+Update the Theme by sending the fields you want to change.
 
 <API method="PUT" uri="/api/theme/{themeId}" authentication={["global-api-key"]} showPatch={true} title="Update the Theme with the given Id"/>
 
@@ -202,6 +214,8 @@ The response for this API contains the Theme that was updated.
 This API is used to permanently delete a Theme.
 
 ### Request
+
+Delete a Theme by its Id.
 
 <API method="DELETE" uri="/api/theme/{themeId}" authentication={["global-api-key"]} title="Delete a Theme by Id"/>
 

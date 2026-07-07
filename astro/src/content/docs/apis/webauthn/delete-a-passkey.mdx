@@ -16,11 +16,13 @@ This API is used to delete a single WebAuthn passkey or all of a user's register
 
 ## Request
 
-<API method="DELETE" uri="/api/webauthn/{id}" authentication={["api-key"]} title="Delete a single Passkey by Id"/>
+Delete a single Passkey by Id, or all Passkeys belonging to a User.
+
+<API method="DELETE" uri="/api/webauthn/{id}" authentication={["api-key"]} title="Delete a single Passkey by Id" headingLevel="h3"/>
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="id" type="UUID" required noborder>
@@ -28,11 +30,11 @@ This API is used to delete a single WebAuthn passkey or all of a user's register
   </APIField>
 </APIBlock>
 
-<API method="DELETE" uri="/api/webauthn?userId={userId}" authentication={["api-key"]} title="Delete all Passkeys belonging to a User"/>
+<API method="DELETE" uri="/api/webauthn?userId={userId}" authentication={["api-key"]} title="Delete all Passkeys belonging to a User" headingLevel="h3"/>
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="userId" type="UUID" required>

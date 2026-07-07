@@ -33,6 +33,8 @@ This API is used to take a User Action on a User. User Actions are the method th
 
 ### Request
 
+Take an action on a User by sending the action details in the request body.
+
 <API method="POST" uri="/api/user/action" authentication={["api-key"]} title="Take an action on a User"/>
 
 <XFusionauthTenantIdHeaderScopedOperation />
@@ -53,6 +55,8 @@ The response for this API contains the User Action along with any event and emai
 This API is used to retrieve a User Action that was previously taken on a User, this can be thought of as the log or historical record.
 
 ### Request
+
+Retrieve a specific User Action Log by Id, or all the Actions for a specific User by the User Id.
 
 <API method="GET" uri="/api/user/action/{actionId}" authentication={["api-key"]} title="Retrieve a specific User Action Log by Id."/>
 
@@ -106,6 +110,8 @@ This API is used to update a User Action that was previously taken on a User. Us
 
 ### Request
 
+Update a previously taken action by its Id.
+
 <API method="PUT" uri="/api/user/action/{actionId}" authentication={["api-key"]} title="Update an in progress Action by Id"/>
 
 #### Request Parameters
@@ -133,6 +139,8 @@ The response for this API contains the User Action along with any event and emai
 This API is used to cancel a User Action that was previously taken on a User. User Actions are the method that FusionAuth uses to discipline, reward and interact with Users.
 
 ### Request
+
+Cancel a previously taken action by its Id.
 
 <API method="DELETE" uri="/api/user/action/{actionId}" authentication={["api-key"]} title="Cancel in progress Action by Id"/>
 

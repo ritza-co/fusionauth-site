@@ -19,9 +19,11 @@ This API is used to remove Users from a Group. Removing a User from a Group remo
 
 ## Request
 
-<API method="DELETE" uri="/api/group/member/{memberId}" authentication={["api-key"]} title="Remove a single User from a Group by Member Id"/>
+Remove a single User from a Group by Member Id, by User Id and Group Id, remove all Users from a Group, or remove specific Users from a Group by Member Id or Group Id.
 
-### Request Parameters
+<API method="DELETE" uri="/api/group/member/{memberId}" authentication={["api-key"]} title="Remove a single User from a Group by Member Id" headingLevel="h3"/>
+
+#### Request Parameters
 
 <APIBlock>
   <APIField name="memberId" type="UUID" required>
@@ -33,9 +35,9 @@ This API is used to remove Users from a Group. Removing a User from a Group remo
 
 <br/>
 
-<API method="DELETE" uri="/api/group/member?groupId={groupId}&userId={userId}" authentication={["api-key"]} title="Remove a single User from a Group by User Id and Group Id"/>
+<API method="DELETE" uri="/api/group/member?groupId={groupId}&userId={userId}" authentication={["api-key"]} title="Remove a single User from a Group by User Id and Group Id" headingLevel="h3"/>
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="groupId" type="UUID" required>
@@ -50,7 +52,7 @@ This API is used to remove Users from a Group. Removing a User from a Group remo
 
 <br/>
 
-<API method="DELETE" uri="/api/group/member?groupId={groupId}" authentication={["api-key"]} title="Remove all Users from a Group"/>
+<API method="DELETE" uri="/api/group/member?groupId={groupId}" authentication={["api-key"]} title="Remove all Users from a Group" headingLevel="h3"/>
 
 <Aside type="caution">
 Note, in version `1.36.0` the Member API supports the `PUT` method allowing you to replace all members in the Group.
@@ -58,7 +60,7 @@ Note, in version `1.36.0` the Member API supports the `PUT` method allowing you 
 As of version `1.36.0` this API is deprecated, in favor of using the `PUT` method. Prefer the use of `PUT /api/group/member` with an empty array of members to effectively remove all members from the group.
 </Aside>
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="groupId" type="UUID" required>
