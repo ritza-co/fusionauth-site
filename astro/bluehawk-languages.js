@@ -40,6 +40,6 @@ export function register({ bluehawk }) {
   });
   bluehawk.addLanguage("erb", {
     languageId: "erb",
-    blockComments: [[/<%#/, /%>/]],
+    blockComments: [[/<%# BLUEHAWK/, /!BLUEHAWK %>/]],
   });
 }
