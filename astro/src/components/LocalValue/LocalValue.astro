@@ -1,4 +1,6 @@
 ---
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 import parse, { Parser, type SelectorFunction } from '../RemoteValue/parsers';
 export { Parser };
 
@@ -75,16 +77,10 @@ const { path, selector, parser, default: defaultValue = 'unknown' } = Astro.prop
 // Value that will be rendered
 let value;
 
-const filePath = `src/code-example-repositories/${path}`;
+const filePath = resolve('src/code-example-repositories', path);
 
 try {
-  const file = await Astro.resolve(filePath);
-  const response = await fetch(file);
-  if (response.ok) {
-    value = await response.text();
-  } else {
-    throw new Error(`Failed to fetch local value at [${filePath}], Reason: [${response.statusText}]`);
-  }
+  value = readFileSync(filePath, 'utf-8');
 } catch (error) {
   throw new Error(`Failed to read local value file at [${filePath}]: ${error}`);
 }
@@ -92,7 +88,13 @@ try {
 // Using the selector to look up the value
 // If you don't provide a selector, the entire file will be returned
 if ((value !== null) && (selector !== null)) {
-  value = parse(filePath, value, selector, parser);
+  // Extract parser from file extension if not provided
+  let localParser = parser;
+  if (!localParser) {
+    const ext = filePath.substring(filePath.lastIndexOf('.') + 1);
+    localParser = ext as Parser;
+  }
+  value = parse(filePath, value, selector, localParser);
 }
 
 // Default value
