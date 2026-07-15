@@ -61,7 +61,7 @@ We'll use the [OmniAuth Library](https://github.com/omniauth/omniauth), which si
 
 Install the omniauth gem and other supporting gems. Add the following three lines to your `Gemfile`.
 
-<LocalCode src="fusionauth-quickstart-ruby-on-rails-web/complete-app/Gemfile.snippet.gemfile"
+<LocalCode src="fusionauth-quickstart-ruby-on-rails-web/Gemfile.snippet.gemfile"
  lang="ruby"/>
 
 Then, install them.
@@ -76,7 +76,7 @@ Next, update your `config/environments/development.rb` file with FusionAuth Open
 You'll have to add similar configuration to the correct environment files when deploying to prod or other environments.
 </Aside>
 
-<LocalCode src="fusionauth-quickstart-ruby-on-rails-web/complete-app/config/environments/development.rb.snippet.oidcConfig"
+<LocalCode src="fusionauth-quickstart-ruby-on-rails-web/development.snippet.oidcConfig.rb"
 lang="ruby"/>
 
 Configure OmniAuth by creating `config/initializers/omniauth.rb` with the following code:
@@ -154,7 +154,7 @@ lang="erb" />
 
 Next, update the layout so the user has login or logout buttons on every page. Add the below code to `app/views/layouts/application.html.erb` just after the `<body>` tag.
 
-<LocalCode src="fusionauth-quickstart-ruby-on-rails-web/complete-app/app/views/layouts/application.html.erb.snippet.applicationLayout"
+<LocalCode src="fusionauth-quickstart-ruby-on-rails-web/application.html.snippet.applicationLayout.erb"
 lang="erb"/>
 
 Finally, add a form and messaging for making change at `app/views/make_change/index.html.erb`:
