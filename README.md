@@ -45,8 +45,8 @@ The following scripts are used in `.github/workflows` when pushing to GitHub:
 - Remove the `.git` folder.
 - Remove the workflows (tests) from the `.github` folder. (But use them to write tests in the new `test.sh` file).
 - Switch the repository annotation format from RemoteCode to Bluehawk in the source files (if you use the entire file you don't need annotations)
-- Use `LocalCode` instead of `RemoteCode` in the accompanying article
-- Run `npm run validate-code-snippets && npm run generate-code-snippets` to create the code snippets for display in the article
+- Use `LocalCode` instead of `RemoteCode` in the accompanying article. And `LocalValue` instead of `RemoteValue`, if it's used.
+- Run `npm run validate-code-snippets && npm run generate-code-snippets` to create the code snippets for display in the article.
 - Test the tests, snippet generation, and documentation build and create a pull request to the main FusionAuth branch
 
 ## Build
