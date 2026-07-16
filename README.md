@@ -42,6 +42,8 @@ The following scripts are used in `.github/workflows` when pushing to GitHub:
 - Copy the contents of the repository into a new folder in `astro/src/code-example-repositories`
 - Add a `repositoryUrl.txt` with the url of the remote (without `https://`)
 - Add a `tests` folder with a `test.sh` file to run all tests using Docker (use `node:26` if possible to avoid multiple images)
+- Remove the `.git` folder.
+- Remove the workflows (tests) from the `.github` folder. (But use them to write tests in the new `test.sh` file).
 - Switch the repository annotation format from RemoteCode to Bluehawk in the source files (if you use the entire file you don't need annotations)
 - Use `LocalCode` instead of `RemoteCode` in the accompanying article
 - Run `npm run validate-code-snippets && npm run generate-code-snippets` to create the code snippets for display in the article
