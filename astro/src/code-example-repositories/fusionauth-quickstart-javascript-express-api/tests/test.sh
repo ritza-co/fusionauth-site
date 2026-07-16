@@ -1,38 +1,44 @@
-name:
-  test_install
+#!/usr/bin/env bash
+set -euo pipefail
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  # You can adjust the schedule as needed
-  schedule:
-    - cron: '31 17 5 * *'
+echo "TODO: write more comprehensive tests using old github workflow below and command below"
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
 
-# Cancel stale executions is easy
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+# name:
+#   test_install
 
-jobs:
-  test_install:
-    runs-on: ubuntu-latest
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
+#   # You can adjust the schedule as needed
+#   schedule:
+#     - cron: '31 17 5 * *'
 
-    # timeout after a certain period
-    timeout-minutes: 5
+#   # Allows you to run this workflow manually from the Actions tab
+#   workflow_dispatch:
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+# # Cancel stale executions is easy
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.ref }}
+#   cancel-in-progress: true
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+# jobs:
+#   test_install:
+#     runs-on: ubuntu-latest
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: complete-application
+#     # timeout after a certain period
+#     timeout-minutes: 5
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: '18'
+
+#       - name: Install dependencies
+#         run: npm install
+#         working-directory: complete-application

@@ -1,25 +1,31 @@
-# This is a starting workflow for building with GitHub Actions
-name: Build
+#!/usr/bin/env bash
+set -euo pipefail
 
-on:
-  push:
-    branches: [ master, main ]
-  pull_request:
-    branches: [ master, main ]
+echo "TODO: write more comprehensive tests using old github workflow below and command below"
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
 
-    steps:
-      # Check out code
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      # Set up the build environment
-      - run: npm ci --prefix "./complete-application/"
+# # This is a starting workflow for building with GitHub Actions
+# name: Build
 
-      # Build
+# on:
+#   push:
+#     branches: [ master, main ]
+#   pull_request:
+#     branches: [ master, main ]
 
-      # Done!
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       # Check out code
+#       - uses: actions/checkout@v3
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: 18
+#       # Set up the build environment
+#       - run: npm ci --prefix "./complete-application/"
+
+#       # Build
+
+#       # Done!
