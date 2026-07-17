@@ -86,7 +86,7 @@ echo "Rails app is ready."
 
 echo "Running Playwright tests..."
 cd "$SCRIPT_DIR"
-docker run --network host --name playwright-test --rm -v "$SCRIPT_DIR":/tests -w /tests mcr.microsoft.com/playwright:v1.61.1 playwright test integration.spec.js
+docker run --network host --name playwright-test --rm -v "$SCRIPT_DIR/integration.spec.js":/tests/integration.spec.js mcr.microsoft.com/playwright:v1.61.1 bash -c "cd /tmp && npm init -y && npm install @playwright/test && npx playwright test /tests/integration.spec.js"
 TEST_EXIT_CODE=$?
 
 exit $TEST_EXIT_CODE
