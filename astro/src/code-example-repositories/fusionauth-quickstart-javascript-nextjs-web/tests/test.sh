@@ -17,14 +17,14 @@ echo "Starting FusionAuth..."
 cd "$PROJECT_DIR"
 docker compose up -d
 
-echo "Starting app..."
-docker run --network host --name app -v "$PROJECT_DIR/complete-application":/app -w /app --rm node:26 bash -c "npm install && npm run dev" &
-NEXTJS_PID=$!
-until docker inspect app > /dev/null 2>&1; do
-  sleep 1
-done
-docker logs -f app &
-LOGS_PID=$!
+# echo "Starting app..."
+# docker run --network host --name app -v "$PROJECT_DIR/complete-application":/app -w /app --rm node:26 bash -c "npm install && npm run dev" &
+# NEXTJS_PID=$!
+# until docker inspect app > /dev/null 2>&1; do
+#   sleep 1
+# done
+# docker logs -f app &
+# LOGS_PID=$!
 
 echo "Waiting for FusionAuth to be ready..."
 until curl -sf http://localhost:9011/admin/ > /dev/null 2>&1; do
@@ -32,14 +32,13 @@ until curl -sf http://localhost:9011/admin/ > /dev/null 2>&1; do
   sleep 5
 done
 echo "FusionAuth is ready."
-sleep 15
 
-echo "Waiting for app to be ready..."
-until curl -sf http://localhost:3000 > /dev/null 2>&1; do
-  echo "  Waiting for app..."
-  sleep 5
-done
-echo "App is ready."
+# echo "Waiting for app to be ready..."
+# until curl -sf http://localhost:3000 > /dev/null 2>&1; do
+#   echo "  Waiting for app..."
+#   sleep 5
+# done
+# echo "App is ready."
 
 echo "Running Playwright tests..."
 cd "$SCRIPT_DIR"
