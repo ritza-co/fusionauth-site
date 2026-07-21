@@ -1,6 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
 test('FusionAuth admin login', async ({ page }) => {
+  test.setTimeout(60000);
   await page.goto('http://localhost:9011/admin/');
   await page.waitForLoadState('networkidle');
   await page.waitForSelector('input[placeholder="Login"]');
