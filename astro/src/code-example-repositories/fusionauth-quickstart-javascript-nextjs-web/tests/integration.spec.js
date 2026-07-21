@@ -3,6 +3,7 @@ const { test, expect } = require('@playwright/test');
 test('FusionAuth admin login', async ({ page }) => {
   await page.goto('http://localhost:9011/admin/');
   await page.waitForLoadState('networkidle');
+  await page.waitForSelector('input[placeholder="Login"]');
 
   await page.getByPlaceholder('Login').fill('admin@example.com');
   await page.getByPlaceholder('Password').fill('password');
