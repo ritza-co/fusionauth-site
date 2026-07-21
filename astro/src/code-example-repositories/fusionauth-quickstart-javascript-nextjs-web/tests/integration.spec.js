@@ -4,6 +4,7 @@ test('FusionAuth admin login', async ({ page }) => {
   await page.goto('http://localhost:9011/admin/');
   await page.waitForLoadState('networkidle');
 
+  await expect(page.getByPlaceholder('Login')).toBeVisible({ timeout: 60000 });
   await page.getByPlaceholder('Login').fill('admin@example.com');
   await page.getByPlaceholder('Password').fill('password');
   await page.getByRole('button', { name: 'Submit' }).click();
