@@ -32,6 +32,7 @@ until curl -sf http://localhost:9011/admin/ > /dev/null 2>&1; do
   sleep 5
 done
 echo "FusionAuth is ready."
+sleep 15
 
 echo "Waiting for app to be ready..."
 until curl -sf http://localhost:3000 > /dev/null 2>&1; do
