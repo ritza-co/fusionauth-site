@@ -4,6 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
+LOGS_PID=0
 cleanup() {
   echo "Cleaning up..."
   kill $LOGS_PID 2>/dev/null || true
@@ -16,7 +17,7 @@ echo "Starting FusionAuth..."
 cd "$PROJECT_DIR"
 docker compose up -d
 
-echo "Starting Rails app..."
+echo "Starting app..."
 docker run --network host --name ruby --rm -v gems:/usr/local/bundle -v "$PROJECT_DIR/complete-app":/app -w /app ruby:4.0.5 bash -c "bundle install && OP_SECRET_KEY=super-secret-secret-that-should-be-regenerated-for-production bundle exec rails s -b 0.0.0.0" &
 RAILS_PID=$!
 until docker inspect ruby > /dev/null 2>&1; do
@@ -32,12 +33,12 @@ until curl -sf http://localhost:9011 > /dev/null 2>&1; do
 done
 echo "FusionAuth is ready."
 
-echo "Waiting for Rails app to be ready..."
+echo "Waiting for app to be ready..."
 until curl -sf http://localhost:3000 > /dev/null 2>&1; do
-  echo "  Waiting for Rails app..."
+  echo "  Waiting for app..."
   sleep 5
 done
-echo "Rails app is ready."
+echo "App is ready."
 
 echo "Running Playwright tests..."
 cd "$SCRIPT_DIR"

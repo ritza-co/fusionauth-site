@@ -15,9 +15,13 @@ test('FusionAuth admin login', async ({ page }) => {
 test('App OAuth login via FusionAuth', async ({ page }) => {
   await page.goto('http://localhost:3000');
 
-  await expect(page.getByRole('heading', { name: /Login to manage your account/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Welcome to Changebank/i })).toBeVisible();
 
-  await page.getByRole('button', { name: /Login/i }).click();
+  await page.getByText(/log in or create a new account/i).click();
+
+  await page.waitForURL(/\/api\/auth\/signin/);
+
+  await page.getByRole('button', { name: /FusionAuth/i }).click();
 
   await page.waitForURL(/localhost:9011/);
 
@@ -27,7 +31,7 @@ test('App OAuth login via FusionAuth', async ({ page }) => {
 
   await page.waitForURL(/localhost:3000/);
 
-  await expect(page.getByRole('heading', { name: /Welcome Richard/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Your balance/i })).toBeVisible();
   await expect(page.getByText('richard@example.com')).toBeVisible();
-  await expect(page.getByRole('button', { name: /Logout/i })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Log out/i })).toBeVisible();
 });
