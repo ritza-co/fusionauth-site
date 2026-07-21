@@ -782,3 +782,11 @@ user.parentEmail=Parent's email
 verificationCode=Verification code
 oneTimeCode=One-time code
 password-containsLoginId-constraint=Cannot contain the user's login
+
+#1.68.0 messages - Two-factor edit
+two-factor-name=Name
+account-two-factor-edit-page-title=Edit Two-Factor
+{placeholder}two-factor-name=Enter a name to identify this method
+edit-two-factor=Edit two-factor
+{description}edit-two-factor=Update the name used to identify this two-factor method.
+[tooLong]twoFactorName=Two-factor method name exceeds the maximum length requirement

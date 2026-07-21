@@ -25,7 +25,7 @@ export default async function RootLayout({
           <div id="page-header">
             <div id="logo-header">
               <Image
-                src="/img/changebank.svg"
+                src="https://fusionauth.io/cdn/samplethemes/changebank/changebank.svg"
                 alt="change bank logo"
                 width="257"
                 height="55"
