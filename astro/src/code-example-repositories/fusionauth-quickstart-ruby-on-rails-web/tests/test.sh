@@ -13,6 +13,10 @@ cleanup() {
 }
 trap cleanup EXIT
 
+echo "Pulling latest FusionAuth image..."
+cd "$PROJECT_DIR"
+docker compose pull
+
 echo "Starting FusionAuth..."
 cd "$PROJECT_DIR"
 docker compose up -d
