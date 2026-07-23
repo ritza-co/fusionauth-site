@@ -30,8 +30,9 @@ const makeChange = (e: Event) => {
   e.preventDefault();
 
   const total = amount.value;
-  const nickels = Math.floor(amount.value / 0.05);
-  const pennies = Math.round((amount.value - nickels * 0.05) * 100);
+  const totalCents = Math.round(amount.value * 100);
+  const nickels = Math.floor(totalCents / 5);
+  const pennies = totalCents - nickels * 5;
   change.value = {total, nickels, pennies};
 };
 </script>

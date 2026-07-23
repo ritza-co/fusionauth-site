@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 
 var coins = {
-  quarters: 0.25,
-  dimes: 0.1,
-  nickels: 0.05,
-  pennies: 0.01,
+  quarters: 25,
+  dimes: 10,
+  nickels: 5,
+  pennies: 1,
 };
 
 export default function MakeChangeForm() {
@@ -23,11 +23,10 @@ export default function MakeChangeForm() {
     try {
       setMessage('We can make change for');
 
-      let remainingAmount = amount;
+      let remainingCents = Math.round(amount * 100);
       for (const [name, nominal] of Object.entries(coins)) {
-        let count = Math.floor(remainingAmount / nominal);
-        remainingAmount =
-          Math.ceil((remainingAmount - count * nominal) * 100) / 100;
+        let count = Math.floor(remainingCents / nominal);
+        remainingCents = remainingCents - count * nominal;
 
         setMessage((m) => `${m} ${count} ${name}`);
       }
