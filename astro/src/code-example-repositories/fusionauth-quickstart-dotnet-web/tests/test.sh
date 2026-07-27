@@ -11,20 +11,20 @@ cleanup() {
   kill $LOGS_PID 2>/dev/null || true
   kill $FA_LOGS_PID 2>/dev/null || true
   docker stop app 2>/dev/null || true
+  docker rm -f app 2>/dev/null || true
   cd "$PROJECT_DIR" && docker compose down -v 2>/dev/null || true
 }
 trap cleanup EXIT
 
 echo "Pulling latest FusionAuth image..."
 cd "$PROJECT_DIR"
-docker compose pull
+# docker compose pull
 
 echo "Starting FusionAuth..."
 docker compose up -d
 
 echo "Starting app..."
-docker run --network host --name app -v "$PROJECT_DIR/complete-application":/app -w /app --rm mcr.microsoft.com/dotnet/sdk:7.0 bash -c "dotnet run"
-NEXTJS_PID=$!
+docker run -d --network host --name app -v "$PROJECT_DIR/complete-application":/app -w /app --rm mcr.microsoft.com/dotnet/sdk:7.0 bash -c "dotnet run"
 until docker inspect app > /dev/null 2>&1; do
   sleep 1
 done
@@ -53,7 +53,7 @@ echo "App is ready."
 
 echo "Running Playwright tests..."
 cd "$SCRIPT_DIR"
-docker run --network host --name playwright-test --rm -e NODE_PATH=/usr/lib/node_modules -v "$SCRIPT_DIR/integration.spec.js":/tests/integration.spec.js mcr.microsoft.com/playwright:v1.61.1 bash -c "npm install -g @playwright/test && playwright test /tests/integration.spec.js"
+docker run --network host --name playwright-test --rm -e NODE_PATH=/usr/lib/node_modules -v "$SCRIPT_DIR/integration.spec.js":/tests/integration.spec.js mcr.microsoft.com/playwright:v1.62.0 bash -c "npm install -g @playwright/test@1.62.0 && playwright test /tests/integration.spec.js"
 TEST_EXIT_CODE=$?
 
 exit $TEST_EXIT_CODE
