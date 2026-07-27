@@ -43,10 +43,6 @@ test('App OAuth login via FusionAuth', async ({ page }) => {
 
   await page.getByText(/log in or create a new account/i).click();
 
-  await page.waitForURL(/\/api\/auth\/signin/);
-
-  await page.getByRole('button', { name: /FusionAuth/i }).click();
-
   await page.waitForURL(/localhost:9011/);
 
   await page.getByPlaceholder('Login').fill('richard@example.com');

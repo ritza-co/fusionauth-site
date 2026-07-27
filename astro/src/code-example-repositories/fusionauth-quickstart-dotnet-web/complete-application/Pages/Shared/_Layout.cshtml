@@ -13,7 +13,7 @@
                     <img src="https://fusionauth.io/cdn/samplethemes/changebank/changebank.svg" />
                     <div class="h-row">
                         <p class="header-email">@User.Claims.Where(x => x.Type == "email").First().Value</p>
-                        <a class="button-lg" href="/Logout">Logout</a>
+                        <a class="button-lg" role="button" href="/Logout">Log out</a>
                     </div>
                 </div>
                 <div id="menu-bar" class="menu-bar">
