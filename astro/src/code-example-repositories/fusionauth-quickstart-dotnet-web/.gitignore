@@ -402,3 +402,5 @@ FodyWeavers.xsd
 
 #Mac DS_Store
 *.DS_Store
+complete-application/bin
+complete-application/obj
