@@ -16,8 +16,6 @@ interface Props {
 
 const { authentication, headingLevel = 'h4', method, showPatch, title, uri }: Props = Astro.props;
 
-const slugger = new GithubSlugger();
-const titleId = title ? slugger.slug(title) : undefined;
 const HeadingTag = headingLevel;
 
 // Parse URI
@@ -95,6 +93,11 @@ const methodColors = {
 };
 
 const uniqueId = `${method.toLowerCase()}-${uri.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')}`;
+
+// Derived from uniqueId (method+uri), not the title text: two <API> boxes on the same page can
+// share an identical title (e.g. the GET-params vs POST-body variants of an operation), but never
+// share both method and uri, so this stays collision-free without needing cross-instance slugger state.
+const titleId = title ? `${new GithubSlugger().slug(title)}-${uniqueId}` : undefined;
 ---
 {(authentication || title) &&
 <div class="border-b border-slate-300 dark:border-slate-800 flex flex-row align-middle">

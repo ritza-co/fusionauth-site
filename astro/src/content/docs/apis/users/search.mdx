@@ -32,11 +32,11 @@ Available Since Version 1.16.0
 </Aside>
 
 
-<API method="GET" uri="/api/user/search?ids={uuid}&ids={uuid}" authentication={["api-key"]} title="Search for Users by Id"/>
+<API method="GET" uri="/api/user/search?ids={uuid}&ids={uuid}" authentication={["api-key"]} title="Search for Users by Id (Database Search Engine)"/>
 
-<API method="GET" uri="/api/user/search?queryString={queryString}" authentication={["api-key"]} title="Search for Users by a query string"/>
+<API method="GET" uri="/api/user/search?queryString={queryString}" authentication={["api-key"]} title="Search for Users by a query string (Database Search Engine)"/>
 
-<API method="GET" uri="/api/user/search?queryString={queryString}&sortFields[0].name={name}&sortFields[0].order={order}" authentication={["api-key"]} title="Search for Users by a query string and sort the response"/>
+<API method="GET" uri="/api/user/search?queryString={queryString}&sortFields[0].name={name}&sortFields[0].order={order}" authentication={["api-key"]} title="Search for Users by a query string and sort the response (Database Search Engine)"/>
 
 ### Request Parameters
 
@@ -44,7 +44,7 @@ Available Since Version 1.16.0
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-<API method="POST" uri="/api/user/search" authentication={["api-key"]} title="Search for Users using a JSON request body. This allows for larger requests than are possible using request parameters."/>
+<API method="POST" uri="/api/user/search" authentication={["api-key"]} title="Search for Users using a JSON request body (Database Search Engine). This allows for larger requests than are possible using request parameters."/>
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
@@ -60,11 +60,11 @@ Available Since Version 1.16.0
 
 The Elasticsearch engine has [advanced querying capabilities and better performance](/docs/get-started/core-concepts/users#elasticsearch-search-engine). You can also review the [Elasticsearch search guide](/docs/lifecycle/manage-users/search/user-search-with-elasticsearch) for more examples.
 
-<API method="GET" uri="/api/user/search?ids={uuid}&ids={uuid}" authentication={["api-key"]} title="Search for Users by Id"/>
+<API method="GET" uri="/api/user/search?ids={uuid}&ids={uuid}" authentication={["api-key"]} title="Search for Users by Id (Elasticsearch Search Engine)"/>
 
-<API method="GET" uri="/api/user/search?queryString={queryString}" authentication={["api-key"]} title="Search for Users by a query string"/>
+<API method="GET" uri="/api/user/search?queryString={queryString}" authentication={["api-key"]} title="Search for Users by a query string (Elasticsearch Search Engine)"/>
 
-<API method="GET" uri="/api/user/search?queryString={queryString}&sortFields[0].name={name}&sortFields[0].order={order}" authentication={["api-key"]} title="Search for Users by a query string and sort the response"/>
+<API method="GET" uri="/api/user/search?queryString={queryString}&sortFields[0].name={name}&sortFields[0].order={order}" authentication={["api-key"]} title="Search for Users by a query string and sort the response (Elasticsearch Search Engine)"/>
 
 <API method="GET" uri="/api/user/search?query={query}" authentication={["api-key"]} title="Search for Users by a raw JSON query"/>
 
@@ -76,7 +76,7 @@ The Elasticsearch engine has [advanced querying capabilities and better performa
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-<API method="POST" uri="/api/user/search" authentication={["api-key"]} title="Search for Users using a JSON request body. This allows for larger requests than are possible using request parameters."/>
+<API method="POST" uri="/api/user/search" authentication={["api-key"]} title="Search for Users using a JSON request body (Elasticsearch Search Engine). This allows for larger requests than are possible using request parameters."/>
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
