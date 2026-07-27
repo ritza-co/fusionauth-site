@@ -11,8 +11,7 @@ import NextSteps from 'src/components/quickstarts/NextSteps.astro';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
 import LocalCode from 'src/components/LocalCode.astro';
 
-<Intro technology=".NET"
-       repositoryUrl="https://github.com/FusionAuth/fusionauth-quickstart-dotnet-web"/>
+<Intro technology=".NET" repositoryUrl="https://github.com/FusionAuth/fusionauth-quickstart-dotnet-web"/>
 
 ## Prerequisites
 
@@ -98,7 +97,7 @@ Press Control+C in the terminal window to stop the application from running.
 It's always smart to leverage existing libraries as they are likely to be more secure and better handle edge cases. You're going to add an `OpenIdConnect` library to the application. In your terminal window, make sure you're in the root directory for your application and run the command below to add the library.
 
 ```shell
-dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
+dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect --version 7.0.9
 ```
 
 This application will contain two pages that require authorization. The `Account` page will display the user's balance and the `MakeChange` page will make change for the user. To protect these pages you can use the [Authorize filter attribute](https://docs.microsoft.com/en-us/aspnet/core/razor-pages/filter?view=aspnetcore-3.1#authorize-filter-attribute) in the [page model](https://learn.microsoft.com/en-us/aspnet/core/razor-pages/?view=aspnetcore-7.0&tabs=visual-studio).
