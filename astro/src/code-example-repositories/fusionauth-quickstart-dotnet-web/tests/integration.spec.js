@@ -16,9 +16,6 @@ test('FusionAuth admin login', async ({ page }) => {
     await page.goto('http://localhost:9011/admin/');
     await page.waitForLoadState('networkidle');
 
-    console.log('Page URL:', page.url());
-    console.log('Page HTML:', await page.content());
-
     await page.getByPlaceholder('Login').fill('admin@example.com');
     await page.getByPlaceholder('Password').fill('password');
     await page.getByRole('button', { name: 'Submit' }).click();
