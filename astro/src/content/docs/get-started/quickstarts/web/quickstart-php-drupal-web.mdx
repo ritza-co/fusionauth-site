@@ -78,8 +78,8 @@ The `complete-application` directory in the repository already contains a comple
 
 Start by creating a new Drupal 10 project and changing to the project directory with the following command.
 
-```shell-session
-composer create-project drupal/recommended-project:10.1.5 "your-application" && cd your-application
+```console
+composer create-project drupal/recommended-project:10.2.12 "your-application" && cd your-application
 ```
 
 Next, make two changes in the `docker-compose.yml` file to allow you to use your new Drupal application.
@@ -88,17 +88,17 @@ Next, make two changes in the `docker-compose.yml` file to allow you to use your
  If you want to use the existing application at any point, revert the following two changes and then rebuild the Docker containers and volumes.
 </Aside>
 
-On the `web` service, change `volumes` from `./complete-application:/opt/drupal:cached` to `./your-application:/opt/drupal:cached`.
+On the `drupal` service, change `volumes` from `./complete-application:/opt/drupal:cached` to `./your-application:/opt/drupal:cached`.
 
-Under the `db2` service, change the key `MYSQL_DATABASE` from `drupaldb` to `changebank`. This updates the database name so that you are not using the same database as the existing complete application.
+Under the `mysql` service, change the key `MYSQL_DATABASE` from `drupaldb` to `changebank`. This updates the database name so that you are not using the same database as the existing complete application.
 
 Save your changes and then run the following command to get the application up and running.
 
-```shell-session
-docker compose up -d
+```console
+docker compose up
 ```
 
-Once the application is up and running, navigate to http://localhost/ and you should be redirected to the Drupal installation wizard at http://localhost/core/install.php.
+Once the application is up and running, browse to http://localhost, and you should be redirected to the Drupal installation wizard at http://localhost/core/install.php.
 
 Run through the wizard and fill in all required fields. Make sure to enter the following.
 
@@ -113,7 +113,7 @@ On <Breadcrumb>Step 4</Breadcrumb>, enter the following database connection deta
 - **Database username**: `drupal`.
 - **Database password**: `verybadpassword`.
 - Expand Advanced options.
-  - Set **Host** to `db2`.
+  - Set **Host** to `mysql`.
   - Set the **port number** to `3307`.
 
 Click <Breadcrumb>Save and continue</Breadcrumb>.
@@ -123,8 +123,8 @@ On <Breadcrumb>Step 6</Breadcrumb>, enter the following values.
 - **Site name**: `Change Bank`.
 - **Site email address**: `admin@example.com`.
 - **Username**: `admin`.
-- **Password**: `verybadpassword`.
-- **Confirm password**: `verybadpassword`.
+- **Password**: `password`.
+- **Confirm password**: `password`.
 - **Email address**: `admin@example.com`.
 
 Click <Breadcrumb>Save and continue</Breadcrumb>.
@@ -136,8 +136,8 @@ Now you can install OpenID Connect to handle authenticating with FusionAuth and 
 
 In a terminal, run the following command from the `your-application` directory.
 
-```shell-session
-composer require 'drupal/openid_connect:3.x-dev@dev' 'drupal/admin_toolbar:^3.4'
+```console
+composer require 'drupal/openid_connect:3.0.0-alpha1' 'drupal/admin_toolbar:^3.4'
 ```
 
 #### Enabling Extensions Via UI
