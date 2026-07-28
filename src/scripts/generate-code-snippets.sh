@@ -24,6 +24,9 @@ for repo in src/code-example-repositories/*/; do
 		--ignore 'tests' \
 		--ignore 'LICENSE' \
 		--ignore 'SECURITY.md' \
+		--ignore '*.log' \
+		--ignore 'tmp' \
+		--ignore '*.cache' \
 		2>&1) || status=$?
 	printf '%s\n' "$out" | grep -v 'parsed file' | grep -v 'found binary file' || true
 	if [ $status -ne 0 ] || printf '%s\n' "$out" | grep -q 'bluehawk errors'; then
