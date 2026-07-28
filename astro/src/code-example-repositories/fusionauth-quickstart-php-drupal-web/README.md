@@ -18,16 +18,10 @@ If you want to run Drupal on your host machine instead of in Docker, you also ne
 
 Clone this repository to your local machine and then enter the `fusionauth-quickstart-php-drupal-web` directory.
 
-Open a bash terminal in the root of this directory and run the following command to pull the necessary Docker images:
+Open a bash terminal in the root of this directory and run the following command to start the latest Drupal and FusionAuth containers:
 
 ```bash
-docker compose pull
-```
-
-Run the following command to start the Drupal and FusionAuth containers:
-
-```bash
-docker compose up -d
+docker compose pull && docker compose up -d
 ```
 
 You should see the following running containers:
@@ -59,7 +53,9 @@ If the `drupal` and `mysql` containers are running then it means the Drupal appl
 However, the Drupal database isn't populated yet. Configure it with the command below:
 
 ```bash
-cd complete-application && ./setupDrupal.sh
+cd complete-application
+docker run --rm --init -v .:/app -w /app composer:2.6 composer install --ignore-platform-req=ext-gd
+./setupDrupal.sh
 ```
 
 ## Log in to the Drupal App

@@ -49,6 +49,20 @@ git clone https://github.com/FusionAuth/fusionauth-quickstart-php-drupal-web.git
 cd fusionauth-quickstart-php-drupal-web
 ```
 
+<Aside type="tip">
+If you want to run the complete app and skip the tutorial, run the commands below:
+
+```console
+docker compose pull
+docker compose up -d
+cd complete-application
+docker run --rm --init -v .:/app -w /app composer:2.6 composer install --ignore-platform-req=ext-gd
+./setupDrupal.sh
+```
+
+After waiting a few minutes for all containers to initialize, log in to the Drupal app at http://localhost using the generic login option with credentials `richard@example.com` and `password`.
+</Aside>
+
 ### Create Your Drupal Application
 
 The `complete-application` directory in the repository already contains a complete Drupal application but for demonstration purposes, this tutorial shows how to create a new application from scratch and then switch the volumes in the `docker-compose.yml` file to point to the new application.
