@@ -12,7 +12,7 @@ trap cleanup EXIT
 
 echo "Pulling latest images..."
 cd "$PROJECT_DIR"
-#docker compose pull
+docker compose pull
 
 echo "Starting containers..."
 cd "$PROJECT_DIR"
