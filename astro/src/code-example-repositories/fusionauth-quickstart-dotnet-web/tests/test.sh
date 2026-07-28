@@ -18,7 +18,7 @@ trap cleanup EXIT
 
 echo "Pulling latest FusionAuth image..."
 cd "$PROJECT_DIR"
-# docker compose pull
+docker compose pull
 
 echo "Starting FusionAuth..."
 docker compose up -d
