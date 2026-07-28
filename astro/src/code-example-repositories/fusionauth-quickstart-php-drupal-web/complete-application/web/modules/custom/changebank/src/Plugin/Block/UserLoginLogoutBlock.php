@@ -67,7 +67,7 @@ class UserLoginLogoutBlock extends BlockBase implements ContainerFactoryPluginIn
     }
     else {
         return [
-            '#markup' => $this->t('<button class="btn btn-primary"><a href="/user/logout">Logout</a></button>'),
+            '#markup' => $this->t('<button class="btn btn-primary"><a href="/user/logout">Log out</a></button>'),
         ];
     }
   }
