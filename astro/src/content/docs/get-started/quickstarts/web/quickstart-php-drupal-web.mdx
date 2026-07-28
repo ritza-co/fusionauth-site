@@ -146,7 +146,7 @@ You can enable the modules by visiting the extensions page of your Drupal applic
 
 #### Enabling Extensions With Drush
 
-Alternatively, you can use Drush to enable the modules. Drush is a command line shell and Unix scripting interface for Drupal, available as a [composer package](https://packagist.org/packages/drush/drush). Install it by running the following command.
+Drush is a command line shell and Unix scripting interface for Drupal, available as a [composer package](https://packagist.org/packages/drush/drush). Install it by running the following command.
 
 ```shell-session
 composer require drush/drush
@@ -164,17 +164,10 @@ Once the containers are up and running, connect to the Drupal container terminal
 docker compose exec web bash
 ```
 
-Run the following command to enable the modules.
+Instead of adding modules manually in the previous section, you could have run the following command to enable the modules.
 
 ```shell-session
 vendor/bin/drush pm-enable openid_connect admin_toolbar
-```
-
-Confirm with yes when prompted.
-
-```
-Do you want to continue? (yes/no) [yes]:
-yes
 ```
 
 You can use Drush to run many commands and perform common tasks in Drupal. Other popular commands include:
@@ -234,7 +227,7 @@ You're going to create a module called "Changebank" that will handle the logic f
 
 ### Generate Changebank Module
 
-In your terminal, run the following command in the Drupal Docker container.
+In your terminal, run the following command.
 
 ```shell-session
 vendor/bin/drush generate module
@@ -517,7 +510,7 @@ Next, you'll create a subtheme of the Barrio Bootstrap 5 theme.
 
 You will notice a folder called `subtheme` in the `your-application/web/themes/contrib/bootstrap_barrio` directory.
 
-First, create a directory called `custom` in `your-application`, and a directory called `subtheme` in `custom`.
+First, create a directory called `custom` in `your-application/web/themes`, and a directory called `subtheme` in `custom`:
 
 ```shell-session
 mkdir -p web/themes/custom/subtheme
@@ -691,7 +684,7 @@ Since you have the `/account` route set up in your custom module, let's make sur
 
 Scroll down to the redirects section and enter `account` in the **Login** redirect field.
 
-Save the configuration and clear the cache. Log out from the application.
+Save the configuration and clear the cache by navigating to http://localhost/admin/config/development/performance and clicking the <Breadcrumb>Clear all caches</Breadcrumb> button. Log out from the application.
 
 ## Run The Application
 
