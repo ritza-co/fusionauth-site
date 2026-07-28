@@ -86,7 +86,7 @@ You're currently logged in as a user with the role of `authenticated user` which
 If you want to explore the application with more depth as an admin user, you can do so by logging out and then entering the following credentials at the user login page:
 
 * Username: `admin`
-* Password: `admin`
+* Password: `password`
 
 If for whatever reason you want to change the credentials for the Drupal application's MySQL database, make sure to update the `settings.php` file located at `./complete-application/web/sites/default/settings.php` with the new credentials.
 
