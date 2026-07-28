@@ -12,14 +12,35 @@ until curl -s -o /dev/null -w "%{http_code}" http://localhost:9011/api/health 2>
 done
 echo "FusionAuth is ready."
 
-echo "Installing Drupal database from config..."
-docker exec drupal drush site:install --existing-config --yes
+echo "Backing up settings.php..."
+docker exec drupal cp /opt/drupal/web/sites/default/settings.php /opt/drupal/web/sites/default/settings.php.bak
+
+echo "Installing Drupal with standard profile..."
+docker exec drupal drush site:install standard --account-name=admin --account-pass=password --account-mail=me@example.com --site-name=Changebank --yes
+
+echo "Restoring settings.php..."
+docker exec drupal cp /opt/drupal/web/sites/default/settings.php.bak /opt/drupal/web/sites/default/settings.php
+docker exec drupal rm /opt/drupal/web/sites/default/settings.php.bak
+
+echo "Setting site UUID to match config..."
+docker exec drupal drush config:set system.site uuid 588fbd96-db18-45a5-889e-490d5fed1340 --yes
+
+echo "Deleting shortcut entities to allow config import..."
+docker exec drupal drush php-eval "
+\$shortcuts = \Drupal::entityTypeManager()->getStorage('shortcut')->loadMultiple();
+foreach (\$shortcuts as \$shortcut) {
+  \$shortcut->delete();
+}
+\$shortcut_sets = \Drupal::entityTypeManager()->getStorage('shortcut_set')->loadMultiple();
+foreach (\$shortcut_sets as \$set) {
+  \$set->delete();
+}
+"
 
 echo "Importing configuration..."
 docker exec drupal drush config:import --yes
 
 echo "Creating users..."
-docker exec drupal drush user:create admin --password="password" --mail="me@example.com"
 docker exec drupal drush user:create "admin@example.com" --password="password" --mail="admin@example.com"
 docker exec drupal drush user:create richard --password="password" --mail="richard@example.com"
 
