@@ -43,7 +43,7 @@ test('Drupal OAuth login via FusionAuth', async ({ page }) => {
 
   await page.waitForURL(/user\/login/);
 
-  await page.getByRole('link', { name: /Log in with generic/i }).click();
+  await page.getByRole('button', { name: /Log in with generic/i }).click();
 
   await page.waitForURL(/localhost:9011/);
 
