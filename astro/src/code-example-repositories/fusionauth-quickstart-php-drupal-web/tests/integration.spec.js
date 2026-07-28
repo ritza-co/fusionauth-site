@@ -45,7 +45,7 @@ test('Drupal OAuth login via FusionAuth', async ({ page }) => {
 
   await page.getByRole('button', { name: /Log in with generic/i }).click();
 
-  await page.waitForURL(/localhost:9011/);
+  await page.waitForURL(/9011/);
 
   await page.getByPlaceholder('Login').fill('richard@example.com');
   await page.getByPlaceholder('Password').fill('password');

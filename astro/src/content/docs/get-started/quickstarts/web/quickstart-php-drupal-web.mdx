@@ -63,6 +63,15 @@ docker run --rm --init -v .:/app -w /app composer:2.6 composer install --ignore-
 After waiting a few minutes for all containers to initialize, log in to the Drupal app at http://localhost using the generic login option with credentials `richard@example.com` and `password`.
 </Aside>
 
+<Aside>
+  If you use Linux, where Docker does not run in a virtual machine, you need to point Docker's localhost to your real localhost, so that your browser redirects correctly when trying to reach the FusionAuth login page. Run the command below to do so:
+
+  ```
+  echo "127.0.0.1 host.docker.internal" | sudo tee -a /etc/hosts
+  ```
+</Aside>
+
+
 ### Create Your Drupal Application
 
 The `complete-application` directory in the repository already contains a complete Drupal application but for demonstration purposes, this tutorial shows how to create a new application from scratch and then switch the volumes in the `docker-compose.yml` file to point to the new application.
@@ -193,14 +202,6 @@ Add a new client by clicking on <Breadcrumb>+ Generic OAuth 2.0</Breadcrumb> and
 - **Authorization endpoint**: `http://host.docker.internal:9011/oauth2/authorize`
 - **Token endpoint**: `http://host.docker.internal:9011/oauth2/token`
 - **UserInfo endpoint**: `http://host.docker.internal:9011/oauth2/userinfo`
-
-<Aside>
-  You may need to update your hosts file to include an entry for `127.0.0.1 host.docker.internal` if it's not already present. On macOS and Linux you can achieve this by running the following command:
-
-  ```
-  echo "127.0.0.1 host.docker.internal" | sudo tee -a /etc/hosts
-  ```
-</Aside>
 
 Scroll down and click <Breadcrumb>Create OpenID Connect client</Breadcrumb>.
 

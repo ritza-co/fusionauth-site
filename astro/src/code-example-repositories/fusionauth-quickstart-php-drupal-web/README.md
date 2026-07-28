@@ -62,7 +62,7 @@ docker run --rm --init -v .:/app -w /app composer:2.6 composer install --ignore-
 
 You can now access the Drupal app by opening a browser and navigating to http://localhost.
 
-If and only if you run Linux, where Docker does not run in a virtual machine, edit your `/etc/hosts` file and add the line `127.0.0.1 host.docker.internal`, so that your browser redirects correctly when trying to reach the FusionAuth login page.
+If and only if you use Linux, where Docker does not run in a virtual machine, edit your `/etc/hosts` file and add the line `127.0.0.1 host.docker.internal`, so that your browser redirects correctly when trying to reach the FusionAuth login page.
 
 To login to the application with FusionAuth, click the Login button and then on the user login page located at http://localhost/user/login you can click on the button labeled `Login with generic`.
 
