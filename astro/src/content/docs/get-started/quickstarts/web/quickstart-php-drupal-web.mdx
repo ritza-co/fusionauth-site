@@ -132,6 +132,13 @@ Click <Breadcrumb>Save and continue</Breadcrumb>.
 
 Once you've completed the installation wizard, you should be taken to the welcome page.
 
+Drupal locks down the `sites/default` directory once installation finishes, so the `www-data` user the Drupal container runs as loses write access to `sites/default/files`. Restore that access with the following command, since Drupal needs to write cached form and Twig data there.
+
+```console
+docker exec drupal chmod 0755 /opt/drupal/web/sites/default
+docker exec drupal chmod -R a+w /opt/drupal/web/sites/default/files
+```
+
 Now you can install OpenID Connect to handle authenticating with FusionAuth and the Admin Toolbar module to add a bit of quality of life when navigating the Drupal administration menu.
 
 In a terminal, run the following command from the `your-application` directory.

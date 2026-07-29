@@ -98,7 +98,16 @@ foreach (\$menu_links as \$link) {
 }
 "
 
+echo "Making the files directory writable by the web server..."
+docker exec drupal chmod 0755 /opt/drupal/web/sites/default
+docker exec drupal chmod -R a+w /opt/drupal/web/sites/default/files
+
 echo "Clearing caches..."
 docker exec drupal drush cache:rebuild
+
+echo "Warming caches for the routes the tests use..."
+curl -s -o /dev/null http://localhost
+curl -s -o /dev/null http://localhost/user/login
+curl -s -o /dev/null http://localhost/makechange
 
 echo "Setup complete!"
