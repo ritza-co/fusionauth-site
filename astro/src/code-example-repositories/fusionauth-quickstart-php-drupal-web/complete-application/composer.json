@@ -21,7 +21,7 @@
         "drupal/core-composer-scaffold": "^10.1",
         "drupal/core-project-message": "^10.1",
         "drupal/core-recommended": "^10.1",
-        "drupal/openid_connect": "3.x-dev@dev",
+        "drupal/openid_connect": "3.0.0-alpha1",
         "drupal/twig_tweak": "^3.2",
         "drush/drush": "^12.2"
     },
