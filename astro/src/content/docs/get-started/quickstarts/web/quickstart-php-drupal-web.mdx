@@ -26,7 +26,7 @@ import Accordion from 'src/components/Accordion.astro';
 - [Docker](https://www.docker.com): The quickest way to stand up FusionAuth. (There are [other ways](/docs/get-started/download-and-install/).)
 
 <Aside type="note">
-  This app has been tested with Drupal 10.1.5. This example should work with other compatible versions of Drupal 10. Drupal 10 requires PHP 8.1.0+ and MariaDB 10.3.7+, MySQL 5.7.8+, or Percona 5.7.8+.
+  This app has been tested with Drupal 10.2.12. This example should work with other compatible versions of Drupal 10. Drupal 10 requires PHP 8.1.0+ and MariaDB 10.3.7+, MySQL 5.7.8+, or Percona 5.7.8+.
 </Aside>
 
 ## General Architecture
@@ -160,8 +160,8 @@ docker compose restart
 
 Once the containers are up and running, connect to the Drupal container terminal to run Drush commands.
 
-```shell-session
-docker compose exec web bash
+```console
+docker compose exec drupal bash
 ```
 
 Instead of adding modules manually in the previous section, you could have run the following command to enable the modules.

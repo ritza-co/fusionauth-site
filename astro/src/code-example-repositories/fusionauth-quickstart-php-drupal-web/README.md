@@ -127,7 +127,7 @@ The command-line tool, Drush, is installed in the Drupal container and you can m
 One such task is to import or export config for the database. To do so, open a bash terminal in the root of the `fusionauth-quickstart-php-drupal-web` directory and run the following command to enter the Drupal container:
 
 ```bash
-docker compose exec web bash
+docker compose exec drupal bash
 ```
 
 Once inside the container, you can run the following command to export the config:
