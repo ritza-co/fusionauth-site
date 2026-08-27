@@ -15,9 +15,11 @@ This can be used to revoke a centrally managed session, when the refresh token i
 
 ## Request
 
-<API method="DELETE" uri="/api/jwt/refresh?applicationId={applicationId}" authentication={["api-key"]} title="Revoke all Refresh Tokens for an entire Application"/>
+Revoke all Refresh Tokens for an entire Application, all Refresh Tokens issued to a User, all Refresh Tokens issued to a User for an Application, a single Refresh Token by Id, or a single Refresh Token by value.
 
-### Request Parameters
+<API method="DELETE" uri="/api/jwt/refresh?applicationId={applicationId}" authentication={["api-key"]} title="Revoke all Refresh Tokens for an entire Application" headingLevel="h3"/>
+
+#### Request Parameters
 
 <APIBlock>
   <APIField name="applicationId" type="UUID" required>
@@ -29,9 +31,9 @@ This can be used to revoke a centrally managed session, when the refresh token i
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-<API method="DELETE" uri="/api/jwt/refresh?userId={userId}" authentication={["api-key"]} title="Revoke all Refresh Tokens issued to a User"/>
+<API method="DELETE" uri="/api/jwt/refresh?userId={userId}" authentication={["api-key"]} title="Revoke all Refresh Tokens issued to a User" headingLevel="h3"/>
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="userId" type="UUID" required>
@@ -41,14 +43,14 @@ This can be used to revoke a centrally managed session, when the refresh token i
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-<API method="DELETE" uri="/api/jwt/refresh?applicationId={applicationId}&userId={userId}" authentication={["api-key"]} title="Revoke all Refresh Tokens issued to a User for an Application"/>
+<API method="DELETE" uri="/api/jwt/refresh?applicationId={applicationId}&userId={userId}" authentication={["api-key"]} title="Revoke all Refresh Tokens issued to a User for an Application" headingLevel="h3"/>
 
 <Aside type="version">
 Available Since Version 1.19.0
 </Aside>
 
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="applicationId" type="UUID" required>
@@ -61,11 +63,11 @@ Available Since Version 1.19.0
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
-<API method="DELETE" uri="/api/jwt/refresh/{tokenId}" authentication={["jwt"]} title="Revoke a single Refresh Token by Id"/>
+<API method="DELETE" uri="/api/jwt/refresh/{tokenId}" authentication={["jwt"]} title="Revoke a single Refresh Token by Id" headingLevel="h3"/>
 
 This API may be authenticated using a JWT or an API key. If using JWT authentication, the JWT owner and token owner must match. See [Authentication](/docs/apis/authentication) for examples of authenticating using a JWT.
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="tokenId" type="UUID" required>
@@ -75,11 +77,11 @@ This API may be authenticated using a JWT or an API key. If using JWT authentica
   </APIField>
 </APIBlock>
 
-<API method="DELETE" uri="/api/jwt/refresh?token={token}" authentication={["jwt"]} title="Revoke a single Refresh Token by value"/>
+<API method="DELETE" uri="/api/jwt/refresh?token={token}" authentication={["jwt"]} title="Revoke a single Refresh Token by value" headingLevel="h3"/>
 
 This API may be authenticated using a JWT or an API key. If using JWT authentication, the JWT owner and token owner must match. See [Authentication](/docs/apis/authentication) for examples of authenticating using a JWT.
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="token" type="String" required>

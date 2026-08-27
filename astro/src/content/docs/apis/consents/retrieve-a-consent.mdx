@@ -15,11 +15,13 @@ This API is used to retrieve a single Consent by unique Id or all of the configu
 
 ## Request
 
-<API method="GET" uri="/api/consent" authentication={["api-key"]} title="Retrieve all of the Consents"/>
+Leave off the Id to retrieve all of the Consents, or include it on the URI to retrieve a single Consent.
 
-<API method="GET" uri="/api/consent/{consentId}" authentication={["api-key"]} title="Retrieve a Consent by Id"/>
+<API method="GET" uri="/api/consent" authentication={["api-key"]} title="Retrieve all of the Consents" headingLevel="h3"/>
 
-### Request Parameters
+<API method="GET" uri="/api/consent/{consentId}" authentication={["api-key"]} title="Retrieve a Consent by Id" headingLevel="h3"/>
+
+#### Request Parameters
 
 <APIBlock>
   <APIField name="consentId" type="UUID" required>

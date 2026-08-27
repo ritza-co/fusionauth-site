@@ -1,4 +1,5 @@
 ---
+import GithubSlugger from "github-slugger";
 import APIAuthenticationIcon from "src/components/api/APIAuthenticationIcon.astro";
 import Aside from "src/components/Aside.astro";
 import ScalarClient from "src/components/ScalarClient.astro";
@@ -6,13 +7,16 @@ import ScalarClient from "src/components/ScalarClient.astro";
 interface Props {
   authentication?: ['api-key' | 'basic' | 'client-credentials' | 'global-api-key' | 'jwt' | 'local-bypass' | 'none'];
   description?: string;
+  headingLevel?: 'h3' | 'h4' | 'h5' | 'h6';
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   showPatch?: false;
   title?: string;
   uri?: string;
 }
 
-const { authentication, method, showPatch, title, uri }: Props = Astro.props;
+const { authentication, headingLevel = 'h4', method, showPatch, title, uri }: Props = Astro.props;
+
+const HeadingTag = headingLevel;
 
 // Parse URI
 let parts= [];
@@ -89,6 +93,11 @@ const methodColors = {
 };
 
 const uniqueId = `${method.toLowerCase()}-${uri.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')}`;
+
+// Derived from uniqueId (method+uri), not the title text: two <API> boxes on the same page can
+// share an identical title (e.g. the GET-params vs POST-body variants of an operation), but never
+// share both method and uri, so this stays collision-free without needing cross-instance slugger state.
+const titleId = title ? `${new GithubSlugger().slug(title)}-${uniqueId}` : undefined;
 ---
 {(authentication || title) &&
 <div class="border-b border-slate-300 dark:border-slate-800 flex flex-row align-middle">
@@ -102,7 +111,7 @@ const uniqueId = `${method.toLowerCase()}-${uri.replace(/[^a-zA-Z0-9]/g, '-').re
     </div>
   }
   { title &&
-    <span class="font-semibold text-sm mt-1 dark:text-white text-slate-800">{ title }</span>
+    <HeadingTag id={titleId} class="group font-semibold text-sm mt-1 mb-0 dark:text-white text-slate-800">{ title }<a href={`#${titleId}`} title="link to header" class="anchor-link !border-b-0 !no-underline ml-2 opacity-0 group-hover:opacity-100">#</a></HeadingTag>
   }
 </div>
 }

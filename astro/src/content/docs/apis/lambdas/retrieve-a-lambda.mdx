@@ -18,19 +18,21 @@ This API is used to retrieve a single Lambda by unique Id or all of the Lambdas.
 
 ## Request
 
-<API method="GET" uri="/api/lambda" authentication={["global-api-key"]} title="Retrieve all of the Lambdas"/>
+Retrieve all of the Lambdas, optionally filtered by type, or a single Lambda by Id.
+
+<API method="GET" uri="/api/lambda" authentication={["global-api-key"]} title="Retrieve all of the Lambdas" headingLevel="h3"/>
 
 <API method="GET" uri="/api/lambda?type={type}" authentication={["global-api-key"]} title="Retrieve all Lambdas by type"/>
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <LambdaType showRequired={true} showSince={true}/>
 </APIBlock>
 
-<API method="GET" uri="/api/lambda/{lambdaId}" authentication={["global-api-key"]} title="Retrieve a Lambda by Id"/>
+<API method="GET" uri="/api/lambda/{lambdaId}" authentication={["global-api-key"]} title="Retrieve a Lambda by Id" headingLevel="h3"/>
 
-### Request Parameters
+#### Request Parameters
 
 <APIBlock>
   <APIField name="lambdaId" type="UUID" required>
