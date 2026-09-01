@@ -12,8 +12,8 @@ import Intro from 'src/components/quickstarts/Intro.astro';
 import {Content as LoginArchitectureApi} from 'src/components/quickstarts/LoginArchitectureApi.mdx';
 import NextStepsApi from 'src/components/quickstarts/NextStepsApi.astro';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
-import RemoteCode from 'src/components/RemoteCode.astro';
-import RemoteValue from 'src/components/RemoteValue/RemoteValue.astro';
+import LocalCode from 'src/components/LocalCode.astro';
+import LocalValue from 'src/components/LocalValue/LocalValue.astro';
 
 <Intro technology="Laravel"
        repositoryUrl="https://github.com/FusionAuth/fusionauth-quickstart-php-laravel-api"
@@ -112,11 +112,11 @@ Include FusionAuth's library to add JWT support to the authentication system.
 
 When installing Laravel, it will automatically make a migration to create a `users` table in the database. You'll have to edit the file `database/migrations/2014_10_12_000000_create_users_table.php` to change the default behavior and use UUID for the primary key, remove the need for a password and the remember token.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/database/migrations/2014_10_12_000000_create_users_table.php"} lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/complete-application/database/migrations/2014_10_12_000000_create_users_table.php" lang="php"/>
 
 You'll also need to edit `app/Models/User.php` to make the database changes consistent with your model.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/app/Models/User.php"} lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/complete-application/app/Models/User.php" lang="php"/>
 
 You may remove all other migrations, as you won't need them.
 
@@ -144,37 +144,37 @@ mkdir -p app/FusionAuth/Providers
 
 Add a new [User Provider](https://laravel.com/docs/10.x/authentication#adding-custom-user-providers) at `app/FusionAuth/Providers/FusionAuthEloquentUserProvider.php` to create new users when receiving valid JWTs from FusionAuth.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/app/FusionAuth/Providers/FusionAuthEloquentUserProvider.php"} lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/complete-application/app/FusionAuth/Providers/FusionAuthEloquentUserProvider.php" lang="php"/>
 
 Now, add an [Authentication Guard](https://laravel.com/docs/10.x/authentication#adding-custom-guards) in `app/FusionAuth/FusionAuthJwtGuard.php` to call that custom method from the User Provider created above.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/app/FusionAuth/FusionAuthJwtGuard.php"} lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/complete-application/app/FusionAuth/FusionAuthJwtGuard.php" lang="php"/>
 
 Let Laravel know about these two classes by editing `config/auth.php`.
 
 First, change the `driver` for the `web` Guard to `jwt`:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/config/auth.php"} tags="guards" lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/auth.snippet.guards.php" lang="php"/>
 
 Now, change the default `provider` to `fusionauth_eloquent`:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/config/auth.php"} tags="providers" lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/auth.snippet.providers.php" lang="php"/>
 
 Finally, create a [Service Provider](https://laravel.com/docs/10.x/providers) in `app/FusionAuth/Providers/FusionAuthServiceProvider.php` to make sure Laravel will use the newly created classes instead of its defaults.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/app/FusionAuth/Providers/FusionAuthServiceProvider.php"} lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/complete-application/app/FusionAuth/Providers/FusionAuthServiceProvider.php" lang="php"/>
 
 ### Update Routes
 
 Change `routes/api.php` to add both `/api/make-change` and `/api/panic` endpoints for your ChangeBank application.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/routes/api.php"} lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/complete-application/routes/api.php" lang="php"/>
 
 ### Add Controllers
 
 Change the base controller at `app/Http/Controllers/Controller.php` to include a helper function to check for roles.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/app/Http/Controllers/Controller.php"} lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/complete-application/app/Http/Controllers/Controller.php" lang="php"/>
 
 Create a folder named `ChangeBank` inside `app/Http/Controllers` to hold the two controllers you're going to create.
 
@@ -184,11 +184,11 @@ mkdir app/Http/Controllers/ChangeBank
 
 To respond the `/api/make-change` endpoint, create a file at `app/Http/Controllers/ChangeBank/MakeChangeController.php`. This controller will verify that the authenticated user has either the `teller` or `customer` role. It then takes in the URL parameter `total` to calculate which coins will be returned in the JSON payload.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/app/Http/Controllers/ChangeBank/MakeChangeController.php"} lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/complete-application/app/Http/Controllers/ChangeBank/MakeChangeController.php" lang="php"/>
 
 To finish, create a controller at `app/Http/Controllers/ChangeBank/PanicController.php` to handle the `/api/panic` endpoint for users with the `teller` role.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/app/Http/Controllers/ChangeBank/PanicController.php"} lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/complete-application/app/Http/Controllers/ChangeBank/PanicController.php" lang="php"/>
 
 ### Validating Issuer and Audience Claims
 
@@ -202,11 +202,11 @@ mkdir app/FusionAuth/Claims
 
 First, create a file named `app/FusionAuth/Claims/Audience.php` that will check if the audience (`aud`) claim actually contains the Client Id for the application you created in FusionAuth.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/app/FusionAuth/Claims/Audience.php"} lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/complete-application/app/FusionAuth/Claims/Audience.php" lang="php"/>
 
 Now, create a file called `app/FusionAuth/Claims/Issuer.php` to check if the issuer (`iss`) is actually your FusionAuth instance address.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/app/FusionAuth/Claims/Issuer.php"} lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/complete-application/app/FusionAuth/Claims/Issuer.php" lang="php"/>
 
 ### Let Your Code Know about the FusionAuth Instance
 
@@ -214,15 +214,15 @@ Now that you created all these files, you need to pass some details about the Fu
 
 Start by adding the environment variables below to your `.env` file, changing `https://The-Address-Ngrok-Gave-You` to the actual address you copied from ngrok.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/.env"} tags="fusionauth" lang="ini"/>
+<LocalCode src="quickstart-php-laravel-api/.env.snippet.fusionauth" lang="ini"/>
 
 Now open the `config/app.php` file and browse to the `providers` section. This is a Laravel configuration to automatically load these files when booting your application. Add `App\FusionAuth\Providers\FusionAuthServiceProvider::class` to the end of the `providers` array, like shown below.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/config/app.php"} tags="providers" lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/app.snippet.providers.php" lang="php"/>
 
 In that same `config/app.php` file, add these lines at the end (just before the last line) to pass values from the environment variables to the application.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/config/app.php"} tags="fusionauth" lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/app.snippet.fusionauth.php" lang="php"/>
 
 To make the library available for use, publish its configuration by running the command below.
 
@@ -236,12 +236,12 @@ To make the library available for use, publish its configuration by running the 
 
 There are [several ways to acquire a token](/docs/lifecycle/authenticate-users/oauth/) in FusionAuth, but for this example you will use the [Login API](/docs/apis/login) to keep things simple.
 
-First, try requests as the <code><RemoteValue url={frontmatter.codeRoot + "/kickstart/kickstart.json"} selector="$.variables.tellerEmail" /></code> user. Based on the configuration this user has the `teller` role and should be able to use both `/api/make-change` and `/api/panic`.
+First, try requests as the <code><LocalValue path="quickstart-php-laravel-api/kickstart/kickstart.json" selector="$.variables.tellerEmail" /></code> user. Based on the configuration this user has the `teller` role and should be able to use both `/api/make-change` and `/api/panic`.
 
-1. Acquire an access token for <code><RemoteValue url={frontmatter.codeRoot + "/kickstart/kickstart.json"} selector="$.variables.tellerEmail" /></code> by making the following request
+1. Acquire an access token for <code><LocalValue path="quickstart-php-laravel-api/kickstart/kickstart.json" selector="$.variables.tellerEmail" /></code> by making the following request
 
-<RemoteValue
-  url={frontmatter.codeRoot + "/kickstart/kickstart.json"}
+<LocalValue
+  path="quickstart-php-laravel-api/kickstart/kickstart.json"
   selector="$.variables">
   {(variables) => <Prism lang="shell-session" code={`curl --location 'http://localhost:9011/api/login' \\
 --header 'Authorization: ${variables.apiKey}' \\
@@ -251,7 +251,7 @@ First, try requests as the <code><RemoteValue url={frontmatter.codeRoot + "/kick
   "password": "${variables.tellerPassword}",
   "applicationId": "${variables.applicationId}"
 }'`}/>}
-</RemoteValue>
+</LocalValue>
 
 Copy the `token` from the response, which should look like this:
 
@@ -323,8 +323,8 @@ Nice, help is on the way!
 
 Now let's try as `customer@example.com` who has the role `customer`. Acquire a token for `customer@example.com`.
 
-<RemoteValue
-    url={frontmatter.codeRoot + "/kickstart/kickstart.json"}
+<LocalValue
+    path="quickstart-php-laravel-api/kickstart/kickstart.json"
     selector="$.variables">
     {(variables) => <Prism lang="shell-session" code={`curl --location 'http://localhost:9011/api/login' \\
 --header 'Authorization: ${variables.apiKey}' \\
@@ -334,7 +334,7 @@ Now let's try as `customer@example.com` who has the role `customer`. Acquire a t
   "password": "${variables.customerPassword}",
   "applicationId": "${variables.applicationId}"
 }'`}/>}
-</RemoteValue>
+</LocalValue>
 
 Your response should look like this:
 
