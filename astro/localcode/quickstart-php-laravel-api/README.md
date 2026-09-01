@@ -1,5 +1,8 @@
 # Quickstart: Laravel API with FusionAuth
 
+> [!WARNING]
+> This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/localcode/quickstart-php-laravel-api). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
+
 This repository contains a Laravel API that works with a locally-running instance of [FusionAuth](https://fusionauth.io/), the authentication and authorization platform.
 
 ## Setup
@@ -7,7 +10,7 @@ This repository contains a Laravel API that works with a locally-running instanc
 ### Prerequisites
 You will need the following things properly installed on your computer.
 
-- [PHP 8.1+](https://www.php.net): This quickstart was built using PHP 8.1 and tested with PHP 8.2 as well. It may work on different versions of PHP, but it has not been tested. 
+- [PHP 8.1+](https://www.php.net): This quickstart was built using PHP 8.1 and tested with PHP 8.2 as well. It may work on different versions of PHP, but it has not been tested.
 - [Composer](https://getcomposer.org/) to install PHP dependencies.
 - [Docker](https://www.docker.com): The quickest way to stand up both FusionAuth and Laravel. Ensure you also have [docker compose](https://docs.docker.com/compose/) installed.
 - (Alternatively, you can [Install FusionAuth Manually](https://fusionauth.io/docs/v1/tech/installation-guide/)).
