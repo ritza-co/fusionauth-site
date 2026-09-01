@@ -51,10 +51,6 @@ cd fusionauth-quickstart-php-laravel-api
 
 <DockerSpinup kickstartUri={frontmatter.codeRoot + "/kickstart/kickstart.json"} api />
 
-### Expose FusionAuth Instance
-
-To make sure your local FusionAuth instance is accessible to your Laravel app, you need to [expose it to the Internet](/docs/get-started/download-and-install/development/exposing-instance). Write down the URL ngrok gave you as you'll need it soon.
-
 ## Create your Laravel Application
 
 Now you are going to create a Laravel API application. While this section builds a simple API, you can use the same configuration to integrate an existing API with FusionAuth.
@@ -66,10 +62,11 @@ We are going to be building an API backend for a banking application called Chan
 Both endpoints will be protected such that a valid JSON web token (JWT) will be required in an `app.at` cookie or the `Authorization` header in order to be accessed. Additionally, the JWT must have a `roles` claim containing the appropriate role to use the endpoint.
 
 <Aside type="note">
-  To skip ahead to running the application, use the completed version in the `complete-application` directory. You can install [PHP](https://www.php.net) and [Composer](https://getcomposer.org/) and use the following commands to get it up and running if you do not want to create your own.
+  To skip ahead to running the application, use the completed version in the `complete-application` directory. Use the following commands to start the app:
 
   ```shell-session
   cd complete-application
+  TODO
   composer install
   ./vendor/bin/sail up -d
   ```
@@ -77,23 +74,31 @@ Both endpoints will be protected such that a valid JSON web token (JWT) will be 
   You can then follow the instructions in the <Breadcrumb>Run the API</Breadcrumb> section.
 </Aside>
 
-To create the application from scratch, you'll use [Laravel Sail](https://laravel.com/docs/10.x/installation#laravel-and-docker) to set up and run your application using Docker.
-
 ```shell-session
-curl "https://laravel.build/your-application?with=mariadb" | bash
-cd your-application
-```
+# curl "https://laravel.build/your-application?with=mariadb" | bash
 
-<Aside type="note">
-  This may ask for your user password to run commands with `sudo`.
-</Aside>
+
+# docker run --name app --network host -v vendor:/app/vendor -v .:/app -w /app -it --rm composer:2.10 bash
+composer global require laravel/installer
+laravel new your-application --database=sqlite --no-node --no-boost # if this fails, try the full path: $COMPOSER_HOME/vendor/bin/laravel new your-application --database=sqlite --no-node --no-boost
+
+# Choose `no` for a starter kit, and then Blade
+
+cd your-application
+composer run dev
+```
 
 ### Initialize the Application
 
-Initialize the Laravel application using the following command (it'll run things in background, just like `docker compose up -d` would).
+Initialize the Laravel application using the following commands:
 
 ```shell-session
-./vendor/bin/sail up -d
+
+
+
+
+
+#./vendor/bin/sail up -d
 ```
 
 <Aside type="note">
