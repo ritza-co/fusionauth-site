@@ -10,7 +10,7 @@ This repository contains a Laravel API that works with a locally-running instanc
 ### Prerequisites
 You will need the following things properly installed on your computer.
 
-- [PHP 8.1+](https://www.php.net): This quickstart was built using PHP 8.1 and tested with PHP 8.2 as well. It may work on different versions of PHP, but it has not been tested.
+- [PHP 8.3+](https://www.php.net): This quickstart was built using PHP 8.1 and tested with PHP 8.2 as well. It may work on different versions of PHP, but it has not been tested.
 - [Composer](https://getcomposer.org/) to install PHP dependencies.
 - [Docker](https://www.docker.com): The quickest way to stand up both FusionAuth and Laravel. Ensure you also have [docker compose](https://docs.docker.com/compose/) installed.
 - (Alternatively, you can [Install FusionAuth Manually](https://fusionauth.io/docs/v1/tech/installation-guide/)).
@@ -44,10 +44,10 @@ The `complete-application` directory contains a minimal Laravel app configured t
 
 Install the dependencies via Composer:
 
-```shell
+```shell-session
 cd complete-application
 composer install
-./vendor/bin/sail up -d
+php artisan serve --port=3000
 ```
 
 The app is now serving two api endpoints:
@@ -56,7 +56,7 @@ The app is now serving two api endpoints:
 
 You can log in with a user preconfigured during Kickstart, `teller@example.com` with the password of `password`, by calling:
 
-```sh
+```shell-session
 curl --location 'http://localhost:9011/api/login' \
 --header 'Authorization: this_really_should_be_a_long_random_alphanumeric_value_but_this_still_works' \
 --header 'Content-Type: application/json' \
@@ -69,13 +69,13 @@ curl --location 'http://localhost:9011/api/login' \
 
 You can take the token from the response and then call one of the endpoints listed above by calling:
 
-```sh
+```shell-session
 curl --cookie 'app.at=<your_token>' 'http://localhost/make-change?total=5.12'
 ```
 
 or
 
-```sh
+```shell-session
 curl --cookie 'app.at=<your_token>' --request POST 'http://localhost/panic'
 ```
 
