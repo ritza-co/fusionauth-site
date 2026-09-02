@@ -78,26 +78,25 @@ Both endpoints will be protected such that a valid JSON web token (JWT) will be 
 composer create-project laravel/laravel your-application "^13.0"
 cd your-application
 php artisan install:api
-php artisan serve --port=3000
 ```
 
-You can browse to the default Laravel [app homepage](http://localhost:3000).
+Choose `yes` to run migrations.
 
 ### Add Security
 
-Stop the server and install the Firebase JWT library:
+Install the Firebase JWT library. This package allows your app to validate tokens from FusionAuth:
 
 ```shell-session
-composer require firebase/php-jwt
+composer require firebase/php-jwt "^7.0"
 ```
 
 ### Create Fields in the User Entity
 
-When installing Laravel, it will automatically make a migration to create a `users` table in the database. You'll have to edit the file `database/migrations/0001_01_01_000000_create_users_table` to change the default behavior and use UUID for the primary key, remove the need for a password and the remember token.
+When installing Laravel, it will automatically make a migration to create a `users` table in the database. Edit the file `database/migrations/0001_01_01_000000_create_users_table` to change the default behavior and use UUID for the primary key, remove the need for a password and the remember token:
 
-<LocalCode src="quickstart-php-laravel-api/complete-application/database/migrations/0001_01_01_000000_create_users_table.php" lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/0001_01_01_000000_create_users_table.snippet.users-table.php" lang="php"/>
 
-You'll also need to edit `app/Models/User.php` to make the database changes consistent with your model.
+Overwrite `app/Models/User.php` to make the database changes consistent with your model.
 
 <LocalCode src="quickstart-php-laravel-api/complete-application/app/Models/User.php" lang="php"/>
 
@@ -109,7 +108,7 @@ php artisan migrate:fresh
 
 ### Add the JWT Middleware
 
-Create a middleware to validate JWTs from FusionAuth. This middleware will fetch and cache the JWKS, validate the token signature and claims, and provision users.
+Create a middleware to validate JWTs from FusionAuth. This middleware will fetch and cache the JWKS, validate the token signature and claims, and provision users:
 
 ```shell-session
 mkdir -p app/Http/Middleware

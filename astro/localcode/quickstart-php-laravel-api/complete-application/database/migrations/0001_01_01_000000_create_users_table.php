@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // :snippet-start: users-table
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->unique();
             $table->timestamps();
         });
+        // :snippet-end:
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
