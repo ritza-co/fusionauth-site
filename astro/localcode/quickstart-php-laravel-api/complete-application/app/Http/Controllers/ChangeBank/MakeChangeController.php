@@ -18,7 +18,20 @@ class MakeChangeController extends Controller
     {
         $this->checkRoles('teller', 'customer');
 
-        $total = (float) request()->query('total', 0);
+        $totalParam = request()->query('total');
+        if ($totalParam === null || $totalParam === '') {
+            return response()->json(['error' => 'total parameter is required'], 400);
+        }
+
+        if (!is_numeric($totalParam)) {
+            return response()->json(['error' => 'total must be a number'], 400);
+        }
+
+        $total = (float) $totalParam;
+        if ($total <= 0) {
+            return response()->json(['error' => 'total must be greater than 0'], 400);
+        }
+
         $output = $this->makeChange($total);
 
         return response()->json($output);
@@ -26,12 +39,6 @@ class MakeChangeController extends Controller
 
     protected function makeChange(float $total): array
     {
-        if ($total <= 0) {
-            return [
-                'Message' => 'Please provider a total parameter greater than 0.',
-            ];
-        }
-
         $message = 'We can make change using';
         $remainingAmount = $total;
 
