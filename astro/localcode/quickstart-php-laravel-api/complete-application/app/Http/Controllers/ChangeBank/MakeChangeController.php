@@ -10,8 +10,6 @@ use function response;
 class MakeChangeController extends Controller
 {
     /**
-     * Make Change entrypoint for the ChangeBank API.
-     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function __invoke(): Response

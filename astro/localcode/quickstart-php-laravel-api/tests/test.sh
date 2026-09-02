@@ -94,7 +94,7 @@ docker run --rm -v "$PROJECT_DIR/complete-application:/app" -w /app composer:2.1
   "find app config routes -name '*.php' -print0 | xargs -0 -n1 php -l"
 
 echo "Pulling latest FusionAuth image..."
-docker compose pull
+#docker compose pull
 
 echo "Starting FusionAuth..."
 docker compose up -d
@@ -107,7 +107,7 @@ wait_for "Kickstart" kickstart_done
 
 echo "Starting Laravel API app..."
 docker run --network host --name laravel-api --rm -v "$PROJECT_DIR/complete-application":/app -w /app composer:2.10 sh -c \
-  "composer install --no-interaction && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=3000" &
+  "composer install --no-interaction && php artisan migrate:fresh --force && php artisan serve --host=0.0.0.0 --port=3000" &
 until docker inspect laravel-api > /dev/null 2>&1; do
   sleep 1
 done

@@ -114,7 +114,7 @@ return [
     | manage Laravel's "maintenance mode" status. The "cache" driver will
     | allow maintenance mode to be controlled across multiple machines.
     |
-    | Supported drivers: "file", "cache"
+    | Supported drivers: "file", "cache", "array"
     |
     */
 
@@ -127,6 +127,9 @@ return [
     'fusionauth' => [
         'url' => rtrim(env('FUSIONAUTH_URL'), '/'),
         'client_id' => env('FUSIONAUTH_CLIENT_ID'),
+        'algo' => env('JWT_ALGO', 'RS256'),
+        'jwks_url' => env('JWT_JWKS_URL'),
+        'jwks_url_cache' => (int) env('JWT_JWKS_URL_CACHE', 86400),
     ],
     // :snippet-end:
 
