@@ -59,12 +59,6 @@ cd fusionauth-quickstart-php-laravel-api
 
 Now you are going to create a Laravel API application. While this section builds a simple API, you can use the same configuration to integrate an existing API with FusionAuth.
 
-We are going to be building an API backend for a banking application called ChangeBank. This API will have two endpoints:
-- `make-change`: This endpoint will allow you to call GET with a `total` amount and receive a response indicating how many nickels and pennies are needed to make change. Valid roles are `customer` and `teller`.
-- `panic`: Tellers may call this endpoint to call the police in case of an incident. The only valid role is `teller`.
-
-Both endpoints will be protected such that a valid JSON web token (JWT) will be required in an `app.at` cookie or the `Authorization` header in order to be accessed. Additionally, the JWT must have a `roles` claim containing the appropriate role to use the endpoint.
-
 <Aside type="note">
   To skip ahead to running the application, use the completed version in the `complete-application` directory. Use the following commands to start the app:
 
@@ -76,6 +70,13 @@ Both endpoints will be protected such that a valid JSON web token (JWT) will be 
 
   You can then follow the instructions in the <Breadcrumb>Run the API</Breadcrumb> section.
 </Aside>
+
+We are going to be building an API backend for a banking application called ChangeBank. This API will have two endpoints:
+- `make-change`: This endpoint will allow you to call GET with a `total` amount and receive a response indicating how many nickels and pennies are needed to make change. Valid roles are `customer` and `teller`.
+- `panic`: Tellers may call this endpoint to call the police in case of an incident. The only valid role is `teller`.
+
+Both endpoints will be protected such that a valid JSON web token (JWT) will be required in an `app.at` cookie or the `Authorization` header in order to be accessed. Additionally, the JWT must have a `roles` claim containing the appropriate role to use the endpoint.
+
 
 ```shell-session
 composer create-project laravel/laravel your-application "^12.0"
@@ -98,7 +99,7 @@ composer require fusionauth/jwt-auth-webtoken-provider:^1.0 web-token/jwt-signat
 
 When installing Laravel, it will automatically make a migration to create a `users` table in the database. You'll have to edit the file `database/migrations/0001_01_01_000000_create_users_table` to change the default behavior and use UUID for the primary key, remove the need for a password and the remember token.
 
-<LocalCode src="quickstart-php-laravel-api/complete-application/database/migrations/2014_10_12_000000_create_users_table.php" lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/complete-application/database/migrations/0001_01_01_000000_create_users_table.php" lang="php"/>
 
 You'll also need to edit `app/Models/User.php` to make the database changes consistent with your model.
 
@@ -192,7 +193,7 @@ Now that you created all these files, you need to pass some details about the Fu
 
 Start by adding the environment variables below to your `.env` file.
 
-<LocalCode src="quickstart-php-laravel-api/.env.snippet.fusionauth" lang="ini"/>
+<LocalCode src="quickstart-php-laravel-api/fusionauth.snippet.fusionauth.env" lang="ini"/>
 
 Add the FusionAuth provider to the `bootstrap/providers.php` providers array:
 
