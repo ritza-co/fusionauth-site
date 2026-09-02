@@ -94,7 +94,7 @@ docker run --rm -v "$PROJECT_DIR/complete-application:/app" -w /app composer:2.1
   "find app config routes -name '*.php' -print0 | xargs -0 -n1 php -l"
 
 echo "Pulling latest FusionAuth image..."
-#docker compose pull
+docker compose pull
 
 echo "Starting FusionAuth..."
 docker compose up -d
