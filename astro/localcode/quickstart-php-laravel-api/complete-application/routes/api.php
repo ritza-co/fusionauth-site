@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-$middleware = Route::middleware('auth:sanctum');
+$middleware = Route::middleware('auth:web');
 $middleware->get('/user', function (Request $request) {
     return $request->user();
 });
