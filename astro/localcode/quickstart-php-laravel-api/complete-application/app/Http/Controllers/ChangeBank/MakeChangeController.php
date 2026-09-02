@@ -57,4 +57,3 @@ class MakeChangeController extends Controller
         return $output;
     }
 }
-

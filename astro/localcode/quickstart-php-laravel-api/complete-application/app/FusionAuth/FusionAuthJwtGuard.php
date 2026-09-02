@@ -42,4 +42,3 @@ class FusionAuthJwtGuard extends TymonJWTGuard
     }
 
 }
-

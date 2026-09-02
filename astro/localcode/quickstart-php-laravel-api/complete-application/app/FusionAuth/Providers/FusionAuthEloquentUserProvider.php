@@ -27,4 +27,3 @@ class FusionAuthEloquentUserProvider extends EloquentUserProvider
         return $model;
     }
 }
-

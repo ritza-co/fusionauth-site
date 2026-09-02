@@ -43,4 +43,3 @@ class Audience extends BaseAudienceClaim
         return \strtolower($value) === $this->expectedValue;
     }
 }
-

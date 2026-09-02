@@ -43,4 +43,3 @@ class Issuer extends BaseIssuerClaim
         return \strtolower($value) === $this->expectedValue;
     }
 }
-

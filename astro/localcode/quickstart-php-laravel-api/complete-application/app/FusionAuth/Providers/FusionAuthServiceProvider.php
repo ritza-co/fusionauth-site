@@ -48,4 +48,3 @@ class FusionAuthServiceProvider extends ServiceProvider
     }
 
 }
-
