@@ -19,10 +19,6 @@ import LocalValue from 'src/components/LocalValue/LocalValue.astro';
        repositoryUrl="https://github.com/FusionAuth/fusionauth-quickstart-php-laravel-api"
        api/>
 
-<Aside type="caution">
-The FusionAuth PHP JWT library does not yet support Laravel version 13. You need to use Laravel version 12 or lower.
-</Aside>
-
 ## Prerequisites
 
 For this QuickStart, you'll need:
@@ -79,7 +75,7 @@ Both endpoints will be protected such that a valid JSON web token (JWT) will be 
 
 
 ```shell-session
-composer create-project laravel/laravel your-application "^12.0"
+composer create-project laravel/laravel your-application "^13.0"
 cd your-application
 php artisan install:api
 php artisan serve --port=3000
@@ -89,10 +85,10 @@ You can browse to the default Laravel [app homepage](http://localhost:3000).
 
 ### Add Security
 
-Stop the server and include FusionAuth's library to add JWT support to the authentication system:
+Stop the server and install the Firebase JWT library:
 
 ```shell-session
-composer require fusionauth/jwt-auth-webtoken-provider:^1.0 web-token/jwt-signature-algorithm-rsa:^3.4 -W
+composer require firebase/php-jwt
 ```
 
 ### Create Fields in the User Entity
@@ -111,47 +107,27 @@ Rerun the migrations to create the altered users in your database.
 php artisan migrate:fresh
 ```
 
-### Provisioning New Users
+### Add the JWT Middleware
 
-By default, Laravel allows only JWTs that correspond to users in your database, but one of the greatest benefits of using FusionAuth is to have a single source of truth of user management. So, you want your API to automatically provision new users when it receives a trusted JWT from FusionAuth.
-
-To do so, first create a folder named `FusionAuth` inside `app/`, and another one named `Providers` inside `FusionAuth`, so you can have `app/FusionAuth/Providers`.
+Create a middleware to validate JWTs from FusionAuth. This middleware will fetch and cache the JWKS, validate the token signature and claims, and provision users.
 
 ```shell-session
-mkdir -p app/FusionAuth/Providers
-````
+mkdir -p app/Http/Middleware
+```
 
-Add a new [User Provider](https://laravel.com/docs/10.x/authentication#adding-custom-user-providers) at `app/FusionAuth/Providers/FusionAuthEloquentUserProvider.php` to create new users when receiving valid JWTs from FusionAuth.
+Create `app/Http/Middleware/EnsureFusionAuthToken.php`:
 
-<LocalCode src="quickstart-php-laravel-api/complete-application/app/FusionAuth/Providers/FusionAuthEloquentUserProvider.php" lang="php"/>
-
-Now, add an [Authentication Guard](https://laravel.com/docs/10.x/authentication#adding-custom-guards) in `app/FusionAuth/FusionAuthJwtGuard.php` to call that custom method from the User Provider created above.
-
-<LocalCode src="quickstart-php-laravel-api/complete-application/app/FusionAuth/FusionAuthJwtGuard.php" lang="php"/>
-
-Let Laravel know about these two classes by editing `config/auth.php`.
-
-First, change the `driver` for the `web` Guard to `jwt`:
-
-<LocalCode src="quickstart-php-laravel-api/auth.snippet.guards.php" lang="php"/>
-
-Now, change the default `provider` to `fusionauth_eloquent`:
-
-<LocalCode src="quickstart-php-laravel-api/auth.snippet.providers.php" lang="php"/>
-
-Finally, create a [Service Provider](https://laravel.com/docs/10.x/providers) in `app/FusionAuth/Providers/FusionAuthServiceProvider.php` to make sure Laravel will use the newly created classes instead of its defaults.
-
-<LocalCode src="quickstart-php-laravel-api/complete-application/app/FusionAuth/Providers/FusionAuthServiceProvider.php" lang="php"/>
+<LocalCode src="quickstart-php-laravel-api/complete-application/app/Http/Middleware/EnsureFusionAuthToken.php" lang="php"/>
 
 ### Update Routes
 
-Change `routes/api.php` to add both `/api/make-change` and `/api/panic` endpoints for your ChangeBank application.
+Change `routes/api.php` to use the middleware and add both `/api/make-change` and `/api/panic` endpoints:
 
 <LocalCode src="quickstart-php-laravel-api/complete-application/routes/api.php" lang="php"/>
 
 ### Add Controllers
 
-Change the base controller at `app/Http/Controllers/Controller.php` to include a helper function to check for roles.
+Change the base controller at `app/Http/Controllers/Controller.php` to include a helper function to check for roles from the JWT payload:
 
 <LocalCode src="quickstart-php-laravel-api/complete-application/app/Http/Controllers/Controller.php" lang="php"/>
 
@@ -169,45 +145,21 @@ To finish, create a controller at `app/Http/Controllers/ChangeBank/PanicControll
 
 <LocalCode src="quickstart-php-laravel-api/complete-application/app/Http/Controllers/ChangeBank/PanicController.php" lang="php"/>
 
-### Validating Issuer and Audience Claims
+### Configure FusionAuth
 
-Besides verifying the signature, it is also recommended to validate the issuer (`iss`) and audience (`aud`) claims when receiving a JWT. To do those checks, you need to create two files.
-
-Create a folder named `Claims` inside `app/FusionAuth`.
-
-```shell-session
-mkdir app/FusionAuth/Claims
-```
-
-First, create a file named `app/FusionAuth/Claims/Audience.php` that will check if the audience (`aud`) claim actually contains the Client Id for the application you created in FusionAuth.
-
-<LocalCode src="quickstart-php-laravel-api/complete-application/app/FusionAuth/Claims/Audience.php" lang="php"/>
-
-Now, create a file called `app/FusionAuth/Claims/Issuer.php` to check if the issuer (`iss`) is actually your FusionAuth instance address.
-
-<LocalCode src="quickstart-php-laravel-api/complete-application/app/FusionAuth/Claims/Issuer.php" lang="php"/>
-
-### Let Your Code Know about the FusionAuth Instance
-
-Now that you created all these files, you need to pass some details about the FusionAuth configuration to them.
-
-Start by adding the environment variables below to your `.env` file.
+Add the environment variables below to your `.env` file:
 
 <LocalCode src="quickstart-php-laravel-api/fusionauth.snippet.fusionauth.env" lang="ini"/>
 
-Add the FusionAuth provider to the `bootstrap/providers.php` providers array:
-
-<LocalCode src="quickstart-php-laravel-api/complete-application/bootstrap/providers.php" lang="php"/>
-
-Now open the `config/app.php` file and add these lines at the end (just before the last line) to pass values from the environment variables to the application.
+Now open the `config/app.php` file and add these lines at the end (just before the last line) to pass values from the environment variables to the application:
 
 <LocalCode src="quickstart-php-laravel-api/app.snippet.fusionauth.php" lang="php"/>
 
-To make the library available for use, publish its configuration by running the command below.
+### Exclude Cookie from Encryption
 
-```shell-session
-php artisan vendor:publish --provider="FusionAuth\JWTAuth\WebTokenProvider\Providers\WebTokenServiceProvider"
-```
+Laravel encrypts cookies by default, but the JWT token in the `app_at` cookie is not encrypted by Laravel. Exclude it from encryption in `bootstrap/app.php`:
+
+<LocalCode src="quickstart-php-laravel-api/complete-application/bootstrap/app.php" lang="php"/>
 
 ## Run the API
 
