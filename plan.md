@@ -1,99 +1,73 @@
 # Plan: Migrate Laravel API Quickstart from fusionauth/jwt-auth-webtoken-provider to firebase/php-jwt
 
-## Overview
+## Goal
 
-Switch the `quickstart-php-laravel-api` complete-application from using the custom `fusionauth/jwt-auth-webtoken-provider` package (and its transitive Tymon JWT/WebToken dependencies) to using the much simpler and more widely supported `firebase/php-jwt` library. A dumber/cheaper agent will implement these steps later, so each instruction must be explicit, file-level, and avoid assumptions.
+Replace the custom `fusionauth/jwt-auth-webtoken-provider` stack (Tymon/WebToken) in `astro/localcode/quickstart-php-laravel-api/complete-application` with `firebase/php-jwt`, while keeping the guide as short as possible for the reader.
 
-## Current State Summary
+## Key Design Decision: One Middleware, No Custom Guard/Provider
 
-### Current packages in `composer.json`
-- `fusionauth/jwt-auth-webtoken-provider: ^1.0`
-- `web-token/jwt-signature-algorithm-rsa: ^3.4`
-- `laravel/sanctum: ^4.0` (installed by `php artisan install:api` in the guide; keep it because following the guide recreates it)
+The new implementation will use a single Laravel middleware for JWT validation. This removes the need for:
+- A custom authentication guard
+- A custom user provider
+- A service provider registration
+- Claim validator classes
+- `vendor:publish` step
+- `config/auth.php` changes
+- `bootstrap/app.php` changes (use the full middleware class name directly in routes)
 
-### Current custom files
-1. `app/FusionAuth/FusionAuthJwtGuard.php` — custom Laravel guard extending Tymon JWTGuard.
-2. `app/FusionAuth/Providers/FusionAuthEloquentUserProvider.php` — creates a `User` model from the JWT payload.
-3. `app/FusionAuth/Providers/FusionAuthServiceProvider.php` — registers the custom guard, custom user provider, custom claim validators, and changes the cookie key from `app_at` to `app.at`.
-4. `app/FusionAuth/Claims/Audience.php` — validates the `aud` claim against `config('app.fusionauth.client_id')`.
-5. `app/FusionAuth/Claims/Issuer.php` — validates the `iss` claim against `config('app.fusionauth.url')`.
-6. `config/jwt.php` — published config from the FusionAuth provider.
-7. `config/auth.php` — `guards.web.driver = 'jwt'` and `providers.users.driver = 'fusionauth_eloquent'`.
-8. `bootstrap/providers.php` — registers `FusionAuthServiceProvider`.
-9. `routes/api.php` — uses `auth:web` middleware (was `auth:sanctum`, already partially fixed).
-10. `app/Http/Controllers/Controller.php` — `checkRoles()` calls `auth('web')->payload()` and reads `roles`.
-11. `.env` / `fusionauth.env` — contain FusionAuth URL, client id, JWT algorithm, JWKS URL/cache.
+The reader will create **one file** and modify **three existing files**.
 
-### Desired New State
-- Use `firebase/php-jwt` for JWT decoding/validation.
-- Use a single middleware (`EnsureFusionAuthToken`) for JWT cookie/header authentication instead of a custom guard/provider. This keeps the guide shorter and easier to follow.
-- No dependency on `fusionauth/jwt-auth-webtoken-provider`, `tymon/jwt-auth`, or `web-token/jwt-signature-algorithm-rsa`.
-- Keep `laravel/sanctum` because the guide runs `php artisan install:api`.
-- Keep automatic user provisioning from trusted FusionAuth JWTs.
-- Keep `aud` and `iss` claim validation.
-- Keep reading `roles` from the JWT for `Controller::checkRoles()`.
-- Keep cookie name `app.at` and `Authorization: Bearer` header support.
-- Prefer a single middleware over a custom guard + provider to keep the guide shorter.
+## What The Reader Does (Guide Steps)
 
-## Important Constraints
+The guide instructs the reader to create/modify these files in their own `your-application` directory:
 
-- Do **NOT** delete the old files until the new implementation is working and tested.
-- Do **NOT** run `npm`, `docker`, `git`, or any command that changes state.
-- Do the initial implementation in `your-application` so `complete-application` stays untouched for comparison. Copy the final files to `complete-application` only when ready.
-- Update the MDX guide to match the new code.
-- Update generated snippet files after source edits.
-- Keep PHP 8.2+ compatibility.
+1. **Create** `app/Http/Middleware/EnsureFusionAuthToken.php`
+   - Fetch and cache the JWKS from FusionAuth.
+   - Decode and validate the JWT signature, `iss`, `aud`, and `exp`.
+   - Read the token from the `app.at` cookie or `Authorization: Bearer` header.
+   - Provision a `User` record from the `sub` claim.
+   - Attach the decoded payload to the request as `jwt_payload`.
+   - Return 401 for missing or invalid tokens.
 
-## Step-by-Step Plan
+2. **Modify** `config/app.php`
+   - Expand the existing `fusionauth` config block to include `algo`, `jwks_url`, and `jwks_url_cache`.
 
-### 1. Composer Changes
+3. **Modify** `routes/api.php`
+   - Replace `auth:sanctum` / `auth:web` with the full middleware class name:
+     ```php
+     $middleware = Route::middleware(\App\Http\Middleware\EnsureFusionAuthToken::class);
+     ```
 
-File: `astro/localcode/quickstart-php-laravel-api/complete-application/composer.json`
+4. **Modify** `app/Http/Controllers/Controller.php`
+   - Change `checkRoles()` to read `roles` from `request()->attributes->get('jwt_payload')`.
 
-1.1. In the `require` section:
-- Remove `"fusionauth/jwt-auth-webtoken-provider": "^1.0"`
-- Remove `"web-token/jwt-signature-algorithm-rsa": "^3.4"`
-- Keep `"laravel/sanctum": "^4.0"` because the guide runs `php artisan install:api`.
-- Add `"firebase/php-jwt": "^6.11"` (or latest stable 6.x version available at the time of implementation).
+5. **Run** `composer require firebase/php-jwt` (terminal command, not a file edit).
 
-1.2. Ensure the final `require` section looks roughly like this:
-```json
-"require": {
-    "php": "^8.2",
-    "firebase/php-jwt": "^6.11",
-    "laravel/framework": "^12.0",
-    "laravel/tinker": "^2.10.1"
-},
-```
+That is the complete reader-facing surface. No other files are touched by the reader.
 
-1.3. Keep `laravel/sanctum: ^4.0` in `require`. The `php artisan install:api` command in the guide creates it, so removing it would make the guide's instructions inconsistent.
+## What The Implementer Does (This Repo)
 
-1.4. Regenerate `composer.lock`. The implementer should later run `composer update` inside the project directory (or Docker). Since we cannot run commands now, this step is listed for the implementer.
+The implementer works in `astro/localcode/quickstart-php-laravel-api/your-application` first, then copies the result to `complete-application`.
 
-### 2. Work in `your-application` First
+### Step 1: Set up the working copy
 
-2.1. Copy the current `complete-application` contents into `your-application` so you have a clean working copy while leaving `complete-application` untouched for comparison.
+1.1. Copy `astro/localcode/quickstart-php-laravel-api/complete-application` into `astro/localcode/quickstart-php-laravel-api/your-application`. This leaves `complete-application` untouched for comparison while work is in progress.
 
-2.2. Do all implementation steps below in `astro/localcode/quickstart-php-laravel-api/your-application/` first.
+### Step 2: Update dependencies
 
-2.3. Only copy the finalized files back to `astro/localcode/quickstart-php-laravel-api/complete-application/` after the implementation is tested and working.
+2.1. In `your-application/composer.json`, remove:
+- `fusionauth/jwt-auth-webtoken-provider`
+- `web-token/jwt-signature-algorithm-rsa`
 
-### 3. Environment Variables
+2.2. Add `firebase/php-jwt` to `require`.
 
-Files: `astro/localcode/quickstart-php-laravel-api/your-application/.env` and the matching `complete-application/.env` / `fusionauth.env`
+2.3. Keep `laravel/sanctum` because the guide runs `php artisan install:api`, which recreates it.
 
-The existing snippet section marked with `# :snippet-start: fusionauth` / `# :snippet-end:` already contains everything needed:
-- `FUSIONAUTH_CLIENT_ID`
-- `FUSIONAUTH_URL`
-- `JWT_ALGO`
-- `JWT_JWKS_URL`
-- `JWT_JWKS_URL_CACHE`
+2.4. Later, run `composer update` in `your-application` to generate a new `composer.lock`. (This is an implementer step, not a reader step.)
 
-No new variables are required.
+### Step 3: Delete the old FusionAuth JWT code
 
-### 4. Delete the Old FusionAuth JWT Provider Code
-
-In `your-application`, delete these files entirely (do this only after creating the replacement in step 5):
+In `your-application`, delete:
 - `app/FusionAuth/FusionAuthJwtGuard.php`
 - `app/FusionAuth/Providers/FusionAuthEloquentUserProvider.php`
 - `app/FusionAuth/Providers/FusionAuthServiceProvider.php`
@@ -101,107 +75,29 @@ In `your-application`, delete these files entirely (do this only after creating 
 - `app/FusionAuth/Claims/Issuer.php`
 - `config/jwt.php`
 
-Do NOT delete `config/sanctum.php` because the guide runs `php artisan install:api`, which creates it.
+Do NOT delete `config/sanctum.php`.
 
-### 5. Create the New JWT Service
+### Step 4: Create the middleware
 
-File to create: `app/FusionAuth/Services/JwtService.php`
+Create `your-application/app/Http/Middleware/EnsureFusionAuthToken.php`.
 
-5.1. Responsibilities:
-- Fetch the JWKS from `config('app.fusionauth.url') . '/.well-known/jwks.json'`.
-- Cache the JWKS for `config('app.fusionauth.jwks_url_cache')` seconds using Laravel's cache.
-- Decode the JWT using `Firebase\JWT\JWT::decode()` with the correct public key from the JWKS.
-- Validate `iss` claim equals `config('app.fusionauth.url')`.
-- Validate `aud` claim contains `config('app.fusionauth.client_id')`.
-- Return the decoded token as an associative array.
+It must:
+- Implement `handle(Request $request, Closure $next)`.
+- Read the token from `$request->cookie('app.at')` first, then from the `Authorization` header if the cookie is missing.
+- Use `Firebase\JWT\JWK::parseKeySet()` and `Firebase\JWT\JWT::decode()` to validate the token.
+- Fetch the JWKS from `config('app.fusionauth.url') . '/.well-known/jwks.json'` using the `Http` facade.
+- Cache the parsed key set with `Cache::remember()` for `config('app.fusionauth.jwks_url_cache')` seconds.
+- Validate that `iss` equals `config('app.fusionauth.url')`.
+- Validate that `aud` contains `config('app.fusionauth.client_id')` (handle string or array audience).
+- Find or create a `User` from the `sub` claim and save it.
+- Set `$request->attributes->set('jwt_payload', (array) $payload)`.
+- On any failure, return `response()->json(['error' => 'Unauthorized'], 401)`.
 
-5.2. Implementation guidelines:
-- Use `Firebase\JWT\JWK::parseKeySet()` to convert the JWKS array into a key set that `JWT::decode()` accepts.
-- Use `Firebase\JWT\JWT::decode($token, $jwks, config('app.fusionauth.algo'))`.
-- Handle all exceptions by throwing a single custom exception (e.g. `App\FusionAuth\Exceptions\InvalidTokenException`) with the original exception chained.
-- The JWKS fetch should use Laravel's `Http` facade. Example: `$response = Http::get(config('app.fusionauth.url') . '/.well-known/jwks.json');`.
-- Cache the parsed key set using `Cache::remember()`.
+Keep the file clean with private helper methods, but keep everything in this single file.
 
-### 6. Create a Single Middleware for JWT Authentication
+### Step 5: Update config/app.php
 
-File to create: `app/Http/Middleware/EnsureFusionAuthToken.php`
-
-6.1. Responsibilities:
-- Read the token from the `app.at` cookie first.
-- If no cookie, read the `Authorization: Bearer <token>` header.
-- Call `JwtService::decode($token)`.
-- From the decoded payload, find or create a `User` record:
-  - `id` = `sub` claim.
-  - Save the user to the database if it does not exist.
-- Log the user in with `Auth::login($user)` so Laravel's `auth()` helper works.
-- Store the decoded payload on the request with `$request->attributes->set('jwt_payload', $payload)` so controllers can read `roles`.
-- If the token is missing or invalid, return a 401 JSON response (or rethrow so Laravel converts it to 401).
-
-6.2. Do NOT create a custom guard or custom user provider. The middleware approach is simpler and keeps the guide shorter.
-
-6.3. Register the middleware in `bootstrap/app.php` (Laravel 12 uses this file instead of `Http/Kernel.php`) with the alias `fusionauth`. The guide should tell the user to add:
-```php
-->withMiddleware(function (Middleware $middleware) {
-    $middleware->alias([
-        'fusionauth' => \App\Http\Middleware\EnsureFusionAuthToken::class,
-    ]);
-})
-```
-
-### 7. Remove the Service Provider Registration
-
-File: `bootstrap/providers.php`
-
-7.1. Remove `App\FusionAuth\Providers\FusionAuthServiceProvider::class` from the providers array.
-
-7.2. Keep `App\Providers\AppServiceProvider::class`.
-
-7.3. Optionally delete `app/FusionAuth/Providers/FusionAuthServiceProvider.php` after the middleware is working.
-
-### 8. Update Authentication Configuration
-
-File: `astro/localcode/quickstart-php-laravel-api/your-application/config/auth.php`
-
-8.1. Revert the `guards` section to Laravel's default `session` driver:
-```php
-// :snippet-start: guards
-'guards' => [
-    'web' => [
-        'driver' => 'session',
-        'provider' => 'users',
-    ],
-],
-// :snippet-end:
-```
-
-8.2. Revert the `providers` section to Laravel's default `eloquent` driver:
-```php
-// :snippet-start: providers
-'providers' => [
-    'users' => [
-        'driver' => 'eloquent',
-        'model' => env('AUTH_MODEL', User::class),
-    ],
-],
-// :snippet-end:
-```
-
-8.3. The middleware will handle JWT auth directly, so no custom guard or provider is needed.
-
-### 9. Update Application Configuration
-
-File: `astro/localcode/quickstart-php-laravel-api/your-application/config/app.php`
-
-9.1. The existing snippet section must expose the JWT algorithm and JWKS cache TTL. Change it from:
-```php
-// :snippet-start: fusionauth
-'fusionauth' => [
-    'url' => rtrim(env('FUSIONAUTH_URL'), '/'),
-    'client_id' => env('FUSIONAUTH_CLIENT_ID'),
-],
-// :snippet-end:
-```
-to:
+In `your-application/config/app.php`, expand the existing snippet block to:
 ```php
 // :snippet-start: fusionauth
 'fusionauth' => [
@@ -214,249 +110,113 @@ to:
 // :snippet-end:
 ```
 
-### 10. Update Base Controller
+### Step 6: Update routes/api.php
 
-File: `astro/localcode/quickstart-php-laravel-api/your-application/app/Http/Controllers/Controller.php`
+In `your-application/routes/api.php`, change the middleware to:
+```php
+$middleware = Route::middleware(\App\Http\Middleware\EnsureFusionAuthToken::class);
+$middleware->post('/panic', \App\Http\Controllers\ChangeBank\PanicController::class);
+$middleware->get('/make-change', \App\Http\Controllers\ChangeBank\MakeChangeController::class);
+```
 
-10.1. The current `checkRoles()` calls `auth('web')->payload()` which relies on Tymon. Replace it with a method that reads the decoded JWT payload from the request attributes set by the middleware.
+### Step 7: Update Controller.php
 
-10.2. New implementation:
+In `your-application/app/Http/Controllers/Controller.php`, replace `checkRoles()` with:
 ```php
 protected function checkRoles(string ...$roles): void
 {
     $payload = (array) request()->attributes->get('jwt_payload');
     $rolesFromJwt = (array) ($payload['roles'] ?? []);
 
-    $hasAtLeastOneRole = false;
     foreach ($roles as $role) {
         if (in_array($role, $rolesFromJwt, true)) {
-            $hasAtLeastOneRole = true;
-            break;
+            return;
         }
     }
 
-    if (!$hasAtLeastOneRole) {
-        throw new AuthorizationException('Proper role not found for user.');
-    }
+    throw new AuthorizationException('Proper role not found for user.');
 }
 ```
 
-### 11. Update Routes
+### Step 8: Leave config/auth.php as Laravel default
 
-File: `astro/localcode/quickstart-php-laravel-api/your-application/routes/api.php`
+In `your-application/config/auth.php`, revert the `guards.web.driver` to `session` and `providers.users.driver` to `eloquent`. The middleware does not depend on these, so the file should match a fresh Laravel install.
 
-11.1. Replace `auth:web` with the new middleware alias `fusionauth`:
-```php
-$middleware = Route::middleware('fusionauth');
-$middleware->post('/panic', \App\Http\Controllers\ChangeBank\PanicController::class);
-$middleware->get('/make-change', \App\Http\Controllers\ChangeBank\MakeChangeController::class);
-```
+### Step 9: Leave bootstrap/providers.php as Laravel default
 
-### 12. Update Middleware Registration
+Remove only the `App\FusionAuth\Providers\FusionAuthServiceProvider::class` line. No new provider is needed.
 
-File: `astro/localcode/quickstart-php-laravel-api/your-application/bootstrap/app.php`
+### Step 10: Keep User model and migrations
 
-12.1. Add the middleware alias inside the `withMiddleware` callback. If the file currently does not have a `withMiddleware` call, add one:
-```php
-use Illuminate\Foundation\Configuration\Middleware;
+`app/Models/User.php` and `database/migrations/0001_01_01_000000_create_users_table.php` stay as they are. They already support UUID primary keys and no password.
 
-return Application::configure(basePath: dirname(__DIR__))
-    ->withRouting(
-        web: __DIR__.'/../routes/web.php',
-        api: __DIR__.'/../routes/api.php',
-        commands: __DIR__.'/../routes/console.php',
-        health: '/up',
-    )
-    ->withMiddleware(function (Middleware $middleware) {
-        $middleware->alias([
-            'fusionauth' => \App\Http\Middleware\EnsureFusionAuthToken::class,
-        ]);
-    })
-    ->withExceptions(function (Exceptions $exceptions) {
-        //
-    })->create();
-```
+### Step 11: Keep controller business logic
 
-### 13. Update Model
+`MakeChangeController.php` and `PanicController.php` stay as they are. The `MakeChangeController` validation added earlier (missing/non-numeric/negative total returns 400) should be kept.
 
-File: `astro/localcode/quickstart-php-laravel-api/your-application/app/Models/User.php`
+### Step 12: Test in your-application
 
-13.1. Keep `$incrementing = false` and `$keyType = 'string'`.
+12.1. Start FusionAuth with `docker compose up -d` from the quickstart root.
 
-13.2. Keep the hidden `remember_token` removal.
+12.2. Run `composer install` and `php artisan serve --port=3000` in `your-application`.
 
-13.3. No JWT-related interface (`JWTSubject`) is required anymore.
+12.3. Verify:
+- `GET /api/make-change?total=1.02` without token returns 401.
+- `POST /api/panic` without token returns 401.
+- Teller token gets 200 on both endpoints.
+- Customer token gets 200 on `/api/make-change` and 403 on `/api/panic`.
+- Missing, non-numeric, and negative `total` values return 400.
+- A token with wrong `aud` or `iss` is rejected with 401.
 
-### 14. Update MakeChangeController Validation
 
-File: `astro/localcode/quickstart-php-laravel-api/your-application/app/Http/Controllers/ChangeBank/MakeChangeController.php`
+### Step 14: Update the MDX guide
 
-14.1. The current file already has validation for missing, non-numeric, and negative totals. Keep that logic.
+In `astro/src/content/docs/get-started/quickstarts/api/quickstart-php-laravel-api.mdx`:
 
-### 15. Update the MDX Guide
-
-File: `astro/src/content/docs/get-started/quickstarts/api/quickstart-php-laravel-api.mdx`
-
-15.1. Update the "Add Security" section command from:
-```
-composer require fusionauth/jwt-auth-webtoken-provider:^1.0 web-token/jwt-signature-algorithm-rsa:^3.4 -W
-```
-to:
+14.1. Change the "Add Security" command to:
 ```
 composer require firebase/php-jwt
 ```
 
-15.2. Replace the three sections about custom guard, user provider, and service provider with ONE section about the `EnsureFusionAuthToken` middleware and `JwtService`.
+14.2. Replace the sections for `FusionAuthEloquentUserProvider`, `FusionAuthJwtGuard`, `FusionAuthServiceProvider`, and the two claim validator files with ONE section titled "Add the JWT Middleware". Show the full `EnsureFusionAuthToken.php` file and explain briefly what it does.
 
-15.3. Remove the "Validating Issuer and Audience Claims" section, or rewrite it to explain that validation is now inside `JwtService`.
+14.3. Remove the "Validating Issuer and Audience Claims" standalone section; instead, note that validation happens inside the middleware.
 
-15.4. Remove the `php artisan vendor:publish --provider="FusionAuth\JWTAuth\WebTokenProvider\Providers\WebTokenServiceProvider"` instruction.
+14.4. Remove the `vendor:publish` instruction.
 
-15.5. Update `LocalCode` references to point to the new files:
-- `app/FusionAuth/Services/JwtService.php`
-- `app/Http/Middleware/EnsureFusionAuthToken.php`
-- `bootstrap/app.php`
-- `routes/api.php`
-- `config/auth.php`
-- `config/app.php`
-- `app/Http/Controllers/Controller.php`
+14.5. Update `LocalCode` references:
+- Add `app/Http/Middleware/EnsureFusionAuthToken.php`
+- Update `routes/api.php`
+- Update `app/Http/Controllers/Controller.php`
+- Update `config/app.php`
+- Remove references to deleted files.
 
-15.6. Keep the `app/Models/User.php` and migration `LocalCode` references unchanged.
+14.6. Keep the `app/Models/User.php` and migration `LocalCode` references unchanged.
 
-### 16. Update/Regenerate Snippets
+### Step 15: Update tests
 
-After copying the finalized files from `your-application` to `complete-application`, run `npm run generate-code-snippets` from the workspace root to regenerate the snippet files in `astro/src/generated-code-snippets/quickstart-php-laravel-api/`.
+In `astro/localcode/quickstart-php-laravel-api/tests/test.sh`:
 
-### 17. Update Tests
+15.1. Keep the existing assertions (401 without token, role-based access, change breakdown, invalid total handling).
 
-File: `astro/localcode/quickstart-php-laravel-api/tests/test.sh`
+15.2. The readiness check expects 401 from `/api/panic`; confirm it still passes once the middleware is active.
 
-17.1. Keep the test logic as-is; it already asserts:
-- 401 without token.
-- 200 for teller/customer on `/api/make-change`.
-- Correct change breakdown.
-- 400 for missing/non-numeric/negative totals.
-- 200 for teller on `/api/panic`.
-- 403 for customer on `/api/panic`.
-- 401 without token on `/api/panic`.
 
-17.2. Only update the readiness check if needed. It currently expects 401 from `/api/panic` and should still work once the middleware is active.
+## Reader File Count
 
-### 18. Clean Up Unused Configs
+Reader creates **1 file** and edits **3 files**:
+- Create: `app/Http/Middleware/EnsureFusionAuthToken.php`
+- Edit: `config/app.php`
+- Edit: `routes/api.php`
+- Edit: `app/Http/Controllers/Controller.php`
 
-18.1. Delete `config/jwt.php` in `your-application` and `complete-application` after the new middleware is working.
+No separate service class, exception class, guard, provider, claim validators, or bootstrap/app.php edits.
 
-18.2. Keep `config/sanctum.php` because the guide runs `php artisan install:api`.
+## Why This Is Neat and Appropriate
 
-### 19. Copy Final Code to complete-application
-
-19.1. Once `your-application` is tested and working, copy these files to `complete-application`:
-- `app/FusionAuth/Services/JwtService.php`
-- `app/FusionAuth/Exceptions/InvalidTokenException.php`
-- `app/Http/Middleware/EnsureFusionAuthToken.php`
-- `app/Http/Controllers/Controller.php`
-- `app/Http/Controllers/ChangeBank/MakeChangeController.php`
-- `app/Http/Controllers/ChangeBank/PanicController.php`
-- `app/Models/User.php`
-- `routes/api.php`
-- `config/auth.php`
-- `config/app.php`
-- `bootstrap/app.php`
-- `composer.json`
-- `composer.lock`
-- `.env`
-- `database/migrations/0001_01_01_000000_create_users_table.php`
-
-19.2. Delete the old custom files from `complete-application`:
-- `app/FusionAuth/FusionAuthJwtGuard.php`
-- `app/FusionAuth/Providers/FusionAuthEloquentUserProvider.php`
-- `app/FusionAuth/Providers/FusionAuthServiceProvider.php`
-- `app/FusionAuth/Claims/Audience.php`
-- `app/FusionAuth/Claims/Issuer.php`
-- `config/jwt.php`
-
-### 20. Verification Checklist for the Implementer
-
-19.1. `composer install` completes without errors.
-
-19.2. `php artisan serve --port=3000` starts.
-
-19.3. Unauthenticated `GET /api/make-change?total=1.02` returns 401.
-
-19.4. Unauthenticated `POST /api/panic` returns 401.
-
-19.5. Teller token (with `teller` role) can call `/api/make-change` and `/api/panic`.
-
-19.6. Customer token (with `customer` role) can call `/api/make-change` but gets 403 on `/api/panic`.
-
-19.7. A token with wrong `aud` or `iss` is rejected with 401.
-
-19.8. `npm run generate-code-snippets` regenerates the snippets without errors.
-
-19.9. The guide renders correctly and all `LocalCode` / `LocalValue` references resolve.
-
-## Files to Modify or Create
-
-### Delete
-- `app/FusionAuth/FusionAuthJwtGuard.php`
-- `app/FusionAuth/Providers/FusionAuthEloquentUserProvider.php`
-- `app/FusionAuth/Providers/FusionAuthServiceProvider.php`
-- `app/FusionAuth/Claims/Audience.php`
-- `app/FusionAuth/Claims/Issuer.php`
-- `config/jwt.php`
-
-### Keep (do not delete)
-- `config/sanctum.php` (created by `php artisan install:api` in the guide)
-
-### Replace / Rewrite
-- `config/auth.php`
-- `config/app.php`
-- `app/Http/Controllers/Controller.php`
-- `composer.json`
-- `bootstrap/app.php`
-- `astro/src/content/docs/get-started/quickstarts/api/quickstart-php-laravel-api.mdx`
-
-### Create
-- `app/FusionAuth/Services/JwtService.php`
-- `app/FusionAuth/Exceptions/InvalidTokenException.php`
-- `app/Http/Middleware/EnsureFusionAuthToken.php`
-
-### Keep Unchanged (after minor review)
-- `app/Models/User.php`
-- `app/Http/Controllers/ChangeBank/MakeChangeController.php`
-- `app/Http/Controllers/ChangeBank/PanicController.php`
-- `routes/api.php` (only middleware name changes)
-- `database/migrations/0001_01_01_000000_create_users_table.php`
-- `.env` and `fusionauth.env`
-- `tests/test.sh`
-- `bootstrap/providers.php` (remove only the FusionAuth service provider line)
-
-## Simplification Rationale
-
-Using a single middleware instead of a custom guard + provider reduces the reader's workload significantly:
-- No custom guard class to understand and maintain.
-- No custom user provider class.
-- No service provider registration in `bootstrap/providers.php`.
-- `config/auth.php` stays close to Laravel defaults.
-- The reader only needs to create one middleware and one service class, both of which are standard Laravel concepts.
-
-## Guide Impact Estimate
-
-Compared to the current guide, the new guide will:
-- Remove ~3 files from the reader's manual steps (guard, provider, claim validators).
-- Remove the `vendor:publish` step.
-- Add one middleware registration step in `bootstrap/app.php`.
-- Net result: fewer files and less code for the reader to copy, even though the middleware is slightly larger than any single old file.
-
-## Important Implementation Notes
-
-- Cookie name is `app.at` (with a dot). Do not change it to `app_at`.
-- The `sub` claim from FusionAuth is a UUID string, so `User::$incrementing = false` and `User::$keyType = 'string'` must remain.
-- `firebase/php-jwt` expects the JWKS as an associative array with `keys` at the top level. `JWK::parseKeySet($jwks)` handles this.
-- When validating `aud`, FusionAuth may issue it as a string or array. Check both forms:
-  ```php
-  $aud = (array) $payload->aud;
-  if (!in_array(config('app.fusionauth.client_id'), $aud, true)) { ... }
-  ```
-- Keep the `Http` facade call simple; do not add retries unless required.
-- Do not change any code outside the `quickstart-php-laravel-api` directory unless the MDX guide requires it.
+- The middleware is a standard Laravel concept and the standard place to enforce authentication on routes.
+- Config values are read through `config()` (not `env()` directly), following Laravel conventions.
+- The `Http` and `Cache` facades are used idiomatically.
+- User provisioning stays in the middleware because it is directly tied to authentication.
+- `config/auth.php` remains at Laravel defaults, avoiding confusion.
+- `bootstrap/app.php` is not edited because the full middleware class name is used in routes, which is still idiomatic.
