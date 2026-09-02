@@ -87,10 +87,10 @@ cd "$PROJECT_DIR"
 docker compose -f docker-compose.yml config > /dev/null
 
 echo "Installing Composer dependencies for complete-application..."
-docker run --rm -v "$PROJECT_DIR/complete-application:/app" -w /app composer:2.7 composer install --no-interaction --quiet
+docker run --rm -v "$PROJECT_DIR/complete-application:/app" -w /app composer:2.10 composer install --no-interaction --quiet
 
 echo "Syntax-checking complete-application PHP files..."
-docker run --rm -v "$PROJECT_DIR/complete-application:/app" -w /app php:8.3-cli sh -c \
+docker run --rm -v "$PROJECT_DIR/complete-application:/app" -w /app composer:2.10 sh -c \
   "find app config routes -name '*.php' -print0 | xargs -0 -n1 php -l"
 
 echo "Pulling latest FusionAuth image..."
@@ -106,8 +106,8 @@ echo "Waiting for Kickstart to finish (application to exist)..."
 wait_for "Kickstart" kickstart_done
 
 echo "Starting Laravel API app..."
-docker run --network host --name laravel-api --rm -v "$PROJECT_DIR/complete-application":/app -w /app php:8.3-cli sh -c \
-  "composer install --no-interaction --quiet && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=3000" &
+docker run --network host --name laravel-api --rm -v "$PROJECT_DIR/complete-application":/app -w /app composer:2.10 sh -c \
+  "composer install --no-interaction && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=3000" &
 until docker inspect laravel-api > /dev/null 2>&1; do
   sleep 1
 done
