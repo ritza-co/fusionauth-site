@@ -123,9 +123,11 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    // :snippet-start: fusionauth
     'fusionauth' => [
         'url' => rtrim(env('FUSIONAUTH_URL'), '/'),
         'client_id' => env('FUSIONAUTH_CLIENT_ID'),
     ],
+    // :snippet-end:
 
 ];

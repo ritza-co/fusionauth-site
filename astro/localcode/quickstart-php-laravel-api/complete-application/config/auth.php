@@ -37,12 +37,14 @@ return [
     |
     */
 
+    // :snippet-start: guards
     'guards' => [
         'web' => [
             'driver' => 'jwt',
             'provider' => 'users',
         ],
     ],
+    // :snippet-end:
 
 
     /*
@@ -62,6 +64,7 @@ return [
     |
     */
 
+    // :snippet-start: providers
     'providers' => [
         'users' => [
             'driver' => 'fusionauth_eloquent',
@@ -73,6 +76,7 @@ return [
         //     'table' => 'users',
         // ],
     ],
+    // :snippet-end:
 
     /*
     |--------------------------------------------------------------------------
