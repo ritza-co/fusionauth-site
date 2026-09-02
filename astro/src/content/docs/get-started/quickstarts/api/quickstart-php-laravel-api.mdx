@@ -78,16 +78,9 @@ Both endpoints will be protected such that a valid JSON web token (JWT) will be 
 </Aside>
 
 ```shell-session
-# docker run --name app --network host -v vendor:/app/vendor -v .:/app -w /app -it --rm composer:2.10 bash
-#composer global require laravel/installer:^5.32
-#laravel new your-application ^12.0 --database=sqlite --no-node --no-boost
-
 composer create-project laravel/laravel your-application "^12.0"
-
-# if command above fails, try the full path: $COMPOSER_HOME/vendor/bin/laravel new your-application ^12.0   --database=sqlite --no-node --no-boost
-# choose `no` for a starter kit, and then Blade
-
 cd your-application
+php artisan install:api
 php artisan serve --port=3000
 ```
 
@@ -197,25 +190,31 @@ Now, create a file called `app/FusionAuth/Claims/Issuer.php` to check if the iss
 
 Now that you created all these files, you need to pass some details about the FusionAuth configuration to them.
 
-Start by adding the environment variables below to your `.env` file, changing `https://The-Address-Ngrok-Gave-You` to the actual address you copied from ngrok.
+Start by adding the environment variables below to your `.env` file.
 
 <LocalCode src="quickstart-php-laravel-api/.env.snippet.fusionauth" lang="ini"/>
 
-Now open the `config/app.php` file and browse to the `providers` section. This is a Laravel configuration to automatically load these files when booting your application. Add `App\FusionAuth\Providers\FusionAuthServiceProvider::class` to the end of the `providers` array, like shown below.
+Add the FusionAuth provider to the `bootstrap/providers.php` providers array:
 
-<LocalCode src="quickstart-php-laravel-api/app.snippet.providers.php" lang="php"/>
+LocalCode src="quickstart-php-laravel-api/complete-application/bootstrap/providers.php" lang="php"/>
 
-In that same `config/app.php` file, add these lines at the end (just before the last line) to pass values from the environment variables to the application.
+Now open the `config/app.php` file and add these lines at the end (just before the last line) to pass values from the environment variables to the application.
 
 <LocalCode src="quickstart-php-laravel-api/app.snippet.fusionauth.php" lang="php"/>
 
 To make the library available for use, publish its configuration by running the command below.
 
 ```shell-session
-./vendor/bin/sail artisan vendor:publish --provider="FusionAuth\JWTAuth\WebTokenProvider\Providers\WebTokenServiceProvider"
+php artisan vendor:publish --provider="FusionAuth\JWTAuth\WebTokenProvider\Providers\WebTokenServiceProvider"
 ```
 
 ## Run the API
+
+Start the Laravel app with the command below.
+
+```shell-session
+php artisan serve --port=3000
+```
 
 ### Get a Token
 
@@ -255,7 +254,7 @@ Copy the `token` from the response, which should look like this:
 Make a request to `/api/make-change` with a query parameter `total=5.12` and pass the `token` in an `app.at` cookie (or as a `Bearer` token in the `Authorization` header).
 
 ```shell-session
-curl --cookie 'app.at=YOUR_TOKEN' 'http://localhost/api/make-change?total=5.12'
+curl --cookie 'app.at=YOUR_TOKEN' 'http://localhost:3000/api/make-change?total=5.12'
 ```
 
 <Aside type="note">
@@ -293,7 +292,7 @@ You were authorized, success! You can try making the request without the cookie 
 Next call the `/api/panic` endpoint because you are in trouble!
 
 ```shell-session
-curl --cookie 'app.at=YOUR_TOKEN' --request POST 'http://localhost/api/panic'
+curl --cookie 'app.at=YOUR_TOKEN' --request POST 'http://localhost:3000/api/panic'
 ```
 
 This is a `POST` (not a `GET`) because you want all your emergency calls to be non-idempotent.
@@ -336,7 +335,7 @@ Your response should look like this:
 Now use that token to call `/api/make-change` with a query parameter `total=3.24`.
 
 ```shell-session
-curl --cookie 'app.at=YOUR_TOKEN' --location 'http://localhost/api/make-change?total=3.24'
+curl --cookie 'app.at=YOUR_TOKEN' --location 'http://localhost:3000/api/make-change?total=3.24'
 ```
 
 The response should look similar to below, however it has been formatted here for readability:
@@ -368,7 +367,7 @@ The response should look similar to below, however it has been formatted here fo
 So far so good. Now call the `/api/panic` endpoint with `-i` flag to see the headers of the response).
 
 ```shell-session
-curl --cookie 'app.at=YOUR_TOKEN' -i --request POST -H "Accept: application/json" 'http://localhost/api/panic'
+curl --cookie 'app.at=YOUR_TOKEN' -i --request POST -H "Accept: application/json" 'http://localhost:3000/api/panic'
 ```
 
 Your should receive a `403 Forbidden` response with the following message and a huge stack trace (because you are in development mode):
