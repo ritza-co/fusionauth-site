@@ -193,14 +193,6 @@ composer require firebase/php-jwt
 
 14.6. Keep the `app/Models/User.php` and migration `LocalCode` references unchanged.
 
-### Step 15: Update tests
-
-In `astro/localcode/quickstart-php-laravel-api/tests/test.sh`:
-
-15.1. Keep the existing assertions (401 without token, role-based access, change breakdown, invalid total handling).
-
-15.2. The readiness check expects 401 from `/api/panic`; confirm it still passes once the middleware is active.
-
 
 ## Reader File Count
 
