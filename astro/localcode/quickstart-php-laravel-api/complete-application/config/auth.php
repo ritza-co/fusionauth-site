@@ -70,11 +70,6 @@ return [
             'driver' => 'fusionauth_eloquent',
             'model' => env('AUTH_MODEL', User::class),
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
     // :snippet-end:
 
