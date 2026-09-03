@@ -23,7 +23,7 @@ import LocalValue from 'src/components/LocalValue/LocalValue.astro';
 
 For this QuickStart, you'll need:
 
-* [PHP](https://www.php.net/manual/en/install.php) 8.3
+* [PHP](https://www.php.net/manual/en/install.php) 8.3 or later
 * [Composer](https://getcomposer.org/)
 * [Docker](https://www.docker.com), version 20 or later, which is the quickest way to start FusionAuth. (There are [other ways](/docs/get-started/download-and-install)).
 
@@ -71,16 +71,26 @@ We are going to be building an API backend for a banking application called Chan
 - `make-change`: This endpoint will allow you to call GET with a `total` amount and receive a response indicating how many nickels and pennies are needed to make change. Valid roles are `customer` and `teller`.
 - `panic`: Tellers may call this endpoint to call the police in case of an incident. The only valid role is `teller`.
 
-Both endpoints will be protected such that a valid JSON web token (JWT) will be required in an `app.at` cookie or the `Authorization` header in order to be accessed. Additionally, the JWT must have a `roles` claim containing the appropriate role to use the endpoint.
+Both endpoints will be protected such that a valid JSON web token (JWT) will be required as a `Bearer` token in the `Authorization` header in order to be accessed. Additionally, the JWT must have a `roles` claim containing the appropriate role to use the endpoint.
 
+Create the application:
 
 ```shell-session
 composer create-project laravel/laravel your-application "^13"
 cd your-application
-php artisan install:api
 ```
 
-Choose `yes` to run migrations.
+### Add API Routes
+
+A new Laravel application only registers web routes. This API validates FusionAuth tokens itself, so it does not need Laravel Sanctum or `php artisan install:api`. Instead, create an empty `routes/api.php` file, which you will fill in later:
+
+```shell-session
+touch routes/api.php
+```
+
+Then register it in `bootstrap/app.php`. This also tells Laravel to render errors for `/api/*` requests as JSON rather than HTML:
+
+<LocalCode src="quickstart-php-laravel-api/complete-application/bootstrap/app.php" lang="php"/>
 
 ### Add Security
 
@@ -100,15 +110,33 @@ Overwrite `app/Models/User.php` to make the database changes consistent with you
 
 <LocalCode src="quickstart-php-laravel-api/complete-application/app/Models/User.php" lang="php"/>
 
-Rerun the migrations to create the altered users in your database.
+Run the migrations to create the `users` table in your database.
 
 ```shell-session
 php artisan migrate:fresh
 ```
 
+### Add the Signing Key Set
+
+FusionAuth publishes the public keys that verify its tokens at a JSON Web Key Set (JWKS) endpoint. Create a class that fetches those keys and caches them, so that the API does not call FusionAuth on every request:
+
+```shell-session
+mkdir -p app/Auth
+```
+
+Create `app/Auth/FusionAuthKeySet.php`:
+
+<LocalCode src="quickstart-php-laravel-api/complete-application/app/Auth/FusionAuthKeySet.php" lang="php"/>
+
+The key set is handed to the Firebase JWT library, which asks it for the key named by the token's `kid` header. A few details are worth calling out:
+
+- When a token names a key Id that is not in the cache, the key set fetches the JWKS again, so a rotated signing key is picked up right away instead of failing until the cache expires. The refresh happens at most once per minute, so a flood of tokens with made-up key Ids cannot turn your API into a request generator against FusionAuth.
+- Every key is bound to the single algorithm you configure (`RS256` below), whatever the JWKS entry declares. The library then refuses any token whose header names a different algorithm.
+- Fetching the JWKS uses short timeouts, and a failure to reach or parse it is a server error. It is never reported to the client as an invalid token.
+
 ### Add the JWT Middleware
 
-Create a middleware to validate JWTs from FusionAuth. This middleware will fetch and cache the JWKS, validate the token signature and claims, and provision users:
+Create a middleware to validate JWTs from FusionAuth. It reads the token from the `Authorization` header, verifies the signature using the key set, checks the claims, and provisions a user record on the first request:
 
 ```shell-session
 mkdir -p app/Http/Middleware
@@ -118,9 +146,15 @@ Create `app/Http/Middleware/EnsureFusionAuthToken.php`:
 
 <LocalCode src="quickstart-php-laravel-api/complete-application/app/Http/Middleware/EnsureFusionAuthToken.php" lang="php"/>
 
+The middleware only reads the token from the `Authorization` header. Browsers attach cookies to cross-site requests automatically, so accepting the token from a cookie would expose every endpoint to cross-site request forgery unless you also added CSRF protection. Sending the token as a `Bearer` header is the standard for an API resource server and needs no such protection.
+
+The Firebase library verifies the signature and the `exp`, `nbf` and `iat` claims when they are present, but it does not fail when they are absent. The middleware therefore requires the claims the API relies on: `sub` must be a UUID (the FusionAuth user Id), `exp` must be present, `iss` must be your FusionAuth URL, and `aud` must contain your application's client Id. FusionAuth issues `aud` as a string, or as an array when the token was requested for additional resources, so both forms are accepted.
+
+Any failure to validate the token results in a `401` response with a generic body. The reason is logged at `info` level, since invalid tokens are routine, and is never sent to the client.
+
 ### Update Routes
 
-Change `routes/api.php` to use the middleware and add both `/api/make-change` and `/api/panic` endpoints:
+Fill in `routes/api.php` to use the middleware and add both `/api/make-change` and `/api/panic` endpoints:
 
 <LocalCode src="quickstart-php-laravel-api/complete-application/routes/api.php" lang="php"/>
 
@@ -153,12 +187,6 @@ Add the environment variables below to your `.env` file:
 Now open the `config/app.php` file and add these lines at the end (just before the last line) to pass values from the environment variables to the application:
 
 <LocalCode src="quickstart-php-laravel-api/app.snippet.fusionauth.php" lang="php"/>
-
-### Exclude Cookie from Encryption
-
-Laravel encrypts cookies by default, but the JWT token in the `app_at` cookie is not encrypted by Laravel. Exclude it from encryption in `bootstrap/app.php`:
-
-<LocalCode src="quickstart-php-laravel-api/complete-application/bootstrap/app.php" lang="php"/>
 
 ## Run the API
 
@@ -203,15 +231,11 @@ Copy the `token` from the response, which should look like this:
 
 ### Make the Request
 
-Make a request to `/api/make-change` with a query parameter `total=5.12` and pass the `token` in an `app.at` cookie (or as a `Bearer` token in the `Authorization` header).
+Make a request to `/api/make-change` with a query parameter `total=5.12` and pass the `token` as a `Bearer` token in the `Authorization` header.
 
 ```shell-session
-curl --cookie 'app.at=YOUR_TOKEN' 'http://localhost:3000/api/make-change?total=5.12'
+curl --header 'Authorization: Bearer YOUR_TOKEN' 'http://localhost:3000/api/make-change?total=5.12'
 ```
-
-<Aside type="note">
-  You can replace `--cookie 'app.at=<your_token>'` with `--header 'Authorization: Bearer <your_token>'` if you wish to use the `Authorization` header instead of the `app.at` cookie.
-</Aside>
 
 The response should look similar to below, however it has been formatted here for readability:
 
@@ -239,12 +263,12 @@ The response should look similar to below, however it has been formatted here fo
 }
 ```
 
-You were authorized, success! You can try making the request without the cookie or with a different string rather than a valid token, and see that you are denied access.
+You were authorized, success! You can try making the request without the header, with the token in an `app.at` cookie instead, or with a different string rather than a valid token, and see that you are denied access with a `401` response.
 
 Next call the `/api/panic` endpoint because you are in trouble!
 
 ```shell-session
-curl --cookie 'app.at=YOUR_TOKEN' --request POST 'http://localhost:3000/api/panic'
+curl --header 'Authorization: Bearer YOUR_TOKEN' --request POST 'http://localhost:3000/api/panic'
 ```
 
 This is a `POST` (not a `GET`) because you want all your emergency calls to be non-idempotent.
@@ -287,7 +311,7 @@ Your response should look like this:
 Now use that token to call `/api/make-change` with a query parameter `total=3.24`.
 
 ```shell-session
-curl --cookie 'app.at=YOUR_TOKEN' --location 'http://localhost:3000/api/make-change?total=3.24'
+curl --header 'Authorization: Bearer YOUR_TOKEN' --location 'http://localhost:3000/api/make-change?total=3.24'
 ```
 
 The response should look similar to below, however it has been formatted here for readability:
@@ -319,7 +343,7 @@ The response should look similar to below, however it has been formatted here fo
 So far so good. Now call the `/api/panic` endpoint with `-i` flag to see the headers of the response).
 
 ```shell-session
-curl --cookie 'app.at=YOUR_TOKEN' -i --request POST -H "Accept: application/json" 'http://localhost:3000/api/panic'
+curl --header 'Authorization: Bearer YOUR_TOKEN' -i --request POST -H "Accept: application/json" 'http://localhost:3000/api/panic'
 ```
 
 Your should receive a `403 Forbidden` response with the following message and a huge stack trace (because you are in development mode):

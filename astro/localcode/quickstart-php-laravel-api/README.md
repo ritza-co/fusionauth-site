@@ -10,7 +10,7 @@ This repository contains a Laravel API that works with a locally-running instanc
 ### Prerequisites
 You will need the following things properly installed on your computer.
 
-- [PHP 8.3+](https://www.php.net): This quickstart was built using PHP 8.1 and tested with PHP 8.2 as well. It may work on different versions of PHP, but it has not been tested.
+- [PHP 8.3+](https://www.php.net): This quickstart requires PHP 8.3 or later, the minimum for Laravel 13.
 - [Composer](https://getcomposer.org/) to install PHP dependencies.
 - [Docker](https://www.docker.com): The quickest way to stand up both FusionAuth and Laravel. Ensure you also have [docker compose](https://docs.docker.com/compose/) installed.
 - (Alternatively, you can [Install FusionAuth Manually](https://fusionauth.io/docs/v1/tech/installation-guide/)).
@@ -51,8 +51,8 @@ php artisan serve --port=3000
 ```
 
 The app is now serving two api endpoints:
- - [http://localhost/api/make-change](http://localhost/api/make-change) - this endpoint calculates the change to make from a given total.
- - [http://localhost/api/panic](http://localhost/api/panic) - this endpoint simulates notifying the police of an incident.
+ - [http://localhost:3000/api/make-change](http://localhost:3000/api/make-change) - this endpoint calculates the change to make from a given total.
+ - [http://localhost:3000/api/panic](http://localhost:3000/api/panic) - this endpoint simulates notifying the police of an incident.
 
 You can log in with a user preconfigured during Kickstart, `teller@example.com` with the password of `password`, by calling:
 
@@ -67,17 +67,19 @@ curl --location 'http://localhost:9011/api/login' \
 }'
 ```
 
-You can take the token from the response and then call one of the endpoints listed above by calling:
+You can take the token from the response and then call one of the endpoints listed above, passing the token as a `Bearer` token in the `Authorization` header:
 
 ```shell-session
-curl --cookie 'app.at=<your_token>' 'http://localhost/make-change?total=5.12'
+curl --header 'Authorization: Bearer <your_token>' 'http://localhost:3000/api/make-change?total=5.12'
 ```
 
 or
 
 ```shell-session
-curl --cookie 'app.at=<your_token>' --request POST 'http://localhost/panic'
+curl --header 'Authorization: Bearer <your_token>' --request POST 'http://localhost:3000/api/panic'
 ```
+
+The API only reads the token from the `Authorization` header. Requests without it, or with the token in a cookie, receive a `401` response.
 
 ### Further Information
 
