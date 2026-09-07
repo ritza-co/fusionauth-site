@@ -14,6 +14,8 @@ class User extends Authenticatable
 
     protected $keyType = 'string';
 
+    protected $fillable = ['id'];
+
     protected $hidden = [
         'remember_token',
     ];

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         // :snippet-start: users-table
         Schema::create('users', function (Blueprint $table) {
-            $table->uuid('id')->unique();
+            $table->uuid('id')->primary();
             $table->timestamps();
         });
         // :snippet-end:

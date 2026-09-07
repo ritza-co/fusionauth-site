@@ -28,9 +28,7 @@ class EnsureFusionAuthToken
             $this->validateIssuer($payload);
             $this->validateAudience($payload);
 
-            $user = User::find($payload->sub) ?? new User();
-            $user->id = $payload->sub;
-            $user->save();
+            $user = User::firstOrCreate(['id' => $payload->sub]);
 
             $request->attributes->set('jwt_payload', (array) $payload);
             $request->setUserResolver(fn () => $user);
