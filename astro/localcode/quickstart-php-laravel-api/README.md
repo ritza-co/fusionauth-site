@@ -10,10 +10,9 @@ This repository contains a Laravel API that works with a locally-running instanc
 ### Prerequisites
 You will need the following things properly installed on your computer.
 
-- [PHP 8.3+](https://www.php.net): This quickstart was built using PHP 8.1 and tested with PHP 8.2 as well. It may work on different versions of PHP, but it has not been tested.
-- [Composer](https://getcomposer.org/) to install PHP dependencies.
-- [Docker](https://www.docker.com): The quickest way to stand up both FusionAuth and Laravel. Ensure you also have [docker compose](https://docs.docker.com/compose/) installed.
-- (Alternatively, you can [Install FusionAuth Manually](https://fusionauth.io/docs/v1/tech/installation-guide/)).
+- [PHP 8.3+](https://www.php.net)
+- [Composer](https://getcomposer.org)
+- [Docker](https://www.docker.com): The quickest way to stand up both FusionAuth and Laravel. (Alternatively, you can [Install FusionAuth Manually](https://fusionauth.io/docs/v1/tech/installation-guide/)).
 
 ### FusionAuth Installation via Docker
 
