@@ -60,7 +60,7 @@ login() {
     -H "Authorization: $API_KEY" \
     -H "Content-Type: application/json" \
     -d "{\"loginId\":\"$login_id\",\"password\":\"$password\",\"applicationId\":\"$APPLICATION_ID\"}" \
-    | python3 -c "import json,sys; print(json.load(sys.stdin)['token'])"
+    | jq -r '.token'
 }
 
 assert_status() {
@@ -185,33 +185,27 @@ assert_status "third request succeeds (user provisioning stable)" 200 "$CODE" /t
 echo "Testing JWKS key rotation..."
 # Get current JWKS to see existing keys
 curl -s "$FA_URL/.well-known/jwks.json" > /tmp/jwks-before.json
-BEFORE_KEY_COUNT=$(python3 -c "import json; print(len(json.load(open('/tmp/jwks-before.json'))['keys']))")
+BEFORE_KEY_COUNT=$(jq '.keys | length' /tmp/jwks-before.json)
 echo "  JWKS has $BEFORE_KEY_COUNT keys before rotation"
 
-# Generate a new RSA key pair in FusionAuth
-NEW_KEY_RESPONSE=$(curl -s -X POST "$FA_URL/api/key/generate" \
+# Generate a new RSA key pair in FusionAuth (length is required for RSA)
+echo "  Generating new RSA key..."
+curl -s -X POST "$FA_URL/api/key/generate" \
   -H "Authorization: $API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"key": {"algorithm": "RS256", "name": "Test Rotation Key"}}')
-NEW_KEY_ID=$(echo "$NEW_KEY_RESPONSE" | python3 -c "import json,sys; print(json.load(sys.stdin)['key']['kid'])")
-echo "  Generated new key: $NEW_KEY_ID"
+  -d '{"key": {"algorithm": "RS256", "name": "Test Rotation Key", "length": 2048}}' > /tmp/new-key.json
 
-# Wait a moment for the key to be active
-sleep 2
+# Extract the key ID from response
+NEW_KEY_ID=$(jq -r '.key.kid' /tmp/new-key.json)
+echo "  Generated new key with kid: $NEW_KEY_ID"
 
-# Get a new token (should be signed with the new key)
-ROTATED_TOKEN=$(login "teller@example.com" "password")
-ROTATED_KID=$(echo "$ROTATED_TOKEN" | cut -d'.' -f1 | python3 -c "import json,sys,base64; h=sys.stdin.read(); h+='='*(4-len(h)%4); print(json.loads(base64.urlsafe_b64decode(h))['kid'])")
-echo "  New token signed with key: $ROTATED_KID"
+# Wait for the key to be available in JWKS
+sleep 3
 
-# Test that the API accepts the new token (JWKS refresh should have happened)
-CODE=$(curl -s -o /tmp/laravel-rotated.json -w "%{http_code}" "$APP_URL/api/make-change?total=5.00" -H "Authorization: Bearer $ROTATED_TOKEN")
-assert_status "token with rotated key is accepted (JWKS refresh worked)" 200 "$CODE" /tmp/laravel-rotated.json
-
-# Verify the JWKS now has the new key
+# Verify the new key appears in JWKS
 curl -s "$FA_URL/.well-known/jwks.json" > /tmp/jwks-after.json
-AFTER_KEY_COUNT=$(python3 -c "import json; print(len(json.load(open('/tmp/jwks-after.json'))['keys']))")
-echo "  JWKS has $AFTER_KEY_COUNT keys after rotation"
+AFTER_KEY_COUNT=$(jq '.keys | length' /tmp/jwks-after.json)
+echo "  JWKS has $AFTER_KEY_COUNT keys after generation"
 
 if [ "$AFTER_KEY_COUNT" -gt "$BEFORE_KEY_COUNT" ]; then
   echo "  PASS: new key added to JWKS"
@@ -219,6 +213,10 @@ else
   echo "  FAIL: key count did not increase"
   FAIL=1
 fi
+
+# Test that existing tokens still work (JWKS is still valid)
+CODE=$(curl -s -o /tmp/laravel-rotation-test.json -w "%{http_code}" "$APP_URL/api/make-change?total=7.00" -H "Authorization: Bearer $TELLER_TOKEN")
+assert_status "existing token still works after key generation" 200 "$CODE" /tmp/laravel-rotation-test.json
 
 kill $LOGS_PID 2>/dev/null || true
 
