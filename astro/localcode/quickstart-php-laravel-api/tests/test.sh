@@ -158,6 +158,68 @@ assert_status "customer is denied /api/panic" 403 "$CODE" /tmp/laravel-panic-cus
 CODE=$(curl -s -o /tmp/laravel-panic-notoken.json -w "%{http_code}" -X POST "$APP_URL/api/panic")
 assert_status "no token on /api/panic is rejected" 401 "$CODE" /tmp/laravel-panic-notoken.json
 
+echo "Testing bearer-only authentication (no cookies)..."
+CODE=$(curl -s -o /tmp/laravel-cookie-only.json -w "%{http_code}" "$APP_URL/api/make-change?total=1.02" --cookie "app.at=$TELLER_TOKEN")
+assert_status "cookie-only token is rejected (bearer-only auth)" 401 "$CODE" /tmp/laravel-cookie-only.json
+
+echo "Testing malformed token handling..."
+CODE=$(curl -s -o /tmp/laravel-malformed.json -w "%{http_code}" "$APP_URL/api/make-change?total=1.02" -H "Authorization: Bearer not-a-valid-jwt")
+assert_status "malformed token is rejected" 401 "$CODE" /tmp/laravel-malformed.json
+
+CODE=$(curl -s -o /tmp/laravel-empty-bearer.json -w "%{http_code}" "$APP_URL/api/make-change?total=1.02" -H "Authorization: Bearer ")
+assert_status "empty bearer token is rejected" 401 "$CODE" /tmp/laravel-empty-bearer.json
+
+CODE=$(curl -s -o /tmp/laravel-garbage.json -w "%{http_code}" "$APP_URL/api/make-change?total=1.02" -H "Authorization: Bearer xyz.abc.123")
+assert_status "garbage JWT is rejected" 401 "$CODE" /tmp/laravel-garbage.json
+
+echo "Testing user provisioning (multiple requests from same user)..."
+CODE=$(curl -s -o /tmp/laravel-provision-1.json -w "%{http_code}" "$APP_URL/api/make-change?total=2.00" -H "Authorization: Bearer $TELLER_TOKEN")
+assert_status "first request succeeds (user provisioned)" 200 "$CODE" /tmp/laravel-provision-1.json
+
+CODE=$(curl -s -o /tmp/laravel-provision-2.json -w "%{http_code}" "$APP_URL/api/make-change?total=3.00" -H "Authorization: Bearer $TELLER_TOKEN")
+assert_status "second request succeeds (no duplicate user issues)" 200 "$CODE" /tmp/laravel-provision-2.json
+
+CODE=$(curl -s -o /tmp/laravel-provision-3.json -w "%{http_code}" "$APP_URL/api/make-change?total=4.00" -H "Authorization: Bearer $TELLER_TOKEN")
+assert_status "third request succeeds (user provisioning stable)" 200 "$CODE" /tmp/laravel-provision-3.json
+
+echo "Testing JWKS key rotation..."
+# Get current JWKS to see existing keys
+curl -s "$FA_URL/.well-known/jwks.json" > /tmp/jwks-before.json
+BEFORE_KEY_COUNT=$(python3 -c "import json; print(len(json.load(open('/tmp/jwks-before.json'))['keys']))")
+echo "  JWKS has $BEFORE_KEY_COUNT keys before rotation"
+
+# Generate a new RSA key pair in FusionAuth
+NEW_KEY_RESPONSE=$(curl -s -X POST "$FA_URL/api/key/generate" \
+  -H "Authorization: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"key": {"algorithm": "RS256", "name": "Test Rotation Key"}}')
+NEW_KEY_ID=$(echo "$NEW_KEY_RESPONSE" | python3 -c "import json,sys; print(json.load(sys.stdin)['key']['kid'])")
+echo "  Generated new key: $NEW_KEY_ID"
+
+# Wait a moment for the key to be active
+sleep 2
+
+# Get a new token (should be signed with the new key)
+ROTATED_TOKEN=$(login "teller@example.com" "password")
+ROTATED_KID=$(echo "$ROTATED_TOKEN" | cut -d'.' -f1 | python3 -c "import json,sys,base64; h=sys.stdin.read(); h+='='*(4-len(h)%4); print(json.loads(base64.urlsafe_b64decode(h))['kid'])")
+echo "  New token signed with key: $ROTATED_KID"
+
+# Test that the API accepts the new token (JWKS refresh should have happened)
+CODE=$(curl -s -o /tmp/laravel-rotated.json -w "%{http_code}" "$APP_URL/api/make-change?total=5.00" -H "Authorization: Bearer $ROTATED_TOKEN")
+assert_status "token with rotated key is accepted (JWKS refresh worked)" 200 "$CODE" /tmp/laravel-rotated.json
+
+# Verify the JWKS now has the new key
+curl -s "$FA_URL/.well-known/jwks.json" > /tmp/jwks-after.json
+AFTER_KEY_COUNT=$(python3 -c "import json; print(len(json.load(open('/tmp/jwks-after.json'))['keys']))")
+echo "  JWKS has $AFTER_KEY_COUNT keys after rotation"
+
+if [ "$AFTER_KEY_COUNT" -gt "$BEFORE_KEY_COUNT" ]; then
+  echo "  PASS: new key added to JWKS"
+else
+  echo "  FAIL: key count did not increase"
+  FAIL=1
+fi
+
 kill $LOGS_PID 2>/dev/null || true
 
 if [ "$FAIL" -eq 0 ]; then
