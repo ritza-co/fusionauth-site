@@ -118,6 +118,8 @@ Create `app/Http/Middleware/EnsureFusionAuthToken.php`:
 
 <LocalCode src="quickstart-php-laravel-api/complete-application/app/Http/Middleware/EnsureFusionAuthToken.php" lang="php"/>
 
+This file logs and displays authentication errors in detail to help you debug any authentication problems you might encounter. You may want to return less detail in error messages when moving to a production system to hide information from hackers.
+
 ### Update Routes
 
 Change `routes/api.php` to use the middleware and add both `/api/make-change` and `/api/panic` endpoints:

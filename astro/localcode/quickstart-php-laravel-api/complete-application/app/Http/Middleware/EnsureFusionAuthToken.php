@@ -22,8 +22,7 @@ class EnsureFusionAuthToken
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
 
-            $keySet = $this->keySet();
-            $payload = JWT::decode($token, $keySet);
+            $payload = $this->decodeToken($token);
 
             $this->validateIssuer($payload);
             $this->validateAudience($payload);
@@ -53,6 +52,28 @@ class EnsureFusionAuthToken
         return null;
     }
 
+    private function decodeToken(string $token): object
+    {
+        $keySet = $this->keySet();
+
+        try {
+            return JWT::decode($token, $keySet);
+        } catch (UnexpectedValueException $e) {
+            if (!str_contains($e->getMessage(), 'Key not found')) {
+                throw $e;
+            }
+
+            if (!Cache::add('fusionauth.jwks.refreshing', true, 60)) {
+                throw $e;
+            }
+
+            Cache::forget('fusionauth.jwks');
+            $keySet = $this->keySet();
+
+            return JWT::decode($token, $keySet);
+        }
+    }
+
     private function keySet(): array
     {
         $jwksUrl = config('app.fusionauth.jwks_url')
@@ -61,10 +82,10 @@ class EnsureFusionAuthToken
         $cacheSeconds = (int) config('app.fusionauth.jwks_url_cache', 86400);
 
         $jwksData = Cache::remember('fusionauth.jwks', $cacheSeconds, function () use ($jwksUrl) {
-            return Http::get($jwksUrl)->json();
+            return Http::timeout(5)->get($jwksUrl)->json();
         });
 
-        return JWK::parseKeySet($jwksData, config('app.fusionauth.algo', 'RS256'));
+        return JWK::parseKeySet($jwksData);
     }
 
     private function validateIssuer(object $payload): void
