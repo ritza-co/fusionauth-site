@@ -24,6 +24,7 @@ class EnsureFusionAuthToken
 
             $payload = $this->decodeToken($token);
 
+            $this->validateSubject($payload);
             $this->validateIssuer($payload);
             $this->validateAudience($payload);
 
@@ -94,6 +95,15 @@ class EnsureFusionAuthToken
 
         if (($payload->iss ?? null) !== $expectedIssuer) {
             throw new \UnexpectedValueException('Invalid issuer.');
+        }
+    }
+
+    private function validateSubject(object $payload): void
+    {
+        $subject = $payload->sub ?? null;
+
+        if (!is_string($subject) || $subject === '') {
+            throw new \UnexpectedValueException('Invalid subject.');
         }
     }
 
