@@ -70,7 +70,7 @@ class EnsureFusionAuthToken
         $cacheSeconds = (int) config('app.fusionauth.jwks_url_cache', 86400);
 
         $jwksData = Cache::remember('fusionauth.jwks', $cacheSeconds, function () use ($jwksUrl) {
-            return Http::timeout(5)->get($jwksUrl)->json();
+            return Http::connectTimeout(2)->timeout(5)->get($jwksUrl)->throw()->json();
         });
 
         return JWK::parseKeySet($jwksData);
