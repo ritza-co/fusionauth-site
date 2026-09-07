@@ -124,10 +124,10 @@ echo "Logging in as customer@example.com..."
 CUSTOMER_TOKEN=$(login "customer@example.com" "password")
 
 echo "Testing /api/make-change..."
-CODE=$(curl -s -o /tmp/laravel-mc-teller.json -w "%{http_code}" "$APP_URL/api/make-change?total=1.02" --cookie "app.at=$TELLER_TOKEN")
+CODE=$(curl -s -o /tmp/laravel-mc-teller.json -w "%{http_code}" "$APP_URL/api/make-change?total=1.02" -H "Authorization: Bearer $TELLER_TOKEN")
 assert_status "teller can call /api/make-change" 200 "$CODE" /tmp/laravel-mc-teller.json
 
-CODE=$(curl -s -o /tmp/laravel-mc-customer.json -w "%{http_code}" "$APP_URL/api/make-change?total=1.02" --cookie "app.at=$CUSTOMER_TOKEN")
+CODE=$(curl -s -o /tmp/laravel-mc-customer.json -w "%{http_code}" "$APP_URL/api/make-change?total=1.02" -H "Authorization: Bearer $CUSTOMER_TOKEN")
 assert_status "customer can call /api/make-change" 200 "$CODE" /tmp/laravel-mc-customer.json
 
 CODE=$(curl -s -o /tmp/laravel-mc-notoken.json -w "%{http_code}" "$APP_URL/api/make-change?total=1.02")
@@ -135,24 +135,24 @@ assert_status "no token on /api/make-change is rejected" 401 "$CODE" /tmp/larave
 
 grep -q '4 quarters' /tmp/laravel-mc-teller.json && echo "  PASS: correct change breakdown for \$1.02" || { echo "  FAIL: unexpected change breakdown for \$1.02"; cat /tmp/laravel-mc-teller.json; FAIL=1; }
 
-CODE=$(curl -s -o /tmp/laravel-mc-029.json -w "%{http_code}" "$APP_URL/api/make-change?total=0.29" --cookie "app.at=$TELLER_TOKEN")
+CODE=$(curl -s -o /tmp/laravel-mc-029.json -w "%{http_code}" "$APP_URL/api/make-change?total=0.29" -H "Authorization: Bearer $TELLER_TOKEN")
 assert_status "0.29 is accepted" 200 "$CODE" /tmp/laravel-mc-029.json
 grep -q '1 quarters 0 dimes 0 nickels 4 pennies' /tmp/laravel-mc-029.json && echo "  PASS: correct change breakdown for \$0.29" || { echo "  FAIL: unexpected breakdown for \$0.29"; cat /tmp/laravel-mc-029.json; FAIL=1; }
 
-CODE=$(curl -s -o /tmp/laravel-mc-missing.json -w "%{http_code}" "$APP_URL/api/make-change" --cookie "app.at=$TELLER_TOKEN")
+CODE=$(curl -s -o /tmp/laravel-mc-missing.json -w "%{http_code}" "$APP_URL/api/make-change" -H "Authorization: Bearer $TELLER_TOKEN")
 assert_status "missing total is rejected" 400 "$CODE" /tmp/laravel-mc-missing.json
 
-CODE=$(curl -s -o /tmp/laravel-mc-nonsense.json -w "%{http_code}" "$APP_URL/api/make-change?total=nonsense" --cookie "app.at=$TELLER_TOKEN")
+CODE=$(curl -s -o /tmp/laravel-mc-nonsense.json -w "%{http_code}" "$APP_URL/api/make-change?total=nonsense" -H "Authorization: Bearer $TELLER_TOKEN")
 assert_status "non-numeric total is rejected" 400 "$CODE" /tmp/laravel-mc-nonsense.json
 
-CODE=$(curl -s -o /tmp/laravel-mc-negative.json -w "%{http_code}" "$APP_URL/api/make-change?total=-5.00" --cookie "app.at=$TELLER_TOKEN")
+CODE=$(curl -s -o /tmp/laravel-mc-negative.json -w "%{http_code}" "$APP_URL/api/make-change?total=-5.00" -H "Authorization: Bearer $TELLER_TOKEN")
 assert_status "negative total is rejected" 400 "$CODE" /tmp/laravel-mc-negative.json
 
 echo "Testing /api/panic..."
-CODE=$(curl -s -o /tmp/laravel-panic-teller.json -w "%{http_code}" -X POST "$APP_URL/api/panic" --cookie "app.at=$TELLER_TOKEN")
+CODE=$(curl -s -o /tmp/laravel-panic-teller.json -w "%{http_code}" -X POST "$APP_URL/api/panic" -H "Authorization: Bearer $TELLER_TOKEN")
 assert_status "teller can call /api/panic" 200 "$CODE" /tmp/laravel-panic-teller.json
 
-CODE=$(curl -s -o /tmp/laravel-panic-customer.json -w "%{http_code}" -X POST "$APP_URL/api/panic" --cookie "app.at=$CUSTOMER_TOKEN")
+CODE=$(curl -s -o /tmp/laravel-panic-customer.json -w "%{http_code}" -X POST "$APP_URL/api/panic" -H "Authorization: Bearer $CUSTOMER_TOKEN")
 assert_status "customer is denied /api/panic" 403 "$CODE" /tmp/laravel-panic-customer.json
 
 CODE=$(curl -s -o /tmp/laravel-panic-notoken.json -w "%{http_code}" -X POST "$APP_URL/api/panic")

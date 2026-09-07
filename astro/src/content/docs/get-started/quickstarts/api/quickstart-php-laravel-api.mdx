@@ -71,7 +71,7 @@ We are going to be building an API backend for a banking application called Chan
 - `make-change`: This endpoint will allow you to call GET with a `total` amount and receive a response indicating how many nickels and pennies are needed to make change. Valid roles are `customer` and `teller`.
 - `panic`: Tellers may call this endpoint to call the police in case of an incident. The only valid role is `teller`.
 
-Both endpoints will be protected such that a valid JSON web token (JWT) will be required in an `app.at` cookie or the `Authorization` header in order to be accessed. Additionally, the JWT must have a `roles` claim containing the appropriate role to use the endpoint.
+Both endpoints will be protected such that a valid JSON web token (JWT) will be required in the `Authorization` header in order to be accessed. Additionally, the JWT must have a `roles` claim containing the appropriate role to use the endpoint.
 
 
 ```shell-session
@@ -156,12 +156,6 @@ Now open the `config/app.php` file and add these lines at the end (just before t
 
 <LocalCode src="quickstart-php-laravel-api/app.snippet.fusionauth.php" lang="php"/>
 
-### Exclude Cookie from Encryption
-
-Laravel encrypts cookies by default, but the JWT token in the `app_at` cookie is not encrypted by Laravel. Exclude it from encryption in `bootstrap/app.php`:
-
-<LocalCode src="quickstart-php-laravel-api/complete-application/bootstrap/app.php" lang="php"/>
-
 ## Run the API
 
 Start the Laravel app with the command below.
@@ -205,15 +199,11 @@ Copy the `token` from the response, which should look like this:
 
 ### Make the Request
 
-Make a request to `/api/make-change` with a query parameter `total=5.12` and pass the `token` in an `app.at` cookie (or as a `Bearer` token in the `Authorization` header).
+Make a request to `/api/make-change` with a query parameter `total=5.12` and pass the `token` as a `Bearer` token in the `Authorization` header.
 
 ```shell-session
-curl --cookie 'app.at=YOUR_TOKEN' 'http://localhost:3000/api/make-change?total=5.12'
+curl -H 'Authorization: Bearer YOUR_TOKEN' 'http://localhost:3000/api/make-change?total=5.12'
 ```
-
-<Aside type="note">
-  You can replace `--cookie 'app.at=<your_token>'` with `--header 'Authorization: Bearer <your_token>'` if you wish to use the `Authorization` header instead of the `app.at` cookie.
-</Aside>
 
 The response should look similar to below, however it has been formatted here for readability:
 
@@ -241,12 +231,12 @@ The response should look similar to below, however it has been formatted here fo
 }
 ```
 
-You were authorized, success! You can try making the request without the cookie or with a different string rather than a valid token, and see that you are denied access.
+You were authorized, success! You can try making the request without the token or with a different string rather than a valid token, and see that you are denied access.
 
 Next call the `/api/panic` endpoint because you are in trouble!
 
 ```shell-session
-curl --cookie 'app.at=YOUR_TOKEN' --request POST 'http://localhost:3000/api/panic'
+curl -H 'Authorization: Bearer YOUR_TOKEN' --request POST 'http://localhost:3000/api/panic'
 ```
 
 This is a `POST` (not a `GET`) because you want all your emergency calls to be non-idempotent.
@@ -289,7 +279,7 @@ Your response should look like this:
 Now use that token to call `/api/make-change` with a query parameter `total=3.24`.
 
 ```shell-session
-curl --cookie 'app.at=YOUR_TOKEN' --location 'http://localhost:3000/api/make-change?total=3.24'
+curl -H 'Authorization: Bearer YOUR_TOKEN' --location 'http://localhost:3000/api/make-change?total=3.24'
 ```
 
 The response should look similar to below, however it has been formatted here for readability:
@@ -321,7 +311,7 @@ The response should look similar to below, however it has been formatted here fo
 So far so good. Now call the `/api/panic` endpoint with `-i` flag to see the headers of the response).
 
 ```shell-session
-curl --cookie 'app.at=YOUR_TOKEN' -i --request POST -H "Accept: application/json" 'http://localhost:3000/api/panic'
+curl -H 'Authorization: Bearer YOUR_TOKEN' -i --request POST -H "Accept: application/json" 'http://localhost:3000/api/panic'
 ```
 
 Your should receive a `403 Forbidden` response with the following message and a huge stack trace (because you are in development mode):

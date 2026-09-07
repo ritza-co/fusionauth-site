@@ -70,13 +70,13 @@ curl --location 'http://localhost:9011/api/login' \
 You can take the token from the response and then call one of the endpoints listed above by calling:
 
 ```shell-session
-curl --cookie 'app.at=<your_token>' 'http://localhost/make-change?total=5.12'
+curl -H 'Authorization: Bearer <your_token>' 'http://localhost/make-change?total=5.12'
 ```
 
 or
 
 ```shell-session
-curl --cookie 'app.at=<your_token>' --request POST 'http://localhost/panic'
+curl -H 'Authorization: Bearer <your_token>' --request POST 'http://localhost/panic'
 ```
 
 ### Further Information

@@ -16,7 +16,7 @@ class EnsureFusionAuthToken
     public function handle(Request $request, Closure $next): Response
     {
         try {
-            $token = $request->cookie('app_at') ?? $this->bearerToken($request);
+            $token = $request->bearerToken();
 
             if (!$token) {
                 return response()->json(['error' => 'Unauthorized'], 401);
@@ -40,17 +40,6 @@ class EnsureFusionAuthToken
             \Illuminate\Support\Facades\Log::error('JWT auth failed: ' . $e->getMessage(), ['class' => get_class($e)]);
             return response()->json(['error' => 'Unauthorized', 'debug' => get_class($e) . ': ' . $e->getMessage()], 401);
         }
-    }
-
-    private function bearerToken(Request $request): ?string
-    {
-        $header = $request->header('Authorization');
-
-        if ($header && str_starts_with($header, 'Bearer ')) {
-            return substr($header, 7);
-        }
-
-        return null;
     }
 
     private function decodeToken(string $token): object
