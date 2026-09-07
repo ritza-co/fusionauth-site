@@ -50,8 +50,8 @@ php artisan serve --port=3000
 ```
 
 The app is now serving two api endpoints:
- - [http://localhost/api/make-change](http://localhost/api/make-change) - this endpoint calculates the change to make from a given total.
- - [http://localhost/api/panic](http://localhost/api/panic) - this endpoint simulates notifying the police of an incident.
+ - [http://localhost:3000/api/make-change](http://localhost:3000/api/make-change) - this endpoint calculates the change to make from a given total.
+ - [http://localhost:3000/api/panic](http://localhost:3000/api/panic) - this endpoint simulates notifying the police of an incident.
 
 You can log in with a user preconfigured during Kickstart, `teller@example.com` with the password of `password`, by calling:
 
@@ -69,13 +69,13 @@ curl --location 'http://localhost:9011/api/login' \
 You can take the token from the response and then call one of the endpoints listed above by calling:
 
 ```shell-session
-curl -H 'Authorization: Bearer <your_token>' 'http://localhost/make-change?total=5.12'
+curl -H 'Authorization: Bearer <your_token>' 'http://localhost:3000/api/make-change?total=5.12'
 ```
 
 or
 
 ```shell-session
-curl -H 'Authorization: Bearer <your_token>' --request POST 'http://localhost/panic'
+curl -H 'Authorization: Bearer <your_token>' --request POST 'http://localhost:3000/api/panic'
 ```
 
 ### Further Information
