@@ -18,10 +18,10 @@ import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.
 
 ## Prerequisites
 
-* [Node v18](https://nodejs.org/en): This will be used to run the Angular application.
+* [Node v26](https://nodejs.org/en): This will be used to run the Angular application.
 * [Docker](https://www.docker.com): The quickest way to stand up FusionAuth. (There are [other ways](/docs/get-started/download-and-install)).
 
-This app has been tested with Node v18 and Angular v16.2.0. This example should work with other compatible versions of Node and Angular.
+This app has been tested with Node v26 and Angular v22.1.7. This example should work with other compatible versions of Node and Angular.
 
 ## General Architecture
 
@@ -51,10 +51,9 @@ cd fusionauth-quickstart-javascript-angular-web
 Now you are going to create a basic Angular application using the Angular CLI. While this section builds a simple Angular application, you can use the same configuration to integrate your existing Angular application with FusionAuth.
 
 ```shell-session
-npx @angular/cli new changebank && cd changebank
+npx @angular/cli new changebank --style=css --ai-config=none --ssr=false --skip-git --skip-tests --defaults --strict && \
+cd changebank
 ```
-
-You'll be prompted to answer a few questions about your application. You can choose the defaults for all of them.
 
 #### Create the Application
 
@@ -72,14 +71,10 @@ First, install the FusionAuth Angular SDK:
 npm install @fusionauth/angular-sdk
 ```
 
-Next, you'll need to configure the SDK with your FusionAuth URL and Client Id. You can do this by adding the following to your `src/app/app.module.ts` file inside the `imports: [ ]` section:
+Next, you'll need to configure the SDK with your FusionAuth URL and Client Id. Overwrite the  `src/app/app.config.ts` file inside to add FusionAuth support:
 
+TODO change below to app.config.ts, no tags needed
 <LocalCode src="quickstart-javascript-angular-web/app.module.snippet.fusionAuthModuleConfiguration.ts" lang="typescript"/>
-
-Don't forget to import the `FusionAuthModule` at the top of the file.
-
-<LocalCode src="quickstart-javascript-angular-web/app.module.snippet.importAngularSDK.ts" lang="typescript"/>
-
 
 Our example application is going to have a home page, an account page and a page where someone can make change. The account and make change page will be protected and only visible to logged in users.
 
@@ -90,22 +85,24 @@ The next step is to get a basic home page up and running. We'll take this opport
 Run the following copy commands to copy these files from the QuickStart repo into your project. This assumes that you checked the QuickStart repo out into the parent directory. If that's not the case, replace the `..` below with your actual repo location.
 
 ```shell-session
-cp -r ../complete-application/src/assets src && \
-cp -r ../complete-application/src/styles.css src
+cp ../complete-application/public/money.jpg public/money.jpg && \
+cp ../complete-application/src/styles.css src/styles.css
 ```
 
 The home page will be a simple page with a welcome message and a login link. You can create a new component for this page with the Angular CLI:
 
 ```shell-session
-npx ng generate component home-page --standalone
+npx ng generate component home-page
 ```
 
-Then, add the welcome message and login link to the `src/app/home-page/home-page.component.html` template by replacing the contents of that file with the below contents:
+Then, add the welcome message and login link to the `src/app/home-page/home-page.html` template by replacing the contents of that file with the below contents:
 
+todo remove component word
 <LocalCode src="quickstart-javascript-angular-web/complete-application/src/app/home-page/home-page.component.html" lang="html"/>
 
-And the login function to the component `src/app/home-page/home-page.component.ts`. Update that file to look like this:
+And the login function to the component `src/app/home-page/home-page.ts`. Update that file to look like this:
 
+todo remove component word
 <LocalCode src="quickstart-javascript-angular-web/complete-application/src/app/home-page/home-page.component.ts" lang="typescript"/>
 
 #### Create an Account Page
@@ -116,12 +113,14 @@ The account page displays a random balance for the logged in user. You can creat
 npx ng generate component account-page --standalone
 ```
 
-Then, display the balance in the `src/app/account-page/account-page.component.html` template by replacing the default content with the below:
+Then, display the balance in the `src/app/account-page/account-page.html` template by replacing the default content with the below:
 
+todo remove component word
 <LocalCode src="quickstart-javascript-angular-web/complete-application/src/app/account-page/account-page.component.html" lang="html"/>
 
-You'll need the balance property in the component `src/app/account-page/account-page.component.ts`. Update that file to look like this content:
+You'll need the balance property in the component `src/app/account-page/account-page.ts`. Update that file to look like this content:
 
+todo remove component word
 <LocalCode src="quickstart-javascript-angular-web/complete-application/src/app/account-page/account-page.component.ts" lang="typescript"/>
 
 #### Create A Make Change Page
@@ -132,12 +131,14 @@ Next, you'll create a page only visible to logged in users. This page displays a
 npx ng generate component make-change-page --standalone
 ```
 
-Then, add the input field and button to the `src/app/make-change-page/make-change-page.component.html` template, replacing the current contents:
+Then, add the input field and button to the `src/app/make-change-page/make-change-page.html` template, replacing the current contents:
 
+todo remove component word
 <LocalCode src="quickstart-javascript-angular-web/complete-application/src/app/make-change-page/make-change-page.component.html" lang="html"/>
 
-You'll also need the make change function to the component `src/app/make-change-page/make-change-page.component.ts`. Here is the full contents of that file:
+You'll also need the make change function to the component `src/app/make-change-page/make-change-page.ts`. Here is the full contents of that file:
 
+todo remove component word
 <LocalCode src="quickstart-javascript-angular-web/complete-application/src/app/make-change-page/make-change-page.component.ts" lang="typescript"/>
 
 ## Authentication
@@ -157,23 +158,21 @@ the guard should allow logged in users `true` or anonymous users `false`. The se
 
 ### Routing
 
-Next, you'll need to add the Auth Guard to the routing configuration. Open the `src/app/app.module.ts` file and add the RouterModule with the following routes inside the `imports: [ ]` part:
+Next, you'll need to add the Auth Guard to the routing configuration. Open the `src/app/app.routes.ts` file and add the RouterModule with the following routes inside the `imports: [ ]` part:
 
+todo no snippet .change filename
 <LocalCode src="quickstart-javascript-angular-web/app.module.snippet.routerConfiguration.ts" lang="typescript"/>
-
-Don't forget to import the `RouterModule` and `authGuard` at the top of the file.
-
-<LocalCode src="quickstart-javascript-angular-web/app.module.snippet.importAuthGuard.ts" lang="typescript"/>
-
 
 ### Tie it all together
 
-Now that you have the Auth Guard and the routing configured, you can tie it all together. Open the `src/app/app.component.html` file and replace its content with the following:
+Now that you have the Auth Guard and the routing configured, you can tie it all together. Open the `src/app/app.html` file and replace its content with the following:
 
+todo remove component word
 <LocalCode src="quickstart-javascript-angular-web/complete-application/src/app/app.component.html" lang="html"/>
 
-Finally, open the `src/app/app.component.ts` file and replace it with the following:
+Finally, open the `src/app/app.ts` file and replace it with the following:
 
+todo remove component word
 <LocalCode src="quickstart-javascript-angular-web/complete-application/src/app/app.component.ts" lang="typescript"/>
 
 ## Running the Application
