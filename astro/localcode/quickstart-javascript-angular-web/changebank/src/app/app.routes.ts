@@ -26,4 +26,8 @@ export const routes: Routes = [
       import('./make-change-page/make-change-page').then((m) => m.MakeChangePage),
     canActivate: [authGuard(true, '/')],
   },
+  {
+    path: '**',
+    redirectTo: '',
+  }
 ];
