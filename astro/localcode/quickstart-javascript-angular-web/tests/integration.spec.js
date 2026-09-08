@@ -45,14 +45,14 @@ test('FusionAuth admin login', async ({ page }) => {
   }
 });
 
-test('React app login, fetch user info, and logout via FusionAuth', async ({ page }) => {
+test('Angular app login and logout via FusionAuth', async ({ page }) => {
   const dumpDiagnostics = trackPageDiagnostics(page);
 
   try {
     await page.goto('http://localhost:4200/');
 
-    await expect(page.getByRole('button', { name: 'Login' })).toBeVisible();
-    await page.getByRole('button', { name: 'Login' }).click();
+    await expect(page.getByRole('link', { name: 'Login' })).toBeVisible();
+    await page.getByRole('link', { name: 'Login' }).click();
 
     await page.waitForURL(/localhost:9011/, { timeout: 15000 });
     await page.getByPlaceholder('Login').fill('richard@example.com');
@@ -61,16 +61,50 @@ test('React app login, fetch user info, and logout via FusionAuth', async ({ pag
 
     await page.waitForURL(/localhost:4200\/account/, { timeout: 15000 });
     await expect(page.getByText('richard@example.com')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Logout' })).toBeVisible();
 
-    // fetch and display user data from the /me endpoint. Assert on the text
-    // itself rather than sleeping for a fixed interval, so the wait is as long
-    // as the request actually takes and no longer.
-    await page.getByRole('button', { name: 'Show your info' }).click();
-    await expect(page.getByText('Richard Hendricks')).toBeVisible();
-
-    await page.getByRole('button', { name: 'Logout' }).click();
+    await page.getByRole('link', { name: 'Logout' }).click();
     await page.waitForURL('http://localhost:4200/', { timeout: 15000 });
-    await expect(page.getByRole('button', { name: 'Login' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Login' })).toBeVisible();
+  } catch (error) {
+    await dumpDiagnostics();
+    throw error;
+  }
+});
+
+test('Make Change calculates change correctly', async ({ page }) => {
+  const dumpDiagnostics = trackPageDiagnostics(page);
+
+  try {
+    await page.goto('http://localhost:4200/');
+    await page.getByRole('link', { name: 'Login' }).click();
+
+    await page.waitForURL(/localhost:9011/);
+    await page.getByPlaceholder('Login').fill('richard@example.com');
+    await page.getByPlaceholder('Password').fill('password');
+    await page.getByRole('button', { name: 'Submit' }).click();
+
+    await page.waitForURL(/localhost:4200\/account/);
+    await page.goto('http://localhost:4200/make-change');
+
+    // These amounts are the ones that expose floating-point error: computing
+    // them as dollars rather than whole cents drops a cent, so 0.29 renders as
+    // "$0.28 with 5 nickels and 3 pennies".
+    const cases = [
+      { amount: '0.29', total: '$0.29', nickels: '5', pennies: '4' },
+      { amount: '0.58', total: '$0.58', nickels: '11', pennies: '3' },
+      { amount: '1.02', total: '$1.02', nickels: '20', pennies: '2' },
+      { amount: '0.15', total: '$0.15', nickels: '3', pennies: '0' },
+    ];
+
+    for (const { amount, total, nickels, pennies } of cases) {
+      await page.locator('input[name="amount"]').fill(amount);
+      await page.locator('input.change-submit').click();
+
+      await expect(page.locator('.change-message')).toHaveText(
+        `We can make change for ${total} with ${nickels} nickels and ${pennies} pennies!`
+      );
+    }
   } catch (error) {
     await dumpDiagnostics();
     throw error;
