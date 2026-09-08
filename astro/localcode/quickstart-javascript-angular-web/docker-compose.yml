@@ -22,8 +22,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      search:
-        condition: service_healthy
     environment:
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_ROOT_PASSWORD: ${POSTGRES_PASSWORD}
