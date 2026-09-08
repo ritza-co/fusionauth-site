@@ -1,6 +1,6 @@
-import {CanActivateFn, Router} from "@angular/router";
-import {FusionAuthService} from "@fusionauth/angular-sdk";
-import {inject} from "@angular/core";
+import { CanActivateFn, Router } from '@angular/router';
+import { FusionAuthService } from '@fusionauth/angular-sdk';
+import { inject } from '@angular/core';
 
 export function authGuard(loggedIn: boolean, redirect: string): CanActivateFn {
   return () => {

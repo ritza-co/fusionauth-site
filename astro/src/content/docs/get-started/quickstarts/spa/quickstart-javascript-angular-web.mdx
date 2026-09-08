@@ -75,7 +75,7 @@ Next, configure the SDK with your FusionAuth URL and Client Id. Overwrite the `s
 
 <LocalCode src="quickstart-javascript-angular-web/complete-application/src/app/app.config.ts" lang="typescript"/>
 
-Our example application is going to have a home page, an account page, and a page where someone can make change. The account and make change page will be protected and visible only to logged in users.
+Our example application is going to have a home page, an account page, and a page where someone can make change. The account and make change pages will be protected and visible only to logged-in users.
 
 #### Create a Home Page
 
@@ -146,8 +146,8 @@ Create a new file called `auth-guard.ts` in the `src/app` directory:
 
 <LocalCode src="quickstart-javascript-angular-web/complete-application/src/app/auth-guard.ts" lang="typescript"/>
 
-The Auth Guard is a functional router guard, which can be used to handle anonymous and logged in states. The first parameter defines if
-the guard should allow logged in users `true` or anonymous users `false`. The second parameter is the route to redirect to if the guard fails.
+The Auth Guard is a functional router guard, which can be used to handle anonymous and logged-in states. The first parameter defines if
+the guard should allow logged-in users `true` or anonymous users `false`. The second parameter is the route to redirect to if the guard fails.
 
 ### Routing
 
