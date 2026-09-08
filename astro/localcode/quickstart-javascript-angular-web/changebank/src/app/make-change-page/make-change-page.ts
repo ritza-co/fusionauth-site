@@ -14,8 +14,9 @@ export class MakeChangePage {
   change: { total: number; nickels: number; pennies: number } | null = null;
   makeChange() {
     const total = this.amount;
-    const nickels = Math.floor(this.amount / 0.05);
-    const pennies = Math.round((this.amount - nickels * 0.05) * 100);
+    const totalCents = Math.round(this.amount * 100);
+    const nickels = Math.floor(totalCents / 5);
+    const pennies = totalCents % 5;
     this.change = {nickels, pennies, total};
   }
 }

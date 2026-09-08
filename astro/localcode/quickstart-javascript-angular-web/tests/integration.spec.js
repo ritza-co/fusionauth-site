@@ -51,8 +51,8 @@ test('Angular app login and logout via FusionAuth', async ({ page }) => {
   try {
     await page.goto('http://localhost:4200/');
 
-    await expect(page.getByRole('link', { name: 'Login' })).toBeVisible();
-    await page.getByRole('link', { name: 'Login' }).click();
+    await expect(page.getByRole('button', { name: 'Login' })).toBeVisible();
+    await page.getByRole('button', { name: 'Login' }).click();
 
     await page.waitForURL(/localhost:9011/, { timeout: 15000 });
     await page.getByPlaceholder('Login').fill('richard@example.com');
@@ -61,11 +61,11 @@ test('Angular app login and logout via FusionAuth', async ({ page }) => {
 
     await page.waitForURL(/localhost:4200\/account/, { timeout: 15000 });
     await expect(page.getByText('richard@example.com')).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Logout' })).toBeVisible();
+    await expect(page.locator('#logo-header').getByText('Logout')).toBeVisible();
 
-    await page.getByRole('link', { name: 'Logout' }).click();
-    await page.waitForURL('http://localhost:4200/', { timeout: 15000 });
-    await expect(page.getByRole('link', { name: 'Login' })).toBeVisible();
+    await page.locator('#logo-header').getByText('Logout').click();
+    await page.waitForURL(/localhost:4200\/logged-out/, { timeout: 15000 });
+    await expect(page.locator('#logo-header').getByText('Login')).toBeVisible();
   } catch (error) {
     await dumpDiagnostics();
     throw error;
@@ -77,7 +77,7 @@ test('Make Change calculates change correctly', async ({ page }) => {
 
   try {
     await page.goto('http://localhost:4200/');
-    await page.getByRole('link', { name: 'Login' }).click();
+    await page.getByRole('button', { name: 'Login' }).click();
 
     await page.waitForURL(/localhost:9011/);
     await page.getByPlaceholder('Login').fill('richard@example.com');
