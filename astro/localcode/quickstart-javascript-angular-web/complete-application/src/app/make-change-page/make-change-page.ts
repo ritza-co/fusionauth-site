@@ -6,20 +6,16 @@ import {FormsModule} from "@angular/forms";
   selector: 'app-make-change-page',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './make-change-page.component.html',
-  styleUrls: ['./make-change-page.component.css']
+  templateUrl: './make-change-page.html',
+  styleUrls: ['./make-change-page.css']
 })
-export class MakeChangePageComponent {
-
+export class MakeChangePage {
   amount = 0;
-
   change: { total: number; nickels: number; pennies: number } | null = null;
-
   makeChange() {
     const total = this.amount;
     const nickels = Math.floor(this.amount / 0.05);
     const pennies = Math.round((this.amount - nickels * 0.05) * 100);
     this.change = {nickels, pennies, total};
   }
-
 }
