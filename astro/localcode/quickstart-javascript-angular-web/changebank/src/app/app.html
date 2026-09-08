@@ -8,13 +8,13 @@
         height="55"
       />
 
-      @if (isLoggedIn) {
+      @if (isLoggedIn()) {
       <div class="h-row">
         <p class="header-email">
-          @if (isGettingUserInfo) {
+          @if (isGettingUserInfo()) {
           {{ "Loading..." }}
           } @else {
-          {{ userInfo?.email }}
+          {{ email() }}
           }
         </p>
         <a class="button-lg" (click)="logout()" style="cursor: pointer">
@@ -28,7 +28,7 @@
     </div>
 
     <div id="menu-bar" class="menu-bar">
-      @if (isLoggedIn) {
+      @if (isLoggedIn()) {
         <a class="menu-link" routerLink="account" routerLinkActive="active"
           >Account</a
         >

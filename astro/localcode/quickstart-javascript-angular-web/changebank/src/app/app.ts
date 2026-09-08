@@ -1,8 +1,7 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, computed, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FusionAuthService, UserInfo } from '@fusionauth/angular-sdk';
 import { Subscription } from 'rxjs';
-import { startWith } from 'rxjs/operators';
 
 @Component({
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
@@ -10,37 +9,49 @@ import { startWith } from 'rxjs/operators';
   templateUrl: './app.html',
   styleUrls: ['./app.css'],
 })
-export class App implements OnInit, OnDestroy {
-  private fusionAuthService: FusionAuthService = inject(FusionAuthService);
+export class App implements OnDestroy {
+  private fusionAuthService = inject(FusionAuthService);
+  private subscription?: Subscription;
 
-  isLoggedIn: boolean = this.fusionAuthService.isLoggedIn();
-  userInfo: UserInfo | null = null;
-  isGettingUserInfo: boolean = false;
-  subscription?: Subscription;
+  readonly isLoggedIn = signal(this.fusionAuthService.isLoggedIn());
+  readonly userInfo = signal<UserInfo | null>(null);
+  readonly isGettingUserInfo = signal(false);
+  readonly email = computed(() => this.userInfo()?.email);
 
-  ngOnInit(): void {
-    if (this.isLoggedIn) {
-      this.subscription = this.fusionAuthService
-        .getUserInfoObservable({
-          onBegin: () => (this.isGettingUserInfo = true),
-          onDone: () => (this.isGettingUserInfo = false),
-        })
-        .subscribe({
-          next: (userInfo) => (this.userInfo = userInfo),
-          error: (error) => console.error(error),
-        });
-    }
+  constructor() {
+    this.subscription = this.fusionAuthService.isLoggedIn$.subscribe((loggedIn) => {
+      this.isLoggedIn.set(loggedIn);
+      if (loggedIn && !this.userInfo()) {
+        this.fetchUserInfo();
+      }
+    });
+  }
+
+  private fetchUserInfo(): void {
+    this.isGettingUserInfo.set(true);
+    this.fusionAuthService
+      .getUserInfoObservable()
+      .subscribe({
+        next: (userInfo) => {
+          this.userInfo.set(userInfo);
+          this.isGettingUserInfo.set(false);
+        },
+        error: (error) => {
+          console.error(error);
+          this.isGettingUserInfo.set(false);
+        },
+      });
   }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
   }
 
-  logout() {
+  logout(): void {
     this.fusionAuthService.logout();
   }
 
-  login() {
+  login(): void {
     this.fusionAuthService.startLogin();
   }
 }
