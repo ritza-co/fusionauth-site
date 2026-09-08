@@ -74,11 +74,11 @@ npm install @fusionauth/angular-sdk
 
 Next, you'll need to configure the SDK with your FusionAuth URL and Client Id. You can do this by adding the following to your `src/app/app.module.ts` file inside the `imports: [ ]` section:
 
-<LocalCode src="quickstart-javascript-angular-web/complete-application/src/app/app.module.snippet.fusionAuthModuleConfiguration.ts" lang="typescript"/>
+<LocalCode src="quickstart-javascript-angular-web/app.module.snippet.fusionAuthModuleConfiguration.ts" lang="typescript"/>
 
 Don't forget to import the `FusionAuthModule` at the top of the file.
 
-<LocalCode src="quickstart-javascript-angular-web/complete-application/src/app/app.module.snippet.importAngularSDK.ts" lang="typescript"/>
+<LocalCode src="quickstart-javascript-angular-web/app.module.snippet.importAngularSDK.ts" lang="typescript"/>
 
 
 Our example application is going to have a home page, an account page and a page where someone can make change. The account and make change page will be protected and only visible to logged in users.
@@ -159,11 +159,11 @@ the guard should allow logged in users `true` or anonymous users `false`. The se
 
 Next, you'll need to add the Auth Guard to the routing configuration. Open the `src/app/app.module.ts` file and add the RouterModule with the following routes inside the `imports: [ ]` part:
 
-<LocalCode src="quickstart-javascript-angular-web/complete-application/src/app/app.module.snippet.routerConfiguration.ts" lang="typescript"/>
+<LocalCode src="quickstart-javascript-angular-web/app.module.snippet.routerConfiguration.ts" lang="typescript"/>
 
 Don't forget to import the `RouterModule` and `authGuard` at the top of the file.
 
-<LocalCode src="quickstart-javascript-angular-web/complete-application/src/app/app.module.snippet.importAuthGuard.ts" lang="typescript"/>
+<LocalCode src="quickstart-javascript-angular-web/app.module.snippet.importAuthGuard.ts" lang="typescript"/>
 
 
 ### Tie it all together
