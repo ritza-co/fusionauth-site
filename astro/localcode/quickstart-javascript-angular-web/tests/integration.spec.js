@@ -49,7 +49,7 @@ test('React app login, fetch user info, and logout via FusionAuth', async ({ pag
   const dumpDiagnostics = trackPageDiagnostics(page);
 
   try {
-    await page.goto('http://localhost:3000/');
+    await page.goto('http://localhost:4200/');
 
     await expect(page.getByRole('button', { name: 'Login' })).toBeVisible();
     await page.getByRole('button', { name: 'Login' }).click();
@@ -59,7 +59,7 @@ test('React app login, fetch user info, and logout via FusionAuth', async ({ pag
     await page.getByPlaceholder('Password').fill('password');
     await page.getByRole('button', { name: 'Submit' }).click();
 
-    await page.waitForURL(/localhost:3000\/account/, { timeout: 15000 });
+    await page.waitForURL(/localhost:4200\/account/, { timeout: 15000 });
     await expect(page.getByText('richard@example.com')).toBeVisible();
 
     // fetch and display user data from the /me endpoint. Assert on the text
@@ -69,7 +69,7 @@ test('React app login, fetch user info, and logout via FusionAuth', async ({ pag
     await expect(page.getByText('Richard Hendricks')).toBeVisible();
 
     await page.getByRole('button', { name: 'Logout' }).click();
-    await page.waitForURL('http://localhost:3000/', { timeout: 15000 });
+    await page.waitForURL('http://localhost:4200/', { timeout: 15000 });
     await expect(page.getByRole('button', { name: 'Login' })).toBeVisible();
   } catch (error) {
     await dumpDiagnostics();

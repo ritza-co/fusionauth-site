@@ -28,10 +28,10 @@ for STEP_DIR in react-frontend-steps/*/; do
 done
 
 echo "Pulling latest FusionAuth image..."
-(cd "$PROJECT_DIR/fusionauth-backend" && docker compose pull)
+(cd "$PROJECT_DIR" && docker compose pull)
 
 echo "Starting FusionAuth..."
-(cd "$PROJECT_DIR/fusionauth-backend" && docker compose up -d)
+(cd "$PROJECT_DIR" && docker compose up -d)
 
 echo "Waiting for FusionAuth to be ready..."
 timeout 480 bash -c 'until curl -sfL http://localhost:9011/admin/ 2>/dev/null | grep -q "<title>Login"; do
@@ -40,16 +40,16 @@ timeout 480 bash -c 'until curl -sfL http://localhost:9011/admin/ 2>/dev/null | 
 done'
 echo "FusionAuth is ready."
 
-echo "Starting React app (final step: 3-fetch-user-data)..."
-docker run --network host --name react-app-test --rm -v "$PROJECT_DIR/react-frontend-steps/3-fetch-user-data":/app -w /app node:26 sh -c "npm install && npx vite --port 3000" &
+echo "Starting Angular app..."
+docker run --network host --name app --rm -v "$PROJECT_DIR/complete-application":/app -w /app node:26 sh -c "npm install && npx start" &
 REACT_PID=$!
 
-echo "Waiting for React app to be ready..."
-timeout 120 bash -c 'until curl -sf http://localhost:3000 > /dev/null 2>&1; do
-  echo "  Waiting for React app..."
+echo "Waiting for Angular app to be ready..."
+timeout 120 bash -c 'until curl -sf http://localhost:4200 > /dev/null 2>&1; do
+  echo "  Waiting for Angular app..."
   sleep 2
 done'
-echo "React app is ready."
+echo "Angular app is ready."
 
 echo "Running Playwright tests..."
 docker run --network host --name playwright-test --rm -e NODE_PATH=/usr/lib/node_modules -v "$SCRIPT_DIR/integration.spec.js":/tests/integration.spec.js mcr.microsoft.com/playwright:v1.62.0 bash -c "npm install -g @playwright/test@1.62.0 && playwright test /tests/integration.spec.js"
