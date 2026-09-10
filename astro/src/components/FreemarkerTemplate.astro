@@ -8,9 +8,10 @@ interface Props {
   lang?: CodeLanguage;
   title?: string;
   src: string;
+  variant?: 'default' | 'code';
 }
 
-const { title, src, lang }: Props = Astro.props;
+const { title, src, lang, variant = 'default' }: Props = Astro.props;
 
 const content = fs.readFileSync(src, {encoding: 'utf-8'});
 
@@ -20,7 +21,10 @@ const parsedTitle = title ? parseInline(title) : '';
 //@ts-ignore
 ---
 {/* title is optional, do not render an empty em tag */}
-{title && <p class="mb-0"><em set:html={parsedTitle}/></p>}
-<div class="mb-14 prose-pre:mt-1">
-  <Prism lang={lang ?? "html"} code={content}/>
-</div>
+{title && variant === 'code' && <p data-title={title}><em set:html={parsedTitle}/></p>}
+{title && variant === 'default' && <p class="mb-0"><em set:html={parsedTitle}/></p>}
+{variant === 'code'
+  ? <Prism lang={lang ?? "html"} code={content}/>
+  : <div class="mb-14 prose-pre:mt-1">
+      <Prism lang={lang ?? "html"} code={content}/>
+    </div>}
