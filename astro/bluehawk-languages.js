@@ -38,4 +38,8 @@ export function register({ bluehawk }) {
     languageId: "dockerfile",
     lineComments: [/#/],
   });
+  bluehawk.addLanguage("twig", {
+    languageId: "twig",
+    blockComments: [[/{#/, /#}/]],
+  });
 }
