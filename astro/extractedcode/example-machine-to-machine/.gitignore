@@ -1,0 +1,6 @@
+package-lock.json
+node_modules
+*.swp
+!astro/extractedcode/example-machine-to-machine/**/.env*
+!.env
+!.env.sample
