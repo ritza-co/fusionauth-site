@@ -42,6 +42,10 @@ for repo in localcode/*/; do
 		--ignore 'tests' \
 		--ignore 'LICENSE' \
 		--ignore 'SECURITY.md' \
+		--ignore '.angular' \
+		--ignore 'dist' \
+		--ignore 'tmp' \
+		--ignore 'out-tsc' \
 		2>&1) || status=$?
 	if [ $status -ne 0 ] || printf '%s\n' "$out" | grep -q 'bluehawk errors'; then
 		echo "Error: bluehawk snip failed for $repo" >&2
