@@ -232,6 +232,8 @@ These repos exist on GitHub but are not referenced in any documentation. They sh
 
 ## Import Process
 
+- Never ever commit to git or do a git branch or checkout!!!  Don't run npm commands or other destructive commands or docker !
+
 For each NEEDS_IMPORT repository:
 
 1. Clone the repository:
