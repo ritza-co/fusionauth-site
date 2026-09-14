@@ -1,0 +1,57 @@
+# This is a starting workflow for building with GitHub Actions
+name: Build
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out code
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      # Set up the build environment
+      - run: npm ci
+
+      # Build
+      - name: Checkout out the example kickstarts
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: FusionAuth/fusionauth-example-kickstart
+          path: fusionauth-example-kickstart
+      - name: Symlink to the Get Started kickstart
+        run: ln -s fusionauth-example-kickstart/get-started kickstart
+      - name: Start FusionAuth
+        uses: fusionauth/fusionauth-github-action@v1
+        with:
+          FUSIONAUTH_VERSION: latest
+          FUSIONAUTH_APP_KICKSTART_DIRECTORY_PATH: kickstart
+      - name: Install npm dependencies
+        run: |
+          npm install
+          npx playwright install-deps
+          npx playwright install
+        working-directory: .
+      - name: Start app
+        run: npm run dev & # & in background
+        working-directory: .
+
+      - name: Run Playwright tests
+        run: npx playwright test --project=chromium
+        working-directory: .
+
+# only for debugging playwright errors
+#      - uses: actions/upload-artifact@v4
+#        if: always()
+#        with:
+#          name: playwright-screenshot
+#          path: app/screenshot.png
+#          retention-days: 2
+      # Done!
