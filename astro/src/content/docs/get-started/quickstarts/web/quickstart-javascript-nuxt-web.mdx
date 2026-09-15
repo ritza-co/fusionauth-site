@@ -12,7 +12,7 @@ import Intro from 'src/components/quickstarts/Intro.astro';
 import {Content as LoginArchitectureWeb} from 'src/components/quickstarts/LoginArchitectureWeb.mdx';
 import NextSteps from 'src/components/quickstarts/NextSteps.astro';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 <Intro technology="Nuxt"
        repositoryUrl="https://github.com/FusionAuth/fusionauth-quickstart-javascript-nuxt-web"/>
@@ -100,8 +100,7 @@ Update `nuxt.config.ts` to include the new `@sidebase/nuxt-auth` and include the
 If you would like to code with any of the pages prior to enabling authentication, just set `globalAppMiddleware` to false.
 </Aside>
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/nuxt.config.ts"}
-  lang="ts" />
+<LocalCode src="quickstart-javascript-nuxt-web/complete-application/nuxt.config.ts" lang="ts" />
 
 Nuxt 3 includes [Route Handlers](https://nuxt.com/docs/guide/directory-structure/server#server-routes), which are the preferred way to handle REST-like requests. In the `Changebank` application you can configure NextAuth.js FusionAuth's provider in a new route handler by creating a file within `/server/api/auth/[...].ts`.
 
@@ -111,8 +110,7 @@ The `FusionAuthProvider` is then provided to `NextAuth` as a provider for any `G
 
 Create a new file named `/server/api/auth/[...].ts` and copy the following code for the ChangeBank application.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/server/api/auth/[...].ts"}
-  lang="ts" />
+<LocalCode src="quickstart-javascript-nuxt-web/complete-application/server/api/auth/[...].ts" lang="ts" />
 
 ## App Customization
 
@@ -120,13 +118,11 @@ Create a new file named `/server/api/auth/[...].ts` and copy the following code 
 
 Create a new file named `/changebank/assets/css/global.css` and copy the below CSS for the ChangeBank application.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/assets/css/global.css"}
-  lang="css" />
+<LocalCode src="quickstart-javascript-nuxt-web/complete-application/assets/css/global.css" lang="css" />
 
 The above styles will be imported into a new layout that you will create called `/changebank/layouts/default.vue`. Update this file to match the code below. This will allow the rest of the pages within your application and the layout itself to use the global styles. This is the first time that you will use the [useAuth](https://auth.sidebase.io/guide/application-side/configuration) Composable from Sidebase. The status can then be used to determine what links should be shown in the layout.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/layouts/default.vue"}
-  lang="ts" />
+<LocalCode src="quickstart-javascript-nuxt-web/complete-application/layouts/default.vue" lang="ts" />
 
 ### Login Button
 
@@ -134,8 +130,7 @@ Create a new file in `/changebank/components/LoginButton.vue` that will be used 
 
 For this button you can use the `signIn` and `signOut` functions from the `useAuth` composable. Copy the below code for the ChangeBank application into `/changebank/components/LoginButton.vue`.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/components/LoginButton.vue"}
-  lang="ts" />
+<LocalCode src="quickstart-javascript-nuxt-web/complete-application/components/LoginButton.vue" lang="ts" />
 
 ### Login Link
 
@@ -143,20 +138,17 @@ Create a new file in `/changebank/components/LoginLink.vue` that will be used fo
 
 Copy the below code for the ChangeBank application into `/changebank/components/LoginLink.vue`.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/components/LoginLink.vue"}
-  lang="ts" />
+<LocalCode src="quickstart-javascript-nuxt-web/complete-application/components/LoginLink.vue" lang="ts" />
 
 ### Home Page
 
 Update the file `/changebank/app.vue` to remove the default Nuxt Welcome and add our layout.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/app.vue"}
-  lang="ts" />
+<LocalCode src="quickstart-javascript-nuxt-web/complete-application/app.vue" lang="ts" />
 
 Create the file `/changebank/pages/index.vue` which will have the Homepage details. Not much here just an image and a Login Link.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/pages/index.vue"}
-  lang="ts" />
+<LocalCode src="quickstart-javascript-nuxt-web/complete-application/pages/index.vue" lang="ts" />
 
 
 ### Account Page
@@ -166,20 +158,17 @@ Create a new file `/changebank/pages/account.vue` which will have some fake Acco
 One special note here is that if you leave the auth `globalAppMiddleware` enabled in `nuxt.config.ts` you will need to authenticate to access this page.
 
 Here's the contents of `/changebank/pages/account.vue`.
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/pages/account.vue"}
-  lang="ts" />
+<LocalCode src="quickstart-javascript-nuxt-web/complete-application/pages/account.vue" lang="ts" />
 
 ### Make Change Page
 
 Finally, add some business logic for logged in users to make change with the following code in `/changebank/pages/makechange.vue`:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/pages/makechange.vue"}
-  lang="ts" />
+<LocalCode src="quickstart-javascript-nuxt-web/complete-application/pages/makechange.vue" lang="ts" />
 
 If the user session is not present the user is redirected back to the homepage at the base route. If the user is present then the `MakeChangeForm` is presented. Create a new file located at `/changebank/components/MakeChangeForm.vue` with the below code. This component has all of the business logic needed for taking in a dollar amount of money and returning the correct amount of each coin.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/components/MakeChangeForm.vue"}
-  lang="ts" />
+<LocalCode src="quickstart-javascript-nuxt-web/complete-application/components/MakeChangeForm.vue" lang="ts" />
 
 ### Run the Application
 

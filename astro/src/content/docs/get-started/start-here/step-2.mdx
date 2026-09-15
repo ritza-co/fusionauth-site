@@ -7,7 +7,7 @@ lastPage: step-1
 nextPage: step-3
 ---
 import Aside from 'src/components/Aside.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import { Steps } from 'astro-better-steps';
 
 To better understand how FusionAuth works, let's take a look at an example app. This app uses Node, Express, Typescript, and FusionAuth to secure a section of the app. This example may seem simple, but it demonstrates how to leverage FusionAuth for things like login and access controls.
@@ -57,13 +57,13 @@ You need Node `22.x` or newer to run this example.
 
 Let's take a quick look at how this app interacts with FusionAuth. First, open `templates/home.html`: the homepage. You should see the following code:
 
-<RemoteCode url={frontmatter.codeRoot + "/templates/home.html"} lang="html" tags="login"/>
+<LocalCode src="example-get-started/templates/home.html.snippet.login.html" lang="html" />
 
 This renders a login button that, when clicked, navigates to `/login`.
 
 Open `src/index.mts`, which contains the Node and Express backend code. You should see the following route:
 
-<RemoteCode url={frontmatter.codeRoot + "/src/index.mts"} lang="typescript" tags="login"/>
+<LocalCode src="example-get-started/src/index.mts.snippet.login.mts" lang="typescript" />
 
 When someone opens this route in a browser, the app checks their login status:
 * If the user is logged in, the app redirects them to the `/account` page.
