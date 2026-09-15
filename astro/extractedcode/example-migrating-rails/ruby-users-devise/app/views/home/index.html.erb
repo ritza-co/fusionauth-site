@@ -1,0 +1,19 @@
+<div class="hero">
+  <h1>Welcome to Ruby Users Devise</h1>
+  <p>A comprehensive Rails application demonstrating user authentication with Devise</p>
+  
+  <% if user_signed_in? %>
+    <h2>Hello, <%= current_user.email %>!</h2>
+    <p>You are successfully signed in.</p>
+    
+    <div class="user-actions">
+      <%= link_to "Edit Profile", edit_user_registration_path, class: "btn" %>
+      <%= link_to "Sign out", destroy_user_session_path, data: { turbo_method: :delete }, class: "btn btn-secondary" %>
+    </div>
+  <% else %>
+    <div class="auth-actions">
+      <%= link_to "Sign up", new_user_registration_path, class: "btn" %>
+      <%= link_to "Sign in", new_user_session_path, class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>

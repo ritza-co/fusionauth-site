@@ -1,0 +1,5 @@
+ignore-paths:
+  - Samples/Quickstart
+
+ignore-rules:
+  - ios_log

@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "files": [
+    "FusionAuthClientTest.ts",
+    "DefaultRESTClientTest.ts"
+  ],
+  "compilerOptions": {
+    "types": [
+      "node",
+      "node-fetch",
+      "mocha",
+      "chai"
+    ]
+  }
+}

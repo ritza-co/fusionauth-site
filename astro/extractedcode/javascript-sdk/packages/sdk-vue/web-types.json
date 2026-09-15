@@ -1,0 +1,121 @@
+{
+  "framework": "vue",
+  "name": "@fusionauth/vue-sdk",
+  "version": "1.4.0",
+  "contributions": {
+    "html": {
+      "description-markup": "markdown",
+      "types-syntax": "typescript",
+      "tags": [
+        {
+          "name": "FusionAuthAccountButton",
+          "description": "",
+          "slots": [
+            {
+              "name": "default"
+            }
+          ],
+          "source": {
+            "module": "./src/components/FusionAuthAccountButton/FusionAuthAccountButton.vue",
+            "symbol": "default"
+          }
+        },
+        {
+          "name": "FusionAuthLoginButton",
+          "description": "",
+          "attributes": [
+            {
+              "name": "state",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ],
+          "source": {
+            "module": "./src/components/FusionAuthLoginButton/FusionAuthLoginButton.vue",
+            "symbol": "default"
+          }
+        },
+        {
+          "name": "FusionAuthLogoutButton",
+          "description": "",
+          "slots": [
+            {
+              "name": "default"
+            }
+          ],
+          "source": {
+            "module": "./src/components/FusionAuthLogoutButton/FusionAuthLogoutButton.vue",
+            "symbol": "default"
+          }
+        },
+        {
+          "name": "FusionAuthRegisterButton",
+          "description": "",
+          "attributes": [
+            {
+              "name": "state",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ],
+          "source": {
+            "module": "./src/components/FusionAuthRegisterButton/FusionAuthRegisterButton.vue",
+            "symbol": "default"
+          }
+        },
+        {
+          "name": "RequireAnonymous",
+          "description": "",
+          "slots": [
+            {
+              "name": "default"
+            }
+          ],
+          "source": {
+            "module": "./src/components/RequireAnonymous/RequireAnonymous.vue",
+            "symbol": "default"
+          }
+        },
+        {
+          "name": "RequireAuth",
+          "description": "",
+          "attributes": [
+            {
+              "name": "withRole",
+              "required": false,
+              "value": {
+                "kind": "expression",
+                "type": "union"
+              }
+            }
+          ],
+          "slots": [
+            {
+              "name": "default"
+            }
+          ],
+          "source": {
+            "module": "./src/components/RequireAuth/RequireAuth.vue",
+            "symbol": "default"
+          }
+        }
+      ]
+    }
+  }
+}

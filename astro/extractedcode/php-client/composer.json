@@ -1,0 +1,38 @@
+{
+  "name": "fusionauth/fusionauth-client",
+  "type": "library",
+  "description": "FusionAuth Client written in PHP",
+  "keywords": ["rest","api", "fusionauth"],
+  "homepage": "https://github.com/FusionAuth/fusionauth-php-client",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Daniel DeGroff",
+      "email": "daniel@fuaionauth.io"
+    },
+    {
+      "name": "Brian Pontarelli",
+      "email": "brian@fusionauth.io"
+    }
+  ],
+  "require": {
+    "ext-curl": "*",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.5.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "FusionAuth\\": "src/FusionAuth/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/FusionAuth/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit"
+  }
+}

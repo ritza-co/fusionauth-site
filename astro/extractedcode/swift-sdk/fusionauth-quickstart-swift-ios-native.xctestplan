@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "3D637F94-CC04-4C8B-B3D8-11A8CBDEFF26",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:fusionauth-quickstart-swift-ios-native.xcodeproj",
+      "identifier" : "0E2795F42BD937B800738892",
+      "name" : "fusionauth-quickstart-swift-ios-native"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:fusionauth-quickstart-swift-ios-native.xcodeproj",
+        "identifier" : "0E232BE42CC7ABD100D944E5",
+        "name" : "QuickstartTests"
+      }
+    }
+  ],
+  "version" : 1
+}

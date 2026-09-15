@@ -1,0 +1,7 @@
+> [!WARNING]
+> This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/example-full-user-search). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
+
+
+# Example scripts
+
+These are scripts you might run as a user of FusionAuth. Please consult the READMEs in each directory for more details.

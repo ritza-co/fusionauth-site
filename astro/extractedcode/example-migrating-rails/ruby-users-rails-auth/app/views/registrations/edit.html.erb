@@ -1,0 +1,51 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Edit Profile</h1>
+      <p>Update your account information</p>
+    </div>
+
+    <%= form_with model: @user, url: update_registration_path, local: true, class: "auth-form" do |form| %>
+      <% if @user.errors.any? %>
+        <div class="error-messages">
+          <h4><%= pluralize(@user.errors.count, "error") %> prohibited this profile from being updated:</h4>
+          <ul>
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= form.label :name, class: "form-label" %>
+        <%= form.text_field :name, class: "form-input", required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :email, class: "form-label" %>
+        <%= form.email_field :email, class: "form-input", required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :password, "New Password (leave blank to keep current)", class: "form-label" %>
+        <%= form.password_field :password, class: "form-input", placeholder: "Enter new password (min. 6 characters)" %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :password_confirmation, "Confirm New Password", class: "form-label" %>
+        <%= form.password_field :password_confirmation, class: "form-input", placeholder: "Confirm new password" %>
+      </div>
+
+      <div class="form-actions">
+        <%= form.submit "Update Profile", class: "btn btn-primary btn-full" %>
+      </div>
+    <% end %>
+
+    <div class="auth-links">
+      <p>
+        <%= link_to "← Back to Home", root_path, class: "auth-link" %>
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ruby Users OmniAuth</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <%= link_to "Ruby Users OmniAuth", root_path, class: "nav-brand" %>
+        
+        <div class="nav-links">
+          <% if user_signed_in? %>
+            <span class="nav-user">
+              <% if current_user.image_url.present? %>
+                <%= image_tag current_user.avatar_url(30), alt: current_user.display_name, class: "user-avatar" %>
+              <% end %>
+              <%= current_user.display_name %>
+            </span>
+            <%= link_to "Profile", user_path(current_user), class: "nav-link" %>
+            <%= button_to "Sign Out", sign_out_path, method: :delete, class: "nav-link btn-link" %>
+          <% else %>
+            <%= link_to "Sign In with Google", "/auth/google_oauth2", method: :post, class: "btn btn-primary" %>
+            <% if Rails.env.development? %>
+              <%= button_to "Developer Login", "/auth/developer", method: :post, class: "btn btn-secondary" %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <% if notice %>
+        <div class="alert alert-success"><%= notice %></div>
+      <% end %>
+      
+      <% if alert %>
+        <div class="alert alert-danger"><%= alert %></div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <p>&copy; 2025 Ruby Users OmniAuth Demo. Built with Rails <%= Rails.version %> and OmniAuth.</p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+<div class="fade-in">
+  <div class="card">
+    <div class="card-header">
+      <h1 class="card-title">User Profile</h1>
+      <p class="card-subtitle">Your account information and OAuth data</p>
+    </div>
+    
+    <div class="user-profile">
+      <%= image_tag @user.avatar_url(80), alt: @user.display_name %>
+      <div class="user-info">
+        <h2><%= @user.display_name %></h2>
+        <p><strong>Email:</strong> <%= @user.email %></p>
+        <p><strong>Provider:</strong> <span class="provider-badge"><%= @user.provider_name %></span></p>
+        <p><strong>User ID:</strong> <%= @user.uid %></p>
+        <p><strong>Member since:</strong> <%= @user.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+        <p><strong>Last updated:</strong> <%= @user.updated_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+      </div>
+    </div>
+    
+    <% if @user.raw_info.present? %>
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">OAuth Data</h3>
+          <p class="card-subtitle">Raw information received from <%= @user.provider_name %></p>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value"><%= @user.raw_info['info']['given_name'] || 'N/A' %></div>
+            <div class="stat-label">First Name</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value"><%= @user.raw_info['info']['family_name'] || 'N/A' %></div>
+            <div class="stat-label">Last Name</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value"><%= @user.raw_info['info']['locale'] || 'N/A' %></div>
+            <div class="stat-label">Locale</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value"><%= @user.raw_info['info']['verified_email'] ? 'Yes' : 'No' %></div>
+            <div class="stat-label">Email Verified</div>
+          </div>
+        </div>
+        
+        <details>
+          <summary><strong>Full OAuth Response (Click to expand)</strong></summary>
+          <pre><%= JSON.pretty_generate(@user.raw_info) %></pre>
+        </details>
+      </div>
+    <% end %>
+    
+    <div class="text-center">
+      <%= link_to "Edit Profile", edit_user_path(@user), class: "btn btn-primary" %>
+      <%= link_to "Back to Dashboard", root_path, class: "btn btn-outline" %>
+    </div>
+  </div>
+</div> 

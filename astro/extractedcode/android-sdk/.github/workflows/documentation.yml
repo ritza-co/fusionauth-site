@@ -1,0 +1,44 @@
+name: Deploy Dokka Docs
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6.1.0
+
+      - name: Build Dokka HTML
+        run: ./gradlew dokkaGenerateHtml
+
+      - name: Determine deployment path
+        id: deploy-path
+        run: |
+            if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+                echo "path=." >> $GITHUB_OUTPUT
+            else
+                BRANCH_NAME=$(echo ${{ github.ref }} | sed 's/refs\/heads\///' | sed 's/\//-/g')
+                echo "path=$BRANCH_NAME" >> $GITHUB_OUTPUT
+            fi
+            
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
+        with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: ./build/library/docs
+            destination_dir: ${{ steps.deploy-path.outputs.path }}
+            keep_files: true  # Important! Prevents deleting other directories
+

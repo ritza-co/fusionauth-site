@@ -1,0 +1,43 @@
+# Entity Type Resource
+
+Entity Types categorize Entities. For example, an Entity Type could be `Device`, `API` or `Company`.
+
+[Entity Type API](https://fusionauth.io/docs/v1/tech/apis/entity-management/entity-types/#create-an-entity-type)
+
+## Example Usage
+
+```hcl
+resource "fusionauth_entity_type" "company" {
+  name = "Company"
+  data = jsonencode({
+    createdBy = "jared@fusionauth.io"
+  })
+  jwt_configuration {
+    access_token_key_id     = "a7516c7c-6234-4021-b0b4-8870c807aeb2"
+    enabled                 = true
+    time_to_live_in_seconds = 3600
+  }
+}
+```
+
+## Argument Reference
+
+* `name` - (Required) A descriptive name for the entity type (i.e. `Customer` or `Email_Service`).
+
+---
+
+* `data` - (Optional) A JSON string that can hold any information about the Entity Type that should be persisted. Must be aJSON string.
+* `entity_type_id` - (Optional) The ID to use for the new Entity Type. If not specified a secure random UUID will be generated.
+* `jwt_configuration` - (Optional) A block to configure JSON Web Token (JWT) options.
+  * `enabled` - (Optional) Indicates if this application is using the JWT configuration defined here or the global JWT
+      configuration defined by the Tenant. If this is false the signing algorithm configured in the Tenant will be used.
+      If true the signing algorithm defined in this application will be used.
+  * `access_token_key_id` - (Required) The unique ID of the signing key used to sign the access token. Required when
+      enabled is set to true.
+  * `access_token_verification_key_ids` - (Optional) The list of access token verification key Ids that are trusted for
+      this entity type when entity JWTs are presented to `/oauth2/introspect` or in SCIM use cases.
+      `access_token_key_id` is implicitly included in this list and does not need to be explicitly specified. If
+      `access_token_key_id` is changed to a new key and the old key is supplied in this field, then this facilitates key
+      rotation because FusionAuth will trust JWTs signed by both keys, while only signing JWTs with the new key.
+      Requires FusionAuth 1.69.0 or later.
+  * `time_to_live_in_seconds` - (Required) The length of time in seconds the JWT will live before it is expired and no longer valid. Required when enabled is set to true.

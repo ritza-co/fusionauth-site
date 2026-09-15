@@ -1,0 +1,6 @@
+*.iws
+**/.DS_Store
+/vendor
+.savant/cache
+.phpunit.cache
+.phpdoc/cache

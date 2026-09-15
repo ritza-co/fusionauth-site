@@ -1,0 +1,38 @@
+# Test fixtures for users
+admin:
+  name: Admin User
+  email: admin@example.com
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  confirmed_at: <%= 1.week.ago %>
+  sign_in_count: 5
+  current_sign_in_at: <%= 1.day.ago %>
+  last_sign_in_at: <%= 2.days.ago %>
+  current_sign_in_ip: "127.0.0.1"
+  last_sign_in_ip: "127.0.0.1"
+
+user:
+  name: Regular User
+  email: user@example.com
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  confirmed_at: <%= 3.days.ago %>
+  sign_in_count: 2
+  current_sign_in_at: <%= 2.hours.ago %>
+  last_sign_in_at: <%= 1.day.ago %>
+  current_sign_in_ip: "127.0.0.1"
+  last_sign_in_ip: "127.0.0.1"
+
+unconfirmed:
+  name: Unconfirmed User
+  email: unconfirmed@example.com
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  confirmed_at: 
+  sign_in_count: 0
+
+with_reset_token:
+  name: Reset User
+  email: reset@example.com
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  confirmed_at: <%= 1.week.ago %>
+  reset_password_token: "secure_token_123"
+  reset_password_sent_at: <%= 1.hour.ago %>
+  sign_in_count: 1

@@ -1,0 +1,48 @@
+---
+name: Publish to NPM
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: /usr/bin/bash -l -e -o pipefail {0}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Fetch full history for branch verification
+
+      - name: verify tag is on main branch
+        run: |
+          git fetch origin main
+          if ! git merge-base --is-ancestor ${{ github.sha }} origin/main; then
+            echo "Error: Tag must be on the main branch"
+            exit 1
+          fi
+
+      - name: setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '25'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: build and publish
+        run: |
+          npm install -g npm@latest
+          npm install
+          npm run build:mcp-api
+          cd packages/mcp-api
+          npm publish --provenance --access public

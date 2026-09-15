@@ -1,0 +1,124 @@
+name: "Security and Code-Quality scan with CodeQL - Package"
+
+on:
+  # Triggers the workflow on push events but only for default and protected branches
+  push:
+    branches: [ "main" ]
+  # Triggers the workflow on pull request events but only for default and protected branches
+  pull_request:
+    branches: [ "main" ]
+  # Triggers the workflow on a schedule every Monday at 6:39 AM
+  schedule:
+    - cron: '39 6 * * 1'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  # Triggers the workflow when it is called from another workflow
+  workflow_call:
+
+jobs:
+  analyze:
+    name: CodeQL Scan (${{ matrix.language }})
+    # Runner size impacts CodeQL analysis time. To learn more, please see:
+    #   - https://gh.io/recommended-hardware-resources-for-running-codeql
+    #   - https://gh.io/supported-runners-and-hardware-resources
+    #   - https://gh.io/using-larger-runners (GitHub.com only)
+    # Consider using larger runners or machines with greater resources for possible analysis time improvements.
+
+    #runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    #runs-on: [ self-hosted, macos ]
+    runs-on: [ 'macos-26' ]
+
+    #timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+    timeout-minutes: 120
+
+    permissions:
+      # required for all workflows
+      security-events: write
+
+      # required to fetch internal or private CodeQL packs
+      packages: read
+
+      # only required for workflows in private repositories
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # https://developer.apple.com/documentation/xcode-release-notes
+        xcode: [ "26.5" ]
+        language: [ swift ]
+        build-mode: [ manual ]
+        # To learn more about changing the languages that are analyzed or customizing the build mode for your analysis,
+        # see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning.
+        # If you are analyzing a compiled language, you can modify the 'build-mode' for that language to customize how
+        # your codebase is analyzed, see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/codeql-code-scanning-for-compiled-languages
+
+    steps:
+      # This step initializes the in the matrix specified version of Xcode.
+      - name: Initialize latest xcode
+        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
+        with:
+          xcode-version: ${{ matrix.xcode }}
+
+      # This step removes all other versions of Xcode from the machine.
+      - name: Remove old xcode versions
+        run: |
+          echo "Searching for Xcode versions:"
+          find /Applications -name "Xcode_*" -maxdepth 1 -mindepth 1
+          echo "Removing old Xcode versions..."
+          find /Applications -name "Xcode_*" -maxdepth 1 -mindepth 1 | grep -v ${{ matrix.xcode }} | xargs rm -rf
+          echo "Available Xcode versions after removal:"
+          find /Applications -name "Xcode_*" -maxdepth 1 -mindepth 1
+
+      # Get the Xcode version.
+      - name: Get Xcode version
+        run: xcodebuild -version
+
+      - name: List available simulators
+        run: xcrun simctl list runtimes
+
+      # Get the Swift version.
+      - name: Get Swift version
+        run: swift --version
+
+      # Checkout the repository.
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.3
+
+      # Initialize CodeQL.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4.36.2
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+          # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
+          # queries: security-extended,security-and-quality
+          queries: security-and-quality
+
+      # ℹ️ Command-line programs to run using the OS shell.
+      # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
+
+
+      # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
+      # If this step fails, then you should remove it and run the build manually (see below)
+      # - name: Autobuild
+      #   uses: github/codeql-action/autobuild@v4.31.2
+
+      # Check disk space.
+      - name: Check Disk Space
+        run: |
+          sleep 10
+          df -h
+
+      # Manual build with the release configuration.
+      - name: Manual build
+        run: swift build --build-tests --configuration debug -v
+
+      # Perform CodeQL analysis after the build has completed successfully or failed.
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4.36.2
+        if: success() || failure()
+        with:
+          category: "/language:${{matrix.language}}"

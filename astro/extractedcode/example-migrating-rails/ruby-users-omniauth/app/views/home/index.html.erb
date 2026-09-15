@@ -1,0 +1,36 @@
+<% if user_signed_in? %>
+  <!-- Authenticated User Dashboard -->
+  <div class="fade-in">
+    <div class="card">
+      <div class="card-header">
+        <h1 class="card-title">Welcome back, <%= current_user.display_name %>!</h1>
+        <p class="card-subtitle">You're successfully signed in with <%= current_user.provider_name %></p>
+      </div>
+      
+      <div class="user-profile">
+        <%= image_tag current_user.avatar_url(80), alt: current_user.display_name %>
+        <div class="user-info">
+          <h2><%= current_user.display_name %></h2>
+          <p><strong>Email:</strong> <%= current_user.email %></p>
+          <p><strong>Provider:</strong> <span class="provider-badge"><%= current_user.provider_name %></span></p>
+        </div>
+      </div>
+      
+      <div class="text-center">
+        <%= link_to "Edit Profile", edit_user_path(current_user), class: "btn btn-primary" %>
+        <%= link_to "View Profile", user_path(current_user), class: "btn btn-outline" %>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <!-- Unauthenticated User Landing Page -->
+  <div class="hero">
+    <h1>Ruby Users OmniAuth</h1>
+    <p>Secure authentication with Google OAuth2 and OmniAuth</p>
+    <%= link_to "Sign In with Google", "/auth/google_oauth2", method: :post, class: "btn btn-primary" %>
+    <% if Rails.env.development? %>
+      <br><br>
+      <%= button_to "Developer Login (Development Only)", "/auth/developer", method: :post, class: "btn btn-secondary" %>
+    <% end %>
+  </div>
+<% end %> 

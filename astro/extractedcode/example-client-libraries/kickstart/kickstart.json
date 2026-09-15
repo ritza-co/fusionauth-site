@@ -1,0 +1,92 @@
+{
+  "variables": {
+    "defaultTenantId": "d7d09513-a3f5-401c-9685-34ab6c552453",
+    "adminEmail": "admin@example.com",
+    "adminPassword": "password",
+    "asymmetricKeyId": "#{UUID()}",
+    "adminUserId": "00000000-0000-0000-0000-000000000001",
+    "applicationClientID": "e9fdb985-9173-4e01-9d73-ac2d60d1dc8e",
+    "applicationClientSecret": "change-this-in-production-to-be-a-real-secret",
+    "authorizedRedirectURL": "https://localhost:5001/callback",
+    "logoutURL": "https://localhost:5001/"
+  },
+  "apiKeys": [
+    {
+      "key": "pNEPFFdeFExk67sQmOOBkT09ekvpThYJDbqgyg00V9raP7i_EXAMPLE_ONLY"
+    },
+    {
+      "key": "bf69486b-4733-4470-a592-f1bfce7af580",
+      "description": "Standard development API key"
+    }
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "url": "/api/key/generate/#{asymmetricKeyId}",
+      "tenantId": "#{defaultTenantId}",
+      "body": {
+        "key": {
+          "algorithm": "RS256",
+          "name": "For Example Application",
+          "length": 2048
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/application/#{applicationClientID}",
+      "tenantId": "#{defaultTenantId}",
+      "body": {
+        "application": {
+          "name": "Example Application",
+          "oauthConfiguration": {
+            "authorizedRedirectURLs": [
+              "#{authorizedRedirectURL}"
+            ],
+            "logoutURL": "#{logoutURL}",
+            "enabledGrants": [
+              "authorization_code",
+              "password",
+              "refresh_token"
+            ],
+            "clientSecret": "#{applicationClientSecret}",
+            "proofKeyForCodeExchangePolicy": "Required"
+          },
+          "jwtConfiguration": {
+            "enabled": true,
+            "accessTokenKeyId": "#{asymmetricKeyId}",
+            "idTokenKeyId": "#{asymmetricKeyId}"
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/user/registration/#{adminUserId}",
+      "body": {
+        "user": {
+          "birthDate": "1981-06-04",
+          "email": "#{adminEmail}",
+          "firstName": "Richard",
+          "lastName": "Hendricks",
+          "password": "#{adminPassword}"
+        },
+        "registration": {
+          "applicationId": "#{FUSIONAUTH_APPLICATION_ID}",
+          "roles": [
+            "admin"
+          ]
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/user/registration/#{adminUserId}",
+      "body": {
+        "registration": {
+          "applicationId": "#{applicationClientID}"
+        }
+      }
+    }
+  ]
+}

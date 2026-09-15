@@ -1,0 +1,124 @@
+name: update_theme_history
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow once a day
+  schedule:
+    - cron: '39 18 * * *'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  # uncomment here and in the checkthemeversion step if you want to run this manually across a lot of versions.
+  #  inputs:
+  #    version:
+  #      required: true
+  #      type: string
+  #      default: ""
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  # this keeps the workflow from being disabled by inactivity in the repo.
+  # https://stackoverflow.com/questions/67184368/prevent-scheduled-github-actions-from-becoming-disabled has more details
+  # I picked the action that seemed least intrusive
+  workflow-keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: liskin/gh-workflow-keepalive@f72ff1a1336129f29bf0166c0fd0ca6cf1bcb38c # v1.2.1
+
+
+  check_theme_history:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    outputs:
+      keepgoing: ${{ steps.checkthemeversion.outputs.keepgoing }}
+      latestreleasedversion: ${{ steps.checkthemeversion.outputs.latestreleasedversion }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+      - name: Check if theme is up to date
+        id: checkthemeversion
+          #bin/checktheme.sh ${{ inputs.version }}
+        run: |
+          bin/checktheme.sh 
+        shell: bash
+
+  update_theme_history:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: check_theme_history
+    if: ${{ needs.check_theme_history.outputs.keepgoing != 'false' }}
+    # get the latest released version number from the check script
+    env:
+      LATEST_RELEASED_VERSION: ${{needs.check_theme_history.outputs.latestreleasedversion}}
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+      - name: Debug update theme
+        run: |
+          echo "ran update_theme_history"
+          echo $LATEST_RELEASED_VERSION
+          pwd
+          tree -d ..
+        shell: bash
+
+      - name: Pull down needed repos, set up git
+        run: |
+          echo $LATEST_RELEASED_VERSION
+          git clone --depth 1 https://github.com/fusionauth/fusionauth-theme-history fusionauth-theme-history
+          cd fusionauth-theme-history
+          git pull --tags
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+        shell: bash
+
+      - name: Start FusionAuth
+        uses: fusionauth/fusionauth-github-action@v1
+        with:
+          FUSIONAUTH_VERSION: ${{needs.check_theme_history.outputs.latestreleasedversion}}
+          FUSIONAUTH_APP_KICKSTART_FILENAME: ks.json
+          FUSIONAUTH_APP_KICKSTART_DIRECTORY_PATH: ks
+      - name: Wait for FusionAuth to be ready
+        run: |
+          set -euo pipefail
+
+          theme_id="75a068fd-e94b-451a-9aeb-3ddb9a3b5987"
+          api_key="4737ea8520bd454caabb7cb3d36e14bc1832c0d3f70a4189b82598670f11b1bdEXAMPLE"
+          url="http://localhost:9011/api/theme/${theme_id}"
+
+          for i in {1..30}; do
+            status_code=$(curl --silent --show-error \
+              --output /tmp/theme-response.json \
+              --write-out "%{http_code}" \
+              --header "Authorization: ${api_key}" \
+              "$url" || true)
+
+            if [ "$status_code" = "200" ]; then
+              echo "FusionAuth is ready and the default theme is accessible."
+              exit 0
+            fi
+
+            echo "Attempt $i/30: theme API returned HTTP $status_code"
+            cat /tmp/theme-response.json || true
+            sleep 2
+          done
+
+          echo "FusionAuth never became ready enough to serve the default theme."
+          exit 1
+        shell: bash
+
+      - name: Download then upload theme
+        run: |
+          bin/pulltheme.sh
+          bin/pushtheme.sh $LATEST_RELEASED_VERSION
+          cd fusionauth-theme-history
+          git push --tags https://${{ secrets.PAT_USER }}:${{ secrets.PAT_FOR_COMMITS }}@github.com/FusionAuth/fusionauth-theme-history main 
+        shell: bash
+

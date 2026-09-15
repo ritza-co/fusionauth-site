@@ -1,0 +1,70 @@
+<div class="fade-in">
+  <div class="form-container">
+    <div class="card">
+      <div class="card-header">
+        <h1 class="card-title">Edit Profile</h1>
+        <p class="card-subtitle">Update your account information</p>
+      </div>
+      
+      <%= form_with model: @user, local: true, class: "needs-validation", novalidate: true do |form| %>
+        <% if @user.errors.any? %>
+          <div class="alert alert-danger">
+            <h4><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h4>
+            <ul>
+              <% @user.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+        
+        <div class="user-profile mb-3">
+          <%= image_tag @user.avatar_url(80), alt: @user.display_name %>
+          <div class="user-info">
+            <p><strong>Provider:</strong> <span class="provider-badge"><%= @user.provider_name %></span></p>
+            <p><strong>User ID:</strong> <%= @user.uid %></p>
+            <p><small class="text-muted">Avatar and provider information cannot be changed</small></p>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <%= form.label :name, class: "form-label" %>
+          <%= form.text_field :name, class: "form-control #{'is-invalid' if @user.errors[:name].any?}", placeholder: "Enter your full name" %>
+          <% if @user.errors[:name].any? %>
+            <div class="invalid-feedback">
+              <%= @user.errors[:name].first %>
+            </div>
+          <% end %>
+        </div>
+        
+        <div class="form-group">
+          <%= form.label :email, class: "form-label" %>
+          <%= form.email_field :email, class: "form-control #{'is-invalid' if @user.errors[:email].any?}", placeholder: "Enter your email address" %>
+          <% if @user.errors[:email].any? %>
+            <div class="invalid-feedback">
+              <%= @user.errors[:email].first %>
+            </div>
+          <% end %>
+          <small class="form-text text-muted">
+            This should match your <%= @user.provider_name %> account email
+          </small>
+        </div>
+        
+        <div class="form-group">
+          <div class="form-check">
+            <%= form.check_box :active, class: "form-check-input" %>
+            <%= form.label :active, "Active account", class: "form-check-label" %>
+          </div>
+          <small class="form-text text-muted">
+            Inactive accounts cannot sign in
+          </small>
+        </div>
+        
+        <div class="form-group text-center">
+          <%= form.submit "Update Profile", class: "btn btn-primary" %>
+          <%= link_to "Cancel", user_path(@user), class: "btn btn-outline" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div> 

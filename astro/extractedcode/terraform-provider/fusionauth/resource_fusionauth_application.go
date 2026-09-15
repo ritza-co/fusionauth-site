@@ -1,0 +1,1430 @@
+package fusionauth
+
+import (
+	"github.com/FusionAuth/go-client/pkg/fusionauth"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+)
+
+func newApplication() *schema.Resource {
+	return &schema.Resource{
+		CreateContext: createApplication,
+		ReadContext:   readApplication,
+		UpdateContext: updateApplication,
+		DeleteContext: deleteApplication,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    resourceApplicationV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: resourceApplicationUpgradeV0,
+				Version: 0,
+			},
+		},
+		Schema: map[string]*schema.Schema{
+			"application_id": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Description:  "The Id to use for the new Application. If not specified a secure random UUID will be generated.",
+				ValidateFunc: validation.IsUUID,
+			},
+			"tenant_id": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validation.IsUUID,
+			},
+			"active": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Whether or not this Application is active.",
+			},
+			"base_url": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The base URL of the Application.",
+			},
+			"access_control_configuration": {
+				Type:       schema.TypeList,
+				MaxItems:   1,
+				Optional:   true,
+				Computed:   true,
+				ConfigMode: schema.SchemaConfigModeAttr,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ui_ip_access_control_list_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.IsUUID,
+							Description:  "The Id of the IP Access Control List limiting access to this application.",
+						},
+					},
+				},
+			},
+			"authentication_token_configuration_enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Determines if Users can have Authentication Tokens associated with this Application. This feature may not be enabled for the FusionAuth application.",
+			},
+			"clean_speak_configuration": {
+				Type:       schema.TypeList,
+				MaxItems:   1,
+				Optional:   true,
+				Computed:   true,
+				ConfigMode: schema.SchemaConfigModeAttr,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"application_ids": {
+							Type:        schema.TypeSet,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Optional:    true,
+							Description: "An array of UUIDs that map to the CleanSpeak applications for this Application. It is possible that a single Application in FusionAuth might have multiple Applications in CleanSpeak. For example, a FusionAuth Application for a game might have one CleanSpeak Application for usernames and another Application for chat.",
+						},
+						"username_moderation": {
+							Type:       schema.TypeList,
+							MaxItems:   1,
+							Optional:   true,
+							ConfigMode: schema.SchemaConfigModeAttr,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enabled": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Default:     false,
+										Description: "True if CleanSpeak username moderation is enabled.",
+									},
+									"application_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The Id of the CleanSpeak application that usernames are sent to for moderation.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"data": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				Description:      "An object that can hold any information about the Application that should be persisted. Please review the limits on data field types as you plan for and build your custom data schema. Must be a JSON string.",
+				DiffSuppressFunc: diffSuppressJSON,
+				ValidateFunc:     validation.StringIsJSON,
+			},
+			"form_configuration": {
+				Type:             schema.TypeList,
+				MaxItems:         1,
+				Optional:         true,
+				ConfigMode:       schema.SchemaConfigModeAttr,
+				DiffSuppressFunc: suppressBlockDiff,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"admin_registration_form_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Computed:     true,
+							ValidateFunc: validation.IsUUID,
+							Description:  "The unique Id of the form to use for the Add and Edit User Registration form when used in the FusionAuth admin UI.",
+						},
+						"self_service_form_configuration": {
+							Type:             schema.TypeList,
+							MaxItems:         1,
+							Optional:         true,
+							ConfigMode:       schema.SchemaConfigModeAttr,
+							DiffSuppressFunc: suppressBlockDiff,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"require_current_password_on_password_change": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Default:     false,
+										Description: "Whether or not the self-service form is enabled.",
+									},
+								},
+							},
+						},
+						"self_service_form_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.IsUUID,
+							Description:  "The unique Id of the form to to enable authenticated users to manage their profile on the account page.",
+						},
+					},
+				},
+			},
+			"external_identifier_configuration": {
+				Type:             schema.TypeList,
+				MaxItems:         1,
+				Optional:         true,
+				Computed:         true,
+				ConfigMode:       schema.SchemaConfigModeAttr,
+				DiffSuppressFunc: suppressBlockDiff,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"two_factor_trust_id_time_to_live_in_seconds": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							Description: "The time in seconds until a two factor trust Id is no longer valid and cannot be used by the Two Factor API.",
+						},
+					},
+				},
+			},
+			"insert_instant": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The instant that the Application was added to the FusionAuth database.",
+			},
+			"jwt_configuration": {
+				Type:             schema.TypeList,
+				MaxItems:         1,
+				Elem:             newJWTConfiguration(),
+				DiffSuppressFunc: suppressBlockDiff,
+				Optional:         true,
+			},
+			"lambda_configuration": {
+				Type:             schema.TypeList,
+				Optional:         true,
+				MaxItems:         1,
+				DiffSuppressFunc: suppressBlockDiff,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"access_token_populate_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Lambda that will be invoked when an access token is generated for this application. This will be utilized during OAuth2 and OpenID Connect authentication requests as well as when an access token is generated for the Login API.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"id_token_populate_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Lambda that will be invoked when an Id token is generated for this application during an OpenID Connect authentication request.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"multi_factor_requirement_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the lambda that will be invoked during the login process to determine the multi-factor authentication requirements for a given user at the time of login.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"samlv2_populate_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Lambda that will be invoked when a a SAML response is generated during a SAML authentication request.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"self_service_registration_validation_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The unique Id of the lambda that will be used to perform additional validation on registration form steps.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"userinfo_populate_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Lambda that will be invoked when a UserInfo response is generated for this application.",
+							ValidateFunc: validation.IsUUID,
+						},
+					},
+				},
+			},
+			"last_update_instant": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The instant that the Application was last updated in the FusionAuth database.",
+			},
+			"login_configuration": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"allow_token_refresh": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Indicates if a JWT may be refreshed using a Refresh Token for this application. This configuration is separate from issuing new Refresh Tokens which is controlled by the generateRefreshTokens parameter. This configuration indicates specifically if an existing Refresh Token may be used to request a new JWT using the Refresh API.",
+						},
+						"generate_refresh_tokens": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Indicates if a Refresh Token should be issued from the Login API",
+						},
+						"require_authentication": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     true,
+							Description: "Indicates if the Login API should require an API key. If you set this value to false and your FusionAuth API is on a public network, anyone may attempt to use the Login API.",
+						},
+					},
+				},
+			},
+			"multi_factor_configuration": {
+				Type:       schema.TypeList,
+				MaxItems:   1,
+				Optional:   true,
+				Computed:   true,
+				ConfigMode: schema.SchemaConfigModeAttr,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"email_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.IsUUID,
+							Description:  "The Id of the email template that is used when notifying a user to complete a multi-factor authentication request.",
+						},
+						"sms_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.IsUUID,
+							Description:  "The Id of the SMS template that is used when notifying a user to complete a multi-factor authentication request.",
+						},
+						"login_policy": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "When enabled and a user has one or more two-factor methods configured, the user will be required to complete a two-factor challenge during login. When disabled, even when a user has configured one or more two-factor methods, the user will not be required to complete a two-factor challenge during login. When required, the user will be required to complete a two-factor challenge during login. When set to ChallengeOnMediumRisk or ChallengeOnHighRisk, a two-factor challenge is required only when the Intelligent MFA composite risk level is medium-or-higher or high, respectively (available since FusionAuth 1.68.0).",
+							ValidateFunc: validation.StringInSlice([]string{
+								fusionauth.MultiFactorLoginPolicy_Enabled.String(),
+								fusionauth.MultiFactorLoginPolicy_Disabled.String(),
+								fusionauth.MultiFactorLoginPolicy_Required.String(),
+								fusionauth.MultiFactorLoginPolicy_ChallengeOnMediumRisk.String(),
+								fusionauth.MultiFactorLoginPolicy_ChallengeOnHighRisk.String(),
+							}, false),
+						},
+						"trust_policy": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     fusionauth.ApplicationMultiFactorTrustPolicy_Any.String(),
+							Description: "When `multi_factor_configuration.login_policy` is set to `Enabled`, this trust policy is utilized when determining if a user must complete a two-factor challenge during login.",
+							ValidateFunc: validation.StringInSlice([]string{
+								fusionauth.ApplicationMultiFactorTrustPolicy_Any.String(),
+								fusionauth.ApplicationMultiFactorTrustPolicy_This.String(),
+								fusionauth.ApplicationMultiFactorTrustPolicy_None.String(),
+							}, false),
+						},
+					},
+				},
+			},
+			"name": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The name of the Application.",
+			},
+			"oauth_configuration": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Elem:     newOAuthConfiguration(),
+				Optional: true,
+				Computed: true,
+			},
+			"passwordless_configuration_enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Determines if passwordless login is enabled for this application.",
+				Deprecated:  "This parameter has been deprecated in favor of the more robust passwordless_configuration block. Please use that block to configure passwordless login for this application.",
+			},
+			"passwordless_configuration": {
+				Type:             schema.TypeList,
+				MaxItems:         1,
+				Optional:         true,
+				DiffSuppressFunc: suppressBlockDiff,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Determines if passwordless login is enabled for this application.",
+						},
+						"email_login_strategy": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "The strategy to use for passwordless logins that utilize email. This configuration is only relevant if passwordless_configuration.enabled is set to true.",
+							ValidateFunc: validation.StringInSlice([]string{
+								fusionauth.PasswordlessStrategy_ClickableLink.String(),
+								fusionauth.PasswordlessStrategy_FormField.String(),
+							}, false),
+						},
+						"phone_login_strategy": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "The strategy to use for passwordless logins that utilize phone. This configuration is only relevant if passwordless_configuration.enabled is set to true.",
+							ValidateFunc: validation.StringInSlice([]string{
+								fusionauth.PasswordlessStrategy_ClickableLink.String(),
+								fusionauth.PasswordlessStrategy_FormField.String(),
+							}, false),
+						},
+					},
+				},
+			},
+			"phone_configuration": {
+				Type:             schema.TypeList,
+				MaxItems:         1,
+				Optional:         true,
+				DiffSuppressFunc: suppressBlockDiff,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"forgot_password_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Message Template that is used when sending a user a forgot password message.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"identity_update_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Message Template used to send a message to a user when their phone number has been updated. The message will be sent to both their new and old phone numbers.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"login_id_in_use_on_create_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Message Template used to send a message to a user when another user attempts to create an account with their login Id.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"login_id_in_use_on_update_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Message Template used to send a message to a user when another user attempts to update an existing account to use their login Id.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"login_new_device_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Message Template used to send a message to a user when they log in on a new device.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"login_suspicious_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Message Template used to send a message to a user when a suspicious login using their login Id occurs.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"passwordless_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Passwordless Message Template, sent to users when they start a passwordless login.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"password_reset_success_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Message Template used to send a message to a user when they have completed a 'forgot password' workflow and their password has been reset.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"password_update_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Message Template used to send a message to a user when their password has been updated.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"set_password_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the SMS Message Template used when a user must set their password manually after their account was created for them (by an admin, for example).",
+							ValidateFunc: validation.IsUUID,
+						},
+						"two_factor_method_add_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Message Template used to send a message to a user when a MFA method has been removed from their account.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"two_factor_method_remove_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Message Template used to send a message to a user when a MFA method has been added to their account.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"verification_complete_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Message Template used to notify a user that their phone number has been verified.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"verification_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Message Template used to send SMS messages to users to verify that their phone number is valid.",
+							ValidateFunc: validation.IsUUID,
+						},
+					},
+				},
+			},
+			"registration_configuration": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Elem:     newRegistrationConfiguration(),
+				Optional: true,
+				Computed: true,
+			},
+			"registration_delete_policy": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"unverified_enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Indicates that users without a verified registration for this application will have their registration permanently deleted after application.registrationDeletePolicy.unverified.numberOfDaysToRetain days.",
+						},
+						"unverified_number_of_days_to_retain": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "The number of days from registration a user’s registration will be retained before being deleted for not completing registration verification. This field is required when application.registrationDeletePolicy.enabled is set to true. Value must be greater than 0.",
+						},
+					},
+				},
+			},
+			"samlv2_configuration": {
+				Type:       schema.TypeList,
+				MaxItems:   1,
+				Computed:   true,
+				ConfigMode: schema.SchemaConfigModeAttr,
+				Elem:       newSamlv2Configuration(),
+				Optional:   true,
+			},
+			"state": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The current state of this Application.",
+			},
+			"theme_id": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Description:  "The unique Id of the theme to be used to style the login page and other end user templates.",
+				ValidateFunc: validation.IsUUID,
+			},
+			"universal_configuration": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"universal": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Indicates if this application is a universal application.",
+						},
+					},
+				},
+			},
+			"verification_email_template_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The Id of the Email Template that is used to send the Registration Verification emails to users. If the verifyRegistration field is true this field is required.",
+			},
+			"verification_strategy": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      "ClickableLink",
+				Description:  "The process by which the user will verify their email address.",
+				ValidateFunc: validation.StringInSlice([]string{"ClickableLink", "FormField"}, false),
+			},
+			"verify_registration": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether or not registrations to this Application may be verified. When this is set to true the verificationEmailTemplateId parameter is also required.",
+			},
+			"unverified_behavior": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "Allow",
+				Description: "The behavior of the application when a user attempts to login with an unverified registration.",
+				ValidateFunc: validation.StringInSlice([]string{
+					"Allow",
+					"Gated",
+				}, false),
+			},
+			"email_configuration": {
+				Type:       schema.TypeList,
+				MaxItems:   1,
+				Optional:   true,
+				Computed:   true,
+				ConfigMode: schema.SchemaConfigModeAttr,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"email_verification_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Email Template used to send emails to users to verify that their email address is valid. When configured, this value will take precedence over the same configuration from the Tenant when an application context is known.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"email_update_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Email Template used to send emails to users when their email address is updated. When configured, this value will take precedence over the same configuration from the Tenant when an application context is known.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"email_verified_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Email Template used to verify user emails. When configured, this value will take precedence over the same configuration from the Tenant when an application context is known.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"forgot_password_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Email Template that is used when a user is sent a forgot password email. When configured, this value will take precedence over the same configuration from the Tenant when an application context is known.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"login_id_in_use_on_create_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Email Template used to send emails to users when another user attempts to create an account with their login Id. When configured, this value will take precedence over the same configuration from the Tenant when an application context is known.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"login_id_in_use_on_update_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Email Template used to send emails to users when another user attempts to update an existing account to use their login Id. When configured, this value will take precedence over the same configuration from the Tenant when an application context is known.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"login_new_device_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Email Template used to send emails to users when they log in on a new device. When configured, this value will take precedence over the same configuration from the Tenant when an application context is known.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"login_suspicious_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Email Template used to send emails to users when a suspicious login occurs. When configured, this value will take precedence over the same configuration from the Tenant when an application context is known.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"passwordless_email_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Passwordless Email Template, sent to users when they start a passwordless login. When configured, this value will take precedence over the same configuration from the Tenant when an application context is known.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"password_reset_success_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Email Template used to send emails to users when they have completed a 'forgot password' workflow and their password has been reset. When configured, this value will take precedence over the same configuration from the Tenant when an application context is known.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"password_update_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Email Template used to send emails to users when their password has been updated. When configured, this value will take precedence over the same configuration from the Tenant when an application context is known.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"set_password_email_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Email Template that is used when a user had their account created for them and they must set their password manually and they are sent an email to set their password. When configured, this value will take precedence over the same configuration from the Tenant when an application context is known.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"two_factor_method_add_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Email Template used to send emails to users when a MFA method has been added to their account. When configured, this value will take precedence over the same configuration from the Tenant when an application context is known.",
+							ValidateFunc: validation.IsUUID,
+						},
+						"two_factor_method_remove_template_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "The Id of the Email Template used to send emails to users when a MFA method has been removed from their account. When configured, this value will take precedence over the same configuration from the Tenant when an application context is known.",
+							ValidateFunc: validation.IsUUID,
+						},
+					},
+				},
+			},
+			"webauthn_configuration": {
+				Type:             schema.TypeList,
+				MaxItems:         1,
+				ConfigMode:       schema.SchemaConfigModeAttr,
+				DiffSuppressFunc: suppressBlockDiff,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"bootstrap_workflow_enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Whether the WebAuthn bootstrap workflow is enabled for this application. This overrides the tenant configuration. Has no effect if application.webAuthnConfiguration.enabled is false.",
+						},
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Indicates if this application enables WebAuthn workflows based on the configuration defined here or the Tenant WebAuthn configuration. If this is false, WebAuthn workflows will be enabled based on the Tenant configuration. If true, WebAuthn workflows will be enabled according to the configuration of this application.",
+						},
+						"reauthentication_workflow_enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Whether the WebAuthn reauthentication workflow is enabled for this application. This overrides the tenant configuration. Has no effect if application.webAuthnConfiguration.enabled is false.",
+						},
+					},
+				},
+				Optional: true,
+			},
+		},
+	}
+}
+
+func newSamlv2Configuration() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"assertion_encryption_configuration": {
+				Type:             schema.TypeList,
+				MaxItems:         1,
+				Optional:         true,
+				ConfigMode:       schema.SchemaConfigModeAttr,
+				DiffSuppressFunc: suppressBlockDiff,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"digest_algorithm": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  "SHA256",
+							ValidateFunc: validation.StringInSlice([]string{
+								"SHA1",
+								"SHA256",
+								"SHA384",
+								"SHA512",
+							}, false),
+							Description: "The message digest algorithm to use when encrypting the symmetric key for transport.",
+						},
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Determines if SAML assertion encryption is enabled for this Application.",
+						},
+						"encryption_algorithm": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  "AES256GCM",
+							ValidateFunc: validation.StringInSlice([]string{
+								"AES128",
+								"AES192",
+								"AES256",
+								"AES128GCM",
+								"AES192GCM",
+								"AES256GCM",
+								"TripleDES",
+							}, false),
+							Description: "The symmetric key encryption algorithm that will be used to encrypt SAML assertions. A new symmetric key will be generated every time an assertion is encrypted. AES ciphers can operate in Cipher Block Chaining (CBC) or Galois/Counter Mode (GCM).",
+						},
+						"key_location": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  "Child",
+							ValidateFunc: validation.StringInSlice([]string{
+								"Child",
+								"Sibling",
+							}, false),
+							Description: "The message digest algorithm to use when encrypting the symmetric key for transport.",
+						},
+						"key_transport_algorithm": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  "RSA_OAEP",
+							ValidateFunc: validation.StringInSlice([]string{
+								"RSAv15",
+								"RSA_OAEP",
+								"RSA_OAEP_MGF1P",
+							}, false),
+							Description: "The encryption algorithm used to encrypt the symmetric key for transport in the SAML response.",
+						},
+						"key_transport_encryption_key_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.IsUUID,
+							Description:  "The unique Id of the Key used to encrypt the symmetric key for transport in the SAML response. The selected Key must contain an RSA certificate. This parameter is required when application.samlv2Configuration.assertionEncryptionConfiguration.enabled is set to true.",
+						},
+						"mask_generation_function": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  "MGF1_SHA1",
+							ValidateFunc: validation.StringInSlice([]string{
+								"MGF1_SHA1",
+								"MGF1_SHA224",
+								"MGF1_SHA256",
+								"MGF1_SHA384",
+								"MGF1_SHA512",
+							}, false),
+							Description: "The mask generation function and hash function to use for the Optimal Asymmetric Encryption Padding when encrypting a symmetric key for transport. This value is only used when the application.samlv2Configuration.assertionEncryptionConfiguration.keyTransportAlgorithm is set to RSA_OAEP. RSAv15 does not require a message digest function, and RSA_OAEP_MGF1P will always use MGF1_SHA1 regardless of this value.",
+						},
+					},
+				},
+			},
+			"audience": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The audience for the SAML response sent to back to the service provider from FusionAuth. Some service providers require different audience values than the issuer and this configuration option lets you change the audience in the response.",
+			},
+			"authorized_redirect_urls": {
+				Type:        schema.TypeList,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Required:    true,
+				Description: "An array of URLs that are the authorized redirect URLs for FusionAuth OAuth.",
+			},
+			"callback_url": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Deprecated:  "In version 1.20.0 and beyond, Callback URLs can be managed via authorized_redirect_urls.",
+				Description: "The URL of the callback (sometimes called the Assertion Consumer Service or ACS). This is where FusionAuth sends the browser after the user logs in via SAML.",
+			},
+			"debug": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether or not FusionAuth will log SAML debug messages to the event log. This is useful for debugging purposes.",
+			},
+			"default_verification_key_id": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				Deprecated:    "In version 1.69.0 and above, use the verification_key_ids field. default_verification_key_id will continue to be populated with the first entry in verification_key_ids for backward compatibility.",
+				Description:   "Default verification key to use for HTTP Redirect Bindings, and for POST Bindings when no key is found in request.",
+				ValidateFunc:  validation.IsUUID,
+				ConflictsWith: []string{"samlv2_configuration.0.verification_key_ids"},
+			},
+			"verification_key_ids": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
+					ValidateFunc: validation.IsUUID,
+				},
+				Description:   "The verification keys used to verify a signature when the SAML v2 Service Provider is using HTTP Redirect Bindings OR HTTP POST Bindings. If a KeyInfo element is found, Key Master will be used to resolve the key but the key must still be included in this list. This parameter or samlv2_configuration.default_verification_key_id is required when samlv2_configuration.required_signed_requests is set to true. The first entry is the default verification key. Requires FusionAuth 1.69.0 or later.",
+				ConflictsWith: []string{"samlv2_configuration.0.default_verification_key_id"},
+			},
+			"initiated_login": {
+				Type:             schema.TypeList,
+				MaxItems:         1,
+				Optional:         true,
+				ConfigMode:       schema.SchemaConfigModeAttr,
+				DiffSuppressFunc: suppressBlockDiff,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Determines if SAML v2 IdP initiated login is enabled for this application. See application.samlv2Configuration.authorizedRedirectURLs for information on which destination URLs are allowed.",
+						},
+						"name_id_format": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
+							Description: "The value sent in the AuthN response to the SAML v2 Service Provider in the NameID assertion.",
+						},
+					},
+				},
+			},
+			"enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether or not the SAML IdP for this Application is enabled or not.",
+			},
+			"issuer": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The issuer that identifies the service provider and allows FusionAuth to load the correct Application and SAML configuration. If you don’t know the issuer, you can often times put in anything here and FusionAuth will display an error message with the issuer from the service provider when you test the SAML login.",
+			},
+			"key_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+				Description: "The id of the Key used to sign the SAML response. If you do not specify this property, FusionAuth will create a new key and associate it with this Application.",
+			},
+			"login_hint_configuration": {
+				Type:             schema.TypeList,
+				MaxItems:         1,
+				Optional:         true,
+				ConfigMode:       schema.SchemaConfigModeAttr,
+				DiffSuppressFunc: suppressBlockDiff,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Determines if SAML v2 login hint is enabled for this application.",
+						},
+						"parameter_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "login_hint",
+							Description: "The name of the parameter that will be used to pass the login hint to the SAML v2 IdP.",
+						},
+					},
+				},
+			},
+			"logout": {
+				Type:             schema.TypeList,
+				MaxItems:         1,
+				Optional:         true,
+				Computed:         true,
+				ConfigMode:       schema.SchemaConfigModeAttr,
+				DiffSuppressFunc: suppressBlockDiff,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"behavior": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  "AllParticipants",
+							ValidateFunc: validation.StringInSlice([]string{
+								"AllParticipants",
+								"OnlyOriginator",
+							}, false),
+							Description: "This configuration is functionally equivalent to the Logout Behavior found in the OAuth2 configuration.",
+						},
+						"default_verification_key_id": {
+							Type:          schema.TypeString,
+							Optional:      true,
+							Computed:      true,
+							Deprecated:    "In version 1.69.0 and above, use the verification_key_ids field. default_verification_key_id will continue to be populated with the first entry in verification_key_ids for backward compatibility.",
+							ValidateFunc:  validation.IsUUID,
+							Description:   "The unique Id of the Key used to verify the signature if the public key cannot be determined by the KeyInfo element when using POST bindings, or the key used to verify the signature when using HTTP Redirect bindings.",
+							ConflictsWith: []string{"samlv2_configuration.0.logout.0.verification_key_ids"},
+						},
+						"verification_key_ids": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Computed: true,
+							Elem: &schema.Schema{
+								Type:         schema.TypeString,
+								ValidateFunc: validation.IsUUID,
+							},
+							Description:   "The verification keys used to verify a signature when the SAML v2 Service Provider is using HTTP Redirect Bindings OR HTTP POST Bindings. If a KeyInfo element is found, Key Master will be used to resolve the key but the key must still be included in this list. This parameter or samlv2_configuration.logout.default_verification_key_id is required when samlv2_configuration.logout.require_signed_requests is set to true. The first entry is the default verification key. Requires FusionAuth 1.69.0 or later.",
+							ConflictsWith: []string{"samlv2_configuration.0.logout.0.default_verification_key_id"},
+						},
+						"key_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.IsUUID,
+							Description:  "The unique Id of the Key used to sign the SAML Logout response.",
+						},
+						"require_signed_requests": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Set this parameter equal to true to require the SAML v2 Service Provider to sign the Logout request. When this value is true all Logout requests missing a signature will be rejected.",
+						},
+						"single_logout": {
+							Type:       schema.TypeList,
+							MaxItems:   1,
+							Optional:   true,
+							ConfigMode: schema.SchemaConfigModeAttr,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enabled": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Default:     false,
+										Description: "Whether or not SAML Single Logout for this SAML IdP is enabled.",
+									},
+									"key_id": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										ValidateFunc: validation.IsUUID,
+										Description:  "The unique Id of the Key used to sign the SAML Single Logout response.",
+									},
+									"url": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The URL at which you want to receive the LogoutRequest from FusionAuth.",
+									},
+									"xml_signature_canonicalization_method": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Default:  "exclusive_with_comments",
+										ValidateFunc: validation.StringInSlice([]string{
+											"exclusive",
+											"exclusive_with_comments",
+											"inclusive",
+											"inclusive_with_comments",
+										}, false),
+										Description: "The XML signature canonicalization method used when digesting and signing the SAML Single Logout response. Unfortunately, many service providers do not correctly implement the XML signature specifications and force a specific canonicalization method. This setting allows you to change the canonicalization method to match the service provider. Often, service providers don’t even document their required method. You might need to contact enterprise support at the service provider to figure out what method they use.",
+									},
+								},
+							},
+						},
+						"xml_signature_canonicalization_method": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  "exclusive_with_comments",
+							ValidateFunc: validation.StringInSlice([]string{
+								"exclusive",
+								"exclusive_with_comments",
+								"inclusive",
+								"inclusive_with_comments",
+							}, false),
+							Description: "The XML signature canonicalization method used when digesting and signing the SAML Logout response. Unfortunately, many service providers do not correctly implement the XML signature specifications and force a specific canonicalization method. This setting allows you to change the canonicalization method to match the service provider. Often, service providers don’t even document their required method. You might need to contact enterprise support at the service provider to figure out what method they use.",
+						},
+					},
+				},
+			},
+			"logout_url": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The URL that the browser is taken to after the user logs out of the SAML service provider. Often service providers need this URL in order to correctly hook up single-logout. Note that FusionAuth does not support the SAML single-logout profile because most service providers to not support it properly.",
+			},
+			"required_signed_requests": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "If set to true, will force verification through the key store.",
+			},
+			"xml_signature_canonicalization_method": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "exclusive_with_comments",
+				ValidateFunc: validation.StringInSlice([]string{
+					"exclusive",
+					"exclusive_with_comments",
+					"inclusive",
+					"inclusive_with_comments",
+				}, false),
+				Description: "The XML signature canonicalization method used when digesting and signing the SAML response. Unfortunately, many service providers do not correctly implement the XML signature specifications and force a specific canonicalization method. This setting allows you to change the canonicalization method to match the service provider. Often, service providers don’t even document their required method. You might need to contact enterprise support at the service provider to figure out what method they use.",
+			},
+			"xml_signature_location": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "Assertion",
+				ValidateFunc: validation.StringInSlice([]string{
+					"Assertion",
+					"Response",
+				}, false),
+				Description: "The location to place the XML signature when signing a successful SAML response.",
+			},
+		},
+	}
+}
+
+func newOAuthConfiguration() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"authorized_origin_urls": {
+				Type:        schema.TypeSet,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Optional:    true,
+				Description: "An array of URLs that are the authorized origins for FusionAuth OAuth.",
+			},
+			"authorized_redirect_urls": {
+				Type:        schema.TypeList,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Optional:    true,
+				Description: "An array of URLs that are the authorized redirect URLs for FusionAuth OAuth.",
+			},
+			"authorized_resource_uris": {
+				Type:        schema.TypeSet,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Optional:    true,
+				Description: "An array of URLs that are the authorized resource URIs for FusionAuth OAuth.",
+			},
+			"authorized_url_validation_policy": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "ExactMatch",
+				ValidateFunc: validation.StringInSlice([]string{
+					"ExactMatch",
+					"AllowWildcards",
+				}, false),
+				Description: "Determines whether wildcard expressions will be allowed in the authorized_redirect_urls and authorized_origin_urls.",
+			},
+			"client_authentication_policy": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "Required",
+				ValidateFunc: validation.StringInSlice([]string{
+					"Required",
+					"NotRequired",
+					"NotRequiredWhenUsingPKCE",
+				}, false),
+				Description: "Determines the client authentication requirements for the OAuth 2.0 Token endpoint.",
+			},
+			"client_secret": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				Description: "The OAuth 2.0 client secret. If you leave this blank during a POST, a secure secret will be generated for you. If you leave this blank during PUT, the previous value will be maintained. For both POST and PUT you can provide a value and it will be stored.",
+				Computed:    true,
+			},
+			"client_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The OAuth 2.0 client id. If you leave this blank during a POST, a client id will be generated for you. If you leave this blank during PUT, the previous value will be maintained. For both POST and PUT you can provide a value and it will be stored.",
+				Computed:    true,
+			},
+			"consent_mode": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     fusionauth.OAuthScopeConsentMode_AlwaysPrompt.String(),
+				Description: "Controls the policy for prompting a user to consent to requested OAuth scopes. This configuration only takes effect when `application.oauthConfiguration.relationship` is `ThirdParty`. The possible values are: `AlwaysPrompt` - Always prompt the user for consent. `RememberDecision` - Remember previous consents; only prompt if the choice expires or if the requested or required scopes have changed. The duration of this persisted choice is controlled by the Tenant’s `externalIdentifierConfiguration.rememberOAuthScopeConsentChoiceTimeToLiveInSeconds` value. `NeverPrompt` - The user will be never be prompted to consent to requested OAuth scopes. Permission will be granted implicitly as if this were a `FirstParty` application. This configuration is meant for testing purposes only and should not be used in production.",
+				ValidateFunc: validation.StringInSlice([]string{
+					fusionauth.OAuthScopeConsentMode_AlwaysPrompt.String(),
+					fusionauth.OAuthScopeConsentMode_RememberDecision.String(),
+					fusionauth.OAuthScopeConsentMode_NeverPrompt.String(),
+				}, false),
+			},
+			"debug": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether or not FusionAuth will log a debug Event Log. This is particular useful for debugging the authorization code exchange with the Token endpoint during an Authorization Code grant.",
+			},
+			"device_verification_url": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The device verification URL to be used with the Device Code grant type, this field is required when device_code is enabled.",
+			},
+			"enabled_grants": {
+				Type:        schema.TypeSet,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Optional:    true,
+				Description: "The enabled grants for this application. In order to utilize a particular grant with the OAuth 2.0 endpoints you must have enabled the grant.",
+			},
+			"generate_refresh_tokens": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Determines if the OAuth 2.0 Token endpoint will generate a refresh token when the offline_access scope is requested.",
+			},
+			"logout_behavior": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"RedirectOnly",
+					"AllApplications",
+				}, false),
+				Default:     "AllApplications",
+				Description: "Behavior when /oauth2/logout is called.",
+			},
+			"logout_url": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The logout URL for the Application. FusionAuth will redirect to this URL after the user logs out of OAuth.",
+			},
+			"proof_key_for_code_exchange_policy": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "NotRequired",
+				ValidateFunc: validation.StringInSlice([]string{
+					"Required",
+					"NotRequired",
+					"NotRequiredWhenUsingClientAuthentication",
+				}, false),
+				Description: "Determines the PKCE requirements when using the authorization code grant.",
+			},
+			"provided_scope_policy": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				Elem:     newOAuthConfigurationProvidedScopePolicy(),
+			},
+			"relationship": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     fusionauth.OAuthApplicationRelationship_FirstParty.String(),
+				Description: "The application’s relationship to the OAuth server. The possible values are: `FirstParty` - The application has the same owner as the authorization server. Consent to requested OAuth scopes is granted implicitly. `ThirdParty` - The application is external to the authorization server. Users will be prompted to consent to requested OAuth scopes based on the application object’s `oauthConfiguration.consentMode` value. Note: An Essentials or Enterprise plan is required to utilize third-party applications.",
+				ValidateFunc: validation.StringInSlice([]string{
+					fusionauth.OAuthApplicationRelationship_FirstParty.String(),
+					fusionauth.OAuthApplicationRelationship_ThirdParty.String(),
+				}, false),
+			},
+			"require_client_authentication": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Deprecated:  "In version 1.28.0 and beyond, client authentication can be managed via oauth_configuration.client_authentication_policy.",
+				Description: "Determines if the OAuth 2.0 Token endpoint requires client authentication. If this is enabled, the client must provide client credentials when using the Token endpoint. The client_id and client_secret may be provided using a Basic Authorization HTTP header, or by sending these parameters in the request body using POST data.",
+			},
+			"require_registration": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "When enabled the user will be required to be registered, or complete registration before redirecting to the configured callback in the authorization code grant or the implicit grant. This configuration does not currently apply to any other grant.",
+			},
+			"scope_handling_policy": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Controls the policy for handling of OAuth scopes when populating JWTs and the UserInfo response. The possible values are: `Compatibility` - OAuth workflows will populate JWT and UserInfo claims in a manner compatible with versions of FusionAuth before version 1.50.0. `Strict` - OAuth workflows will populate token and UserInfo claims according to the OpenID Connect 1.0 specification based on requested and consented scopes.",
+				ValidateFunc: validation.StringInSlice([]string{
+					fusionauth.OAuthScopeHandlingPolicy_Compatibility.String(),
+					fusionauth.OAuthScopeHandlingPolicy_Strict.String(),
+				}, false),
+			},
+			"unknown_scope_policy": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Controls the policy for handling unknown scopes on an OAuth request. The possible values are: `Allow` - Unknown scopes will be allowed on the request, passed through the OAuth workflow, and written to the resulting tokens without consent. `Remove` - Unknown scopes will be removed from the OAuth workflow, but the workflow will proceed without them. `Reject` - Unknown scopes will be rejected and cause the OAuth workflow to fail with an error.",
+				ValidateFunc: validation.StringInSlice([]string{
+					fusionauth.UnknownScopePolicy_Allow.String(),
+					fusionauth.UnknownScopePolicy_Remove.String(),
+					fusionauth.UnknownScopePolicy_Reject.String(),
+				}, false),
+			},
+		},
+	}
+}
+
+func newJWTConfiguration() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"access_token_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The Id of the signing key used to sign the access token.",
+			},
+			"access_token_verification_key_ids": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
+					ValidateFunc: validation.IsUUID,
+				},
+				Description: "The list of access token verification key Ids that are trusted by this application. access_token_id is implicitly included in this list and does not need to be explicitly specified. If access_token_id is changed to a new key and the old key is supplied in this field, then this facilitates key rotation because FusionAuth will trust JWTs signed by both keys, while only signing JWTs with the new key. Requires FusionAuth 1.69.0 or later.",
+			},
+			"enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Indicates if this application is using the JWT configuration defined here or the global JWT configuration defined by the System Configuration. If this is false the signing algorithm configured in the System Configuration will be used. If true the signing algorithm defined in this application will be used.",
+			},
+			"id_token_key_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The Id of the signing key used to sign the Id token.",
+			},
+			"id_token_verification_key_ids": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
+					ValidateFunc: validation.IsUUID,
+				},
+				Description: "The list of Id token verification key Ids that are trusted by this application. id_token_key_id is implicitly included in this list and does not need to be explicitly specified. If id_token_key_id is changed to a new key and the old key is supplied in this field, then this facilitates key rotation because FusionAuth will trust JWTs signed by both keys, while only signing JWTs with the new key. Requires FusionAuth 1.69.0 or later.",
+			},
+			"refresh_token_expiration_policy": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     fusionauth.RefreshTokenExpirationPolicy_Fixed.String(),
+				Description: "The Refresh Token expiration policy. The possible values are: Fixed - the expiration is calculated from the time the token is issued.  SlidingWindow - the expiration is calculated from the last time the token was used.",
+				ValidateFunc: validation.StringInSlice([]string{
+					fusionauth.RefreshTokenExpirationPolicy_SlidingWindow.String(),
+					fusionauth.RefreshTokenExpirationPolicy_Fixed.String(),
+					fusionauth.RefreshTokenExpirationPolicy_SlidingWindowWithMaximumLifetime.String(),
+				}, false),
+			},
+			"refresh_token_one_time_use_grace_period_in_seconds": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      0,
+				Description:  "The length of time specified in seconds that a one-time use token can be re-used. This value must be greater than `0` and less than `86,400` which is equal to 24 hours. Setting this value to 0 effectively disables the grace period which means a one-time token may not be reused. ",
+				ValidateFunc: validation.IntAtLeast(0),
+			},
+			"refresh_token_sliding_window_maximum_ttl_in_minutes": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      43200,
+				Description:  "The maximum lifetime of a refresh token when using a refresh token expiration policy of SlidingWindowWithMaximumLifetime. Value must be greater than 0.",
+				ValidateFunc: validation.IntAtLeast(1),
+			},
+			"refresh_token_ttl_minutes": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     43200,
+				Description: "The length of time in minutes the JWT refresh token will live before it is expired and is not able to be exchanged for a JWT.",
+			},
+			"refresh_token_usage_policy": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     fusionauth.RefreshTokenUsagePolicy_Reusable.String(),
+				Description: "The refresh token usage policy. The following are valid values: Reusable - the token does not change after it was issued. OneTimeUse - the token value will be changed each time the token is used to refresh a JWT. The client must store the new value after each usage.",
+				ValidateFunc: validation.StringInSlice([]string{
+					fusionauth.RefreshTokenUsagePolicy_Reusable.String(),
+					fusionauth.RefreshTokenUsagePolicy_OneTimeUse.String(),
+				}, false),
+			},
+			"ttl_seconds": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     3600,
+				Description: "The length of time in seconds the JWT will live before it is expired and no longer valid.",
+			},
+		},
+	}
+}
+
+func newRegistrationConfiguration() *schema.Resource {
+	requireable := func() *schema.Resource {
+		return &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"enabled": {
+					Type:     schema.TypeBool,
+					Optional: true,
+					Default:  false,
+				},
+				"required": {
+					Type:     schema.TypeBool,
+					Optional: true,
+					Default:  false,
+				},
+			},
+		}
+	}
+
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"birth_date": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Elem:     requireable(),
+				Optional: true,
+			},
+			"complete_registration": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Users cannot self-register, but can complete missing information from an existing registration. Defaults to `false`. When `true`, any registered user logging in to this application using hosted login pages is prompted to complete missing registration information based on the application's configured registration form. If `application.registrationConfiguration.enabled` is `true`, `completeRegistration` is ignored. In that case, users can create a registration or complete profile information.",
+			},
+			"confirm_password": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Determines if the password should be confirmed during self service registration, this means that the user will be required to type the password twice.",
+			},
+			"enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Determines if self service registration is enabled for this application. When this value is false, you may still use the Registration API, this only affects if the self service option is available during the OAuth 2.0 login.",
+			},
+			"first_name": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Elem:     requireable(),
+				Optional: true,
+			},
+			"full_name": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Elem:     requireable(),
+				Optional: true,
+			},
+			"last_name": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Elem:     requireable(),
+				Optional: true,
+			},
+			"login_id_type": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"email",
+					"phoneNumber",
+					"username",
+				}, false),
+				Default:     "email",
+				Description: "The unique login Id that will be collected during registration, this value can be email or username. Leaving the default value of email is preferred because an email address is globally unique.",
+			},
+			"middle_name": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Elem:     requireable(),
+				Optional: true,
+			},
+			"mobile_phone": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Elem:     requireable(),
+				Optional: true,
+			},
+			"preferred_languages": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Elem:     requireable(),
+				Optional: true,
+			},
+			"type": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"basic",
+					"advanced",
+				}, false),
+				Default:     "basic",
+				Description: "The type of registration flow.",
+			},
+			"form_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The Id of an associated Form when using advanced registration configuration type. This field is required when application.registrationConfiguration.type is set to advanced.",
+			},
+		},
+	}
+}
+
+func newOAuthConfigurationProvidedScopePolicy() *schema.Resource {
+	requireable := func() *schema.Resource {
+		return &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"enabled": {
+					Type:     schema.TypeBool,
+					Optional: true,
+					Default:  true,
+				},
+				"required": {
+					Type:     schema.TypeBool,
+					Optional: true,
+					Default:  false,
+				},
+			},
+		}
+	}
+
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"address": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem:     requireable(),
+			},
+			"email": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem:     requireable(),
+			},
+			"phone": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem:     requireable(),
+			},
+			"profile": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem:     requireable(),
+			},
+		},
+	}
+}

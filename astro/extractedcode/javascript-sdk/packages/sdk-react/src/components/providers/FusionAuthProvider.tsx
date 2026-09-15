@@ -1,0 +1,162 @@
+import {
+  PropsWithChildren,
+  useContext,
+  useMemo,
+  useState,
+  useRef,
+  useCallback,
+} from 'react';
+
+import { SDKConfig, SDKCore } from '@fusionauth-sdk/core';
+
+import { FusionAuthProviderConfig } from './FusionAuthProviderConfig';
+import {
+  useTokenRefresh,
+  useRedirecting,
+  useUserInfo,
+  useCookieAdapter,
+  useDpop,
+} from './hooks';
+import { FusionAuthContext, UserInfo as DefaultUserInfo } from './Context';
+import { FusionAuthProviderContext } from './FusionAuthProviderContext';
+
+function FusionAuthProvider<T = DefaultUserInfo>(
+  props: PropsWithChildren & FusionAuthProviderConfig,
+) {
+  const config: Omit<SDKConfig, 'cookieAdapter' | 'onTokenExpiration'> =
+    useMemo(
+      () => ({
+        serverUrl: props.serverUrl,
+        clientId: props.clientId,
+        redirectUri: props.redirectUri,
+        scope: props.scope,
+        authParams: props.authParams,
+        postLogoutRedirectUri: props.postLogoutRedirectUri,
+        shouldAutoRefresh: props.shouldAutoRefresh,
+        shouldAutoFetchUserInfo: props.shouldAutoFetchUserInfo,
+        autoRefreshSecondsBeforeExpiry: props.autoRefreshSecondsBeforeExpiry,
+        onRedirect: props.onRedirect,
+        loginPath: props.loginPath,
+        logoutPath: props.logoutPath,
+        registerPath: props.registerPath,
+        tokenRefreshPath: props.tokenRefreshPath,
+        mePath: props.mePath,
+        accessTokenExpireCookieName: props.accessTokenExpireCookieName,
+        onAutoRefreshFailure: props.onAutoRefreshFailure,
+        onLoginFailure: props.onLoginFailure,
+        useDpop: props.useDpop,
+        dpopTokenStorage: props.dpopTokenStorage,
+      }),
+      [
+        props.serverUrl,
+        props.clientId,
+        props.redirectUri,
+        props.scope,
+        props.authParams,
+        props.postLogoutRedirectUri,
+        props.shouldAutoRefresh,
+        props.shouldAutoFetchUserInfo,
+        props.autoRefreshSecondsBeforeExpiry,
+        props.onRedirect,
+        props.loginPath,
+        props.logoutPath,
+        props.registerPath,
+        props.tokenRefreshPath,
+        props.mePath,
+        props.accessTokenExpireCookieName,
+        props.onAutoRefreshFailure,
+        props.onLoginFailure,
+        props.useDpop,
+        props.dpopTokenStorage,
+      ],
+    );
+
+  const cookieAdapter = useCookieAdapter(props);
+
+  const coreRef = useRef<SDKCore | undefined>(undefined);
+  const coreDepsRef = useRef<
+    | {
+        config: typeof config;
+        cookieAdapter: typeof cookieAdapter;
+      }
+    | undefined
+  >(undefined);
+
+  if (
+    coreRef.current === undefined ||
+    coreDepsRef.current?.config !== config ||
+    coreDepsRef.current?.cookieAdapter !== cookieAdapter
+  ) {
+    // Recreate the core only when config/cookieAdapter genuinely change,
+    // disposing the previous instance. The guard keeps this a no-op on
+    // StrictMode's second render pass, so the committed `core` is never an
+    // instance we just disposed (which previously left auto refresh broken).
+    coreRef.current?.dispose();
+    coreRef.current = new SDKCore({
+      ...config,
+      cookieAdapter,
+      onTokenExpiration: () => setIsLoggedIn(false),
+    });
+    coreDepsRef.current = { config, cookieAdapter };
+  }
+
+  const core: SDKCore = coreRef.current;
+
+  const [isLoggedIn, setIsLoggedIn] = useState(core.isLoggedIn);
+
+  const syncIsLoggedIn = useCallback(() => {
+    setIsLoggedIn(core.isLoggedIn);
+  }, [core]);
+
+  const { manageAccount, startLogin, startLogout, startRegister } =
+    useRedirecting(core, config.onRedirect, syncIsLoggedIn);
+
+  const { isFetchingUserInfo, userInfo, fetchUserInfo, error } = useUserInfo<T>(
+    core,
+    config.shouldAutoFetchUserInfo ?? false,
+    isLoggedIn,
+  );
+
+  const { refreshToken, initAutoRefresh } = useTokenRefresh(
+    core,
+    config.shouldAutoRefresh ?? false,
+    syncIsLoggedIn,
+  );
+
+  const { dpopFetch, generateProof, getAccessToken } = useDpop(
+    core,
+    config.useDpop ?? false,
+  );
+
+  const providerValue: FusionAuthProviderContext<T> = {
+    startLogin,
+    startRegister,
+    startLogout,
+    isLoggedIn,
+    isFetchingUserInfo,
+    error,
+    userInfo,
+    refreshToken,
+    initAutoRefresh,
+    fetchUserInfo,
+    manageAccount,
+    dpopFetch,
+    generateProof,
+    getAccessToken,
+  };
+
+  return (
+    <FusionAuthContext.Provider value={providerValue}>
+      {props.children}
+    </FusionAuthContext.Provider>
+  );
+}
+
+/**
+ * A hook that returns `FusionAuthProviderContext`
+ */
+function useFusionAuth<T = DefaultUserInfo>() {
+  return useContext<FusionAuthProviderContext<T>>(FusionAuthContext);
+}
+
+export { FusionAuthProvider, useFusionAuth };

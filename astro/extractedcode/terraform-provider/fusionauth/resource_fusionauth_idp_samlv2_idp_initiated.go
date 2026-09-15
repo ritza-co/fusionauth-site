@@ -1,0 +1,443 @@
+package fusionauth
+
+import (
+	"context"
+	"encoding/json"
+	"strings"
+
+	"github.com/FusionAuth/go-client/pkg/fusionauth"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+)
+
+type SAMLIDPInitiatedIdentityProviderBody struct {
+	IdentityProvider fusionauth.SAMLv2IdPInitiatedIdentityProvider `json:"identityProvider"`
+}
+
+type SAMLIDPInitiatedAppConfig struct {
+	CreateRegistration bool `json:"createRegistration"`
+	Enabled            bool `json:"enabled"`
+}
+
+func resourceIDPSAMLv2IdPInitiated() *schema.Resource {
+	return &schema.Resource{
+		CreateContext: createIDPSAMLv2IdPInitiated,
+		ReadContext:   readIDPSAMLv2IdPInitiated,
+		UpdateContext: updateIDPSAMLv2IdPInitiated,
+		DeleteContext: deleteIdentityProvider,
+		Schema: map[string]*schema.Schema{
+			"idp_id": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Description:  "The ID to use for the new identity provider. If not specified a secure random UUID will be generated.",
+				ValidateFunc: validation.IsUUID,
+				ForceNew:     true,
+			},
+			"attribute_mappings": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "A map of Identity Provider claim or response values to FusionAuth user attributes or registration fields.",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+			"application_configuration": {
+				Optional:    true,
+				Type:        schema.TypeSet,
+				Description: "The configuration for each Application that the identity provider is enabled for.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"application_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.IsUUID,
+						},
+						"create_registration": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     true,
+							Description: "Determines if a UserRegistration is created for the User automatically or not. If a user doesn’t exist in FusionAuth and logs in through an identity provider, this boolean controls whether or not FusionAuth creates a registration for the User in the Application they are logging into.",
+						},
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Determines if this identity provider is enabled for the Application specified by the applicationId key.",
+						},
+					},
+				},
+			},
+			"assertion_configuration": {
+				Type:             schema.TypeList,
+				Optional:         true,
+				MaxItems:         1,
+				Description:      "The assertion configuration for the SAML v2 identity provider.",
+				DiffSuppressFunc: suppressBlockDiff,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"decryption": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "The decryption configuration for the SAML v2 identity provider.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enabled": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Default:     false,
+										Description: "Determines if FusionAuth requires encrypted assertions in SAML responses from the identity provider. When true, SAML responses from the identity provider containing unencrypted assertions will be rejected by FusionAuth.",
+									},
+									"key_transport_decryption_key_id": {
+										Type:         schema.TypeString,
+										Required:     true,
+										ValidateFunc: validation.IsUUID,
+										Description:  "The Id of the key stored in Key Master that is used to decrypt the symmetric key on the SAML response sent to FusionAuth from the identity provider. The selected Key must contain an RSA private key. Required when `'enabled` is true.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"debug": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Determines if debug is enabled for this provider. When enabled, each time this provider is invoked to reconcile a login an Event Log will be created.",
+			},
+			"email_claim": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The name of the email claim (Attribute in the Assertion element) in the SAML response that FusionAuth uses to uniquely identity the user. If this is not set, the `use_name_for_email` flag must be true.",
+			},
+			"enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Determines if this provider is enabled. If it is false then it will be disabled globally.",
+			},
+			"issuer": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The EntityId (unique identifier) of the SAML v2 identity provider. This value should be provided to you. Prior to 1.27.1 this value was required to be a URL.",
+			},
+			"key_id": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				Deprecated:   "In version 1.69.0 and above, use the verification_key_ids field. key_id will continue to be populated with the first entry in verification_key_ids for backward compatibility.",
+				ValidateFunc: validation.IsUUID,
+				Description:  "The id of the key stored in Key Master that is used to verify the SAML response sent back to FusionAuth from the identity provider. This key must be a verification only key or certificate (meaning that it only has a public key component).",
+				ExactlyOneOf: []string{"key_id", "verification_key_ids"},
+			},
+			"lambda_reconcile_id": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Description:  "The id of a SAML reconcile lambda that is applied when the identity provider sends back a successful SAML response.",
+				ValidateFunc: validation.IsUUID,
+			},
+			"linking_strategy": newLinkingStrategySchema("SAML v2 IdP Initiated"),
+			"name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The name of the provider. This is only used for display purposes.",
+			},
+			"unique_id_claim": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The name of the unique claim in the SAML response that FusionAuth uses to uniquely link the user. If this is not set, the `email_claim` will be used when linking user.",
+			},
+			"use_name_for_email": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether or not FusionAuth will use the NameID element value as the email address of the user for reconciliation processing. If this is false, then the `email_claim` property must be set.",
+			},
+			"verification_key_ids": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
+					ValidateFunc: validation.IsUUID,
+				},
+				Description:  "The Ids of the keys stored in Key Master that are used to verify the SAML response sent back to FusionAuth from the identity provider. These keys must be verification only keys or certificates (meaning that they only have a public key component). The first entry is the default verification key. Requires FusionAuth 1.69.0 or later.",
+				ExactlyOneOf: []string{"key_id", "verification_key_ids"},
+			},
+			"username_claim": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The name of the claim in the SAML response that FusionAuth uses to identity the username. If this is not set, the NameID value will be used to link a user. This property is required when `linking_stategy` is set to LinkByUsername or LinkByUsernameForExistingUser",
+			},
+			"source": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ForceNew:     true,
+				ValidateFunc: validation.StringLenBetween(0, 191),
+				Description:  "The source of this Identity Provider. The maximum length is 191 characters. This value is only used on create. If updated, a new Identity Provider will be created.",
+			},
+			"tenant_configuration": {
+				Optional:    true,
+				Type:        schema.TypeSet,
+				Description: "The configuration for each Tenant that limits the number of links a user may have for a particular identity provider.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tenant_id": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.IsUUID,
+						},
+						"limit_user_link_count_enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "When enabled, the number of identity provider links a user may create is enforced by maximumLinks",
+						},
+						"limit_user_link_count_maximum_links": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     42,
+							Description: "Determines if this provider is enabled. If it is false then it will be disabled globally.",
+						},
+					},
+				},
+			},
+			"tenant_id": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Description:  "The unique Id of the Tenant. Providing a value creates an identity provider scoped to the specified tenant, otherwise a global identity provider is created. Tenant-scoped identity providers can only be used to authenticate in the context of the specified tenant. Global identity providers can be used with any tenant. This value cannot be updated after creation and requires recreating the resource to change.",
+				ValidateFunc: validation.IsUUID,
+			},
+		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
+	}
+}
+
+func createIDPSAMLv2IdPInitiated(_ context.Context, data *schema.ResourceData, i interface{}) diag.Diagnostics {
+	o := buildIDPSAMLv2IdPInitiated(data)
+
+	b, err := json.Marshal(o)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	client := i.(Client)
+	bb, err := createIdentityProvider(b, client, data.Get("idp_id").(string))
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	err = json.Unmarshal(bb, &o)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	data.SetId(o.IdentityProvider.Id)
+
+	// FusionAuth derives verification_key_ids from the deprecated key_id when the list is omitted, so
+	// write the list back rather than leaving it unknown until the next refresh.
+	keyIDs := alignVerificationKeyIDs(data.Get("verification_key_ids").([]interface{}), o.IdentityProvider.VerificationKeyIds)
+	if err := data.Set("verification_key_ids", keyIDs); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.verification_key_ids: %s", err.Error())
+	}
+
+	return nil
+}
+
+func readIDPSAMLv2IdPInitiated(_ context.Context, data *schema.ResourceData, i interface{}) diag.Diagnostics {
+	client := i.(Client)
+	b, err := readIdentityProvider(data.Id(), client)
+	if err != nil {
+		if err.Error() == NotFoundError {
+			data.SetId("")
+			return nil
+		}
+		return diag.FromErr(err)
+	}
+
+	var ipb SAMLIDPInitiatedIdentityProviderBody
+	_ = json.Unmarshal(b, &ipb)
+
+	return buildResourceDataFromIDPSAMLv2IdPInitiated(data, ipb.IdentityProvider)
+}
+
+func updateIDPSAMLv2IdPInitiated(_ context.Context, data *schema.ResourceData, i interface{}) diag.Diagnostics {
+	o := buildIDPSAMLv2IdPInitiated(data)
+
+	b, err := json.Marshal(o)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	client := i.(Client)
+	bb, err := updateIdentityProvider(b, data.Id(), client)
+	if err != nil {
+		if data.HasChange("linking_strategy") && strings.Contains(err.Error(), "unexpected status code: 400(") {
+			return identityProviderLinkingStrategyUpdateWarning()
+		}
+		return diag.FromErr(err)
+	}
+
+	err = json.Unmarshal(bb, &o)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	data.SetId(o.IdentityProvider.Id)
+	return nil
+}
+
+func buildIDPSAMLv2IdPInitiated(data *schema.ResourceData) SAMLIDPInitiatedIdentityProviderBody {
+	verificationKeyIDs := handleStringSliceFromList(data.Get("verification_key_ids").([]interface{}))
+
+	// SAMLv2IdPInitiatedIdentityProviderValidator still requires keyId even when verificationKeyIds is
+	// supplied, so send the first entry. The server derives the same value on read (ENG-4598).
+	keyID := data.Get("key_id").(string)
+	if keyID == "" && len(verificationKeyIDs) > 0 {
+		keyID = verificationKeyIDs[0]
+	}
+
+	s := fusionauth.SAMLv2IdPInitiatedIdentityProvider{
+		BaseSAMLv2IdentityProvider: fusionauth.BaseSAMLv2IdentityProvider{
+			BaseIdentityProvider: fusionauth.BaseIdentityProvider{
+				AttributeMappings: intMapToStringMap(data.Get("attribute_mappings").(map[string]interface{})),
+				Debug:             data.Get("debug").(bool),
+				Enableable:        buildEnableable("enabled", data),
+				LambdaConfiguration: fusionauth.ProviderLambdaConfiguration{
+					ReconcileId: data.Get("lambda_reconcile_id").(string),
+				},
+				LinkingStrategy: fusionauth.IdentityProviderLinkingStrategy(data.Get("linking_strategy").(string)),
+				Name:            data.Get("name").(string),
+				Source:          data.Get("source").(string),
+				TenantId:        data.Get("tenant_id").(string),
+				Type:            fusionauth.IdentityProviderType_SAMLv2IdPInitiated,
+			},
+			AssertionDecryptionConfiguration: fusionauth.SAMLv2AssertionDecryptionConfiguration{
+				Enableable:                  buildEnableable("assertion_configuration.0.decryption.0.enabled", data),
+				KeyTransportDecryptionKeyId: data.Get("assertion_configuration.0.decryption.0.key_transport_decryption_key_id").(string),
+			},
+			EmailClaim:         data.Get("email_claim").(string),
+			KeyId:              keyID,
+			VerificationKeyIds: verificationKeyIDs,
+			UniqueIdClaim:      data.Get("unique_id_claim").(string),
+			UseNameIdForEmail:  data.Get("use_name_for_email").(bool),
+			UsernameClaim:      data.Get("username_claim").(string),
+		},
+		Issuer: data.Get("issuer").(string),
+	}
+	s.ApplicationConfiguration = buildIDPSAMLv2IdPInitiatedAppConfig("application_configuration", data)
+	s.TenantConfiguration = buildTenantConfiguration(data)
+
+	return SAMLIDPInitiatedIdentityProviderBody{IdentityProvider: s}
+}
+
+func buildResourceDataFromIDPSAMLv2IdPInitiated(data *schema.ResourceData, res fusionauth.SAMLv2IdPInitiatedIdentityProvider) diag.Diagnostics {
+	if err := data.Set("attribute_mappings", res.AttributeMappings); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.attribute_mappings: %s", err.Error())
+	}
+	if err := data.Set("assertion_configuration", []map[string]interface{}{
+		{
+			"decryption": []map[string]interface{}{
+				{
+					"enabled":                         res.AssertionDecryptionConfiguration.Enabled,
+					"key_transport_decryption_key_id": res.AssertionDecryptionConfiguration.KeyTransportDecryptionKeyId,
+				},
+			},
+		},
+	}); err != nil {
+		return diag.Errorf("idpSAMLv2.assertion_configuration: %s", err.Error())
+	}
+
+	if err := data.Set("debug", res.Debug); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.debug: %s", err.Error())
+	}
+	if err := data.Set("email_claim", res.EmailClaim); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.email_claim: %s", err.Error())
+	}
+	if err := data.Set("enabled", res.Enabled); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.enabled: %s", err.Error())
+	}
+	if err := data.Set("issuer", res.Issuer); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.issuer: %s", err.Error())
+	}
+	if err := data.Set("key_id", res.KeyId); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.key_id: %s", err.Error())
+	}
+	if err := data.Set("lambda_reconcile_id", res.LambdaConfiguration.ReconcileId); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.lambda_reconcile_id: %s", err.Error())
+	}
+	if err := data.Set("linking_strategy", res.LinkingStrategy); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.linking_strategy: %s", err.Error())
+	}
+	if err := data.Set("name", res.Name); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.name: %s", err.Error())
+	}
+	if err := data.Set("source", res.Source); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.source: %s", err.Error())
+	}
+	if err := data.Set("tenant_id", res.TenantId); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.tenant_id: %s", err.Error())
+	}
+	if err := data.Set("unique_id_claim", res.UniqueIdClaim); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.unique_id_claim: %s", err.Error())
+	}
+	if err := data.Set("use_name_for_email", res.UseNameIdForEmail); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.use_name_for_email: %s", err.Error())
+	}
+	keyIDs := alignVerificationKeyIDs(data.Get("verification_key_ids").([]interface{}), res.VerificationKeyIds)
+	if err := data.Set("verification_key_ids", keyIDs); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.verification_key_ids: %s", err.Error())
+	}
+	if err := data.Set("username_claim", res.UsernameClaim); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.username_claim: %s", err.Error())
+	}
+
+	// Since this is coming down as an interface and would end up being map[string]interface{}
+	// with one of the values being map[string]interface{}
+	b, _ := json.Marshal(res.ApplicationConfiguration)
+	m := make(map[string]SAMLIDPInitiatedAppConfig)
+	_ = json.Unmarshal(b, &m)
+
+	ac := make([]map[string]interface{}, 0, len(res.ApplicationConfiguration))
+	for k, v := range m {
+		ac = append(ac, map[string]interface{}{
+			"application_id":      k,
+			"create_registration": v.CreateRegistration,
+			"enabled":             v.Enabled,
+		})
+	}
+	if err := data.Set("application_configuration", ac); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.application_configuration: %s", err.Error())
+	}
+
+	tc := buildTenantConfigurationResource(res.TenantConfiguration)
+	if err := data.Set("tenant_configuration", tc); err != nil {
+		return diag.Errorf("idpSAMLv2IdpInitiated.tenant_configuration: %s", err.Error())
+	}
+
+	return nil
+}
+
+func buildIDPSAMLv2IdPInitiatedAppConfig(key string, data *schema.ResourceData) map[string]interface{} {
+	m := make(map[string]interface{})
+	s := data.Get(key)
+	set, ok := s.(*schema.Set)
+	if !ok {
+		return m
+	}
+	l := set.List()
+	for _, x := range l {
+		ac := x.(map[string]interface{})
+		aid := ac["application_id"].(string)
+		oc := SAMLIDPInitiatedAppConfig{
+			CreateRegistration: ac["create_registration"].(bool),
+			Enabled:            ac["enabled"].(bool),
+		}
+		m[aid] = oc
+	}
+	return m
+}

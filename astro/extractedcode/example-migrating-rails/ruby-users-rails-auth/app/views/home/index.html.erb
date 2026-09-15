@@ -1,0 +1,30 @@
+<div class="hero-section">
+  <div class="hero-content">
+    <h1 class="hero-title">Ruby Users Rails Auth</h1>
+    <p class="hero-subtitle">
+      Demonstrating Rails 8.0 Built-in Authentication with <code>has_secure_password</code>
+    </p>
+    
+    <% if user_signed_in? %>
+      <div class="welcome-card">
+        <h2>Welcome back, <%= current_user.display_name %>!</h2>
+        <p>You are successfully authenticated using Rails 8.0's built-in authentication system.</p>
+        
+        <div class="action-buttons">
+          <%= link_to "Edit Profile", edit_registration_path, class: "btn btn-primary" %>
+          <%= link_to "Logout", destroy_session_path, method: :delete, class: "btn btn-secondary" %>
+        </div>
+      </div>
+    <% else %>
+      <div class="auth-card">
+        <h2>Get Started</h2>
+        <p>Experience Rails 8.0's built-in authentication system with secure password hashing and session management.</p>
+        
+        <div class="action-buttons">
+          <%= link_to "Login", new_session_path, class: "btn btn-primary" %>
+          <%= link_to "Register", new_registration_path, class: "btn btn-secondary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

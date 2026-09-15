@@ -1,0 +1,41 @@
+{
+  "name": "fusionauth-migrating-rails",
+  "version": "1.0.0",
+  "description": "FusionAuth migration examples for Rails authentication systems",
+  "scripts": {
+    "start:devise": "cd ruby-users-devise && rails server -p 3000",
+    "start:omniauth": "cd ruby-users-omniauth && rails server -p 3001",
+    "start:rails-auth": "cd ruby-users-rails-auth && rails server -p 3002",
+    "test:devise": "cd ruby-users-devise && rails test",
+    "test:omniauth": "cd ruby-users-omniauth && rails test",
+    "test:rails-auth": "cd ruby-users-rails-auth && rails test",
+    "export:devise": "cd ruby-users-devise && rails runner export_users_for_fusionauth.rb",
+    "export:omniauth": "cd ruby-users-omniauth && rails runner export_users_for_fusionauth.rb",
+    "export:rails-auth": "cd ruby-users-rails-auth && rails runner export_users_for_fusionauth.rb",
+    "setup:devise": "cd ruby-users-devise && bundle install && rails db:migrate && rails db:seed",
+    "setup:omniauth": "cd ruby-users-omniauth && bundle install && rails db:migrate && rails db:seed",
+    "setup:rails-auth": "cd ruby-users-rails-auth && bundle install && rails db:migrate && rails db:seed"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fusionauth/fusionauth-migrating-rails"
+  },
+  "keywords": [
+    "fusionauth",
+    "rails",
+    "authentication",
+    "migration",
+    "devise",
+    "omniauth",
+    "oauth"
+  ],
+  "author": "FusionAuth",
+  "license": "MIT"
+} 

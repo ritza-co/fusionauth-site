@@ -1,0 +1,41 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Set New Password</h1>
+      <p>Enter your new password below</p>
+    </div>
+
+    <%= form_with model: @user, url: update_password_reset_path(params[:token]), local: true, class: "auth-form" do |form| %>
+      <% if @user.errors.any? %>
+        <div class="error-messages">
+          <h4><%= pluralize(@user.errors.count, "error") %> prohibited this password from being reset:</h4>
+          <ul>
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= form.label :password, "New Password", class: "form-label" %>
+        <%= form.password_field :password, class: "form-input", placeholder: "Enter new password (min. 6 characters)", required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :password_confirmation, "Confirm New Password", class: "form-label" %>
+        <%= form.password_field :password_confirmation, class: "form-input", placeholder: "Confirm new password", required: true %>
+      </div>
+
+      <div class="form-actions">
+        <%= form.submit "Update Password", class: "btn btn-primary btn-full" %>
+      </div>
+    <% end %>
+
+    <div class="auth-links">
+      <p>
+        <%= link_to "← Back to Login", new_session_path, class: "auth-link" %>
+      </p>
+    </div>
+  </div>
+</div>

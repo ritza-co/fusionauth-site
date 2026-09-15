@@ -1,0 +1,56 @@
+# Xbox Identity Provider Resource
+
+The Xbox identity provider type will use the Xbox OAuth v2.0 login API. It will also provide a Login with Xbox button on FusionAuth’s login page that will direct a user to the Xbox login page.
+
+This identity provider will call Xbox’s API to load the user’s email and gtg (Gamer Tag) and use those as email and username to lookup or create a user in FusionAuth depending on the linking strategy configured for this identity provider. Additional claims returned by Xbox can be used to reconcile the user to FusionAuth by using an Xbox Reconcile Lambda.
+
+FusionAuth will also store the Xbox refresh_token returned from the Xbox API in the link between the user and the identity provider. This token can be used by an application to make further requests to Xbox APIs on behalf of the user.
+
+[Xbox Identity Provider APIs](https://fusionauth.io/docs/v1/tech/apis/identity-providers/xbox/)
+
+## Example Usage
+
+```hcl
+resource "fusionauth_idp_xbox" "xbox" {
+  application_configuration {
+    application_id      = fusionauth_application.GPS_Insight.id
+    create_registration = true
+    enabled             = true
+  }
+  button_text   = "Login with Xbox"
+  client_id     = "0eb1ce3c-2fb1-4ae9-b361-d49fc6e764cc"
+  client_secret = "693s000cbn66k0mxtqzr_c_NfLy3~6_SEA"
+  scope         = "Xboxlive.signin Xboxlive.offline_access"
+}
+```
+
+## Argument Reference
+
+* `button_text` - (Required) The top-level button text to use on the FusionAuth login page for this Identity Provider.
+* `client_id` - (Required) The top-level Xbox client id for your Application. This value is retrieved from the Xbox developer website when you setup your Xbox developer account.
+* `client_secret` - (Required) The top-level client secret to use with the Xbox Identity Provider when retrieving the long-lived token. This value is retrieved from the Xbox developer website when you setup your Xbox developer account.
+
+---
+
+* `application_configuration` - (Optional) The configuration for each Application that the identity provider is enabled for.
+  * `application_id` - (Optional) ID of the Application to apply this configuration to.
+  * `button_text` - (Optional) This is an optional Application specific override for the top level button text.
+  * `client_id` - (Optional) This is an optional Application specific override for the top level client_id.
+  * `client_secret` - (Optional) This is an optional Application specific override for the top level client_secret.
+  * `create_registration` - (Optional) Determines if a UserRegistration is created for the User automatically or not. If a user doesn’t exist in FusionAuth and logs in through an identity provider, this boolean controls whether or not FusionAuth creates a registration for the User in the Application they are logging into.
+  * `enabled` - (Optional) Determines if this identity provider is enabled for the Application specified by the applicationId key.
+  * `scope` - (Optional)This is an optional Application specific override for the top level scope.
+* `attribute_mappings` - (Optional) A map of attribute mappings applied during user reconciliation when a reconcile Lambda is not configured. Each key is the FusionAuth target field path and must begin with `user.` or `registration.`. Each value is the source expression in the identity provider response payload. A dot-notated value such as `email` or `id_token.given_name` is converted to a JSON Pointer. A value that starts with `/` is treated as a JSON Pointer as-is. This property cannot be used with `identityProvider.lambdaConfiguration.reconcileId`. This property is ignored when `identityProvider.linkingStrategy` is `LinkAnonymously`. This property defaults to an empty map. Mappings that resolve to null, cannot be extracted, or cannot be written to the target field are ignored. Mappings to `user.password` do not set a password.
+* `debug` - (Optional) Determines if debug is enabled for this provider. When enabled, each time this provider is invoked to reconcile a login an Event Log will be created.
+* `enabled` - (Optional) Determines if this provider is enabled. If it is false then it will be disabled globally.
+* `idp_id` - (Optional) The ID to use for the new identity provider. If not specified a secure random UUID will be generated.
+* `lambda_reconcile_id` - (Optional) The unique Id of the lambda to used during the user reconcile process to map custom claims from the external identity provider to the FusionAuth user.
+* `linking_strategy` - (Optional) The linking strategy to use when creating the link between the Xbox Identity Provider and the user. To change the linking strategy for an enabled identity provider, disable the provider, make your change, then re-enable the provider.
+* `name` - (Optional) The name of the provider. This is only used for display purposes. The display name of this provider instance. Required when using a provided `tenant_id` or `identity_provider.tenant_id`.
+* `scope` - (Optional) The top-level scope that you are requesting from Xbox.
+* `source` - (Optional) The source of this Identity Provider. The maximum length is 191 characters. This value is only used on create. If updated, a new Identity Provider will be created.
+* `tenant_configuration` - (Optional) The configuration for each Tenant that limits the number of links a user may have for a particular identity provider.
+  * `tenant_id` - (Optional) The unique Id of the tenant that this configuration applies to.
+    * `limit_user_link_count_enabled` - (Optional) When enabled, the number of identity provider links a user may create is enforced by maximumLinks.
+    * `limit_user_link_count_maximum_links` - (Optional) Determines if this provider is enabled. If it is false then it will be disabled globally.
+* `tenant_id` - (Optional) The unique Id of the Tenant. Providing a value creates an identity provider scoped to the specified tenant, otherwise a global identity provider is created. Tenant-scoped identity providers can only be used to authenticate in the context of the specified tenant. Global identity providers can be used with any tenant. This value cannot be updated after creation and requires recreating the resource to change.

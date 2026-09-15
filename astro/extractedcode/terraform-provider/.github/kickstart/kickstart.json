@@ -1,0 +1,10 @@
+{
+  "apiKeys": [
+    {
+      "key": "this-is-a-test-key",
+      "description": "Acceptance test API key",
+      "keyManager": true
+    }
+  ],
+  "requests": []
+}

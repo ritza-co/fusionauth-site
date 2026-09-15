@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:Samples/Quickstart/QuickstartTests">
+   </FileRef>
+   <FileRef
+      location = "group:Samples/Quickstart/QuickstartTests">
+   </FileRef>
+   <FileRef
+      location = "group:">
+   </FileRef>
+   <Group
+      location = "container:"
+      name = "Samples">
+      <FileRef
+         location = "group:Samples/Quickstart/fusionauth-quickstart-swift-ios-native.xcodeproj">
+      </FileRef>
+   </Group>
+   <FileRef
+      location = "group:Samples/Quickstart/QuickstartTests/QuickstartTests.xctestplan">
+   </FileRef>
+   <FileRef
+      location = "group:Samples/Quickstart/QuickstartTests/QuickstartTests-swift-6.xctestplan">
+   </FileRef>
+   <FileRef
+      location = "group:fusionauth-quickstart-swift-ios-native.xctestplan">
+   </FileRef>
+   <FileRef
+      location = "group:fusionauth-quickstart-swift-ios-native-swift-6.xctestplan">
+   </FileRef>
+</Workspace>

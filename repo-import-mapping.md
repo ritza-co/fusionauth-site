@@ -6,6 +6,7 @@ This file tracks which repositories need to be imported into `astro/extractedcod
 
 ### Status Categories
 - **IMPORTED**: Repos already in astro/extractedcode/ in the current branch
+- **NEEDS_REVIEW**: Repos imported but need human review before being marked as fully IMPORTED
 - **IMPORTED_IN_BRANCH**: Repos imported in other branches, not yet merged to main
 - **NEEDS_IMPORT**: Repos referenced in docs but not yet imported
 - **NOT_REFERENCED**: Repos not referenced in any documentation (should not be imported)
@@ -33,11 +34,11 @@ We are currently on branch: `draft_bluehawkAllRepos`
 ---
 
 ## IMPORTED Repos (42)
-| FusionAuth/fusionauth-quickstart-express | quickstart-express | IMPORTED | (internal - no external repo) |
-| FusionAuth/fusionauth-webauthn | webauthn | IMPORTED | (internal - no external repo) |
 
 | Source Repository | Target Folder | Status | Referenced By |
 |---|---|---|---|
+| FusionAuth/fusionauth-quickstart-express | quickstart-express | IMPORTED | (internal - no external repo) |
+| FusionAuth/fusionauth-webauthn | webauthn | IMPORTED | (internal - no external repo) |
 | FusionAuth/fusionauth-containers | containers | IMPORTED | get-started/download-and-install/docker.mdx, kubernetes/index.mdx |
 | FusionAuth/fusionauth-contrib | contrib | IMPORTED | operate/secure/key-master.mdx |
 | FusionAuth/fusionauth-example-5-minute-guide | example-5-minute-guide | IMPORTED | 5-minute-intro/_5-minute-configure-node-application.mdx, _5-minute-logout.mdx, _5-minute-store-user-object.mdx |
@@ -79,6 +80,60 @@ We are currently on branch: `draft_bluehawkAllRepos`
 | FusionAuth/fusionauth-quickstart-java-springboot-api | quickstart-springboot-api | IMPORTED | get-started/quickstarts/api/quickstart-java-springboot-api.mdx |
 | FusionAuth/fusionauth-quickstart-wordpress-web | quickstart-wordpress-web | IMPORTED | get-started/quickstarts/web/quickstart-wordpress-web.mdx |
 
+## NEEDS_REVIEW Repos (48)
+
+| Source Repository | Target Folder | Status | Referenced By |
+|---|---|---|---|
+| FusionAuth/fusionauth-android-sdk | android-sdk | NEEDS_REVIEW | sdks/android-sdk.mdx |
+| FusionAuth/fusionauth-example-azure-ad-bulk-export | example-azure-ad-bulk-export | NEEDS_REVIEW | lifecycle/migrate-users/provider-specific/azureadb2c.mdx |
+| FusionAuth/fusionauth-example-client-libraries | example-client-libraries | NEEDS_REVIEW | sdks/netcore.mdx |
+| FusionAuth/fusionauth-example-device-grant | example-device-grant | NEEDS_REVIEW | lifecycle/authenticate-users/oauth/index.mdx |
+| FusionAuth/fusionauth-example-flask-portal | example-flask-portal | NEEDS_REVIEW | lifecycle/register-users/advanced-registration-forms.mdx |
+| FusionAuth/fusionauth-example-full-user-search | example-full-user-search | NEEDS_REVIEW | _shared/_user-search-limits-workarounds.mdx |
+| FusionAuth/fusionauth-example-github-actions | example-github-actions | NEEDS_REVIEW | cloud/operate/test.mdx |
+| FusionAuth/fusionauth-example-kickstart | example-kickstart | NEEDS_REVIEW | customize/look-and-feel/advanced-themes/kickstart-custom-theme.mdx |
+| FusionAuth/fusionauth-example-migrating-rails | example-migrating-rails | NEEDS_REVIEW | lifecycle/migrate-users/framework-specific/rails.mdx |
+| FusionAuth/fusionauth-example-node-multi-tenant | example-node-multi-tenant | NEEDS_REVIEW | extend/examples/multi-tenant.mdx |
+| FusionAuth/fusionauth-example-symfony-multitenant | example-symfony-multitenant | NEEDS_REVIEW | extend/examples/multi-tenant.mdx |
+| FusionAuth/fusionauth-example-theme-tailwind-daisyui | example-theme-tailwind-daisyui | NEEDS_REVIEW | customize/look-and-feel/advanced-themes/tailwind.mdx |
+| FusionAuth/fusionauth-go-client | go-client | NEEDS_REVIEW | sdks/go.mdx |
+| FusionAuth/homebrew-fusionauth | homebrew-fusionauth | NEEDS_REVIEW | get-started/download-and-install/fusionauth-app.mdx |
+| FusionAuth/fusionauth-install | install | NEEDS_REVIEW | get-started/download-and-install/upgrade.mdx |
+| FusionAuth/fusionauth-issues | issues | NEEDS_REVIEW | apis/index.mdx, customize/look-and-feel/advanced-themes/index.mdx |
+| FusionAuth/fusionauth-java-client | java-client | NEEDS_REVIEW | sdks/java.mdx |
+| FusionAuth/fusionauth-javascript-sdk | javascript-sdk | NEEDS_REVIEW | sdks/vue-sdk.mdx |
+| FusionAuth/fusionauth-jwt | jwt | NEEDS_REVIEW | apis/jwt/validate-a-jwt.mdx |
+| FusionAuth/fusionauth-load-tests | load-tests | NEEDS_REVIEW | cloud/operate/load-test.mdx, operate/deploy/cluster.mdx |
+| FusionAuth/fusionauth-localization | localization | NEEDS_REVIEW | customize/look-and-feel/simple-theme-editor.mdx, advanced-themes/upgrade-advanced-theme.mdx |
+| FusionAuth/fusionauth-mcp-api | mcp-api | NEEDS_REVIEW | get-started/download-and-install/development/mcp-server.mdx |
+| FusionAuth/fusionauth-netcore-client | netcore-client | NEEDS_REVIEW | sdks/netcore.mdx |
+| FusionAuth/fusionauth-node-cli | node-cli | NEEDS_REVIEW | customize/cli.mdx, extend/code/lambdas/testing.mdx |
+| FusionAuth/fusionauth-openapi | openapi | NEEDS_REVIEW | sdks/openapi.mdx |
+| FusionAuth/fusionauth-php-client | php-client | NEEDS_REVIEW | sdks/php.mdx |
+| FusionAuth/fusionauth-python-client | python-client | NEEDS_REVIEW | sdks/python.mdx |
+| FusionAuth/fusionauth-quickstart-app | quickstart-app | NEEDS_REVIEW | get-started/quickstarts/web/express.mdx |
+| FusionAuth/fusionauth-quickstart-flutter-native | quickstart-flutter-native | NEEDS_REVIEW | get-started/quickstarts/app/quickstart-flutter-native.mdx |
+| FusionAuth/fusionauth-quickstart-java-android-native | quickstart-java-android-native | NEEDS_REVIEW | get-started/quickstarts/app/quickstart-java-android-native.mdx |
+| FusionAuth/fusionauth-quickstart-java-springboot-web | quickstart-java-springboot-web | NEEDS_REVIEW | get-started/quickstarts/web/quickstart-java-springboot-web.mdx |
+| FusionAuth/fusionauth-quickstart-javascript-nuxt-web | quickstart-javascript-nuxt-web | NEEDS_REVIEW | get-started/quickstarts/web/quickstart-javascript-nuxt-web.mdx |
+| FusionAuth/fusionauth-quickstart-kotlin-android-native | quickstart-kotlin-android-native | NEEDS_REVIEW | get-started/quickstarts/app/quickstart-kotlin-android-native.mdx |
+| FusionAuth/fusionauth-quickstart-python-flask-web | quickstart-python-flask-web | NEEDS_REVIEW | get-started/quickstarts/web/quickstart-python-flask-web.mdx |
+| FusionAuth/fusionauth-quickstart-react-native | quickstart-react-native | NEEDS_REVIEW | get-started/quickstarts/app/quickstart-react-native.mdx |
+| FusionAuth/fusionauth-quickstart-swift-ios-native | quickstart-swift-ios-native | NEEDS_REVIEW | get-started/quickstarts/app/quickstart-swift-ios-native.mdx |
+| FusionAuth/fusionauth-quickstart-swift-ios-native-appauth | quickstart-swift-ios-native-appauth | NEEDS_REVIEW | get-started/quickstarts/app/quickstart-swift-ios-native-appauth.mdx |
+| FusionAuth/fusionauth-render-blueprint | render-blueprint | NEEDS_REVIEW | get-started/marketplaces/render.mdx |
+| FusionAuth/fusionauth-ruby-client | ruby-client | NEEDS_REVIEW | sdks/ruby.mdx |
+| FusionAuth/fusionauth-swift-sdk | swift-sdk | NEEDS_REVIEW | sdks/swift-sdk.mdx |
+| FusionAuth/terraform-provider-fusionauth | terraform-provider | NEEDS_REVIEW | operate/deploy/terraform.mdx |
+| FusionAuth/fusionauth-theme-helper | theme-helper | NEEDS_REVIEW | customize/look-and-feel/advanced-themes/upgrade-advanced-theme.mdx |
+| FusionAuth/fusionauth-theme-history | theme-history | NEEDS_REVIEW | customize/look-and-feel/advanced-themes/upgrade-advanced-theme.mdx |
+| FusionAuth/fusionauth-theme-history-updater | theme-history-updater | NEEDS_REVIEW | get-started/marketplaces/github-actions.mdx |
+| FusionAuth/fusionauth-theme-management | theme-management | NEEDS_REVIEW | lifecycle/register-users/advanced-registration-forms.mdx |
+| FusionAuth/fusionauth-typescript-client | typescript-client | NEEDS_REVIEW | extend/code/lambdas/testing.mdx |
+| FusionAuth/openid-AppAuth-Android | openid-appauth-android | NEEDS_REVIEW | get-started/quickstarts/app/quickstart-java-android-native.mdx |
+| FusionAuth/rack-jwt | rack-jwt | NEEDS_REVIEW | get-started/quickstarts/api/quickstart-ruby-on-rails-api.mdx |
+
+
 ## IMPORTED_IN_BRANCH Repos (10)
 
 | Source Repository | Target Folder | Status | Referenced By |
@@ -93,59 +148,6 @@ We are currently on branch: `draft_bluehawkAllRepos`
 | FusionAuth/fusionauth-quickstart-php-drupal-web | quickstart-php-drupal-web | IMPORTED_IN_BRANCH | get-started/quickstarts/web/quickstart-php-drupal-web.mdx |
 | FusionAuth/fusionauth-quickstart-php-laravel-api | quickstart-php-laravel-api | IMPORTED_IN_BRANCH | get-started/quickstarts/api/quickstart-php-laravel-api.mdx |
 | FusionAuth/fusionauth-quickstart-ruby-on-rails-web | quickstart-ruby-on-rails-web | IMPORTED_IN_BRANCH | get-started/quickstarts/web/quickstart-ruby-on-rails-web.mdx |
-
-## NEEDS_IMPORT Repos (48)
-
-| Source Repository | Target Folder | Status | Referenced By |
-|---|---|---|---|
-| FusionAuth/fusionauth-android-sdk | android-sdk | NEEDS_IMPORT | sdks/android-sdk.mdx |
-| FusionAuth/fusionauth-example-azure-ad-bulk-export | example-azure-ad-bulk-export | NEEDS_IMPORT | lifecycle/migrate-users/provider-specific/azureadb2c.mdx |
-| FusionAuth/fusionauth-example-client-libraries | example-client-libraries | NEEDS_IMPORT | sdks/netcore.mdx |
-| FusionAuth/fusionauth-example-device-grant | example-device-grant | NEEDS_IMPORT | lifecycle/authenticate-users/oauth/index.mdx |
-| FusionAuth/fusionauth-example-flask-portal | example-flask-portal | NEEDS_IMPORT | lifecycle/register-users/advanced-registration-forms.mdx |
-| FusionAuth/fusionauth-example-full-user-search | example-full-user-search | NEEDS_IMPORT | _shared/_user-search-limits-workarounds.mdx |
-| FusionAuth/fusionauth-example-github-actions | example-github-actions | NEEDS_IMPORT | cloud/operate/test.mdx |
-| FusionAuth/fusionauth-example-kickstart | example-kickstart | NEEDS_IMPORT | customize/look-and-feel/advanced-themes/kickstart-custom-theme.mdx |
-| FusionAuth/fusionauth-example-migrating-rails | example-migrating-rails | NEEDS_IMPORT | lifecycle/migrate-users/framework-specific/rails.mdx |
-| FusionAuth/fusionauth-example-node-multi-tenant | example-node-multi-tenant | NEEDS_IMPORT | extend/examples/multi-tenant.mdx |
-| FusionAuth/fusionauth-example-symfony-multitenant | example-symfony-multitenant | NEEDS_IMPORT | extend/examples/multi-tenant.mdx |
-| FusionAuth/fusionauth-example-theme-tailwind-daisyui | example-theme-tailwind-daisyui | NEEDS_IMPORT | customize/look-and-feel/advanced-themes/tailwind.mdx |
-| FusionAuth/fusionauth-go-client | go-client | NEEDS_IMPORT | sdks/go.mdx |
-| FusionAuth/homebrew-fusionauth | homebrew-fusionauth | NEEDS_IMPORT | get-started/download-and-install/fusionauth-app.mdx |
-| FusionAuth/fusionauth-install | install | NEEDS_IMPORT | get-started/download-and-install/upgrade.mdx |
-| FusionAuth/fusionauth-issues | issues | NEEDS_IMPORT | apis/index.mdx, customize/look-and-feel/advanced-themes/index.mdx |
-| FusionAuth/fusionauth-java-client | java-client | NEEDS_IMPORT | sdks/java.mdx |
-| FusionAuth/fusionauth-javascript-sdk | javascript-sdk | NEEDS_IMPORT | sdks/vue-sdk.mdx |
-| FusionAuth/fusionauth-jwt | jwt | NEEDS_IMPORT | apis/jwt/validate-a-jwt.mdx |
-| FusionAuth/fusionauth-load-tests | load-tests | NEEDS_IMPORT | cloud/operate/load-test.mdx, operate/deploy/cluster.mdx |
-| FusionAuth/fusionauth-localization | localization | NEEDS_IMPORT | customize/look-and-feel/simple-theme-editor.mdx, advanced-themes/upgrade-advanced-theme.mdx |
-| FusionAuth/fusionauth-mcp-api | mcp-api | NEEDS_IMPORT | get-started/download-and-install/development/mcp-server.mdx |
-| FusionAuth/fusionauth-netcore-client | netcore-client | NEEDS_IMPORT | sdks/netcore.mdx |
-| FusionAuth/fusionauth-node-cli | node-cli | NEEDS_IMPORT | customize/cli.mdx, extend/code/lambdas/testing.mdx |
-| FusionAuth/fusionauth-openapi | openapi | NEEDS_IMPORT | sdks/openapi.mdx |
-| FusionAuth/fusionauth-php-client | php-client | NEEDS_IMPORT | sdks/php.mdx |
-| FusionAuth/fusionauth-python-client | python-client | NEEDS_IMPORT | sdks/python.mdx |
-| FusionAuth/fusionauth-quickstart-app | quickstart-app | NEEDS_IMPORT | get-started/quickstarts/web/express.mdx |
-| FusionAuth/fusionauth-quickstart-flutter-native | quickstart-flutter-native | NEEDS_IMPORT | get-started/quickstarts/app/quickstart-flutter-native.mdx |
-| FusionAuth/fusionauth-quickstart-java-android-native | quickstart-java-android-native | NEEDS_IMPORT | get-started/quickstarts/app/quickstart-java-android-native.mdx |
-| FusionAuth/fusionauth-quickstart-java-springboot-web | quickstart-java-springboot-web | NEEDS_IMPORT | get-started/quickstarts/web/quickstart-java-springboot-web.mdx |
-| FusionAuth/fusionauth-quickstart-javascript-nuxt-web | quickstart-javascript-nuxt-web | NEEDS_IMPORT | get-started/quickstarts/web/quickstart-javascript-nuxt-web.mdx |
-| FusionAuth/fusionauth-quickstart-kotlin-android-native | quickstart-kotlin-android-native | NEEDS_IMPORT | get-started/quickstarts/app/quickstart-kotlin-android-native.mdx |
-| FusionAuth/fusionauth-quickstart-python-flask-web | quickstart-python-flask-web | NEEDS_IMPORT | get-started/quickstarts/web/quickstart-python-flask-web.mdx |
-| FusionAuth/fusionauth-quickstart-react-native | quickstart-react-native | NEEDS_IMPORT | get-started/quickstarts/app/quickstart-react-native.mdx |
-| FusionAuth/fusionauth-quickstart-swift-ios-native | quickstart-swift-ios-native | NEEDS_IMPORT | get-started/quickstarts/app/quickstart-swift-ios-native.mdx |
-| FusionAuth/fusionauth-quickstart-swift-ios-native-appauth | quickstart-swift-ios-native-appauth | NEEDS_IMPORT | get-started/quickstarts/app/quickstart-swift-ios-native-appauth.mdx |
-| FusionAuth/fusionauth-render-blueprint | render-blueprint | NEEDS_IMPORT | get-started/marketplaces/render.mdx |
-| FusionAuth/fusionauth-ruby-client | ruby-client | NEEDS_IMPORT | sdks/ruby.mdx |
-| FusionAuth/fusionauth-swift-sdk | swift-sdk | NEEDS_IMPORT | sdks/swift-sdk.mdx |
-| FusionAuth/fusionauth-terraform-provider | terraform-provider | NEEDS_IMPORT | operate/deploy/terraform.mdx |
-| FusionAuth/fusionauth-theme-helper | theme-helper | NEEDS_IMPORT | customize/look-and-feel/advanced-themes/upgrade-advanced-theme.mdx |
-| FusionAuth/fusionauth-theme-history | theme-history | NEEDS_IMPORT | customize/look-and-feel/advanced-themes/upgrade-advanced-theme.mdx |
-| FusionAuth/fusionauth-theme-history-updater | theme-history-updater | NEEDS_IMPORT | get-started/marketplaces/github-actions.mdx |
-| FusionAuth/fusionauth-theme-management | theme-management | NEEDS_IMPORT | lifecycle/register-users/advanced-registration-forms.mdx |
-| FusionAuth/fusionauth-typescript-client | typescript-client | NEEDS_IMPORT | extend/code/lambdas/testing.mdx |
-| FusionAuth/openid-AppAuth-Android | openid-appauth-android | NEEDS_IMPORT | get-started/quickstarts/app/quickstart-java-android-native.mdx |
-| FusionAuth/rack-jwt | rack-jwt | NEEDS_IMPORT | get-started/quickstarts/api/quickstart-ruby-on-rails-api.mdx |
 
 ## NOT_REFERENCED Repos (58)
 
@@ -226,8 +228,9 @@ These repos exist on GitHub but are not referenced in any documentation. They sh
 ## Summary
 
 - **IMPORTED**: 42 repos already in astro/extractedcode/
+- **NEEDS_REVIEW**: 48 repos imported but need human review
 - **IMPORTED_IN_BRANCH**: 10 repos imported in other branches, not yet merged to main
-- **NEEDS_IMPORT**: 48 repos referenced in docs but not yet imported
+- **NEEDS_IMPORT**: 0 repos referenced in docs but not yet imported
 - **NOT_REFERENCED**: 58 repos not referenced in any documentation (should not be imported)
 
 ## Import Process

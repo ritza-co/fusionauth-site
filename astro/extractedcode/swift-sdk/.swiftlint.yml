@@ -1,0 +1,50 @@
+opt_in_rules:
+  - direct_return
+  - final_test_case
+  - missing_docs
+  - modifier_order
+  - no_empty_block
+  - operator_usage_whitespace
+  - prefer_self_in_static_references
+  - redundant_nil_coalescing
+  - redundant_type_annotation
+  - shorthand_optional_binding
+  - superfluous_else
+  - test_case_accessibility
+  - trailing_closure
+  - unneeded_parentheses_in_closure_argument
+  - untyped_error_in_catch
+  - vertical_parameter_alignment_on_call
+  - vertical_whitespace_closing_braces
+  - vertical_whitespace_opening_braces
+analyzer_rules:
+  - capture_variable
+  - typesafe_array_init
+  - unneeded_synthesized_initializer
+  - unused_declaration
+  - unused_import
+custom_rules:
+  swiftui_state_private:
+    regex: '@(ObservedObject|EnvironmentObject)\s+var'
+    message: "SwiftUI @ObservedObject and @EnvironmentObject properties should be private"
+  swiftui_environment_private:
+    regex: '@Environment\(\\\.\w+\)\s+var'
+    message: "SwiftUI @Environment properties should be private"
+  swiftui_scaledtofit:
+    regex: 'aspectRatio\(contentMode: \.fit\)'
+    message: "Prefer `scaledToFit()`"
+  swiftui_scaledtofill:
+    regex: 'aspectRatio\(contentMode: \.fill\)'
+    message: "Prefer `scaledToFill()`"
+line_length:
+    warning: 250
+    ignores_comments: true
+missing_docs:
+  excludes_trivial_init: true
+no_empty_block:
+  disabled_block_types: [initializer_bodies]
+included:
+  - Samples/Quickstart/Quickstart
+  - Samples/Quickstart/QuickstartTests
+  - Sources
+  - Tests

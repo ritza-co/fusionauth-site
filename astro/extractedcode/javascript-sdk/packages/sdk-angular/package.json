@@ -1,0 +1,37 @@
+{
+  "name": "sdk-angular-workspace",
+  "version": "0.0.1",
+  "scripts": {
+    "ng": "ng",
+    "get-sdk-core": "node getSDKCore.js",
+    "build": "yarn get-sdk-core && ng build && cp README.md dist/fusionauth-angular-sdk/README.md",
+    "test": "yarn get-sdk-core && ng test --watch=false",
+    "test:watch": "yarn get-sdk-core && ng test",
+    "docs": "typedoc --plugin typedoc-plugin-markdown --tsconfig tsconfig.doc.json"
+  },
+  "private": false,
+  "dependencies": {
+    "@angular/animations": "^22.0.0",
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@angular/platform-browser-dynamic": "^22.0.0",
+    "@angular/router": "^22.0.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.0.0",
+    "@angular/cli": "^22.0.0",
+    "@angular/compiler-cli": "^22.0.0",
+    "typedoc": "^0.25.13",
+    "typedoc-plugin-markdown": "^3.17.1",
+    "jsdom": "^25.0.0",
+    "ng-packagr": "^22.0.0",
+    "typescript": "~6.0.0",
+    "vitest": "^4.0.0"
+  }
+}

@@ -1,0 +1,9 @@
+.ai
+*.iws
+build
+error-log.txt
+heap*
+lib/*
+*.csv
+**/.DS_Store
+.savant/cache

@@ -1,0 +1,65 @@
+import { Locator, Page, expect } from '@playwright/test';
+
+const Locators = {
+  logInBtn: 'role=button[name="Login"]',
+  loginInput: 'role=textbox[name="Login"]',
+  passwordInput: 'role=textbox[name="Password"]',
+  submitBtn: 'role=button[name="Submit"]',
+  createAccountBtn: 'role=button[name="Create a new account."]',
+  registerBtn: 'role=button[name="Register"]',
+  logOutBtn: 'text=Logout',
+} as const;
+
+type LocatorsKey = keyof typeof Locators;
+
+export class quickstartPage {
+  readonly page: Page;
+  readonly locators: Record<LocatorsKey, Locator>;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.locators = Object.keys(Locators).reduce(
+      (acc, key) => {
+        acc[key as LocatorsKey] = page.locator(Locators[key as LocatorsKey]);
+        return acc;
+      },
+      {} as Record<LocatorsKey, Locator>,
+    );
+  }
+
+  async navToLogIn() {
+    await this.locators.logInBtn.nth(0).click();
+    await expect(this.locators.loginInput).toBeVisible();
+  }
+
+  async authenticate() {
+    await this.locators.loginInput.click();
+    await this.locators.loginInput.clear();
+    await this.locators.loginInput.fill('richard@example.com');
+    await this.locators.passwordInput.click();
+    await this.locators.passwordInput.clear();
+    await this.locators.passwordInput.fill('password');
+    await this.locators.submitBtn.click();
+    await expect(this.locators.logOutBtn).toBeVisible();
+    await this.page.waitForLoadState('load');
+  }
+
+  async navToRegister() {
+    await this.locators.createAccountBtn.click();
+    await expect(this.locators.registerBtn).toBeVisible();
+  }
+
+  async logOut() {
+    const logoutNavigationPromise = this.page.waitForURL(
+      url => /\/(oauth2|app)\/logout/.test(url.pathname),
+      { timeout: 10_000 },
+    );
+
+    await this.locators.logOutBtn.click();
+    await logoutNavigationPromise;
+
+    await expect(this.locators.logInBtn.nth(0)).toBeVisible();
+    // See the comment in authenticate() above.
+    await this.page.waitForLoadState('load');
+  }
+}

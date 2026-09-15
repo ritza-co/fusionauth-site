@@ -1,0 +1,186 @@
+/*
+ * Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ */
+
+fusionauthJWTVersion = "5.2.4"
+jacksonVersion = "2.21.1"
+// No 2.21.0 version available, annotations dropped patch versioning in 2.20+
+// pom target has hack to maintain this "patchless" version
+jacksonAnnotationsVersion = "2.21"
+jackson5Version = "3.0.1"
+javaErrorVersion = "2.2.3"
+restifyVersion = "4.4.0"
+testngVersion = "7.5.1"
+
+project(group: "io.fusionauth", name: "fusionauth-java-client", version: "1.70.0", licenses: ["ApacheV2_0"]) {
+  workflow {
+    fetch {
+      cache()
+      url(url: "https://repository.savantbuild.org")
+      maven()
+    }
+    publish {
+      cache()
+    }
+  }
+
+  publishWorkflow {
+    subversion(repository: "https://svn.savantbuild.org")
+  }
+
+  dependencies {
+    group(name: "compile") {
+      dependency(id: "com.fasterxml.jackson.core:jackson-annotations:${jacksonAnnotationsVersion}")
+      dependency(id: "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}")
+      dependency(id: "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
+      dependency(id: "com.inversoft:jackson5:${jackson5Version}")
+      dependency(id: "com.inversoft:java-error:${javaErrorVersion}") {
+        exclusion(id: "com.inversoft:jackson5")
+      }
+      dependency(id: "com.inversoft:restify:${restifyVersion}")
+      dependency(id: "io.fusionauth:fusionauth-jwt:${fusionauthJWTVersion}")
+    }
+    group(name: "test-compile", export: false) {
+      dependency(id: "org.testng:testng:${testngVersion}")
+    }
+  }
+
+  publications {
+    standard()
+  }
+}
+
+// Plugins
+dependency = loadPlugin(id: "org.savantbuild.plugin:dependency:2.0.0")
+java = loadPlugin(id: "org.savantbuild.plugin:java:2.0.0")
+javaTestNG = loadPlugin(id: "org.savantbuild.plugin:java-testng:2.0.0")
+file = loadPlugin(id: "org.savantbuild.plugin:file:2.0.0")
+idea = loadPlugin(id: "org.savantbuild.plugin:idea:2.0.0")
+pom = loadPlugin(id: "org.savantbuild.plugin:pom:2.0.0")
+release = loadPlugin(id: "org.savantbuild.plugin:release-git:2.0.0")
+
+// Plugin settings
+java.settings.javaVersion = "1.8"
+javaTestNG.settings.javaVersion = "1.8"
+
+target(name: "clean", description: "Cleans the project") {
+  java.clean()
+  file.prune(dir: "target") // clean the mvn directory so we release properly
+}
+
+target(name: "compile", description: "Compiles the project") {
+  java.compile()
+}
+
+target(name: "jar", description: "JARs the project", dependsOn: ["compile"]) {
+  java.jar()
+}
+
+target(name: "test", description: "Runs the project's tests", dependsOn: ["jar"]) {
+  javaTestNG.test()
+}
+
+target(name: "doc", description: "Generate the project's JavaDoc", dependsOn: ["jar"]) {
+  java.document()
+}
+
+target(name: "int", description: "Releases a local integration build of the project", dependsOn: ["jar", "pom"]) {
+  dependency.integrate()
+}
+
+target(name: "list-unused-dependencies", description: "Lists the unused dependencies of the project", dependsOn: ["compile"]) {
+  dependency.listUnusedDependencies()
+}
+
+target(name: "print-dependency-tree", description: "Prints the dependency tree") {
+  dependency.printFull()
+}
+
+target(name: "release", description: "Releases a full version of the project", dependsOn: ["clean", "int"]) {
+  release.release()
+}
+
+target(name: "publish", description: "Publish to MVN repo", dependsOn: ["clean", "compile"]) {
+  if (new ProcessBuilder('mvn', 'clean', 'deploy', '-Prelease').inheritIO().start().waitFor() != 0) {
+    fail("deploy failed")
+  }
+}
+
+target(name: "idea", description: "Updates the IntelliJ IDEA module file") {
+  idea.iml()
+}
+
+target(name: "pom", description: "Updates the pom.xml file") {
+  pom.update()
+
+  // Hack. I think we need to update the pom plugin to optionally remove -{integration} from versions.
+  // Hack-2. Because jacksonAnnotationsVersion = "2.21", need to overwrite what the pom plugin writes
+  file.copy(to: ".") {
+    fileSet(dir: ".", includePatterns: [~/pom.xml/])
+    filter(token: "-\\{integration\\}", value: "")
+    filter(token: "2.21.0", value: "2.21")
+  }
+  ensureFileNotChanged("pom.xml", "pom")
+}
+
+target(name: "bundle", description: "Builds the project release bundle", dependsOn: ["jar"]) {
+  dependency.copy(to: "build/jars") {
+    dependencies(group: "compile", transitive: false, fetchSource: true, transitiveGroups: ["compile"])
+  }
+  file.delete {
+    fileSet(dir: "build/jars", includePatterns: [~/.+src\.jar/, ~/-test-/])
+  }
+  file.zip(file: "build/bundles/fusionauth-java-client-${project.version}.zip") {
+    fileSet(dir: "build/jars")
+  }
+}
+
+target(name: "write-licenses", description: "Write licenses to build/licenses") {
+  dependency.writeLicenses(to: "build/licenses")
+}
+
+def ensureFileNotChanged(String filename, String target) {
+  if (!cleanExecute("git",
+                    "diff",
+                    "--exit-code",
+                    filename)) {
+    fail(
+        "${filename} was changed. If this is not being run locally, run the [${target}] Savant target locally to update the file and commit/push the result.")
+  }
+}
+
+boolean cleanExecute(String... args) {
+  ProcessBuilder pb = new ProcessBuilder(args)
+  clearEnvironment(pb)
+  return execute(pb, '.')
+}
+
+boolean execute(ProcessBuilder pb, String pathname) {
+  def process = pb.inheritIO().directory(new File(pathname)).start()
+  process.consumeProcessOutput(System.out, System.err)
+  process.waitFor()
+  return process.exitValue() == 0
+}
+
+/**
+ * Clears out the RBENV variables in the environment.
+ *
+ * @param pb The ProcessBuilder to clear out.
+ */
+static def clearEnvironment(ProcessBuilder pb) {
+  pb.environment().remove("RBENV_VERSION")
+  pb.environment().remove("RBENV_DIR")
+  pb.environment().remove("RBENV_ROOT")
+}

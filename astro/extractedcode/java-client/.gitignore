@@ -1,0 +1,6 @@
+build
+*.iws
+target
+**/.DS_Store
+test-output
+.savant/cache

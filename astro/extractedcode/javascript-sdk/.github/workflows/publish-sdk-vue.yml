@@ -1,0 +1,52 @@
+name: Publish @fusionauth/vue-sdk
+
+on: workflow_dispatch
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x, 24.x]
+    steps:
+      - uses: actions/checkout@v6
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Vue SDK - Install packages
+        run: yarn install --frozen-lockfile
+      - name: Build core package
+        run: yarn build:core
+      - name: Vue SDK - Test
+        run: yarn test:sdk-vue
+
+  publish-sdk-vue:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: setup node for publishing
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org' # This generates the necessary .npmrc
+
+      - name: Vue SDK - Install packages
+        run: yarn install --frozen-lockfile
+
+      - name: Vue SDK - Build
+        run: yarn build:sdk-vue
+
+      - name: Vue SDK - Publish
+        working-directory: ./packages/sdk-vue/dist
+        run: |
+          npm install -g npm@latest
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: 'sigstore' # npm uses OIDC when this is any non-empty string

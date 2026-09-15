@@ -1,0 +1,45 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "name": "io.fusionauth/mcp-api",
+  "description": "Preview release of FusionAuth API MCP server",
+  "repository": {
+    "url": "https://github.com/FusionAuth/fusionauth-mcp-api",
+    "source": "github"
+  },
+  "version": "0.1.22",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@fusionauth/mcp-api",
+      "version": "0.1.22",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "description": "Your API key for FusionAuth instance",
+          "isRequired": true,
+          "format": "string",
+          "isSecret": true,
+          "name": "API_KEY_APIKEYAUTH"
+        },
+        {
+          "description": "The URL for your FusionAuth instance",
+          "isRequired": true,
+          "placeholder": "http://localhost:9011",
+          "format": "string",
+          "isSecret": false,
+          "name": "API_BASE_URL"
+        },
+        {
+          "description": "Prefixes of APIs to create MCP tools for, if not set defaults to all available tools",
+          "isRequired": false,
+          "placeholder": "retrieve,search",
+          "format": "string",
+          "isSecret": false,
+          "name": "USE_TOOLS"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Vulnerability Scan with MobSF
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '30 6 * * 1'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  # Triggers the workflow on call from another workflow
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  mobile-security:
+    name: MobSF Scan
+    permissions:
+      contents: read # for actions/checkout to fetch code
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      # Sets up the python as a prerequisites for MobSF
+      - name: Setup python
+        uses: actions/setup-python@v6.2.0
+        with:
+          python-version: 3.9
+
+      # Sets up the reviewdog cli
+      - name: Setup reviewdog
+        uses: reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f # v1.5.0
+
+      - name: Show reviewdog version
+        run: reviewdog -version
+
+      # Performs analysis using MobSF and outputs a Sarif Report
+      - name: Run mobsfscan
+        uses: MobSF/mobsfscan@3d87bc570c4614d705547bddb521395663dba353 # 0.4.5
+        with:
+          args: . --config .mobsf.yml --sarif --output mobsf.sarif.json || true
+
+      # Uploads Sarif Report to GitHub
+      - name: Upload mobsfscan report
+        uses: github/codeql-action/upload-sarif@v4.36.0
+        if: success() || failure()
+        with:
+          sarif_file: mobsf.sarif.json
+
+      # Process Sarif Report file from MobSF with reviewdog cli
+      - name: Run reviewdog
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: success() || failure()
+        run: reviewdog -f=sarif -diff="git diff FETCH_HEAD" -name="mobsf" -reporter=github-pr-check < mobsf.sarif.json

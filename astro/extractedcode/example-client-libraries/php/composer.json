@@ -1,0 +1,6 @@
+{
+    "require": {
+        "php": "^8.2",
+        "fusionauth/fusionauth-client": "^1.45"
+    }
+}

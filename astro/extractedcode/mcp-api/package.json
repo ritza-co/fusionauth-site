@@ -1,0 +1,25 @@
+{
+  "name": "fusionauth-mcp-api",
+  "version": "0.1.22",
+  "mcpName": "com.fusionAuth/fusionauth-mcp-api",
+  "description": "Preview release of FusionAuth API MCP server",
+  "main": "index.js",
+  "scripts": {
+    "build:openapi-mcp-generator": "npm run build --workspace=packages/openapi-mcp-generator",
+    "build:mcp-api": "npm run build --workspace=packages/mcp-api",
+    "generate": "cp README.md packages/mcp-api/ && cd packages/openapi-mcp-generator && bin/openapi-mcp-generator.js --server-version $npm_package_version --input https://raw.githubusercontent.com/FusionAuth/fusionauth-openapi/refs/heads/main/openapi.yaml --output ../mcp-api --force",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "version": "node bin/update-server-json-version.js"
+  },
+  "keywords": [
+    "fusionauth",
+    "mcp",
+    "api"
+  ],
+  "author": "Brent Halsey",
+  "license": "Apache-2.0",
+  "workspaces": [
+    "packages/mcp-api",
+    "packages/openapi-mcp-generator"
+  ]
+}

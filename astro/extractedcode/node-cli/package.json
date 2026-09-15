@@ -1,0 +1,78 @@
+{
+  "name": "@fusionauth/cli",
+  "version": "1.9.0",
+  "description": "FusionAuth CLI",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "resources/*"
+  ],
+  "scripts": {
+    "build": "tsc && npm run copy-files",
+    "copy-files": "cp -r ./src/resources/ ./dist/commands/resources/",
+    "prepublishOnly": "npm run build",
+    "postinstall": "test -f dist/postinstall.js && node dist/postinstall.js || true",
+    "start": "node --import=tsx src/index.ts",
+    "test": "NODE_ENV=test node --import=tsx --test __tests__/postInstall/postinstall.test.js __tests__/telemetry/telemetry.test.js __tests__/utilities/kickstart/validator.test.js __tests__/utilities/kickstart/variable-substitution.test.js __tests__/integration/apply/apply.integration.test.js",
+    "test:integration": "NODE_ENV=test node --import=tsx --test __tests__/integration/apply/apply.integration.test.js",
+    "test:unit": "NODE_ENV=test node --import=tsx --test __tests__/postInstall/postinstall.test.js __tests__/telemetry/telemetry.test.js __tests__/utilities/kickstart/validator.test.js __tests__/utilities/kickstart/variable-substitution.test.js"
+  },
+  "keywords": [
+    "fusionauth",
+    "oidc",
+    "oauth",
+    "themes"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FusionAuth/fusionauth-node-cli.git"
+  },
+  "author": "FusionAuth",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/FusionAuth/fusionauth-node-cli/issues"
+  },
+  "homepage": "https://github.com/FusionAuth/fusionauth-node-cli#readme",
+  "dependencies": {
+    "@comandeer/cli-spinner": "^1.0.2",
+    "@commander-js/extra-typings": "11.0.0",
+    "@faker-js/faker": "^8.4.1",
+    "@fusionauth/typescript-client": "1.47.0",
+    "bcryptjs": "^3.0.3",
+    "boxen": "^8.0.1",
+    "chalk": "5.3.0",
+    "chokidar": "3.5.3",
+    "command-exists": "^1.2.9",
+    "commander": "11.0.0",
+    "dotenv": "^17.4.2",
+    "figlet": "1.6.0",
+    "fs-extra": "11.1.1",
+    "html-to-text": "9.0.5",
+    "inquirer": "^13.3.0",
+    "log-symbols": "5.1.0",
+    "log-update": "5.0.1",
+    "merge": "2.1.1",
+    "posthog-node": "^5.21.2",
+    "queue": "7.0.0",
+    "remove-undefined-objects": "3.0.0",
+    "uuid": "9.0.0",
+    "yocto-spinner": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/figlet": "1.5.6",
+    "@types/fs-extra": "11.0.1",
+    "@types/html-to-text": "9.0.1",
+    "@types/mock-fs": "^4.13.4",
+    "@types/node": "20.4.5",
+    "@types/uuid": "9.0.2",
+    "tsx": "^4.19.4",
+    "mock-fs": "^5.5.0",
+    "nock": "^14.0.15",
+    "type-fest": "3.13.0",
+    "typescript": "5.1.6"
+  },
+  "bin": {
+    "fusionauth": "dist/index.js"
+  },
+  "type": "module"
+}

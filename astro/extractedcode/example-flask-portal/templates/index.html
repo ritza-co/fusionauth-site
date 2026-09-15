@@ -1,0 +1,68 @@
+<!doctype html>
+<title>Hello from FusionAuth</title>
+<body>
+
+This is a sample OAuth/Flask application. 
+<br/>
+<br/>
+{% if user %}
+  <div>
+    <a href='/logout'>Logout</a>
+  </div>
+  <h1>Hello {{ user.email }}!</h1>
+
+  {% if error %}
+    <p style="color:red">Error: {{ error }}</p> 
+  {% endif %}
+  <div>
+  <h3>Current preferences</h3>
+  {% if registration_data %}  
+    {% for key in registration_data.keys() %}
+      <p>
+      {% if key == 'geographicarea' and registration_data['geographicarea'] | length > 0 %}
+        Geographic area: {{registration_data['geographicarea']}}
+      {% endif %}
+      {% if key == 'maxprice' %}
+        Maximum home price: {{ "$%.0f"|format(registration_data['maxprice'])}}
+      {% endif %}
+      {% if key == 'minprice' %}
+        Minimum home price: {{ "$%.0f"|format(registration_data['minprice'])}}
+      {% endif %}
+      </p>
+    {% endfor %}
+  {% endif %}
+
+  </div>
+  <div>
+  <h3>Update your preferences</h3>
+
+<form action="/update" method="post">
+  {% if registration_data %}  
+    {% for key in registration_data.keys() %}
+      <p>
+      {% if key == 'geographicarea' %}
+        Geographic area: <input type='{{fields['registration.data.'+key].control}}' {% if fields['registration.data.'+key].required %}required{% endif %} name='{{key}}' value='{{registration_data['geographicarea']}}' />
+      {% endif %}
+      {% if key == 'maxprice' %}
+        Maximum home price: <input type='{{fields['registration.data.'+key].control}}' {% if fields['registration.data.'+key].required %}required{% endif %} name='{{key}}' value='{{registration_data['maxprice']}}' />
+      {% endif %}
+      {% if key == 'minprice' %}
+        Minimum home price: <input type='{{fields['registration.data.'+key].control}}' {% if fields['registration.data.'+key].required %}required{% endif %} name='{{key}}' value='{{registration_data['minprice']}}' />
+      {% endif %}
+      </p>
+    {% endfor %}
+  {% endif %}
+  <input type="submit" value="Update"></input>
+</form>
+
+  </div>
+{% else %}
+  <div>
+    Log in or register to update your profile.
+  </div>
+  <div>
+    <a href='/login'>Login</a> | <a href='/register'>Register</a>
+  </div>
+{% endif %}
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "name": "user-export-node",
+  "version": "1.0.0",
+  "description": "Export users from Azure AD B2C",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "AzureADB2C",
+    "export"
+  ],
+  "author": "FusionAuth",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/msal-node": "^1.0.3",
+    "@microsoft/microsoft-graph-client": "^2.2.1",
+    "dotenv": "^8.2.0",
+    "isomorphic-fetch": "^3.0.0",
+    "yargs": "^16.2.0"
+  }
+}

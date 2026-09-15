@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {# Run `composer require symfony/webpack-encore-bundle`
+           and uncomment the following Encore helpers to start using Symfony UX #}
+        {% block stylesheets %}
+            {#{{ encore_entry_link_tags('app') }}#}
+        {% endblock %}
+
+        {% block javascripts %}
+            {#{{ encore_entry_script_tags('app') }}#}
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}
+            <div id="nav">
+                {% block nav %}
+                    <a href="{{ path('app_home_index') }}">Home</a>
+                    {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                       | <a href="{{ path('app_loginurl_login') }}">Login</a>
+                       | <a href="{{ path('app_loginurl_register') }}">Register</a>
+                    {% endif %}
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                       {% if (onControlPlaneApplication == 1) %}
+                         {% if app.user.tenant is null%} | <a href="{{ path('app_tenant_new') }}"> Create Tenant {%endif%}</a> 
+                         {% if app.user.tenant is not null%} | <a href="{{ path('app_tenant_view',{tenantId: app.user.tenant.id}) }}">View Tenant</a>  {%endif%}
+                       {% else %}
+                       | <a href="{{ path('app_chat_index') }}">Chat</a> 
+                       {% endif %}
+                       | <a href="{{ path('app_logout') }}">Logout</a>
+                    {% endif %}
+                {% endblock %}
+            </div>
+
+            <div id="content">
+                {% block content %}{% endblock %}
+            </div>
+        {% endblock %}
+    </body>
+</html>

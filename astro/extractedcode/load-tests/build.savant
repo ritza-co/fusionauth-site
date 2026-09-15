@@ -1,0 +1,153 @@
+/*
+ * Copyright (c) 2018-2025, FusionAuth, All Rights Reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ */
+
+guavaVersion = "33.7.1-jre"
+guiceVersion = "6.0.0"
+jacksonVersion = "2.15.4"
+jackson5Version = "3.0.1"
+fusionauthJavaClientVersion = "1.66.0"
+fusionauthJWTVersion = "5.3.2"
+javaErrorVersion = "2.2.3"
+logbackVersion = "1.5.6"
+restifyVersion = "4.4.0"
+slf4jVersion = "2.0.13"
+testngVersion = "7.8.0"
+
+project(group: "io.fusionauth", name: "fusionauth-load-tests", version: "1.70.0", licenses: ["ApacheV2_0"]) {
+  workflow {
+    fetch {
+      // Dependency resolution order:
+      //
+      // 1. Hit the savant cache
+      cache()
+      //
+      // 2. Look in public savant repo
+      url(url: "https://repository.savantbuild.org")
+      //
+      // 3. No dice, see if we can find it in Maven central
+      maven()
+    }
+    publish {
+      cache()
+    }
+    semanticVersions {
+      mapping(id: "com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava", version: "9999.0.0")
+      mapping(id: "com.google.guava:guava-parent:26.0-android", version: "26.0.0")
+    }
+  }
+
+  publishWorkflow {
+    subversion(repository: "https://svn.savantbuild.org")
+  }
+
+  dependencies {
+    group(name: "compile") {
+      dependency(id: "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}")
+      dependency(id: "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}")
+      dependency(id: "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
+      dependency(id: "com.google.inject:guice:${guiceVersion}")
+      dependency(id: "com.inversoft:jackson5:${jackson5Version}")
+      dependency(id: "com.inversoft:java-error:${javaErrorVersion}")
+      dependency(id: "com.inversoft:restify:${restifyVersion}")
+      dependency(id: "io.fusionauth:fusionauth-jwt:${fusionauthJWTVersion}")
+      dependency(id: "io.fusionauth:fusionauth-java-client:${fusionauthJavaClientVersion}")
+      dependency(id: "org.slf4j:slf4j-api:${slf4jVersion}", skipCompatibilityCheck: true)
+    }
+    group(name: "runtime") {
+      dependency(id: "ch.qos.logback:logback-classic:${logbackVersion}")
+      dependency(id: "ch.qos.logback:logback-core:${logbackVersion}")
+    }
+    group(name: "test-compile", export: false) {
+      dependency(id: "com.google.guava:guava:${guavaVersion}", skipCompatibilityCheck: true)
+      dependency(id: "org.testng:testng:${testngVersion}")
+    }
+  }
+
+  publications {
+    standard()
+  }
+}
+
+// Plugins
+database = loadPlugin(id: "org.savantbuild.plugin:database:2.0.0")
+dependency = loadPlugin(id: "org.savantbuild.plugin:dependency:2.0.0")
+java = loadPlugin(id: "org.savantbuild.plugin:java:2.0.0")
+javaTestNG = loadPlugin(id: "org.savantbuild.plugin:java-testng:2.0.0")
+idea = loadPlugin(id: "org.savantbuild.plugin:idea:2.0.0")
+release = loadPlugin(id: "org.savantbuild.plugin:release-git:2.0.0")
+file = loadPlugin(id: "org.savantbuild.plugin:file:2.0.0")
+
+java.settings.javaVersion = "21"
+javaTestNG.settings.javaVersion = "21"
+
+target(name: "clean", description: "Cleans the build directory") {
+  java.clean()
+}
+
+target(name: "compile", description: "Compiles the Java source files") {
+  java.compile()
+}
+
+target(name: "config", description: "Configure FusionAuth for load testing") {
+  ["mysql", "postgresql"].each { type ->
+    database.settings.type = type
+    database.settings.name = "fusionauth"
+
+    // Insert a test API key
+    database.execute(file: "src/test/db/authentication_key_${type}.sql")
+  }
+}
+
+target(name: "jar", description: "Builds the project JARs", dependsOn: ["compile"]) {
+  java.jar()
+}
+
+target(name: "test", description: "Runs the project's tests", dependsOn: ["jar"]) {
+  javaTestNG.test()
+}
+
+target(name: "int", description: "Releases a local integration build of the project", dependsOn: ["jar"]) {
+  // Copy all compile dependencies to be able to run command line
+  dependency.copy(to: "build/dist/lib") {
+    dependencies(group: "compile", transitive: true, fetchSource: false)
+    // Get rid of a slf4j warning by copying runtime deps (gets the logback-classic in the classpath)
+    dependencies(group: "runtime", transitive: false, fetchSource: false)
+  }
+
+  // Copy the JARs over
+  file.copy(to: "build/dist/lib") {
+    fileSet(dir: "build/jars", includePatterns: [/${project.name}-${project.version}.jar/])
+  }
+
+  // Copy the scripts over
+  file.copy(to: "build/dist") {
+    fileSet(dir: "src/main/script", includePatterns: [/.*/])
+    fileSet(dir: "src/main/resources", includePatterns: [/.*/])
+  }
+}
+
+target(name: "release", description: "Releases a full version of the project", dependsOn: ["int"]) {
+  release.release()
+}
+
+target(name: "idea", description: "Updates the IntelliJ IDEA module file") {
+  idea.iml()
+}
+
+target(name: "print-dependency-tree", description: "Prints the dependency tree") {
+  dependency.printFull()
+}
+

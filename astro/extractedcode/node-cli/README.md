@@ -1,0 +1,138 @@
+> [!WARNING]
+> This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/node-cli). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
+
+
+## FusionAuth CLI
+
+The FusionAuth CLI is a command line tool for interacting with FusionAuth. It is written in Typescript and is available as an NPM package.
+
+## Requirements
+
+* A modern version of node (tested on 19, 20 and 22)
+* A FusionAuth instance (download it here: https://fusionauth.io/download)
+
+## Installation & usage
+
+To install and use @fusionauth/cli, run the following commands:
+```bash
+npm i @fusionauth/cli;
+npx fusionauth --help;
+```
+
+You can install it globally for ease of use from anywhere, but global installations can potentially lead to conflicts and are not recommended:
+```bash
+npm i -g @fusionauth/cli;
+fusionauth --help;
+```
+
+Currently, the CLI supports the following commands:
+- Common config check
+  - `fusionauth check:common-config` - Checks to make sure common configuration settings are set.
+- Emails
+  - `fusionauth email:download` - Download a specific template or all email templates from a FusionAuth server.
+  - `fusionauth email:duplicate` - Duplicate an email template locally.
+  - `fusionauth email:html-to-text` - Convert HTML email templates to text, where the text template is missing.
+  - `fusionauth email:upload` - Upload a specific template or all email templates to a FusionAuth server.
+  - `fusionauth email:watch` - Watch the email template directory and upload changes to a FusionAuth server.
+  - `fusionauth email:create` - Create a new email template locally.
+Fake user generation
+  - `fusionauth import:generate` - Generate JSON for importing fake users for testing.
+- Kickstart (beta test)
+  - `fusionauth kickstart:install [dir]` - Generate the appropriate files to kickstart and install FusionAuth
+  - `fusionauth kickstart:start` - Run in the directory of a FusionAuth Docker image to run the image
+  - `fusionauth kickstart:stop` - Run in the directory of a FusionAuth Docker image to stop the image
+  - `fusionauth kickstart:kill` - Run in the directory of a FusionAuth Docker image to shutdown and wipe the FusionAuth instance
+- Apply Configuration
+  - `fusionauth apply --file <path>` - Apply a kickstart configuration file to a FusionAuth instance. Supports additional variable substitution with the following patterns:
+    - `#{DEFAULT_TENANT_ID()}` - Fetch the default tenant ID from the FusionAuth instance
+    - `#{ENV.VARIABLE_NAME}` - Access environment variables
+    - `#{PROMPT('message')}` - Prompt user for input (displays value in console)
+    - `#{PROMPT_HIDDEN('message')}` - Prompt user for input (hides value, suitable for passwords)
+- Lambdas
+  - `fusionauth lambda:update` - Update a lambda on a FusionAuth server.
+  - `fusionauth lambda:delete` - Delete a lambda from a FusionAuth server.
+  - `fusionauth lambda:retrieve` - Download a lambda from a FusionAuth server.
+- Messages
+  - `fusionauth message:download` - Download a specific message template or all message templates from a FusionAuth server.
+  - `fusionauth message:upload` - Upload a specific message template or all message templates to a FusionAuth server.
+- Themes
+  - `fusionauth theme:download` - Download a theme from a FusionAuth server.
+  - `fusionauth theme:upload` - Upload a theme to a FusionAuth server.
+  - `fusionauth theme:watch` - Watch a theme directory and upload changes to a FusionAuth server.
+- Telemetry
+  - `fusionauth telemetry:enable` - Enables telemetry collection
+  - `fusionauth telemetry:disable` - Disables telemetry collection
+
+Instead of supplying the API key with the `-k` option on every command, you can set the `FUSIONAUTH_API_KEY` environment variable.
+The same goes for the host URL option `-h`, which can be set with the `FUSIONAUTH_HOST` environment variable.
+
+The `download` and `retrieve` commands will succeed even if there are no templates or lambdas to retrieve.
+
+## Telemetry and data collection
+
+By default, the FusionAuth CLI collects data about your usage. We use this to judge effectiveness of the CLI, check performance and reliability, and help drive new features and improvements. An anonymized unique ID is generated, and function usage information is stored by PostHog.
+
+The CLI never transmits your payloads or command parameters.
+
+If you'd prefer not to send usage data, run the following command:
+
+```sh
+npx fusionauth telemetry:disable
+```
+
+If you change your mind and decide to share usage data with us, run this command:
+
+```sh
+npx fusionauth telemetry:enable
+```
+
+## Questions and support
+
+If you have a question or support issue regarding this client library, we'd love to hear from you.
+
+If you have a paid edition with support included, please [open a ticket in your account portal](https://account.fusionauth.io/account/support/). Learn more about [paid editions here](https://fusionauth.io/pricing).
+
+Otherwise, please [post your question in the community forum](https://fusionauth.io/community/forum/).
+
+## Releasing
+
+1. Run the release script from the main branch:
+
+```bash
+./scripts/release.sh patch  # or minor, major
+```
+
+2. Create a Pull Request from the release branch to `main`.
+
+3. After the PR is merged, tag the release, make sure they match:
+
+```bash
+./scripts/tag-release.sh <version>  # e.g., 1.2.3
+```
+
+4. The [GitHub Action](https://github.com/FusionAuth/fusionauth-node-cli/actions/workflows/publish.yaml) will automatically build and publish to npm when the tag is pushed.
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub.
+
+To build this library locally:
+```bash
+git clone https://github.com/FusionAuth/fusionauth-node-cli &&
+cd fusionauth-node-cli;
+npm install &&
+npm run build;
+
+# now you can use it
+npx fusionauth -h;
+```
+
+To see examples of use: https://fusionauth.io/docs/extend/code/lambdas/testing
+
+## Troubleshooting
+
+If you run this multiple times in a row against a local instance, the number of admin users may be incorrect until you re-index. See [this issue for more](https://github.com/FusionAuth/fusionauth-issues/issues/3271).
+
+## License
+
+This code is available as open source under the terms of the [Apache v2.0 License](https://opensource.org/licenses/Apache-2.0).

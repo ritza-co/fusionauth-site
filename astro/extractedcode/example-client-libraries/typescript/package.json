@@ -1,0 +1,16 @@
+{
+  "name": "fusionauth-example-typescript-client",
+  "version": "1.0.0",
+  "description": "Example of setting up an application with typescript.",
+  "scripts": {
+    "setup-angular": "node setup-angular.js",
+    "setup-express": "node setup-express.js",
+    "setup-flutter": "node setup-flutter.js",
+    "setup-react": "node setup-react.js"
+  },
+  "author": "Dan Moore",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@fusionauth/typescript-client": "^1.45.0"
+  }
+}

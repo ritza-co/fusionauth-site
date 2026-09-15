@@ -1,0 +1,62 @@
+{
+  "name": "fusionauth-javascript-sdk",
+  "version": "0.1.0",
+  "description": "The monorepo containing FusionAuth's React, Angular, and Vue SDKs.",
+  "main": "index.js",
+  "repository": "git@github.com:FusionAuth/fusionauth-javascript-sdk.git",
+  "author": "FusionAuth",
+  "license": "Apache",
+  "private": true,
+  "workspaces": [
+    "packages/core",
+    "packages/lexicon",
+    "packages/sdk-react",
+    "packages/sdk-angular",
+    "packages/sdk-vue"
+  ],
+  "devDependencies": {
+    "@playwright/test": "^1.44.1",
+    "playwright": "^1.44.1",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "build:core": "yarn workspace @fusionauth-sdk/core build",
+    "build:lexicon": "yarn workspace @fusionauth-sdk/lexicon build",
+    "build:sdk-angular": "yarn workspace sdk-angular-workspace build",
+    "build:sdk-react": "yarn build:lexicon && yarn build:core && yarn workspace @fusionauth/react-sdk build",
+    "build:sdk-vue": "yarn build:lexicon && yarn build:core && yarn workspace @fusionauth/vue-sdk build",
+    "yalc-pub:sdk-react": "yarn build:sdk-react && yalc publish packages/sdk-react",
+    "yalc-pub:sdk-vue": "yarn build:sdk-vue && yalc publish packages/sdk-vue",
+    "yalc-pub:sdk-angular": "yarn build:sdk-angular && yalc publish packages/sdk-angular/dist/fusionauth-angular-sdk",
+    "test": "yarn test:lexicon && yarn test:core && yarn test:sdk-react && yarn test:sdk-angular && yarn test:sdk-vue",
+    "test:core": "yarn workspace @fusionauth-sdk/core test",
+    "test:lexicon": "yarn workspace @fusionauth-sdk/lexicon test",
+    "test:sdk-angular": "yarn workspace sdk-angular-workspace test",
+    "test:sdk-react": "yarn build:core && yarn workspace @fusionauth/react-sdk test",
+    "test:sdk-vue": "yarn build:core && yarn workspace @fusionauth/vue-sdk test",
+    "test:e2e": "yarn playwright test",
+    "test:e2e:dpop-endpoints": "yarn playwright test --config playwright.dpop-endpoints.config.ts",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "lint:check": "eslint . --ext .ts,.tsx --max-warnings 0",
+    "format:fix": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint --cache --fix",
+    "*.{js,css,md,ts,tsx,yml}": "prettier --write"
+  }
+}

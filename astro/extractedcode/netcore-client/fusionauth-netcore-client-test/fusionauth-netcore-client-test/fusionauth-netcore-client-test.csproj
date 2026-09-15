@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace></RootNamespace>
+        <PackageVersion>1.70.0</PackageVersion>
+        <AssemblyName>FusionAuth.Client.Test</AssemblyName>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\fusionauth-netcore-client\fusionauth-netcore-client.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0"/>
+        <PackageReference Include="NUnit" Version="3.14.0"/>
+        <PackageReference Include="NUnit3TestAdapter" Version="4.5.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="test\io\fusionauth\JWTOtherFieldsTest.json"/>
+        <EmbeddedResource Include="test\io\fusionauth\JWTOtherFieldsTest.json"/>
+        <EmbeddedResource Include="test\io\fusionauth\JWTDateTimeTest.json"/>
+        <EmbeddedResource Include="test\io\fusionauth\ConsentTest.json"/>
+    </ItemGroup>
+
+</Project>

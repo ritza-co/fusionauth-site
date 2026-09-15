@@ -1,0 +1,41 @@
+{
+  "$schema": "../../node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "fusionauth-angular-sdk": {
+      "projectType": "library",
+      "root": "projects/fusionauth-angular-sdk",
+      "sourceRoot": "projects/fusionauth-angular-sdk/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "project": "projects/fusionauth-angular-sdk/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/fusionauth-angular-sdk/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/fusionauth-angular-sdk/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "runner": "vitest",
+            "runnerConfig": "vitest.config.ts",
+            "tsConfig": "projects/fusionauth-angular-sdk/tsconfig.spec.json"
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": false
+  }
+}

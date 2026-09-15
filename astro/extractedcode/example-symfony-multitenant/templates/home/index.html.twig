@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<h1>
+Welcome to Pied Piper video chat
+</h1>
+
+<p>
+{% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+Login or register
+{% endif %}
+</p>
+{% endblock %}

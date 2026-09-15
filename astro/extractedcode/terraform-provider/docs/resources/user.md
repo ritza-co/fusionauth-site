@@ -1,0 +1,96 @@
+# User Resource
+
+[Users API](https://fusionauth.io/docs/v1/tech/apis/users)
+
+## Example Usage
+
+```hcl
+resource "fusionauth_user" "example" {
+  user_id    = "4c4511df-0d0d-4029-8c2b-f6c01b9e138d"
+  birth_date = "1976-05-30"
+  data       = jsonencode({
+    displayName = "Johnny Boy"
+    favoriteColors = [
+      "Red",
+      "Blue"
+    ]
+  })
+  email                    = "example@fusionauth.io"
+  encryption_scheme        = "salted-sha256"
+  expiry                   = 1571786483322
+  first_name               = "John"
+  full_name                = "John Doe"
+  image_url                = "http://65.media.tumblr.com/tumblr_l7dbl0MHbU1qz50x3o1_500.png"
+  last_name                = "Doe"
+  middle_name              = "William"
+  mobile_phone             = "303-555-1234"
+  password_change_required = false
+  preferred_languages = [
+    "en",
+    "fr"
+  ]
+  timezone           = "America/Denver"
+  username_status    = "ACTIVE"
+  username           = "johnny123"
+}
+```
+
+## Argument Reference
+
+* `application_id` (Optional) An optional Application Id. When this value is provided, it will be used to resolve an application specific email template if you have configured transactional emails such as setup password, email verification and others.
+* `birth_date` - (Optional) An ISO-8601 formatted date of the User’s birthdate such as YYYY-MM-DD.
+* `data` - (Optional) A JSON string that can hold any information about a User that should be persisted. Must be a JSON serialised string.
+* `disable_domain_block` - (Optional) A tenant has the option to configure one or more email domains to be blocked in order to restrict email domains during user create or update. Setting this property equal to true will override the tenant configuration. See `registration_configuration.blocked_domains` in the Tenant resource.
+* `email` - (Optional) The User’s email address. An email address is a unique in FusionAuth and stored in lower case.
+* `encryption_scheme` - (Optional) The method for encrypting the User’s password.
+* `expiry` - (Optional) The expiration instant of the User’s account. An expired user is not permitted to login.
+* `first_name` - (Optional) The first name of the User.
+* `full_name` - (Optional) The User’s full name as a separate field that is not calculated from firstName and lastName.
+* `image_url` - (Optional) The URL that points to an image file that is the User’s profile image.
+* `last_name` - (Optional) The User’s last name.
+* `middle_name` - (Optional) The User’s middle name.
+* `mobile_phone` - (Optional) The User’s mobile phone number. This is useful is you will be sending push notifications or SMS messages to the User.
+* `parent_email` - (Optional) The email address of the user’s parent or guardian. This field is used to allow a child user to identify their parent so FusionAuth can make a request to the parent to confirm the parent relationship.
+* `password` - (Optional) The User’s plaintext password. This password will be hashed and the provided value will never be stored and cannot be retrieved.
+* `password_change_required` - (Optional) Indicates that the User’s password needs to be changed during their next login attempt.
+* `phone_number` - (Optional) The phone number of the User. The phone number is stored and returned in E.164 canonical format, however a phone number is considered unique regardless of the format. 303-555-1212 is considered equal to +13035551212 so either version of this phone number can be used whenever providing it as input to an API. If phone_number is not provided, then email or username will be required.
+* `preferred_languages` - (Optional) An array of locale strings that give, in order, the User’s preferred languages. These are important for email templates and other localizable text.
+* `send_set_password_email` - (Optional, Deprecated) Indicates to FusionAuth to send the User an email asking them to set their password. The Email Template that is used is configured in the System Configuration setting for Set Password Email Template. Use `send_set_password_identity_type` instead.
+* `send_set_password_identity_type` - (Optional) If set, FusionAuth will send the User a message asking them to set their password. When you set this value to anything but `doNotSend`, any provided password field is ignored. The possible values are `doNotSend`, `email`, and `phone`.
+* `skip_verification` - (Optional) Indicates to FusionAuth that it should skip email verification even if it is enabled. This is useful for creating admin or internal User accounts.
+* `tenant_id` - (Optional) The unique Id of the tenant used to scope this API request.
+* `timezone` - (Optional) The User’s preferred timezone. The string must be in an IANA time zone format.
+* `two_factor_methods`
+  * `authenticator_algorithm` - (Optional) The algorithm used by the TOTP authenticator. With the current implementation, this will always be HmacSHA1.
+  * `authenticator_code_length` - (Optional) The length of code generated by the TOTP. With the current implementation, this will always be 6.
+  * `authenticator_time_step` - (Optional) The time-step size in seconds. With the current implementation, this will always be 30.
+  * `email` - (Optional) The value of the email address for this method.
+  * `method` - (Optional) The type of this method. There will also be an object with the same value containing additional information about this method.
+  * `mobile_phone` - (Optional) The value of the mobile phone for this method.
+  * `secret` - (Optional) A base64 encoded secret
+  * `name` - (Optional) A user-friendly name for this two-factor method, for example "Work authenticator".
+* `user_id` - (Optional) The Id to use for the new User. If not specified a secure random UUID will be generated..
+* `username` - (Optional) The username of the User. The username is stored and returned as a case sensitive value, however a username is considered unique regardless of the case. bob is considered equal to BoB so either version of this username can be used whenever providing it as input to an API.
+* `username_status` - (Optional) The current status of the username. This is used if you are moderating usernames via CleanSpeak.
+* `verification_ids` - The list of all verifications that exist for a user. This includes the email and phone identities that a user may have. The values from emailVerificationId and emailVerificationOneTimeCode are legacy fields and will also be present in this list.
+  * `verification_id` - A verification Id.
+
+## Attribute Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `verification_ids` - The list of all verifications that exist for a user. This includes the email and phone identities that a user may have. The values from emailVerificationId and emailVerificationOneTimeCode are legacy fields and will also be present in this list.
+  * `one_time_code` - A one time code that will be paired with the verificationIds[x].id.
+  * `type` - The identity type that the verification Id is for. This identity type, along with verificationIds[x].value , matches exactly one identity via user.identities[x].type.
+  * `value` - The identity value that the verification Id is for. This identity value, along with verificationIds[x].type , matches exactly one identity via user.identities[x].value.
+* `identities` - The list of identities that exist for a User.
+  * `display_value` - The display value for the identity. Only used for username type identities. If the unique username feature is not enabled, this value will be the same as user.identities[x].value. Otherwise, it will be the username the User has chosen. For primary username identities, this will be the same value as user.username.
+  * `insert_instant` - The instant when the identity was created.
+  * `last_login_instant` - The instant when the identity was last used to log in. If a User has multiple identity types (username, email, and phoneNumber), then this value will represent the specific identity they last used to log in. This contrasts with user.lastLoginInstant, which represents the last time any of the User’s identities was used to log in.
+  * `last_update_instant` - The instant when the identity was last updated.
+  * `moderation_status` - The current status of the username. This is used if you are moderating usernames via CleanSpeak.
+  * `type` - he identity type.
+  * `value` - The value represented by the identity.
+  * `verified` - Whether verification was actually performed on the identity by FusionAuth.
+  * `verified_instant` - The instant when verification was performed on the identity.
+  * `verified_reason` - The reason the User’s identity was verified or not verified.

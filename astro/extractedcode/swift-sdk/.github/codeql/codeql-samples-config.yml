@@ -1,0 +1,4 @@
+name: "CodeQL - Sample Quickstart configuration"
+
+paths:
+  - Samples

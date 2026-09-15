@@ -1,0 +1,28 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Reset Password</h1>
+      <p>Enter your email address and we'll send you instructions to reset your password</p>
+    </div>
+
+    <%= form_with url: password_reset_path, local: true, class: "auth-form" do |form| %>
+      <div class="form-group">
+        <%= form.label :email, class: "form-label" %>
+        <%= form.email_field :email, class: "form-input", placeholder: "Enter your email", required: true %>
+      </div>
+
+      <div class="form-actions">
+        <%= form.submit "Send Reset Instructions", class: "btn btn-primary btn-full" %>
+      </div>
+    <% end %>
+
+    <div class="auth-links">
+      <p>
+        Remember your password? <%= link_to "Login here", new_session_path, class: "auth-link" %>
+      </p>
+      <p>
+        Don't have an account? <%= link_to "Register here", new_registration_path, class: "auth-link" %>
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+google_user:
+  email: "google@example.com"
+  name: "Google User"
+  provider: "google_oauth2"
+  uid: "google_123456789"
+  image_url: "https://example.com/google_avatar.jpg"
+  raw_info: |
+    {
+      "provider": "google_oauth2",
+      "uid": "google_123456789",
+      "info": {
+        "name": "Google User",
+        "email": "google@example.com",
+        "given_name": "Google",
+        "family_name": "User",
+        "image": "https://example.com/google_avatar.jpg",
+        "verified_email": true,
+        "locale": "en"
+      }
+    }
+  active: true
+
+developer_user:
+  email: "dev@example.com"
+  name: "Developer User"
+  provider: "developer"
+  uid: "dev@example.com"
+  image_url: "https://example.com/dev_avatar.jpg"
+  raw_info: |
+    {
+      "provider": "developer",
+      "uid": "dev@example.com",
+      "info": {
+        "name": "Developer User",
+        "email": "dev@example.com"
+      }
+    }
+  active: true
+
+inactive_user:
+  email: "inactive@example.com"
+  name: "Inactive User"
+  provider: "google_oauth2"
+  uid: "inactive_123456789"
+  image_url: "https://example.com/inactive_avatar.jpg"
+  raw_info: |
+    {
+      "provider": "google_oauth2",
+      "uid": "inactive_123456789",
+      "info": {
+        "name": "Inactive User",
+        "email": "inactive@example.com",
+        "given_name": "Inactive",
+        "family_name": "User",
+        "image": "https://example.com/inactive_avatar.jpg",
+        "verified_email": true,
+        "locale": "en"
+      }
+    }
+  active: false

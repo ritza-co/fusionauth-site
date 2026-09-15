@@ -1,0 +1,60 @@
+name: "Code-Quality scan with SwiftLint"
+
+on:
+  # Triggers the workflow on push events but only for default and protected branches
+  push:
+    branches: [ "main" ]
+  # Triggers the workflow on pull request events but only for default and protected branches
+  pull_request:
+    branches: [ "main" ]
+  # Triggers the workflow on a schedule every Monday at 6:33 AM
+  schedule:
+    - cron: '33 6 * * 1'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  # Triggers the workflow when it is called from another workflow
+  workflow_call:
+
+jobs:
+  scan-app:
+    name: Swift Lint Check
+    permissions:
+      # required for all workflows
+      security-events: write
+      # only required for workflows in private repositories
+      actions: read
+      contents: read
+
+    runs-on: ubuntu-latest
+    steps:
+      # Sets up the reviewdog cli
+      - name: Setup reviewdog
+        uses: reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f # v1.5.0
+
+      - name: Show reviewdog version
+        run: reviewdog -version
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.3
+
+      # Performs analysis using Swift Lint and outputs a Sarif Report
+      - name: GitHub Action for SwiftLint
+        uses: stanfordbdhg/action-swiftlint@234b29234afef1ae74ee94b915c41484bddb7f17 # v4.1.2
+        with:
+          args: --reporter sarif --output lint-results-debug.sarif
+          # https://github.com/realm/SwiftLint/issues/4048
+
+      # Uploads Sarif Report for the app to GitHub
+      - name: Upload Swift app report
+        uses: github/codeql-action/upload-sarif@v4.36.2
+        if: success() || failure()
+        with:
+          sarif_file: lint-results-debug.sarif
+
+      # Process checkstyle Report file from Swift Lint with reviewdog cli
+      - name: Run reviewdog for app
+        if: success() || failure()
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: reviewdog -f=sarif -diff="git diff FETCH_HEAD" -name="lint" -reporter=github-pr-check < lint-results-debug.sarif

@@ -1,0 +1,40 @@
+# Exported from Render on 2026-02-02T13:59:43Z
+version: "1"
+databases:
+- name: fusionauth
+  databaseName: fusionauth_db
+  plan: free
+  ipAllowList:
+  - source: 0.0.0.0/0
+    description: everywhere
+  postgresMajorVersion: "18"
+
+services:
+- type: web
+  name: fusionauth-app:latest
+  runtime: docker
+
+  plan: free
+  envVars:
+  - key: DATABASE_HOST
+    fromDatabase:
+      name: fusionauth
+      property: host
+  - key: POSTGRES_PASSWORD
+    fromDatabase:
+      name: fusionauth
+      property: password
+  - key: POSTGRES_USER
+    fromDatabase:
+      name: fusionauth
+      property: user
+  - key: FUSIONAUTH_APP_RUNTIME_MODE
+    value: production
+  - key: DATABASE_USERNAME
+    fromDatabase:
+      name: fusionauth
+      property: user
+  - key: DATABASE_NAME
+    fromDatabase:
+      name: fusionauth
+      property: database

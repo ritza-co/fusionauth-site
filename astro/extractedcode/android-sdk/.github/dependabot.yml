@@ -1,0 +1,33 @@
+# Please see the documentation for all configuration options:
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+updates:
+
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/" # Uses default location of GitHub Workflows
+    schedule:
+      interval: "weekly"
+    groups:
+      prod-github-actions:
+        dependency-type: "production"
+      dev-github-actions:
+        dependency-type: "development"
+
+  # Maintain dependencies for Gradle
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      gradle-minor-dependencies:
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Maintain dependencies for Docker Compose
+  - package-ecosystem: "docker-compose"
+    directory: "/fusionauth/latest/"
+    schedule:
+      interval: "weekly"

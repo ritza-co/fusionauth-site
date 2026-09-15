@@ -1,0 +1,46 @@
+name: Bug Report (New Form)
+description: Create a bug report to help us improve FusionAuth
+title: "[Bug]: "
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report. We really appreciate it!
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What happened, and what did you expect to happen?
+      placeholder: "Example: I clicked a button and it exploded."
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of FusionAuth are you using?
+      placeholder: "Example: 1.42.0"
+    validations:
+      required: true
+  - type: input
+    id: affects_versions
+    attributes:
+      label: Affects Versions
+      description: What versions of FusionAuth will be affected by this bug? If you do not know, just leave this blank and a FusionAuth engineer will figure it out.
+      placeholder: "Example: >= 1.42.0, or 1.42.0 - 1.44.1"
+    validations:
+      required: false
+  - type: textarea
+    id: alternatives_workarounds
+    attributes:
+      label: Alternatives / Workarounds
+      description: If you have found a workaround, please share what you did with others.
+      placeholder: "Example: Use the API to update the field instead."
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        #### Community guidelines
+        All issues filed in this repository must abide by the [FusionAuth community guidelines](https://fusionauth.io/community/forum/topic/1000/code-of-conduct).

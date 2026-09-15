@@ -1,0 +1,69 @@
+name: update_mcp_server
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow once a day
+  schedule:
+    - cron: '39 18 * * *'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  # uncomment here and in the checkopenapispec step if you want to run this manually across a lot of versions.
+  #  inputs:
+  #    version:
+  #      required: true
+  #      type: string
+  #      default: ""
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  # this keeps the workflow from being disabled by inactivity in the repo.
+  # https://stackoverflow.com/questions/67184368/prevent-scheduled-github-actions-from-becoming-disabled has more details
+  # I picked the action that seemed least intrusive
+  workflow-keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: liskin/gh-workflow-keepalive@f72ff1a1336129f29bf0166c0fd0ca6cf1bcb38c # v1.2.1
+
+  check_openapi_changes:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    outputs:
+      keepgoing: ${{ steps.checkopenapispec.outputs.keepgoing }}
+      latestreleasedversion: ${{ steps.checkopenapispec.outputs.latestreleasedversion }}
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+      - name: Check if spec is up to date
+        id: checkopenapispec
+        run: |
+          bin/checkopenapi.sh 
+        shell: bash
+
+  update_mcp_server:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: check_openapi_changes
+    if: ${{ needs.check_openapi_changes.outputs.keepgoing != 'false' }}
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+      - name: Updates mcp server
+        run: |
+          bin/updatemcp.sh 
+        shell: bash
+
+      - name: Commit the changes and push
+        uses: stefanzweifel/git-auto-commit-action@e348103e9026cc0eee72ae06630dbe30c8bf7a79 # v5
+        env:
+          GH_TOKEN: ${{ github.token }}
+        with:
+          commit_message: Update MCP server
+
+      #- name: Publish TODO
+

@@ -1,0 +1,81 @@
+---
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      command: # be careful when editing these, fusionauth-app expects certain commands
+        type: choice
+        options:
+          - test     # build & test only
+          - release  # build & release to svn
+        default: test
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: /usr/bin/bash -l -e -o pipefail {0}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+
+      - name: setup java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+          java-package: jre
+
+      - name: install savant
+        run: |
+          curl -O https://repository.savantbuild.org/org/savantbuild/savant-core/2.0.0/savant-2.0.0.tar.gz
+          tar xzvf savant-2.0.0.tar.gz
+          savant-2.0.0/bin/sb --version
+          SAVANT_PATH=$(realpath -s "./savant-2.0.0/bin")
+          echo "${SAVANT_PATH}" >> $GITHUB_PATH
+          mkdir -p ~/.savant/plugins
+          cat << EOF > ~/.savant/plugins/org.savantbuild.plugin.java.properties
+          21=${JAVA_HOME}
+          EOF
+
+      - name: install golang
+        uses: actions/setup-go@v5
+        with:
+          go-version: oldstable
+
+      - name: Compile
+        if: success() && inputs.command != 'release'
+        run: sb compile
+
+      - name: Copy our kickstart file over so it gets picked up
+        if: success() && inputs.command != 'release'
+        run: |
+          mkdir faDockerComposeFilePath
+          cp -r .github/kickstart faDockerComposeFilePath
+          cp .github/kickstart/kickstart.json faDockerComposeFilePath/kickstart/k2.json
+          cp .github/kickstart/kickstart.json .github/kickstart/k2.json
+
+      - name: Start FusionAuth
+        if: success() && inputs.command != 'release'
+        uses: fusionauth/fusionauth-github-action@v1
+        with:
+          FUSIONAUTH_APP_KICKSTART_FILENAME: k2.json
+          FUSIONAUTH_APP_KICKSTART_DIRECTORY_PATH: .github/kickstart
+
+      - name: Run tests
+        if: success() && inputs.command != 'release'
+        run: sleep 30 && sb test
+
+      - name: release to svn
+        if: success() && inputs.command == 'release'
+        run: sb release
