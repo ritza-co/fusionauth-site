@@ -17,7 +17,7 @@ import SocialLoginNote from 'src/content/docs/lifecycle/migrate-users/provider-s
 import VerifyImport from 'src/content/docs/lifecycle/migrate-users/provider-specific/_verify-import.mdx';
 import WhatNext from 'src/content/docs/lifecycle/migrate-users/provider-specific/_what-next.mdx';
 import PasswordHashSection from 'src/content/docs/lifecycle/migrate-users/provider-specific/_password-hashes-section.mdx';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import SlowMigrationTimeline from 'src/content/docs/lifecycle/migrate-users/provider-specific/_slow-migration-timeline.mdx';
 import SetUpUserRoles from 'src/content/docs/lifecycle/migrate-users/provider-specific/_set-up-user-roles.mdx';
 import PlanBlurb from 'src/components/plan/PlanBlurb.astro';
@@ -124,7 +124,7 @@ The export script in the following section generates a JSON file ready for impor
 
 The following script exports raw user data from a Node.js application database.
 
-<RemoteCode url= {frontmatter.importCodeRoot + "/scripts/4_exportUsers.mjs"} lang="js" />
+<LocalCode lang="js" src="import-scripts/passportjs/4_exportUsers.mjs" />
 
 The script creates a `users.json` file containing the exported data, similar to the example below.
 
@@ -151,7 +151,7 @@ The script creates a `users.json` file containing the exported data, similar to 
 
 The conversion script transforms the raw data into FusionAuth's required format.
 
-<RemoteCode url={frontmatter.importCodeRoot + "/scripts/5_convertUserToFaUser.mjs"} lang="js" />
+<LocalCode lang="js" src="import-scripts/passportjs/5_convertUserToFaUser.mjs" />
 
 The conversion script generates a `faUsers.json` file ready for import into FusionAuth.
 

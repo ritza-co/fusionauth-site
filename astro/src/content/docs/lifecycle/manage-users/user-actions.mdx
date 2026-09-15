@@ -5,7 +5,7 @@ description: Learn how you can use User Actions to apply attributes to your user
 import Aside from 'src/components/Aside.astro';
 import Breadcrumb from 'src/components/Breadcrumb.astro';
 import Icon from 'src/components/icon/Icon.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 User Actions in FusionAuth are ways to interact with, reward, and discipline users. For example, you could use them to email a user, call another application when a user does something, or temporarily disable a user's login.
 
@@ -537,17 +537,17 @@ You'll add a new route that pretends to be Intercom and will listen for new subs
 
 After the line `var indexRouter = require('./routes/index');`, add a reference to the FusionAuth TypeScript client library, the **`API_KEY`** and **`BASE_URL`** environment variables.
 
-<RemoteCode lang="js" url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-user-actions-guide/main/app.js" tags="tsClientLib"/>
+<LocalCode lang="js" src="example-user-actions-guide/app.js.snippet.tsClientLib.js" />
 
 Below the line `app.use('/', indexRouter);`, add the following.
 
-<RemoteCode lang="js" url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-user-actions-guide/main/app.js" tags="intercom" />
+<LocalCode lang="js" src="example-user-actions-guide/app.js.snippet.intercom.js" />
 
 ### Create Mock Slack API
 
 Now make a similar API to mock Slack by adding the following code below the code you added previously.
 
-<RemoteCode lang="js" url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-user-actions-guide/main/app.js" tags="slack" />
+<LocalCode lang="js" src="example-user-actions-guide/app.js.snippet.slack.js" />
 
 Administrators monitoring PiedPiper on Slack can immediately contact the user to help them if their survey response was `Bad`.
 
@@ -555,7 +555,7 @@ Administrators monitoring PiedPiper on Slack can immediately contact the user to
 
 The final piece of code you'll add to `app.js` is a little more complex. The `expire` route below is called by FusionAuth when the user's subscription Action instance ends. To ban the user from logging in after this time, PiedPiper applies the **Prevent Login** Action to the user by calling the FusionAuth API.  Add this code directly below the mock Slack code you just added.
 
-<RemoteCode lang="js" url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-user-actions-guide/main/app.js" tags="expire" />
+<LocalCode lang="js" src="example-user-actions-guide/app.js.snippet.expire.js" />
 
 ## Testing
 

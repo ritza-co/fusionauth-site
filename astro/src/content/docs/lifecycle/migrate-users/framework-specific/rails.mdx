@@ -19,7 +19,7 @@ import SocialLoginNote from 'src/content/docs/lifecycle/migrate-users/provider-s
 import VerifyImport from 'src/content/docs/lifecycle/migrate-users/provider-specific/_verify-import.mdx';
 import WhatNext from 'src/content/docs/lifecycle/migrate-users/provider-specific/_what-next.mdx';
 import PasswordHashSection from 'src/content/docs/lifecycle/migrate-users/provider-specific/_password-hashes-section.mdx';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import SlowMigrationTimeline from 'src/content/docs/lifecycle/migrate-users/provider-specific/_slow-migration-timeline.mdx';
 import SetUpUserRoles from 'src/content/docs/lifecycle/migrate-users/provider-specific/_set-up-user-roles.mdx';
 import PlanBlurb from 'src/components/plan/PlanBlurb.astro';
@@ -132,35 +132,35 @@ The export scripts in the following sections are tailored for each authenticatio
 
 The following export script will work for most Rails applications using Devise.
 
-<RemoteCode url={frontmatter.importCodeRoot + "/rails/export-scripts/devise/export_users_for_fusionauth.rb"} lang="ruby"  />
+<LocalCode lang="ruby" src="import-scripts/rails/export-scripts/devise/export_users_for_fusionauth.rb" />
 
 The script handles bcrypt password hashes directly since bcrypt includes the salt in the hash.
 
 The script exports a user file that looks similar to the example below.
 
-<RemoteCode url={frontmatter.importCodeRoot + "/rails/export-scripts/devise/users_export.json"} lang="json"  />
+<LocalCode lang="json" src="import-scripts/rails/export-scripts/devise/users_export.json" />
 
 ### OmniAuth
 
 As OmniAuth doesn't store passwords locally, the following script exports profile data and provider information.
 
-<RemoteCode url={frontmatter.importCodeRoot + "/rails/export-scripts/omniauth/export_users_for_fusionauth.rb"} lang="ruby"  />
+<LocalCode lang="ruby" src="import-scripts/rails/export-scripts/omniauth/export_users_for_fusionauth.rb" />
 
 The `oauth_provider` and `oauth_uid` data will be used later to link user accounts to identity providers in FusionAuth.
 
 The script exports a user file that looks similar to the example below.
 
-<RemoteCode url={frontmatter.importCodeRoot + "/rails/export-scripts/omniauth/users_export.json"} lang="json"  />
+<LocalCode lang="json" src="import-scripts/rails/export-scripts/omniauth/users_export.json" />
 
 ### Rails Built-In Authentication
 
 The following export script works for Rails applications using `has_secure_password`.
 
-<RemoteCode url={frontmatter.importCodeRoot + "/rails/export-scripts/built-in-auth/export_users_for_fusionauth.rb"} lang="ruby"  />
+<LocalCode lang="ruby" src="import-scripts/rails/export-scripts/built-in-auth/export_users_for_fusionauth.rb" />
 
 The script exports a user file that looks similar to the example below.
 
-<RemoteCode url={frontmatter.importCodeRoot + "/rails/export-scripts/built-in-auth/users_export.json"} lang="json"  />
+<LocalCode lang="json" src="import-scripts/rails/export-scripts/built-in-auth/users_export.json" />
 
 <PasswordHashSection hashing_algorithm={hashing_algorithm} />
 

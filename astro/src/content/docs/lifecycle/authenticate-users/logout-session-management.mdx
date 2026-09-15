@@ -9,7 +9,7 @@ import Aside from 'src/components/Aside.astro';
 import BootstrappingSSO from 'src/content/docs/lifecycle/authenticate-users/_bootstrapping-sso.mdx'
 import Breadcrumb from 'src/components/Breadcrumb.astro';
 import JSON from 'src/components/JSON.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import SessionsExpiration from 'src/content/docs/lifecycle/authenticate-users/_sessions-expiration.mdx';
 
 This guide documents logout and session management features. Logout, or sign out, processes revoke users' access to applications and functionality. Session management controls the session and therefore continued access to application functionality and data.
@@ -223,15 +223,11 @@ With centralized sessions, on each request you must check whether the refresh to
 
 Here's code adding middleware to an Express application.
 
-<RemoteCode url={frontmatter.codeRoot + "/changebankforum/src/index.ts"}
-  lang="ts"
-  tags="redirectmiddleware"/>
+<LocalCode lang="ts" src="example-node-centralized-sessions/changebankforum/src/index.ts.snippet.redirectmiddleware.ts" />
 
 `redirectFunction` is defined in a separate file. In this code the refresh token Id is stored as a cookie, but it could be stored in an application session. The code retrieves the Id of the refresh token and checks the validity. The check happens on every request, but you can ignore certain URLs, either by a full path or by path prefix.
 
-<RemoteCode url={frontmatter.codeRoot + "/changebankforum/src/redirectMiddleware.js"}
-  lang="ts"
-  />
+<LocalCode lang="ts" src="example-node-centralized-sessions/changebankforum/src/redirectMiddleware.js" />
 
 Using the API to check refresh token validity may not work, depending on your [session lifetime preferences](#timeouts-and-session-lifetimes).
 
@@ -250,15 +246,11 @@ Let's look at a scenario where custom session invalidation logic would be helpfu
 
 Here's example typescript code for the ChangeBank logout route, where all tokens for the user are revoked across all devices.
 
-<RemoteCode url={frontmatter.codeRoot + "/changebank/src/index.ts"}
-  lang="ts"
-  tags="endsession"/>
+<LocalCode lang="ts" src="example-node-centralized-sessions/changebank/src/index.ts.snippet.endsession.ts" />
 
 Here's example code for the ChangeBank Forum logout route. Here only the refresh token whose Id was previously stored is revoked.
 
-<RemoteCode url={frontmatter.codeRoot + "/changebankforum/src/index.ts"}
-  lang="ts"
-  tags="endsession"/>
+<LocalCode lang="ts" src="example-node-centralized-sessions/changebankforum/src/index.ts.snippet.endsession.ts" />
 
 It's not just the complex single user logout use case shown above that is supported. Since you can revoke refresh tokens from other applications using the SDKs and APIs, you can have custom session expiration logic. 
 
