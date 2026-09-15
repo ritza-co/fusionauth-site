@@ -33,7 +33,7 @@ Please also use ``` instead of indenting for code blocks. The backticks are tran
 
 # Overview
 <!--
-tag::forDocSiteOverview[]
+:snippet-start: forDocSiteOverview
 -->
 This SDK allows you to use OAuth 2.0 and OpenId Connect functionality in an Android app with FusionAuth as the
 authorization server. It also provides a Token Manager to store, refresh, and retrieve tokens.
@@ -50,13 +50,13 @@ The following OAuth 2.0 and OpenID Connect functionality are covered:
 
 The SDK is written in Kotlin and is compatible with Java.
 <!--
-end::forDocSiteOverview[]
+:snippet-end:
 -->
 
 # Getting Started
 
 <!--
-tag::forDocSiteGettingStarted[]
+:snippet-start: forDocSiteGettingStarted
 -->
 To use the FusionAuth Android SDK, add the following dependency to your `build.gradle.kts` file:
 
@@ -107,13 +107,13 @@ By default, the SDK uses the `MemoryStorage` for storing tokens. This means that
 closed.
 To persist tokens, you can use the `DataStoreStorage` or implement your own `TokenStorage`.
 <!--
-end::forDocSiteGettingStarted[]
+:snippet-end:
 -->
 
 # Usage
 
 <!--
-tag::forDocSiteUsage[]
+:snippet-start: forDocSiteUsage
 -->
 To start the OAuth 2.0 Authorization Code Grant, you can use the `oAuth()` function on the `AuthorizationManager` to
 retrieve the `OAuthAuthorizationService`:
@@ -175,27 +175,27 @@ AuthorizationManager
 
 If the user is signed out, the `LoginActivity` will be opened.
 <!--
-end::forDocSiteUsage[]
+:snippet-end:
 -->
 
 # Example App
 
 <!--
-tag::forDocSiteExampleApp[]
+:snippet-start: forDocSiteExampleApp
 -->
 See the [FusionAuth Android SDK Example](https://github.com/FusionAuth/fusionauth-quickstart-kotlin-android-native) for a functional example of an Android client that uses the SDK.
 <!--
-end::forDocSiteExampleApp[]
+:snippet-end:
 -->
 
 # Quickstart
 
 <!--
-tag::forDocSiteQuickstart[]
+:snippet-start: forDocSiteQuickstart
 -->
 See the [FusionAuth Android Quickstart](https://fusionauth.io/docs/quickstarts/quickstart-kotlin-android-native) for a full tutorial on using FusionAuth and Android.
 <!--
-end::forDocSiteQuickstart[]
+:snippet-end:
 -->
 
 # Documentation

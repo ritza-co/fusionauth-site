@@ -15,7 +15,7 @@ import NextSteps from 'src/components/quickstarts/NextSteps.astro';
 import QuickstartNgrok from 'src/components/quickstarts/quickstart-ngrok.mdx';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
 import RemoteCode from 'src/components/RemoteCode.astro';
-import RemoteValue from 'src/components/RemoteValue/RemoteValue.astro';
+import { LocalValue } from 'src/components/LocalValue/LocalValue.astro';
 
 <Intro technology="React Native"
        repositoryUrl="https://github.com/FusionAuth/fusionauth-quickstart-react-native"/>
@@ -164,7 +164,7 @@ Wait a few seconds and Expo will build and install the app in your device. You s
   If it is your first time running the app, ngrok will ask if you really want to continue to that page, so click <Breadcrumb>Visit Site</Breadcrumb>.
 </Aside>
 
-You'll finally arrive at the FusionAuth login screen. Fill in <code><RemoteValue url={frontmatter.codeRoot + "kickstart/kickstart.json"} selector="$.variables.userEmail" /></code> and <code><RemoteValue url={frontmatter.codeRoot + "kickstart/kickstart.json"} selector="$.variables.userPassword" /></code> and click on <Breadcrumb>Submit</Breadcrumb> to be redirected back to the logged-in ChangeBank page.
+You'll finally arrive at the FusionAuth login screen. Fill in <code><LocalValue path="quickstart-react-native/kickstart/kickstart.json" selector="$.variables.userEmail" /></code> and <code><LocalValue path="quickstart-react-native/kickstart/kickstart.json" selector="$.variables.userPassword" /></code> and click on <Breadcrumb>Submit</Breadcrumb> to be redirected back to the logged-in ChangeBank page.
 
 <QuickstartTshirtCTA/>
 

@@ -16,7 +16,7 @@ Please also use ``` instead of indenting for code blocks. The backticks are tran
 
 ### Prerequisites
 <!--
-tag::forDocSitePrerequisites[]
+:snippet-start: forDocSitePrerequisites
 -->
 You will need the following things properly installed on your computer.
 
@@ -24,7 +24,7 @@ You will need the following things properly installed on your computer.
 - [Docker](https://www.docker.com): The quickest way to stand up FusionAuth. Ensure you also have [docker compose](https://docs.docker.com/compose/) installed.
   - (Alternatively, you can [Install FusionAuth Manually](https://fusionauth.io/docs/v1/tech/installation-guide/)).
 <!--
-end::forDocSitePrerequisites[]
+:snippet-end:
 -->
 
 ### FusionAuth Installation via Docker

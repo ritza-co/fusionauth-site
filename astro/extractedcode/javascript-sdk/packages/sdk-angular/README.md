@@ -25,7 +25,7 @@ Please also use ``` instead of indenting for code blocks. The backticks are tran
 # Overview
 
 <!--
-tag::forDocSite[]
+:snippet-start: forDocSite
 -->
 
 This SDK helps manage authentication state for your Angular app and provides functionality to login, register, and logout users. It also can be configured to automatically manage your refresh token.
@@ -230,7 +230,7 @@ None.
 [Full library documentation](https://github.com/FusionAuth/fusionauth-javascript-sdk/tree/main/packages/sdk-angular/docs)
 
 <!--
-end::forDocSite[]
+:snippet-end:
 -->
 
 Use backticks for code in this readme. This readme is included on the FusionAuth website, and backticks show the code in the best light there.

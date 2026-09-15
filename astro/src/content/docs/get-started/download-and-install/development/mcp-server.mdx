@@ -3,7 +3,7 @@ title: API MCP Server
 description: Learn how to use the FusionAuth API MCP Server.
 ---
 import Aside from 'src/components/Aside.astro';
-import RemoteContent from 'src/components/RemoteContent.astro';
+import LocalMarkdown from 'src/components/LocalMarkdown.astro';
 
 FusionAuth has a model context protocol (MCP) server which allows you to manipulate a FusionAuth instance using any MCP compatible client.
 
@@ -27,8 +27,7 @@ Using this MCP server provides the MCP client with a FusionAuth API key. Use thi
 FusionAuth is not responsible for potentially leaking sensitive information.
 </Aside>
 
-<RemoteContent url="https://raw.githubusercontent.com/FusionAuth/fusionauth-mcp-api/refs/heads/main/README.md"
-               tags="forDocSite" />
+<LocalMarkdown src="mcp-api/README.snippet.forDocSite.md" />
 
 ## Feedback
 

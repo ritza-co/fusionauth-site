@@ -29,7 +29,7 @@ Please also use ``` instead of indenting for code blocks. The backticks are tran
 # Overview
 
 <!--
-tag::forDocSite[]
+:snippet-start: forDocSite
 -->
 
 This SDK manages authentication state for your React app and provides functionality to login, register, and logout users. It can be easily configured to automatically manage your refresh token and fetch user info.
@@ -271,7 +271,7 @@ None.
 These docs are generated with [typedoc](https://typedoc.org/) and configured with [typedoc-plugin-markdown](https://www.npmjs.com/package/typedoc-plugin-markdown).
 
 <!--
-end::forDocSite[]
+:snippet-end:
 -->
 
 ## Formatting

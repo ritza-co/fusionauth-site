@@ -6,7 +6,7 @@ codeRoot: https://raw.githubusercontent.com/FusionAuth/fusionauth-example-github
 order: 600
 ---
 import Aside from 'src/components/Aside.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 This page explains:
@@ -215,8 +215,7 @@ This will open the playwright window. Click on the <Breadcrumb>Run</Breadcrumb> 
 
 The code for the test Playwright runs is in the file `app/tests/test.spec.js`.
 
-<RemoteCode url={frontmatter.codeRoot + "/app/tests/test.spec.js"}
-            lang="js" />
+<LocalCode src="example-github-actions/app/tests/test.spec.js" lang="js" />
 
 The code should mostly be self-explanatory, but there are a few things to note:
 - `await` is used frequently as most operations on the page are asynchronous.
@@ -266,8 +265,7 @@ GitHub Actions is a service provided by GitHub that allows you to run workflows 
 
 Let's review the GitHub Actions workflow script to see how it works. All scripts are stored in the `.github/workflows` directory, and the files can be called whatever you like. Here, the file is called `test.yaml`.
 
-<RemoteCode url={frontmatter.codeRoot + "/.github/workflows/test.yaml"}
-            lang="yaml" />
+<LocalCode src="example-github-actions/.github/workflows/test.yaml" lang="yaml" />
 
 Each workflow has a name, which is a human-readable label.
 
