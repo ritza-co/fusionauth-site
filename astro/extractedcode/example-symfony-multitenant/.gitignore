@@ -16,3 +16,6 @@
 ###< symfony/phpunit-bridge ###
 
 *.swp
+
+# Unignore .env.test
+!.env.test

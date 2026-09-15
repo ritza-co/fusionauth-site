@@ -2,3 +2,6 @@ venv/
 */.env
 .DS_Store
 __pycache__
+
+# Unignore .env in complete-application
+!complete-application/.env

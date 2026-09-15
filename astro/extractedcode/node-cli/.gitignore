@@ -221,3 +221,8 @@ emails/
 
 
 .fa/
+
+# Unignore specific files for documentation
+!__tests__/integration/fixtures/kickstarts/poc/templates/emails/
+!__tests__/integration/fixtures/kickstarts/poc/templates/emails/*.ftl
+!src/resources/kickstart/fusionauth/.env.defaults

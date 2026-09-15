@@ -27,3 +27,6 @@
 local.properties
 
 .vscode/**
+
+# Unignore specific files
+!.idea/git_toolbox_prj.xml

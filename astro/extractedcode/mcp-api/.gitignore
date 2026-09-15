@@ -48,3 +48,6 @@ Thumbs.db
 .eslintcache
 
 *.swp
+
+# Unignore .env.example files
+!packages/mcp-api/.env.example

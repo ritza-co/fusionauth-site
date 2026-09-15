@@ -9,3 +9,8 @@ DerivedData/
 .idea
 Samples/Quickstart/build/
 Samples/Quickstart/fusionauth-quickstart-swift-ios-native.xcodeproj/xcshareddata/
+
+
+# Unignore .vscode directory and settings.json
+!.vscode/
+!.vscode/settings.json

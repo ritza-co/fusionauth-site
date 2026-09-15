@@ -41,3 +41,6 @@ out/
 **/.DS_Store
 */.idea/**/projectSettingsUpdater.xml
 .savant/cache
+
+# Unignore specific files
+!fusionauth-netcore-client/fusionauth-netcore-client.sln.DotSettings.user

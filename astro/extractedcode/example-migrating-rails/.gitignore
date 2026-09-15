@@ -51,3 +51,15 @@ tmp/*
 
 
 .DS_Store
+
+# Unignore vendor directories and their .keep files
+!ruby-users-devise/vendor/
+!ruby-users-devise/vendor/.keep
+!ruby-users-devise/vendor/javascript/
+!ruby-users-devise/vendor/javascript/.keep
+!ruby-users-omniauth/vendor/
+!ruby-users-omniauth/vendor/.keep
+!ruby-users-omniauth/vendor/javascript/
+!ruby-users-omniauth/vendor/javascript/.keep
+!ruby-users-rails-auth/vendor/
+!ruby-users-rails-auth/vendor/.keep
