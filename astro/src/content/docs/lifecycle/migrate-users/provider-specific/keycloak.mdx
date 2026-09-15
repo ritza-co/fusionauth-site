@@ -13,7 +13,7 @@ import Identifiers from 'src/content/docs/lifecycle/migrate-users/provider-speci
 import MappingUserAttributes from 'src/content/docs/lifecycle/migrate-users/provider-specific/_mapping-user-attributes.mdx';
 import OtherEntitiesIntro from 'src/content/docs/lifecycle/migrate-users/provider-specific/_other-entities-intro.mdx';
 import PasswordHashNote from 'src/content/docs/lifecycle/migrate-users/provider-specific/_password-hash-note.mdx';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import SetUpFusionauth from 'src/content/docs/lifecycle/migrate-users/provider-specific/_set-up-fusionauth.mdx';
 import SocialLoginMigration from 'src/content/docs/lifecycle/migrate-users/provider-specific/_social-login-migration.mdx';
 import SocialLoginNote from 'src/content/docs/lifecycle/migrate-users/provider-specific/_social-login-note.mdx';
@@ -91,9 +91,7 @@ Here are SQL scripts that will query the needed fields. Update `RealmID` with th
 
 Here's the SQL to export from MySQL.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-import-scripts/main/keycloak/keycloak-export.sql"
-            lang="sql"
-            title="Keycloak Export MySQL SQL" />
+<LocalCode lang="sql" src="import-scripts/keycloak/keycloak-export.sql" title="Keycloak Export MySQL SQL" />
 
 You'll need to run this SQL query in such a way as to get comma separated values (CSV) out of it. Depending on your database, you'll do this differently.
 
@@ -107,9 +105,7 @@ cat keycloak-export.sql | mysql -u USER -p keycloak| sed 's/\t/,/g' > out.csv
 
 Here's the SQL to export from PostgreSQL.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-import-scripts/main/keycloak/keycloak-export-postgres.sql"
-            lang="sql"
-            title="Keycloak Export Postgres SQL" />
+<LocalCode lang="sql" src="import-scripts/keycloak/keycloak-export-postgres.sql" title="Keycloak Export Postgres SQL" />
 
 Here's how to generate CSV with PostgreSQL, assuming the SQL above is in `keycloak-export-postgres.sql`. You may have to remove the header line from the `out.csv` file.
 

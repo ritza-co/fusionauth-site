@@ -13,7 +13,7 @@ import Identifiers from 'src/content/docs/lifecycle/migrate-users/provider-speci
 import MappingUserAttributes from 'src/content/docs/lifecycle/migrate-users/provider-specific/_mapping-user-attributes.mdx';
 import OtherEntitiesIntro from 'src/content/docs/lifecycle/migrate-users/provider-specific/_other-entities-intro.mdx';
 import PasswordHashNote from 'src/content/docs/lifecycle/migrate-users/provider-specific/_password-hash-note.mdx';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import SetUpFusionauth from 'src/content/docs/lifecycle/migrate-users/provider-specific/_set-up-fusionauth.mdx';
 import SocialLoginMigration from 'src/content/docs/lifecycle/migrate-users/provider-specific/_social-login-migration.mdx';
 import SocialLoginNote from 'src/content/docs/lifecycle/migrate-users/provider-specific/_social-login-note.mdx';
@@ -89,9 +89,7 @@ By default, {migration_source_name} has disabled the exporting of the password h
 If you do not want to set the `Private` switch to false in your environment, you may use the ./ldapsearch method mentioned above or another viable alternative method. The results of that will then have to be merged with the other user information into a `.json` file using the method of your choosing.
 </Aside>
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-import-scripts/main/forgerock/forgerock-export.rb"
-            lang="ruby"
-            title="Forgerock Export Script" />
+<LocalCode lang="ruby" src="import-scripts/forgerock/forgerock-export.rb" title="Forgerock Export Script" />
 
 There are several options that can be set when running the script. To see a list of options available, use the -h switch.
 

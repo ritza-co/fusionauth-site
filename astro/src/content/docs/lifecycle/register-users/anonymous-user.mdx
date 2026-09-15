@@ -3,7 +3,7 @@ title: Anonymous Users
 description: Learn how to create anonymous or stub users in FusionAuth.
 ---
 import Aside from 'src/components/Aside.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 A "stub" user profile, also known as an **anonymous user**, is a pattern to allow your users to build up profiles gradually before requiring identifying information such as an email address or username. This is a common pattern with business to consumer or gaming applications, where you want to lower friction as much as possible.
@@ -59,9 +59,7 @@ To create the key, navigate to <Breadcrumb>Settings -> API Keys</Breadcrumb> and
 
 Now that you've set up the API key, make sure it is available to the application via a secrets manager or environment variable. You can then create a FusionAuth client like this.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-anonymous-user/main/complete-application/server.py"
-            lang="python"
-            tags="createFusionAuthClient" />
+<LocalCode lang="python" src="example-anonymous-user/complete-application/server.py.snippet.createFusionAuthClient.py" />
 
 ## Create The Anonymous User
 
@@ -71,9 +69,7 @@ When that happens, make an API call to create a user. Because FusionAuth require
 
 Here's the user creation logic, from the route which serves up the video page.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-anonymous-user/main/complete-application/server.py"
-            lang="python"
-            tags="createUser" />
+<LocalCode lang="python" src="example-anonymous-user/complete-application/server.py.snippet.createUser.py" />
 
 You can see code checks to see if an anonymous account exists by checking for a cookie. If not, a new user is created with the relevant data attributes. The Id of the user is then extracted. You'll need to save that off. All future interactions will be keyed off this Id.
 
@@ -95,9 +91,7 @@ A JWT is a middle ground. It requires less effort than encrypting the Id, but el
 
 Here's the code to create the JWT and store it in a cookie.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-anonymous-user/main/complete-application/server.py"
-            lang="python"
-            tags="createJWT" />
+<LocalCode lang="python" src="example-anonymous-user/complete-application/server.py.snippet.createJWT.py" />
 
 You can then store the JWT. You can do so in a persistent secure, `HttpOnly` browser cookie, or, if the device is a mobile application, in a shared preferences file.
 
@@ -118,17 +112,13 @@ Your client side application should then present the token representing the stub
 
 In this example, the `watchCount` is incremented each time the video page is viewed. Here's the code to do so.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-anonymous-user/main/complete-application/server.py"
-            lang="python"
-            tags="readJWT" />
+<LocalCode lang="python" src="example-anonymous-user/complete-application/server.py.snippet.readJWT.py" />
 
 The user Id is retrieved from the cookie, then the user is looked up. If the user Id is not found, something is wrong and processing stops. Otherwise, the anonymous user profile is updated.
 
 It's also worth looking at the `get_anon_user_id_from_cookie` method, which is what gets the `user_id`.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-anonymous-user/main/complete-application/server.py"
-            lang="python"
-            tags="getAnonUserIdFromCookie" />
+<LocalCode lang="python" src="example-anonymous-user/complete-application/server.py.snippet.getAnonUserIdFromCookie.py" />
 
 Here the JWT is retrieved from the cookie. It is also validated using the [authlib JWT decoder](https://docs.authlib.org). If validation fails, someone is messing with the JWT value and no processing should occur.
 
@@ -153,9 +143,7 @@ A conversion process looks like this:
 
 Here's code that does this.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-anonymous-user/main/complete-application/server.py"
-            lang="python"
-            tags="registerAnonymousUserRoute" />
+<LocalCode lang="python" src="example-anonymous-user/complete-application/server.py.snippet.registerAnonymousUserRoute.py" />
 
 ### The Forgot Password Workflow
 
@@ -165,7 +153,7 @@ Since you can only have one forgot password email template per user, you can pro
 
 Here's the example email template with the logic with a `[#if state.anon_user??]` statement.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-anonymous-user/main/kickstart/email-templates/forgot-password.txt.ftl" />
+<LocalCode lang="html" src="example-anonymous-user/kickstart/email-templates/forgot-password.txt.ftl" />
 
 
 ### Cleaning Up After Full Conversion
@@ -182,9 +170,7 @@ This guide will use the latter option. You'll need to [create and register the w
 
 Here's the webhook code.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-anonymous-user/main/complete-application/server.py"
-            lang="python"
-            tags="cleanupAnonymousUserRoute" />
+<LocalCode lang="python" src="example-anonymous-user/complete-application/server.py.snippet.cleanupAnonymousUserRoute.py" />
 
 This examines the incoming event to see if it is a login success. It then checks if the user is a newly converted user, as indicated by a value of **user.data.anonymousUser**. If these are all true, then the user is updated to set **anonymousUser** to `false`. For this guide, that is indication that the user has been converted to a regular user.
 

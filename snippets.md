@@ -581,3 +581,19 @@ These files contain only tags that are NOT referenced by any documentation. Revi
 - Old: `tag::tagName[]` / `end::tagName[]`
 - New: `:snippet-start: tagName` / `:snippet-end:`
 
+
+## Cleanup Actions (2026-09-15)
+
+### Deleted: astro/extractedcode/webauthn/
+- **Reason**: Duplicate folder from James Whitford's POC work (commit a587c5dc6)
+- **History**: Created with Bluehawk tags but never used by any MDX files
+- **Replacement**: astro/extractedcode/example-javascript-webauthn/ (added by Richard in commit 707313978)
+- **Impact**: No MDX files referenced this folder, so deletion is safe
+
+### Preserved: astro/src/generated-code-snippets/webauthn/
+- **Reason**: Auto-generated files should not be manually deleted
+- **Note**: These will be regenerated when build runs
+
+### Preserved: astro/src/content/json/webauthn/
+- **Reason**: JSON files referenced by MDX files (different from extractedcode)
+- **References**: Used by webauthn API documentation for JSON examples

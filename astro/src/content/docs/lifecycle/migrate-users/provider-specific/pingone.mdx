@@ -17,7 +17,7 @@ import SlowMigrationTimeline from 'src/content/docs/lifecycle/migrate-users/prov
 import SocialLoginMigration from 'src/content/docs/lifecycle/migrate-users/provider-specific/_social-login-migration.mdx';
 import SocialLoginNote from 'src/content/docs/lifecycle/migrate-users/provider-specific/_social-login-note.mdx';
 import WhatNext from 'src/content/docs/lifecycle/migrate-users/provider-specific/_what-next.mdx';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import PlanBlurb from 'src/components/plan/PlanBlurb.astro';
 
 export const migration_source_name = 'Ping Identity';
@@ -263,7 +263,7 @@ The following fields need to be populated from your environment:
 * `appId`: The Client Id of the OIDC application.
 * `access_token`: The access token you generated when you created the worker application in Ping Identity.
 
-<RemoteCode lang="python" url={codeRoot + "/pingidentity/export/slowmigration/pingIdentityAuth.py"} />
+<LocalCode lang="python" src="import-scripts/pingidentity/export/slowmigration/pingIdentityAuth.py" />
 
 This code receives a login request from FusionAuth, attempts to log the user in via ROPC, and then returns a FusionAuth user object on success.
 
@@ -562,7 +562,7 @@ Set up a Python virtual environment as described in the [Set Up Authentication L
 
 Clone the code below to a file named `exportPingUsers.py` and make modifications appropriate to your environment and needs. In addition to adding the `envID` and `access_token`, change the `apiPath` to point to the domain of the region where your Ping Identity data is hosted.
 
-<RemoteCode lang="python" url={codeRoot + "/pingidentity/export/bulk/exportPingUsers.py"} />
+<LocalCode lang="python" src="import-scripts/pingidentity/export/bulk/exportPingUsers.py" />
 
 Run the script with the following command.
 
