@@ -279,3 +279,91 @@ For each NEEDS_IMPORT repository:
 7. Update this mapping file:
    - Move repo from NEEDS_IMPORT to IMPORTED
    - Update summary counts
+
+---
+
+## Files with Old-Style Remote Code Tags (72 files)
+
+These files contain `tag::` and `end::` markers that need to be converted to bluehawk-style `:snippet-start:` and `:snippet-end:` markers.
+
+### Files with REFERENCED tags (63 files)
+
+These files contain at least one tag that is currently referenced by documentation via `<RemoteContent tags="...">` or `<RemoteCode tags="...">`.
+
+- android-sdk/README.md
+- contrib/Password Hashing Plugins/src/main/java/com/mycompany/fusionauth/plugins/ExampleFirebaseScryptPasswordEncryptor.java
+- contrib/Password Hashing Plugins/src/main/java/com/mycompany/fusionauth/plugins/ExampleStytchScryptPasswordEncryptor.java
+- example-5-minute-guide/routes/index.js
+- example-5-minute-guide/views/index.pug
+- example-anonymous-user/complete-application/server.py
+- example-api-consents-platform/changebank-apis/app.js
+- example-api-consents-platform/changebank-apis/routes/index.js
+- example-api-consents-platform/changebank-apis/services/hasScope.js
+- example-api-consents-platform/create-application/create-application.js
+- example-api-consents-platform/moneyscope-application/src/index.ts
+- example-device-limit-friendly/complete-application/src/index.ts
+- example-device-limit-simple/complete-application/src/index.ts
+- example-fine-grained-authorization/app/src/index.ts
+- example-fine-grained-authorization/docker-compose.yml
+- example-fine-grained-authorization/permify-setup/src/loaddata.ts
+- example-full-user-search/client-side-password-rules/README.md
+- example-get-started/src/index.mts
+- example-get-started/src/sdk.ts
+- example-get-started/tests/example.spec.ts
+- example-javascript-webhooks/simple/app.js
+- example-machine-to-machine/apis/app.js
+- example-machine-to-machine/request-api/request-news.js
+- example-modeling-organizations/complete-application/app.js
+- example-modeling-organizations/complete-application/middleware/checkGrantPermissions.js
+- example-modeling-organizations/complete-application/routes/admin.js
+- example-modeling-organizations/complete-application/routes/billing.js
+- example-modeling-organizations/complete-application/routes/index.js
+- example-modeling-organizations/complete-application/routes/users.js
+- example-node-centralized-sessions/changebankforum/src/index.ts
+- example-node-centralized-sessions/changebank/src/index.ts
+- example-node-sso/pied-piper/routes/index.js
+- example-protected-mcp-server/protected-local-mcp/mcp-server/server.py
+- example-protected-mcp-server/protected-local-mcp/setup/setup_clients.py
+- example-protected-mcp-server/unprotected-local-mcp/mcp-server/server.py
+- example-protected-mcp-server/unprotected-local-mcp/setup/setup_clients.py
+- example-scim-integration/src/main/java/io/fusionauth/example/scim/ScimExample.java
+- example-terraform/examples/create/main.tf
+- example-terraform/examples/data-source/main.tf
+- example-terraform/examples/import/main.tf
+- example-user-actions-guide/app.js
+- example-user-actions-guide/routes/index.js
+- example-user-actions-guide/views/index.pug
+- homebrew-fusionauth/README.md
+- javascript-sdk/packages/sdk-angular/docs/README.md
+- javascript-sdk/packages/sdk-angular/README.md
+- javascript-sdk/packages/sdk-react/docs/README.md
+- javascript-sdk/packages/sdk-react/README.md
+- javascript-sdk/packages/sdk-vue/docs/README.md
+- javascript-sdk/packages/sdk-vue/generated/README.adoc
+- javascript-sdk/packages/sdk-vue/README.md
+- mcp-api/packages/mcp-api/README.md
+- mcp-api/README.md
+- php-client/README.md
+- python-client/README.md
+- quickstart-flutter-native/complete-application/android/app/build.gradle
+- quickstart-flutter-native/complete-application/pubspec.yaml
+- quickstart-kotlin-android-native/README.md
+- quickstart-python-flask-web/complete-application/server.py
+- quickstart-swift-ios-native/README.md
+- ruby-client/README.md
+- swift-sdk/README.md
+- terraform-provider/docs/guides/handling_default_resources.md
+
+### Files with UNREFERENCED tags only (9 files)
+
+These files contain only tags that are NOT referenced by any documentation. These tags may be vestigial, planned for future use, or used by external systems.
+
+- android-sdk/CONTRIBUTING.md (tag: forDocSiteContributing)
+- example-get-started/templates/account.html (tag: login -->)
+- example-get-started/templates/home.html (tag: logout -->)
+- example-kickstart/identity-verification/lambdas/fideo.js (tag: ForgerockPasswordHash)
+- example-modeling-organizations/complete-application/middleware/loadGrants.js (tag: loadGrantsMW)
+- homebrew-fusionauth/CONTRIBUTING.md (tag: forDocSiteContributing)
+- import-scripts/forgerock/import.rb (tag: security)
+- quickstart-kotlin-android-native/TESTING.md (tag: forDocSiteE2ETest)
+- swift-sdk/CONTRIBUTING.md (tag: forDocSiteContributing)
