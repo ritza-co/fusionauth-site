@@ -1,5 +1,6 @@
 ---
 import { Marked } from "marked";
+import Prism from "prismjs";
 import { readLocalFile } from 'src/utils/localFileReader';
 
 export interface Props {
@@ -11,7 +12,21 @@ export interface Props {
 }
 
 const { src } = Astro.props as Props;
-const html = new Marked().parse(readLocalFile(src));
+
+const marked = new Marked({
+  renderer: {
+    code({ text, lang }) {
+      const language = (lang || "").trim().split(/\s+/)[0];
+      if (language && Prism.languages[language]) {
+        const highlighted = Prism.highlight(text, Prism.languages[language], language);
+        return `<pre><code class="language-${language}">${highlighted}</code></pre>`;
+      }
+      return `<pre><code class="language-${language}">${text}</code></pre>`;
+    }
+  }
+});
+
+const html = marked.parse(readLocalFile(src));
 ---
 
 <article>
