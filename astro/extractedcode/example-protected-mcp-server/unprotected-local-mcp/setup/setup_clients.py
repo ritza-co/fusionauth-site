@@ -65,7 +65,7 @@ def create_scope(client: FusionAuthClient, app_id: str) -> None:
         print(f"  Failed to create scope: {response.status}")
 
 
-# :snippet-start: create-client-application
+# :snippet-start: create-client-application-unprotected
 def create_client_application(
     client: FusionAuthClient, client_name: str, port: int, mcp_server_url: str
 ) -> "dict | None":

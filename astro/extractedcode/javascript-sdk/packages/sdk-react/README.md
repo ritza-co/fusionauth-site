@@ -29,7 +29,7 @@ Please also use ``` instead of indenting for code blocks. The backticks are tran
 # Overview
 
 <!--
-:snippet-start: forDocSite
+:snippet-start: forDocSiteReact
 -->
 
 This SDK manages authentication state for your React app and provides functionality to login, register, and logout users. It can be easily configured to automatically manage your refresh token and fetch user info.

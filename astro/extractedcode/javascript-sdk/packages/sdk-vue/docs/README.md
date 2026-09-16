@@ -31,7 +31,7 @@ Please also use ``` instead of indenting for code blocks. The backticks are tran
 # Overview
 
 <!--
-:snippet-start: forDocSite
+:snippet-start: forDocSiteVueDocs
 -->
 
 This SDK provides helpful methods and reactive values that integrate with FusionAuth to help automatically manage authentication state in your Vue app.

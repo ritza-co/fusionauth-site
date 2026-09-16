@@ -25,7 +25,7 @@ Please also use ``` instead of indenting for code blocks. The backticks are tran
 # Overview
 
 <!--
-:snippet-start: forDocSite
+:snippet-start: forDocSiteAngular
 -->
 
 This SDK helps manage authentication state for your Angular app and provides functionality to login, register, and logout users. It also can be configured to automatically manage your refresh token.

@@ -12,7 +12,7 @@ Built with the excellent [github.com/harsha-iiiv/openapi-mcp-generator](https://
 Using this MCP server requires providing the MCP client with a FusionAuth API key. Only use this for dev and test instances. FusionAuth is not responsible for potentially leaking sensitive information.
 
 <!--
-:snippet-start: forDocSite
+:snippet-start: forDocSitePackage
 -->
 
 ## Prerequisites
