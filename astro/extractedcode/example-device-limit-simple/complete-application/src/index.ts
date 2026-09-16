@@ -254,7 +254,6 @@ app.post('/user-login-success', async (req, res, next) => {
 
   // Make a request to FusionAuth with an API key to get the user's refresh tokens.
   // This is effectively the same as counting the number of active sessions, and therefore devices a user has logged in on.
-//:snippet-start: active-session-count
   const tokenResponse = await fetch(`${fusionAuthURL}/api/jwt/refresh?userId=${userId}`, {
     method: 'GET',
     headers: {
@@ -266,7 +265,6 @@ app.post('/user-login-success', async (req, res, next) => {
   // Filter to only refresh tokens for this application.
   tokens.refreshTokens = tokens.refreshTokens.filter((token: any) => token.applicationId === clientId);
   const activeSessionCount = tokens.refreshTokens.length;
-//:snippet-end:
 
   console.log(`User has ${activeSessionCount} of ${maxDeviceCount} allowed active sessions.`);
   if (activeSessionCount >= maxDeviceCount) {

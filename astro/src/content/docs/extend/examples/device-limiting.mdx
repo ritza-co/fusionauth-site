@@ -62,7 +62,7 @@ Now you can use this key to call the API to retrieve the active refresh tokens f
 
 You can now use the number of active refresh tokens filtered for the particular application as a proxy for the number of active logins for the user. Calling the API using Node and filtering the results looks something like the following.
 
-<LocalCode src="example-device-limit-simple/complete-application/src/index.ts.snippet.active-session-count.ts" lang="typescript" />
+<LocalCode src="example-device-limit-simple/complete-application/src/index.ts.snippet.device-limiting.ts" lang="typescript" />
 
 The **`clientId`** variable stores the FusionAuth application Id of the application you are limiting logins for, and **`userId`** is the Id of the user you are checking the active sessions for.
 
