@@ -466,17 +466,17 @@ These files contain `tag::`/`end::` markers that are actively used by documentat
 
 ## Unreferenced Tag Files (9 files)
 
-These files contain only tags that are NOT referenced by any documentation. Review needed to determine if tags should be converted or removed.
+These files contain only tags that are NOT referenced by any documentation. All tags were converted to bluehawk format (snippet-start/snippet-end) for consistency, even though they're not currently used.
 
-- [x] android-sdk/CONTRIBUTING.md (tag: forDocSiteContributing)
-- [x] example-get-started/templates/account.html (tag: login -->)
-- [x] example-get-started/templates/home.html (tag: login)
-- [x] example-kickstart/identity-verification/lambdas/fideo.js (tag: ForgerockPasswordHash)
-- [x] example-modeling-organizations/complete-application/middleware/loadGrants.js (tag: loadGrantsMW)
-- [x] homebrew-fusionauth/CONTRIBUTING.md (tag: forDocSiteContributing)
-- [x] import-scripts/forgerock/import.rb (tag: security)
-- [x] quickstart-kotlin-android-native/TESTING.md (tag: forDocSiteE2ETest)
-- [x] swift-sdk/CONTRIBUTING.md (tag: forDocSiteContributing)
+- [x] android-sdk/CONTRIBUTING.md (tag: forDocSiteContributing) - converted to bluehawk
+- [x] example-get-started/templates/account.html (tag: logout) - converted to bluehawk
+- [x] example-get-started/templates/home.html (tag: login) - converted to bluehawk
+- [x] example-kickstart/identity-verification/lambdas/fideo.js (tag: ForgerockPasswordHash) - converted to bluehawk
+- [x] example-modeling-organizations/complete-application/middleware/loadGrants.js (tag: loadGrantsMW) - converted to bluehawk
+- [x] homebrew-fusionauth/CONTRIBUTING.md (tag: forDocSiteContributing) - converted to bluehawk
+- [x] import-scripts/forgerock/import.rb (tag: security) - converted to bluehawk
+- [x] quickstart-kotlin-android-native/TESTING.md (tag: forDocSiteE2ETest) - converted to bluehawk
+- [x] swift-sdk/CONTRIBUTING.md (tag: forDocSiteContributing) - converted to bluehawk
 
 **Progress: 9/9**
 
