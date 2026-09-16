@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
+trap 'echo "SCRIPT FAILED on line $LINENO (exit $?)" >&2' ERR
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ASTRO_DIR="$(cd "$SCRIPT_DIR/../../astro" && pwd)"
@@ -10,13 +11,13 @@ mkdir -p src/generated-code-snippets
 
 # Compute a hash of all extractedcode file contents to detect changes
 compute_hash() {
-  find extractedcode -type f | sort | xargs sha256sum 2>/dev/null \
-    || find extractedcode -type f | sort | xargs shasum -a 256 2>/dev/null
+  find extractedcode -type f -print0 | sort -z | xargs -0 sha256sum 2>/dev/null \
+    || find extractedcode -type f -print0 | sort -z | xargs -0 shasum -a 256 2>/dev/null
 }
 HASH_FILE="src/generated-code-snippets/.extractedcode-hash"
 current_hash=$(compute_hash | sha256sum 2>/dev/null | cut -d' ' -f1 \
   || compute_hash | shasum -a 256 | cut -d' ' -f1)
-snippet_count=$(find src/generated-code-snippets -type f -not -name '.extractedcode-hash' 2>/dev/null | wc -l)
+snippet_count=$(find src/generated-code-snippets -type f -not -name '.extractedcode-hash' 2>/dev/null | wc -l || true)
 
 if [ -f "$HASH_FILE" ] && [ "$(cat "$HASH_FILE")" = "$current_hash" ] && [ "$snippet_count" -gt 0 ]; then
   echo "Code snippets: up to date ($((snippet_count + 0)) files)"
