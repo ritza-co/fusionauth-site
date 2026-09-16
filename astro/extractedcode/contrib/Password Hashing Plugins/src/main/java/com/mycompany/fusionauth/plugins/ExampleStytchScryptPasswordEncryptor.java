@@ -23,14 +23,14 @@ import java.nio.charset.StandardCharsets;
 
 public class ExampleStytchScryptPasswordEncryptor implements PasswordEncryptor {
 
-// tag::scryptParameters[]
+// :snippet-start: scryptParameters
   /* Scrypt Parameters. You can find the correct settings for your Stytch project
     in the email they sent you containing your hashes. Copy them here. */
   private static final int N_CpuCost = 1 << 15;
   private static final int R_MemoryCost_BlockSize = 8;
   private static final int P_Parallelization = 1;
   private static final int KeyLength = 32;
-// end::scryptParameters[]
+// :snippet-end:
 
   @Override
   public int defaultFactor() {
@@ -42,7 +42,7 @@ public class ExampleStytchScryptPasswordEncryptor implements PasswordEncryptor {
     try {
         Charset Charset = StandardCharsets.US_ASCII;
         String urlSafeSalt = salt.replace('+', '-').replace('/', '_'); // because Stytch exports the latter type of Base 64, and Java/FusionAuth require the former
-        byte[] hashedBytes = SCrypt.scrypt(password.getBytes(Charset), urlSafeSalt.getBytes(Charset), N_CpuCost, R_MemoryCost_BlockSize, P_Parallelization, KeyLength);
+        byte hashedBytes = SCrypt.scrypt(password.getBytes(Charset), urlSafeSalt.getBytes(Charset), N_CpuCost, R_MemoryCost_BlockSize, P_Parallelization, KeyLength);
         return new String(Base64.encodeBase64(hashedBytes)); // Return Base64 with + and / symbols, not - and _ symbols
     }
     catch (Exception e) {

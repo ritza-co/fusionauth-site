@@ -1,4 +1,4 @@
-//tag::top[]
+// :snippet-start: top
 import FusionAuthClient from "@fusionauth/typescript-client";
 import express from 'express';
 import cookieParser from 'cookie-parser';
@@ -83,14 +83,14 @@ app.use(cookieParser());
 /** Decode Form URL Encoded data */
 app.use(express.urlencoded());
 
-//end::top[]
+// :snippet-end:
 
 // Static Files
-//tag::static[]
+// :snippet-start: static
 app.use('/static', express.static(path.join(__dirname, '../static/')));
-//end::static[]
+// :snippet-end:
 
-//tag::homepage[]
+// :snippet-start: homepage
 app.get("/", async (req, res) => {
   const accessToken = req.session.accessToken;
   if (await validateUser(accessToken)) {
@@ -103,9 +103,9 @@ app.get("/", async (req, res) => {
     res.render('home');
   }
 });
-//end::homepage[]
+// :snippet-end:
 
-//tag::login[]
+// :snippet-start: login
 app.get('/login', (req, res, next) => {
   const userSession = req.session.userSession;
 
@@ -116,9 +116,9 @@ app.get('/login', (req, res, next) => {
 
   res.redirect(302, `${fusionAuthURL}/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=http://localhost:${port}/oauth-redirect&state=${userSession?.stateValue}&code_challenge=${userSession?.challenge}&code_challenge_method=S256&scope=profile%20email%20openid%20offline_access`)
 });
-//end::login[]
+// :snippet-end:
 
-//tag::authorize[]
+// :snippet-start: authorize
 app.get('/authorize', (req, res, next) => {
   const userSession = req.session.userSession;
 
@@ -131,9 +131,9 @@ app.get('/authorize', (req, res, next) => {
 
 
 });
-//end::authorize[]
+// :snippet-end:
 
-//tag::oauth-redirect[]
+// :snippet-start: oauth-redirect
 app.get('/oauth-redirect', async (req, res, next) => {
   // Capture query params
   const stateFromFusionAuth = `${req.query?.state}`;
@@ -180,14 +180,14 @@ app.get('/oauth-redirect', async (req, res, next) => {
     }))
   }
 });
-//end::oauth-redirect[]
+// :snippet-end:
 
 
 interface Balance {
   balance: number;
 }
 
-//tag::account[]
+// :snippet-start: account
 app.get("/account", async (req, res) => {
   const access_token = req.session.accessToken;
   if (!await validateUser(access_token)) {
@@ -213,29 +213,29 @@ app.get("/account", async (req, res) => {
     //});
   }
 });
-//end::account[]
+// :snippet-end:
 
-//tag::logout[]
+// :snippet-start: logout
 app.get('/logout', (req, res, next) => {
   res.redirect(302, `${fusionAuthURL}/oauth2/logout?client_id=${clientId}`);
 });
-//end::logout[]
+// :snippet-end:
 
-//tag::oauth-logout[]
+// :snippet-start: oauth-logout
 app.get('/oauth2/logout', (req, res, next) => {
   console.log('Logging out...')
   req.session.destroy(() => {});
 
   res.redirect(302, '/')
 });
-//end::oauth-logout[]
+// :snippet-end:
 
 // start the Express server
-//tag::app[]
+// :snippet-start: app
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
 });
-//end::app[]
+// :snippet-end:
 
 
 // todo

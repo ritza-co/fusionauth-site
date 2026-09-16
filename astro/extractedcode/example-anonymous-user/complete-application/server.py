@@ -1,4 +1,3 @@
-#tag::baseApplication[]
 import json
 import math
 from os import environ as env
@@ -39,18 +38,17 @@ oauth.register(
 
 jwks_url=f'{env.get("ISSUER")}/.well-known/jwks.json'
 
-# tag::createFusionAuthClient[]
+# :snippet-start: createFusionAuthClient
 client = FusionAuthClient(env.get("API_KEY"), 'http://localhost:9011')
-# end::createFusionAuthClient[]
+# :snippet-end:
 
 if __name__ == "__main__":
   app.run(host="0.0.0.0", port=env.get("PORT", 5000))
 
 def get_logout_url():
   return env.get("ISSUER") + "/oauth2/logout?" + urlencode({"client_id": env.get("CLIENT_ID")},quote_via=quote_plus)
-#end::baseApplication[]
 
-#tag::homeRoute[]
+# :snippet-start: homeRoute
 @app.route("/")
 def home():
   if request.cookies.get(ACCESS_TOKEN_COOKIE_NAME, None) is not None:
@@ -58,9 +56,8 @@ def home():
     return redirect("/account")
 
   return render_template("home.html")
-#end::homeRoute[]
+# :snippet-end:
 
-#tag::registerRoute[]
 @app.route("/register", methods=['GET', 'POST'])
 def register():
   message = {}
@@ -81,7 +78,7 @@ def register():
     oauth.FusionAuth.save_authorize_data(redirect_uri=redirect_uri, **authorize_url_obj)
     return redirect(register_url)
   else: 
-#tag::registerAnonymousUserRoute[]
+# :snippet-start: registerAnonymousUserRoute
   # if they have a cookie, look up the user and convert them and send a password reset
     if request.method == 'POST':
       user_id = get_anon_user_id_from_cookie()
@@ -111,11 +108,11 @@ def register():
         }
         trigger_email_response = client.forgot_password(forgot_password_data)
 
-#end::registerAnonymousUserRoute[]
+# :snippet-end:
       
     return render_template("register.html", message=message)
 
-#tag::cleanupAnonymousUserRoute[]
+# :snippet-start: cleanupAnonymousUserRoute
 @app.route("/webhook", methods=['POST'])
 def webhook():
   # look up the user by id. If they are not an anonymous user return 204 directly, otherwise update their anonymous user status to be false and return 204
@@ -137,10 +134,10 @@ def webhook():
       patch_response = client.patch_user(user_id, patch_data).success_response
 
   return '', 204
-#end::cleanupAnonymousUserRoute[]
+# :snippet-end:
 
-# tag::videoRoute[]
-# tag::createUser[]
+# :snippet-start: videoRoute
+# :snippet-start: createUser
 @app.route("/video")
 def video():
   if request.cookies.get(ANON_JWT_COOKIE_NAME, None) is None:
@@ -158,8 +155,8 @@ def video():
 
     response = client.create_user(new_user).success_response
     user_id=response['user']['id']
-# end::createUser[]
-# tag::createJWT[]
+# :snippet-end:
+# :snippet-start: createJWT
     # create a JWT, good for a year
     jwt_ttl=60*60*24*365
     jwt={
@@ -175,10 +172,10 @@ def video():
 
     # set the cookie
     resp.set_cookie(ANON_JWT_COOKIE_NAME, token, max_age=jwt_ttl, httponly=True, samesite="Lax")
-# end::createJWT[]
+# :snippet-end:
     return resp
   else:
-# tag::readJWT[]
+# :snippet-start: readJWT
     user_id = get_anon_user_id_from_cookie()
     if user_id is None:
       print("couldn't find user")
@@ -197,20 +194,20 @@ def video():
       }
     }
     patch_response = client.patch_user(user_id, patch_data).success_response
-# end::readJWT[]
+# :snippet-end:
     return render_template("video.html")
-# end::videoRoute[]
+# :snippet-end:
 
-#tag::loginRoute[]
+# :snippet-start: loginRoute
 @app.route("/login")
 def login():
   return oauth.FusionAuth.authorize_redirect(
     redirect_uri=url_for("callback", _external=True)
   )
-#end::loginRoute[]
+# :snippet-end:
 
 
-#tag::callbackRoute[]
+# :snippet-start: callbackRoute
 @app.route("/callback")
 def callback():
   token = oauth.FusionAuth.authorize_access_token()
@@ -226,10 +223,10 @@ def callback():
   session["user"] = token["userinfo"]
 
   return resp
-#end::callbackRoute[]
+# :snippet-end:
 
 
-#tag::logoutRoute[]
+# :snippet-start: logoutRoute
 @app.route("/logout")
 def logout():
   session.clear()
@@ -240,13 +237,13 @@ def logout():
   resp.delete_cookie(USERINFO_COOKIE_NAME)
 
   return resp
-#end::logoutRoute[]
+# :snippet-end:
 
 
 #
 # This is the logged in Account page.
 #
-#tag::accountRoute[]
+# :snippet-start: accountRoute
 @app.route("/account")
 def account():
   access_token = request.cookies.get(ACCESS_TOKEN_COOKIE_NAME, None)
@@ -259,13 +256,13 @@ def account():
     "account.html",
     session=json.loads(request.cookies.get(USERINFO_COOKIE_NAME, None)),
     logoutUrl=get_logout_url())
-#end::accountRoute[]
+# :snippet-end:
 
 
 #
 # Takes a dollar amount and converts it to change
 #
-#tag::makeChangeRoute[]
+# :snippet-start: makeChangeRoute
 @app.route("/make-change", methods=['GET', 'POST'])
 def make_change():
   access_token = request.cookies.get(ACCESS_TOKEN_COOKIE_NAME, None)
@@ -300,13 +297,13 @@ def make_change():
     session=json.loads(request.cookies.get(USERINFO_COOKIE_NAME, None)),
     change=change,
     logoutUrl=get_logout_url())
-#end::makeChangeRoute[]
+# :snippet-end:
 
 # from https://stackoverflow.com/questions/2257441/random-string-generation-with-upper-case-letters-and-digits
 def random_string(length):
   return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(length))
 
-# tag::getAnonUserIdFromCookie[]
+# :snippet-start: getAnonUserIdFromCookie
 def get_anon_user_id_from_cookie():
   # get the cookie
   anon_jwt = request.cookies.get(ANON_JWT_COOKIE_NAME, None)
@@ -320,5 +317,5 @@ def get_anon_user_id_from_cookie():
     return None
 
   return claims['userId']
-# end::getAnonUserIdFromCookie[]
+# :snippet-end:
 
