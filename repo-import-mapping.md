@@ -33,7 +33,7 @@ We are currently on branch: `draft_bluehawkAllRepos`
 
 ---
 
-## IMPORTED Repos (56)
+## IMPORTED Repos (57)
 
 | Source Repository | Target Folder | Status | Referenced By |
 |---|---|---|---|
@@ -93,6 +93,7 @@ We are currently on branch: `draft_bluehawkAllRepos`
 | FusionAuth/fusionauth-example-java-spring | example-java-spring | IMPORTED | blog/spring-and-fusionauth.mdx |
 | FusionAuth/fusionauth-example-to-mock-or-not-mock | example-to-mock-or-not-mock | IMPORTED | blog/to-mock-or-not-mock-auth.mdx |
 | FusionAuth/fusionauth-example-using-links-fastify | example-using-links-fastify | IMPORTED | blog/using-identity-provider-links.mdx |
+| FusionAuth/fusionauth-example-mock-testing-vs-dev-server | example-mock-testing-vs-dev-server | IMPORTED | blog/6-indicators-doing-mocking-wrong.mdx |
 
 ## NEEDS_REVIEW Repos (48)
 
@@ -231,7 +232,7 @@ These repos exist on GitHub but are not referenced in any documentation. They sh
 
 ## Summary
 
-- **IMPORTED**: 56 repos already in astro/extractedcode/
+- **IMPORTED**: 57 repos already in astro/extractedcode/
 - **NEEDS_REVIEW**: 48 repos imported but need human review
 - **IMPORTED_IN_BRANCH**: 10 repos imported in other branches, not yet merged to main
 - **NEEDS_IMPORT**: 0 repos referenced in docs but not yet imported
