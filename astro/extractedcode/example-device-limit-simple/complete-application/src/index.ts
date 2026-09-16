@@ -1,4 +1,3 @@
-//tag::top[]
 import FusionAuthClient from "@fusionauth/typescript-client";
 import express from 'express';
 import cookieParser from 'cookie-parser';
@@ -73,14 +72,12 @@ app.use(express.urlencoded());
 
 app.use(express.json());
 
-//end::top[]
-
 // Static Files
-//tag::static[]
+//:snippet-start: static
 app.use('/static', express.static(path.join(__dirname, '../static/')));
-//end::static[]
+//:snippet-end:
 
-//tag::homepage[]
+//:snippet-start: homepage
 app.get("/", async (req, res) => {
   const userTokenCookie = req.cookies[userToken];
   if (await validateUser(userTokenCookie)) {
@@ -93,9 +90,9 @@ app.get("/", async (req, res) => {
     res.sendFile(path.join(__dirname, '../templates/home.html'));
   }
 });
-//end::homepage[]
+//:snippet-end:
 
-//tag::login[]
+//:snippet-start: login
 app.get('/login', (req, res, next) => {
   const userSessionCookie = req.cookies[userSession];
 
@@ -106,9 +103,9 @@ app.get('/login', (req, res, next) => {
 
   res.redirect(302, `${fusionAuthURL}/oauth2/authorize?client_id=${clientId}&response_type=code&scope=offline_access&redirect_uri=http://localhost:${port}/oauth-redirect&state=${userSessionCookie?.stateValue}&code_challenge=${userSessionCookie?.challenge}&code_challenge_method=S256`)
 });
-//end::login[]
+//:snippet-end:
 
-//tag::oauth-redirect[]
+//:snippet-start: oauth-redirect
 app.get('/oauth-redirect', async (req, res, next) => {
   // Capture query params
   const stateFromFusionAuth = `${req.query?.state}`;
@@ -153,9 +150,9 @@ app.get('/oauth-redirect', async (req, res, next) => {
     }))
   }
 });
-//end::oauth-redirect[]
+//:snippet-end:
 
-//tag::account[]
+//:snippet-start: account
 app.get("/account", async (req, res) => {
   const userTokenCookie = req.cookies[userToken];
   if (!await validateUser(userTokenCookie)) {
@@ -164,9 +161,9 @@ app.get("/account", async (req, res) => {
     res.sendFile(path.join(__dirname, '../templates/account.html'));
   }
 });
-//end::account[]
+//:snippet-end:
 
-//tag::make-change[]
+//:snippet-start: make-change
 app.get("/make-change", async (req, res) => {
   const userTokenCookie = req.cookies[userToken];
   if (!await validateUser(userTokenCookie)) {
@@ -215,15 +212,15 @@ app.post("/make-change", async (req, res) => {
   }))
 
 });
-//end::make-change[]
+//:snippet-end:
 
-//tag::logout[]
+//:snippet-start: logout
 app.get('/logout', (req, res, next) => {
   res.redirect(302, `${fusionAuthURL}/oauth2/logout?client_id=${clientId}`);
 });
-//end::logout[]
+//:snippet-end:
 
-//tag::oauth-logout[]
+//:snippet-start: oauth-logout
 app.get('/oauth2/logout', async (req, res, next) => {
   console.log('Logging out...')
 
@@ -244,9 +241,9 @@ app.get('/oauth2/logout', async (req, res, next) => {
   res.clearCookie(userDetails);
   res.redirect(302, '/')
 });
-//end::oauth-logout[]
+//:snippet-end:
 
-//tag::device-limiting[]
+//:snippet-start: device-limiting
 app.post('/user-login-success', async (req, res, next) => {
 
   if (req.body.event.applicationId !== clientId)
@@ -257,7 +254,7 @@ app.post('/user-login-success', async (req, res, next) => {
 
   // Make a request to FusionAuth with an API key to get the user's refresh tokens.
   // This is effectively the same as counting the number of active sessions, and therefore devices a user has logged in on.
-//tag::active-session-count[]
+//:snippet-start: active-session-count
   const tokenResponse = await fetch(`${fusionAuthURL}/api/jwt/refresh?userId=${userId}`, {
     method: 'GET',
     headers: {
@@ -269,7 +266,7 @@ app.post('/user-login-success', async (req, res, next) => {
   // Filter to only refresh tokens for this application.
   tokens.refreshTokens = tokens.refreshTokens.filter((token: any) => token.applicationId === clientId);
   const activeSessionCount = tokens.refreshTokens.length;
-//end::active-session-count[]
+//:snippet-end:
 
   console.log(`User has ${activeSessionCount} of ${maxDeviceCount} allowed active sessions.`);
   if (activeSessionCount >= maxDeviceCount) {
@@ -281,11 +278,11 @@ app.post('/user-login-success', async (req, res, next) => {
   }
 
 });
-//end::device-limiting[]
+//:snippet-end:
 
 // start the Express server
-//tag::app[]
+//:snippet-start: app
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
 });
-//end::app[]
+//:snippet-end:

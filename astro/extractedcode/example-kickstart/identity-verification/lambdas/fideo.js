@@ -1,8 +1,8 @@
-// tag::failthreshold
+// :snippet-start: failthreshold
 var FAIL_THRESHOLD = 0.6;
-// end::failthreshold
+// :snippet-end:
 
-// tag::validate
+// :snippet-start: validate
 function validate(result, user, registration, formContext) {
   try {
 
@@ -52,9 +52,9 @@ function validate(result, user, registration, formContext) {
     console.log("General error:", error);
   }
 }
-// end::validate
+// :snippet-end:
 
-// tag::getapikey
+// :snippet-start: getapikey
 // pull API key off of application.data field using a limited API key
 function getAPIKey() {
   var response = fetch("http://localhost:9012/api/application/e9fdb985-9173-4e01-9d73-ac2d60d1dc8e", {
@@ -74,9 +74,9 @@ function getAPIKey() {
   }
   return fideoAPIKey;
 }
-// end::getapikey
+// :snippet-end:
 
-// tag::registrationfailfetch
+// :snippet-start: registrationfailfetch
 function trackRegistrationFailedFetch(email) {
   var response = fetch("http://example.com/trackregistrationfail", {
     method: "POST",
@@ -93,11 +93,11 @@ function trackRegistrationFailedFetch(email) {
     console.log("error tracking registration: " + response.status);
   }
 }
-// end::registrationfailfetch
+// :snippet-end:
 
-// tag::registrationfaillog
+// :snippet-start: registrationfaillog
 function trackRegistrationFailedEventLog(email) {
   var LOG_PREFIX = 'fideo-registration-failed ';
   console.log(LOG_PREFIX + email);
 }
-// end::registrationfaillog
+// :snippet-end:

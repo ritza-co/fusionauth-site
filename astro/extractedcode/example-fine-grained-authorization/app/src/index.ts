@@ -1,4 +1,3 @@
-//tag::top[]
 import FusionAuthClient from "@fusionauth/typescript-client";
 import express from 'express';
 import cookieParser from 'cookie-parser';
@@ -77,7 +76,7 @@ const validateUser = async (userTokenCookie: { access_token: string }, permissio
     // use for testing specific hours. between 7 and 17 should work. These are in permify-setup/src/loaddata.ts and are the openValue and closeValue values. Uncomment below and then comment out the mtTime.getHours() line below
     //const hour = 1;
 
-    // tag::checkingPermission
+    // :snippet-start: checkingPermission
     const now = new Date();
     const mtTime = new Date(now.toLocaleString("en-US", {timeZone: "America/Denver"}));
     const hour = mtTime.getHours();
@@ -105,7 +104,7 @@ const validateUser = async (userTokenCookie: { access_token: string }, permissio
     });
     
     let checkresult = response.can === permify.grpc.base.CheckResult.CHECK_RESULT_ALLOWED;
-    // end::checkingPermission
+    // :snippet-end:
 
     console.log(checkresult ? "RESULT_ALLOWED" : "RESULT_DENIED");
     return checkresult;
@@ -136,14 +135,12 @@ app.use(cookieParser());
 /** Decode Form URL Encoded data */
 app.use(express.urlencoded());
 
-//end::top[]
-
 // Static Files
-//tag::static[]
+// :snippet-start: static
 app.use('/static', express.static(path.join(__dirname, '../static/')));
-//end::static[]
+// :snippet-end:
 
-//tag::homepage[]
+// :snippet-start: homepage
 app.get("/", async (req, res) => {
   const userTokenCookie = req.cookies[userToken];
   if (await validateUser(userTokenCookie,"home")) {
@@ -156,9 +153,9 @@ app.get("/", async (req, res) => {
     res.sendFile(path.join(__dirname, '../templates/home.html'));
   }
 });
-//end::homepage[]
+// :snippet-end:
 
-//tag::login[]
+// :snippet-start: login
 app.get('/login', (req, res, next) => {
   const userSessionCookie = req.cookies[userSession];
 
@@ -169,9 +166,9 @@ app.get('/login', (req, res, next) => {
 
   res.redirect(302, `${fusionAuthURL}/oauth2/authorize?scope=email%20profile%20openid&client_id=${clientId}&response_type=code&redirect_uri=http://localhost:${port}/oauth-redirect&state=${userSessionCookie?.stateValue}&code_challenge=${userSessionCookie?.challenge}&code_challenge_method=S256`)
 });
-//end::login[]
+// :snippet-end:
 
-//tag::oauth-redirect[]
+// :snippet-start: oauth-redirect
 app.get('/oauth-redirect', async (req, res, next) => {
   // Capture query params
   const stateFromFusionAuth = `${req.query?.state}`;
@@ -217,9 +214,9 @@ app.get('/oauth-redirect', async (req, res, next) => {
     }))
   }
 });
-//end::oauth-redirect[]
+// :snippet-end:
 
-//tag::account[]
+// :snippet-start: account
 app.get("/account", async (req, res) => {
   const userTokenCookie = req.cookies[userToken];
   if (!await validateUser(userTokenCookie,"account")) {
@@ -228,15 +225,15 @@ app.get("/account", async (req, res) => {
     res.sendFile(path.join(__dirname, '../templates/account.html'));
   }
 });
-//end::account[]
+// :snippet-end:
 
-//tag::error[]
+// :snippet-start: error
 app.get("/error", async (req, res) => {
   res.sendFile(path.join(__dirname, '../templates/error.html'));
 });
-//end::error[]
+// :snippet-end:
 
-//tag::admin[]
+// :snippet-start: admin
 app.get("/admin", async (req, res) => {
   const userTokenCookie = req.cookies[userToken];
   if (!await validateUser(userTokenCookie,"admin")) {
@@ -245,9 +242,9 @@ app.get("/admin", async (req, res) => {
     res.sendFile(path.join(__dirname, '../templates/admin.html'));
   }
 });
-//end::admin[]
+// :snippet-end:
 
-//tag::make-change[]
+// :snippet-start: make-change
 app.get("/make-change", async (req, res) => {
   const userTokenCookie = req.cookies[userToken];
   if (!await validateUser(userTokenCookie,"makechange")) {
@@ -296,15 +293,15 @@ app.post("/make-change", async (req, res) => {
   }))
 
 });
-//end::make-change[]
+// :snippet-end:
 
-//tag::logout[]
+// :snippet-start: logout
 app.get('/logout', (req, res, next) => {
   res.redirect(302, `${fusionAuthURL}/oauth2/logout?client_id=${clientId}`);
 });
-//end::logout[]
+// :snippet-end:
 
-//tag::oauth-logout[]
+// :snippet-start: oauth-logout
 app.get('/oauth2/logout', (req, res, next) => {
   console.log('Logging out...')
   res.clearCookie(userSession);
@@ -313,11 +310,11 @@ app.get('/oauth2/logout', (req, res, next) => {
 
   res.redirect(302, '/')
 });
-//end::oauth-logout[]
+// :snippet-end:
 
 // start the Express server
-//tag::app[]
+// :snippet-start: app
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
 });
-//end::app[]
+// :snippet-end:

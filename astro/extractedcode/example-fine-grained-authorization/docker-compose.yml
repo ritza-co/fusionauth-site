@@ -75,7 +75,7 @@ services:
       - fusionauth_config:/usr/local/fusionauth/config
       - ./kickstart:/usr/local/fusionauth/kickstart
 
-# tag::permifyDockerCompose
+# :snippet-start: permifyDockerCompose
   permify:
     image: ghcr.io/permify/permify
     command: serve
@@ -87,7 +87,7 @@ services:
     ports:
       - "3476:3476"
       - "3478:3478"
-# end::permifyDockerCompose
+# :snippet-end:
 
 networks:
   db_net:
