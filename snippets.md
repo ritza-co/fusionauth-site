@@ -5,11 +5,11 @@
 ### Current Status (as of 2026-09-16)
 - **RemoteContent → LocalMarkdown**: COMPLETE (8/8 files converted, 1 skipped)
 - **RemoteValue → LocalValue**: COMPLETE (1/1 file converted, 2 skipped)
-- **RemoteCode → LocalCode**: COMPLETE (all non-SKIP'd files converted)
+- **RemoteCode → LocalCode**: 68/68 COMPLETE (12 skipped in other branches, 14 blocked - repos are NOT_REFERENCED)
 - **Old-style tags → Bluehawk**: COMPLETE (all source files converted)
 - **Unreferenced tags → Bluehawk**: COMPLETE (all 9 files converted)
 - **Email Templates → LocalEmailCode**: COMPLETE (28 files converted to new component)
-- **Overall**: ALL TASKS COMPLETE (191/191 files converted, 15 skipped)
+- **Overall**: 177/177 files converted, 15 skipped, 14 blocked (NOT_REFERENCED repos should not be imported per repo-import-mapping.md)
 
 ### Key Information
 
@@ -381,20 +381,20 @@ These blog files use `<RemoteCode>`. Convert to use `<LocalCode>`.
 - [x] blog/2023-hacktoberfest.mdx (import only, no usage)
 - [x] blog/2024-hacktoberfest.mdx (import only, no usage)
 - [x] blog/dotnet-templates.mdx (import only, no usage)
-- [ ] blog/6-indicators-doing-mocking-wrong.mdx (SKIP: missing repos)
-- [ ] blog/backend-for-frontend.mdx (SKIP: missing repo)
-- [ ] blog/custom-scopes-in-third-party-applications.mdx (SKIP: missing repo)
-- [ ] blog/get-more-value-out-of-fusionauth.mdx (SKIP: missing repo)
-- [ ] blog/javascript-sdks.mdx (SKIP: missing repos)
-- [ ] blog/modeling-family-and-consents.mdx (SKIP: missing repo)
-- [ ] blog/nextjs-single-sign-on.mdx (SKIP: missing repo)
-- [ ] blog/permify-bulk-permissions-check.mdx (SKIP: missing repo)
-- [ ] blog/react-example-application.mdx (SKIP: missing repo)
-- [ ] blog/remix-demo.mdx (SKIP: missing repo)
-- [ ] blog/securing-react-native-with-oauth.mdx (SKIP: missing repo)
-- [ ] blog/spring-and-fusionauth.mdx (SKIP: missing repo)
-- [ ] blog/to-mock-or-not-mock-auth.mdx (SKIP: missing repo)
-- [ ] blog/using-identity-provider-links.mdx (SKIP: missing repo)
+- [ ] blog/6-indicators-doing-mocking-wrong.mdx (BLOCKED: repos are NOT_REFERENCED, should not be imported)
+- [ ] blog/backend-for-frontend.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
+- [ ] blog/custom-scopes-in-third-party-applications.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
+- [ ] blog/get-more-value-out-of-fusionauth.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
+- [ ] blog/javascript-sdks.mdx (BLOCKED: repos are NOT_REFERENCED, should not be imported)
+- [ ] blog/modeling-family-and-consents.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
+- [ ] blog/nextjs-single-sign-on.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
+- [ ] blog/permify-bulk-permissions-check.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
+- [ ] blog/react-example-application.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
+- [ ] blog/remix-demo.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
+- [ ] blog/securing-react-native-with-oauth.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
+- [ ] blog/spring-and-fusionauth.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
+- [ ] blog/to-mock-or-not-mock-auth.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
+- [ ] blog/using-identity-provider-links.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
 
 ## Docs Files with RemoteCode (1 file)
 
@@ -491,19 +491,6 @@ These files contain only tags that are NOT referenced by any documentation. Revi
 
 **Progress: 9/9**
 
----
-
-## Summary
-
-| Task | Total | Skip (Done in Other Branches) | To Do | Completed | Remaining |
-|------|-------|-------------------------------|-------|-----------|-----------|
-| RemoteCode → LocalCode | 94 | 12 | 82 | 82 | 0 |
-| RemoteValue → LocalValue | 3 | 2 | 1 | 1 | 0 |
-| RemoteContent → LocalMarkdown | 9 | 1 | 8 | 8 | 0 |
-| Old-style tags → Bluehawk | 63 | 0 | 63 | 63 | 0 |
-| Unreferenced tags review | 9 | 0 | 9 | 9 | 0 |
-| Email Templates → LocalEmailCode | 28 | 0 | 28 | 28 | 0 |
-| **TOTAL** | **206** | **15** | **191** | **191** | **0** |
 
 ---
 
