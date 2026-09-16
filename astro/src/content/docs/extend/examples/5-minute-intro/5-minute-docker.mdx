@@ -12,7 +12,7 @@ import FiveMinuteTestApplication from 'src/content/docs/extend/examples/5-minute
 import FiveMinuteLogout from 'src/content/docs/extend/examples/5-minute-intro/_5-minute-logout.mdx';
 import FiveMinuteSummingUp from 'src/content/docs/extend/examples/5-minute-intro/_5-minute-summing-up.mdx';
 import { YouTube } from '@astro-community/astro-embed-youtube';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 You've chosen to install FusionAuth via Docker and Docker Compose.
 
@@ -73,9 +73,7 @@ curl -o .env https://raw.githubusercontent.com/FusionAuth/fusionauth-containers/
 
 Edit these files as needed. The stock `.env` file will contain the following values, you will want to modify the `DATABASE_PASSWORD` and ensure the `POSTGRES_USER` and `POSTGRES_PASSWORD` values are correct. You may also override any of these values using environment variables.
 
-<RemoteCode lang="shell"
-            url="https://raw.githubusercontent.com/FusionAuth/fusionauth-containers/main/docker/fusionauth/.env"
-            title="The .env file" />
+<LocalCode lang="shell" src="containers/docker/fusionauth/.env" title="The .env file" />
 
 ```shell title="Starting FusionAuth"
 docker compose up -d

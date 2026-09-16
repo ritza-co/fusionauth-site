@@ -6,7 +6,7 @@ tags: docker, container, orbstack, compose, docker-compose, dockerfile. docker-c
 order: 0
 ---
 import { Steps } from 'astro-better-steps';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import Accordion from 'src/components/Accordion.astro';
 import MarkdownOnly from 'src/components/MarkdownOnly.astro';
 
@@ -42,7 +42,7 @@ Use the steps below to install FusionAuth using Docker Compose with the configur
 
    <Accordion>
     <span slot="title">Full `docker-compose.yaml` example</span>    
-    <RemoteCode title="docker-compose.yml" url="https://raw.githubusercontent.com/FusionAuth/fusionauth-containers/main/docker/fusionauth/docker-compose.yml" lang="yaml" />
+    <LocalCode src="containers/docker/fusionauth/docker-compose.yml" lang="yaml" title="docker-compose.yml" />
       
    </Accordion>
 
@@ -52,9 +52,7 @@ Use the steps below to install FusionAuth using Docker Compose with the configur
 
    <Accordion>
     <span slot="title">Full `.env` example</span>    
-    <RemoteCode lang="yaml"
-        url="https://raw.githubusercontent.com/FusionAuth/fusionauth-containers/main/docker/fusionauth/.env"
-        title=".env" />
+    <LocalCode src="containers/docker/fusionauth/.env" lang="yaml" title=".env" />
       
    </Accordion>
 

@@ -10,7 +10,7 @@ import DockerSpinup from 'src/components/quickstarts/DockerSpinup.astro';
 import Intro from 'src/components/quickstarts/Intro.astro';
 import {Content as LoginArchitectureWeb} from 'src/components/quickstarts/LoginArchitectureWeb.mdx';
 import NextSteps from 'src/components/quickstarts/NextSteps.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import QuickstartNgrok from 'src/components/quickstarts/quickstart-ngrok.mdx';
 import Breadcrumb from 'src/components/Breadcrumb.astro';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
@@ -147,15 +147,13 @@ Let's look at Android first.
 
 In your editor, go to the `android/app/build.gradle` file for your Android app to specify the custom redirect scheme. Find the code block similar to the code below and add `com.fusionauth.flutterdemo` as the `appAuthRedirectScheme` in the `manifestPlaceholders` array.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-flutter-native/main/complete-application/android/app/build.gradle"
- lang="text" tags="appAuthRedirectScheme" />
+<LocalCode src="quickstart-flutter-native/complete-application/android/app/build.gradle.snippet.appAuthRedirectScheme.gradle" lang="text" />
 
 #### iOS Setup
 
 Now edit the `ios/Runner/Info.plist` file in the iOS app to specify the custom scheme. Find the section that looks similar to the following and add the FusionAuth URL `com.fusionauth.flutterdemo`.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-flutter-native/main/complete-application/ios/Runner/Info.plist"
- lang="xml" />
+<LocalCode src="quickstart-flutter-native/complete-application/ios/Runner/Info.plist" lang="xml" />
 
 Make sure the `ios/Runner/Info.plist` file has `CFBundleURLTypes` and `CFBundleURLSchemes` keys as in the code above.
 
@@ -163,8 +161,7 @@ Make sure the `ios/Runner/Info.plist` file has `CFBundleURLTypes` and `CFBundleU
 
 Open the `main.dart` file in the `lib` directory of your project and paste the contents below into it.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-flutter-native/main/complete-application/lib/main.dart"
- lang="dart" />
+<LocalCode src="quickstart-flutter-native/complete-application/lib/main.dart" lang="dart" />
 
 <Aside type="tip">
 Putting all your logic in one file makes sense for a tutorial but for a larger application, you'll probably want to split it up.
@@ -189,8 +186,7 @@ curl -o assets/example_bank_logo.svg https://raw.githubusercontent.com/FusionAut
 
 In `pubspec.yaml`, add an `assets` section that will allow the logo to be copied over to the application.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-flutter-native/main/complete-application/pubspec.yaml"
- lang="yaml" tags="addAsset"/>
+<LocalCode src="quickstart-flutter-native/complete-application/pubspec.yaml.snippet.addAsset.yaml" lang="yaml" />
 
 ## Run The Application
 

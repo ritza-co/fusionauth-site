@@ -14,7 +14,7 @@ import {Content as LoginArchitectureWeb} from 'src/components/quickstarts/LoginA
 import NextSteps from 'src/components/quickstarts/NextSteps.astro';
 import QuickstartNgrok from 'src/components/quickstarts/quickstart-ngrok.mdx';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 <Intro fulltext="an Android app with Java"
        repositoryUrl="https://github.com/FusionAuth/fusionauth-quickstart-java-android-native"/>
@@ -87,13 +87,11 @@ rm app/res/layout/browser_selector_layout.xml
 
 Change the package namespace in `app/build.gradle`. You can replace the entire file with below contents.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-java-android-native/main/complete-application/app/build.gradle"
-            lang="groovy"/>
+<LocalCode src="quickstart-java-android-native/complete-application/app/build.gradle" lang="groovy" />
 
 Replace `app/AndroidManifest.xml` as well.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-java-android-native/main/complete-application/app/AndroidManifest.xml"
-            lang="xml"/>
+<LocalCode src="quickstart-java-android-native/complete-application/app/AndroidManifest.xml" lang="xml" />
 
 ## Authentication
 
@@ -103,30 +101,25 @@ We'll use the [AppAuth Library](https://github.com/openid/AppAuth-Android), whic
 
 Modify `app/res/raw/auth_config.json` to use the values provisioned by Kickstart. Update the `discovery_uri` value; change `https://[YOUR-NGROK-MAIN-DOMAIN]` to the URL you wrote when [exposing your instance](#set-up-a-public-url-for-fusionauth).
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-java-android-native/main/complete-application/app/res/raw/auth_config.json"
-            lang="json"/>
+<LocalCode src="quickstart-java-android-native/complete-application/app/res/raw/auth_config.json" lang="json" />
 
 ### Change Activities
 
 An [Activity](https://developer.android.com/guide/components/activities/intro-activities) is a screen for your app, combining the User Interface as well as the logic to handle it. Start by changing the login activity layout at `app/res/layout/activity_login.xml`. Replace it with the below XML.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-java-android-native/main/complete-application/app/res/layout/activity_login.xml"
-            lang="xml"/>
+<LocalCode src="quickstart-java-android-native/complete-application/app/res/layout/activity_login.xml" lang="xml" />
 
 Now modify login activity logic by replacing `app/java/io/fusionauth/app/LoginActivity.java` with this code.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-java-android-native/main/complete-application/app/java/io/fusionauth/app/LoginActivity.java"
-            lang="java"/>
+<LocalCode src="quickstart-java-android-native/complete-application/app/java/io/fusionauth/app/LoginActivity.java" lang="java" />
 
 Update the main screen layout in the file `app/res/layout/activity_token.xml`.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-java-android-native/main/complete-application/app/res/layout/activity_token.xml"
-            lang="xml"/>
+<LocalCode src="quickstart-java-android-native/complete-application/app/res/layout/activity_token.xml" lang="xml" />
 
 And finally, change the main screen logic by replacing the content of `app/java/io/fusionauth/app/TokenActivity.java` with the below.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-java-android-native/main/complete-application/app/java/io/fusionauth/app/TokenActivity.java"
-            lang="java"/>
+<LocalCode src="quickstart-java-android-native/complete-application/app/java/io/fusionauth/app/TokenActivity.java" lang="java" />
 
 ## App Customization
 
@@ -136,13 +129,11 @@ In this section, you'll update the look and feel of your native application to m
 
 Change the application colors in `app/res/values/colors.xml` to the ones used by Changebank.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-java-android-native/main/complete-application/app/res/values/colors.xml"
-            lang="xml"/>
+<LocalCode src="quickstart-java-android-native/complete-application/app/res/values/colors.xml" lang="xml" />
 
 Modify strings shown in the user interface by updating `app/res/values/strings.xml`.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-java-android-native/main/complete-application/app/res/values/strings.xml"
-            lang="xml"/>
+<LocalCode src="quickstart-java-android-native/complete-application/app/res/values/strings.xml" lang="xml" />
 
 ### Add Styling
 

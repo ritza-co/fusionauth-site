@@ -12,7 +12,7 @@ import {Content as LoginArchitectureWeb} from 'src/components/quickstarts/LoginA
 import NextSteps from 'src/components/quickstarts/NextSteps.astro';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
 import LocalMarkdown from 'src/components/LocalMarkdown.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 This QuickStart is built on top of [FusionAuth Android SDK](/docs/sdks/android-sdk) demonstrating the different functionalities of the SDK available.
 
@@ -62,13 +62,11 @@ Wait until Android Studio has finished creating and indexing the project.
 
 Add the [FusionAuth SDK as a dependency](https://central.sonatype.com/artifact/io.fusionauth/fusionauth-android-sdk/) to your project by changing the `app/build.gradle.kts` file. You can replace the entire file with below contents.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-kotlin-android-native/main/complete-application/app/build.gradle.kts"
-            lang="kotlin"/>
+<LocalCode src="quickstart-kotlin-android-native/complete-application/app/build.gradle.kts" lang="kotlin" />
 
 Replace `app/src/main/AndroidManifest.xml` as well which defines all Activities used later.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-kotlin-android-native/main/complete-application/app/src/main/AndroidManifest.xml"
-            lang="kotlin"/>
+<LocalCode src="quickstart-kotlin-android-native/complete-application/app/src/main/AndroidManifest.xml" lang="xml" />
 
 ## Authentication
 
@@ -78,31 +76,26 @@ We'll use the [FusionAuth Android SDK](/docs/sdks/android-sdk) , which simplifie
 
 Create `app/src/main/res/raw/fusionauth_config.json` to use the values provisioned by Kickstart.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-android-sdk/main/app/src/main/res/raw/fusionauth_config.json"
-            lang="json"/>
+<LocalCode src="quickstart-kotlin-android-native/complete-application/app/src/main/res/raw/fusionauth_config.json" lang="json" />
 
 ### Change Activities
 
 An [Activity](https://developer.android.com/guide/components/activities/intro-activities) is a screen for your app, combining the User Interface as well as the logic to handle it.
 Start by creating the login activity layout at `app/src/main/res/layout/activity_login.xml`. Replace it with the below XML.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-kotlin-android-native/main/complete-application/app/src/main/res/layout/activity_login.xml"
-    lang="xml"/>
+<LocalCode src="quickstart-kotlin-android-native/complete-application/app/src/main/res/layout/activity_login.xml" lang="xml" />
 
 Now modify login activity logic by creating `app/src/main/java/io/fusionauth/sdk/LoginActivity.kt` with this code.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-kotlin-android-native/main/complete-application/app/src/main/java/io/fusionauth/sdk/LoginActivity.kt"
-    lang="kotlin"/>
+<LocalCode src="quickstart-kotlin-android-native/complete-application/app/src/main/java/io/fusionauth/sdk/LoginActivity.kt" lang="kotlin" />
 
 Create the main screen layout in the file `app/src/main/res/layout/activity_token.xml`.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-kotlin-android-native/main/complete-application/app/src/main/res/layout/activity_token.xml"
-    lang="xml"/>
+<LocalCode src="quickstart-kotlin-android-native/complete-application/app/src/main/res/layout/activity_token.xml" lang="xml" />
 
 And finally, create the main screen logic by creating `app/src/main/java/io/fusionauth/sdk/TokenActivity.kt` with the below.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-kotlin-android-native/main/complete-application/app/src/main/java/io/fusionauth/sdk/TokenActivity.kt"
-    lang="kotlin"/>
+<LocalCode src="quickstart-kotlin-android-native/complete-application/app/src/main/java/io/fusionauth/sdk/TokenActivity.kt" lang="kotlin" />
 
 ## App Customization
 
@@ -112,23 +105,19 @@ In this section, you'll update the look and feel of your native application to m
 
 Change the application colors in `app/src/main/res/values/colors.xml` to the ones used by ChangeBank.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-kotlin-android-native/main/complete-application/app/src/main/res/values/colors.xml"
-    lang="xml"/>
+<LocalCode src="quickstart-kotlin-android-native/complete-application/app/src/main/res/values/colors.xml" lang="xml" />
 
 Modify strings shown in the user interface by updating `app/src/main/res/values/strings.xml`.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-kotlin-android-native/main/complete-application/app/src/main/res/values/strings.xml"
-    lang="xml"/>
+<LocalCode src="quickstart-kotlin-android-native/complete-application/app/src/main/res/values/strings.xml" lang="xml" />
 
 Update the theme in `app/src/main/res/values/themes.xml`.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-kotlin-android-native/main/complete-application/app/src/main/res/values/themes.xml"
-    lang="xml"/>
+<LocalCode src="quickstart-kotlin-android-native/complete-application/app/src/main/res/values/themes.xml" lang="xml" />
 
 Create the dimension file in `app/src/main/res/values/dimens.xml`.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-kotlin-android-native/main/complete-application/app/src/main/res/values/dimens.xml"
-            lang="xml"/>
+<LocalCode src="quickstart-kotlin-android-native/complete-application/app/src/main/res/values/dimens.xml" lang="xml" />
 
 Finally, remove the night theme by deleting `app/src/main/res/values-night` directory.
 

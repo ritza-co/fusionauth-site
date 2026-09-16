@@ -5,7 +5,7 @@ order: 6
 tags: docker, kubernetes, k8s, container, aks, eks, gke
 ---
 import Aside from 'src/components/Aside.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 The following set of guides are designed to help you get FusionAuth up and running in a Kubernetes cluster as quickly and easily as possible.
 Step-by-step instructions are provided on how to setup all of the required infrastructure for your local development machine or favorite cloud provider:
@@ -33,4 +33,4 @@ Community provided [Istio configurations can be found here](https://github.com/F
 
 Here's a sample, community-contributed, Istio configuration file.
 
-<RemoteCode lang="yaml" url="https://raw.githubusercontent.com/FusionAuth/fusionauth-contrib/main/kubernetes/istio/fusionauth-all-in-one.yaml" />
+<LocalCode src="contrib/kubernetes/istio/fusionauth-all-in-one.yaml" lang="yaml" />

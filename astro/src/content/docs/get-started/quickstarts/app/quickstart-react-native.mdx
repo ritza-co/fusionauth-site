@@ -14,7 +14,7 @@ import {Content as LoginArchitectureWeb} from 'src/components/quickstarts/LoginA
 import NextSteps from 'src/components/quickstarts/NextSteps.astro';
 import QuickstartNgrok from 'src/components/quickstarts/quickstart-ngrok.mdx';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import { LocalValue } from 'src/components/LocalValue/LocalValue.astro';
 
 <Intro technology="React Native"
@@ -86,15 +86,13 @@ npx expo install expo-auth-session expo-crypto expo-web-browser
 
 Create a `.env` file to hold information about your FusionAuth instance and application, replacing the value in **`EXPO_PUBLIC_FUSIONAUTH_URL`** with the address you copied from `ngrok` when [exposing your instance](#set-up-a-public-url-for-fusionauth).
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/.env"}
-            lang="ini"/>
+<LocalCode src="quickstart-react-native/complete-application/.env" lang="ini" />
 
 Replace `app.json` with the contents below to add some details about your app:
 - A `scheme` that will be used when redirecting back to your application after logging in and out of FusionAuth.
 - The package name for both Android (`expo.android.package`) and iOS (`expo.ios.bundleIdentifier`) builds.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/app.json"}
-            lang="json"/>
+<LocalCode src="quickstart-react-native/complete-application/app.json" lang="json" />
 
 ## App Customization
 
@@ -110,8 +108,7 @@ npm install expo-image expo-constants react-native-currency-input
 
 Instead of using CSS, React Native has its own concept of [stylesheets](https://reactnative.dev/docs/stylesheet). Create a file named `changebank.style.js` with the contents below to style your ChangeBank app.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/changebank.style.js"}
-            lang="javascript"/>
+<LocalCode src="quickstart-react-native/complete-application/changebank.style.js" lang="javascript" />
 
 Run the command below to download the ChangeBank logo into the `assets` folder.
 
@@ -123,8 +120,7 @@ wget -O assets/changebank.svg https://raw.githubusercontent.com/FusionAuth/fusio
 
 Replace the existing `App.js` to integrate `expo-auth-session`, add the ChangeBank template, and stitch everything up.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/App.js"}
-            lang="javascript"/>
+<LocalCode src="quickstart-react-native/complete-application/App.js" lang="javascript" />
 
 ## Run the App
 
