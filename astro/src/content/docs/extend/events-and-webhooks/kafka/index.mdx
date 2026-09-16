@@ -3,7 +3,7 @@ title: Kafka Integration
 description: How to publish FusionAuth events to Kafka.
 ---
 import KafkaTroubleshooting from 'src/content/docs/extend/events-and-webhooks/kafka/_kafka_troubleshooting.mdx';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 [Kafka](https://kafka.apache.org/) is a scalable messaging platform. This integration allows you to consume webhook events
@@ -34,7 +34,7 @@ If you're running Kafka alongside FusionAuth (for example, from the same `docker
 
 If your Docker Compose file is as follows:
 
-<RemoteCode title="Example docker-compose.yml with Kafka" url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-docker-compose/main/kafka/docker-compose.yml" lang="yaml" />
+<LocalCode title="Example docker-compose.yml with Kafka" src="example-docker-compose/kafka/docker-compose.yml" lang="yaml" />
 
 Then you would input the following configuration in the FusionAuth UI to configure the Kafka integration.
 

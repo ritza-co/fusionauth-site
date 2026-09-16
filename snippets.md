@@ -437,11 +437,13 @@ These files use `<RemoteCode>` to fetch code from external URLs. Convert to use 
 
 ---
 
-## RemoteValue Files (3 files - excluding 1 already done)
+## RemoteValue Files (3 files)
 
 These files use `<RemoteValue>` to extract values from remote files. Convert to use `<LocalValue>`.
 
-- [x] get-started/quickstarts/app/quickstart-react-native.mdx
+- [x] blog/identity-verification-before-registration.mdx
+- [ ] get-started/quickstarts/api/quickstart-php-laravel-api.mdx (SKIP: done in other branches)
+- [ ] get-started/quickstarts/web/quickstart-ruby-rails-web.mdx (SKIP: done in other branches)
 
 
 ---
