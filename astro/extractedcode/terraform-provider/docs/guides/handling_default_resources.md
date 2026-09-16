@@ -13,7 +13,7 @@ There are [FusionAuth default configuration elements](https://fusionauth.io/docs
 To import a resource, you must provide all required attributes. Here's an example for the default tenant:
 
 ```hcl
-#tag::defaultTenantImport[]
+# :snippet-start: defaultTenantImport
 import {
   to = fusionauth_tenant.Default
   id = "Replace-This-With-The-Existing-Default-Tenant-Id"
@@ -100,7 +100,7 @@ resource "fusionauth_tenant" "Default" {
     verify_email_when_changed           = false
   }
 }
-#end::defaultTenantImport[]
+# :snippet-end:
 ```
 
 You can set some attribute id values to `00000000-0000-0000-0000-000000000000`, then run `terraform plan` to find out the real values. Then update the import statement. This will also display any new tenant default attributes that may have been added over time.

@@ -12,7 +12,7 @@ Built with the excellent [github.com/harsha-iiiv/openapi-mcp-generator](https://
 Using this MCP server requires providing the MCP client with a FusionAuth API key. Only use this for dev and test instances. FusionAuth is not responsible for potentially leaking sensitive information.
 
 <!--
-tag::forDocSite[]
+:snippet-start: forDocSite
 -->
 
 ## Prerequisites
@@ -110,7 +110,7 @@ Check your MCP client logs; these vary by MCP client and platform. For example, 
 Use the modelcontextprotocol inspector to help determine if the issue is with the MCP server or with your MCP client: `npx @modelcontextprotocol/inspector`. If you want to change the `USE_TOOLS` variable, you cannot dynamically change it and must pass it on the command line. `npx @modelcontextprotocol/inspector npx @fusionauth/mcp-api -e API_KEY_APIKEYAUTH=... -e USE_TOOLS=create`
 
 <!--
-end::forDocSite[]
+:snippet-end:
 -->
 
 ## Building Locally

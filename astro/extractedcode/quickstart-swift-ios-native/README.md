@@ -29,7 +29,7 @@ You will need the following things properly installed on your computer.
 
 ### FusionAuth Installation via Docker
 <!--
-tag::forDocSiteDocker[]
+:snippet-start: forDocSiteDocker
 -->
 The root of this project directory _(next to this README)_ are two files: [a Docker compose file](./docker-compose.yml) and an [environment variables configuration file](./.env). Assuming you have Docker installed on your machine, you can stand up FusionAuth up on your machine with:
 
@@ -49,11 +49,11 @@ FusionAuth will be initially configured with these settings:
 
 You can log into the [FusionAuth admin UI](http://localhost:9011/admin) and look around if you want, but with Docker/Kickstart you don't need to.
 <!--
-end::forDocSiteDocker[]
+:snippet-end:
 -->
 ### Running the iOS App
 <!--
-tag::forDocSiteRun[]
+:snippet-start: forDocSiteRun
 -->
 This iOS Quickstart is fully functional and can be used without any modifications:
 
@@ -62,7 +62,7 @@ This iOS Quickstart is fully functional and can be used without any modification
 
 And there are additional [testing instructions](TESTING.md) available for different scenarios.
 <!--
-end::forDocSiteRun[]
+:snippet-end:
 -->
 ## Further Information
 

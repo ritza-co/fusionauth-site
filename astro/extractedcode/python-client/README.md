@@ -8,7 +8,7 @@
 
 
 <!--
-tag::forDocSite[]
+:snippet-start: forDocSite
 -->
 
 If you're integrating FusionAuth with a Python 3 application, this library will speed up your development time. Please also make sure to check our [SDK Usage Suggestions page](https://fusionauth.io/docs/sdks/#usage-suggestions).
@@ -165,7 +165,7 @@ print(result.success_response)
 [Check the API docs for this endpoint](https://fusionauth.io/docs/apis/registrations#create-a-user-registration-for-an-existing-user)
 
 <!--
-end::forDocSite[]
+:snippet-end:
 -->
 
 

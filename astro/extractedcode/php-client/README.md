@@ -8,7 +8,7 @@
 
 
 <!--
-tag::forDocSite[]
+:snippet-start: forDocSite
 -->
 
 If you're integrating FusionAuth with a PHP application, this library will speed up your development time. Please also make sure to check our [SDK Usage Suggestions  page](https://fusionauth.io/docs/sdks/#usage-suggestions).
@@ -198,7 +198,7 @@ $result = $client->register(
 [Check the API docs for this endpoint](https://fusionauth.io/docs/apis/registrations#create-a-user-registration-for-an-existing-user)
 
 <!--
-end::forDocSite[]
+:snippet-end:
 -->
 
 ## Questions and support

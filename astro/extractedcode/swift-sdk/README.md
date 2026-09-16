@@ -226,13 +226,13 @@ See the latest [Full library documentation](https://github.com/FusionAuth/fusion
 
 # Contributing
 <!--
-tag::forDocSiteContributing[]
+:snippet-start: forDocSiteContributing
 -->
 We hope you love using FusionAuth Swift SDK, but in case you encounter a bug or an issue with the SDK, please do let us know.
 
 Please follow the detailed [Contributing](CONTRIBUTING.md) documentation.
 <!--
-end::forDocSiteContributing[]
+:snippet-end:
 -->
 
 # Upgrade Policy

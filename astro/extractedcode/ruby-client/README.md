@@ -8,7 +8,7 @@
 
 
 <!--
-tag::forDocSite[]
+:snippet-start: forDocSite
 -->
 
 This gem is the Ruby client library that helps connect Ruby applications
@@ -196,7 +196,7 @@ Documentation can be found at
 [doc](https://github.com/FusionAuth/fusionauth-ruby-client/tree/master/doc).
 
 <!--
-end::forDocSite[]
+:snippet-end:
 -->
 
 ## Questions and support

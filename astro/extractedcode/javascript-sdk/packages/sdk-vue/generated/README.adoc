@@ -20,7 +20,7 @@ Please also use ``` instead of indenting for code blocks. The backticks are tran
 
 == Overview
 
-// tag::forDocSite[]
+// :snippet-start: forDocSite
 
 This SDK allows you to add login, logout, and registration buttons to
 your Vue application. You can do this via pre-built buttons, or with
@@ -159,7 +159,7 @@ See the https://fusionauth.io/docs/quickstarts/quickstart-javascript-vue-web[Fus
 https://github.com/FusionAuth/fusionauth-vue-sdk/blob/main/docs/documentation.md[Full library
 documentation]
 
-// end::forDocSite[]
+// :snippet-end:
 
 Use backticks for code in this readme. This readme is included on the FusionAuth website, and backticks show the code in the best light there.
 
