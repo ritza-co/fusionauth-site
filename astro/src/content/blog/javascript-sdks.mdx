@@ -149,7 +149,7 @@ One other common objection to redirection is the ability to send a successfully 
 
 Here's code from an [example application](https://github.com/FusionAuth/fusionauth-example-node-deeplink/) that extracts a URL from a `state` parameter and returns the user to that URL after a successful exchange at the token endpoint.
 
-<LocalCode src="example-node-deeplink/routes/index.js.snippet.extractURLFromState.js" lang="javascript" />
+<LocalCode src="example-node-deeplink/index.snippet.extractURLFromState.js" lang="javascript" />
 
 The takeaway from this code is that you can set the `state` parameter when redirecting the user to the login page, then extract a value from it and redirect back to the correct location.
 

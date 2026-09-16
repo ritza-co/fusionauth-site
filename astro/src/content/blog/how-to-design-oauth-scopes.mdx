@@ -387,11 +387,11 @@ You'll need to be more communicative if you are removing a scope entirely than i
 
 Let's talk a bit about what the API or service that gets an access token containing a scope needs to do. APIs must check scopes correctly when responding to a request. Here's a few example routes from a fictitious Changebank API which check for scopes.
 
-<LocalCode lang="javascript" src="example-api-consents-platform/changebank-apis/routes/index.js.snippet.routes.js" title="Example Changebank API routes" />
+<LocalCode lang="javascript" src="example-api-consents-platform/index.snippet.routes.js" title="Example Changebank API routes" />
 
 The `hasScope` method looks like this:
 
-<LocalCode lang="javascript" src="example-api-consents-platform/changebank-apis/services/hasScope.js.snippet.hasScope.js" title="The hasScope logic" />
+<LocalCode lang="javascript" src="example-api-consents-platform/hasScope.snippet.hasScope.js" title="The hasScope logic" />
 
 Don't forget to sanitize user input. Since scopes are part of a URL that is displayed in the browser, a nefarious user or client can modify them before making the authorization request. Make sure your application handles unexpected scopes, whether policy prohibits them for a certain third-party application or whether they are completely unknown. 
 

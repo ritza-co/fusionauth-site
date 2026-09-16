@@ -207,7 +207,7 @@ Let's take a look at the JavaScript code for the self-service registration lambd
 
 Here's the validation function that Kickstart installed for you:
 
-<LocalCode src="example-kickstart/identity-verification/lambdas/fideo.js.snippet.validate.js" language="javascript" />
+<LocalCode src="example-kickstart/fideo.snippet.validate.js" language="javascript" />
 
 This code does the following:
 
@@ -220,7 +220,7 @@ If the value is above the threshold, the code adds an error. If it is below the 
 
 The threshold value is defined in the lambda function:
 
-<LocalCode src="example-kickstart/identity-verification/lambdas/fideo.js.snippet.failthreshold.js" language="javascript" />
+<LocalCode src="example-kickstart/fideo.snippet.failthreshold.js" language="javascript" />
 
 
 Storing the Fideo API key on the application object makes the key easier to rotate without modifying the lambda code. But the value is not secret; it is still available to API keys and users with sufficient access. There's an open GitHub issue to add [lambda secrets management](https://github.com/FusionAuth/fusionauth-issues/issues/1629).
@@ -265,7 +265,7 @@ You can make a fetch call for every failed registration.
 
 Here's a sample implementation which captures the failed email address. This is called when the risk threshold is reached.
 
-<LocalCode src="example-kickstart/identity-verification/lambdas/fideo.js.snippet.registrationfailfetch.js" language="javascript" />
+<LocalCode src="example-kickstart/fideo.snippet.registrationfailfetch.js" language="javascript" />
 
 This requires you to set up a remote API.
 
@@ -273,7 +273,7 @@ This requires you to set up a remote API.
 
 You can also create an event log entry. In this case, you make a `console.log` function call when the risk threshold is reached. This creates an Event Log entry.
 
-<LocalCode src="example-kickstart/identity-verification/lambdas/fideo.js.snippet.registrationfaillog.js" language="javascript" />
+<LocalCode src="example-kickstart/fideo.snippet.registrationfaillog.js" language="javascript" />
 
 You can be notified of this via the Event Log webhook](/docs/extend/events-and-webhooks/events/event-log-create). You can also poll [the event logs](/docs/apis/event-logs#search-event-logs) for the `fideo-registration-failed` prefix.
 

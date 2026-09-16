@@ -537,17 +537,17 @@ You'll add a new route that pretends to be Intercom and will listen for new subs
 
 After the line `var indexRouter = require('./routes/index');`, add a reference to the FusionAuth TypeScript client library, the **`API_KEY`** and **`BASE_URL`** environment variables.
 
-<LocalCode lang="js" src="example-user-actions-guide/app.js.snippet.tsClientLib.js" />
+<LocalCode lang="js" src="example-user-actions-guide/app.snippet.tsClientLib.js" />
 
 Below the line `app.use('/', indexRouter);`, add the following.
 
-<LocalCode lang="js" src="example-user-actions-guide/app.js.snippet.intercom.js" />
+<LocalCode lang="js" src="example-user-actions-guide/app.snippet.intercom.js" />
 
 ### Create Mock Slack API
 
 Now make a similar API to mock Slack by adding the following code below the code you added previously.
 
-<LocalCode lang="js" src="example-user-actions-guide/app.js.snippet.slack.js" />
+<LocalCode lang="js" src="example-user-actions-guide/app.snippet.slack.js" />
 
 Administrators monitoring PiedPiper on Slack can immediately contact the user to help them if their survey response was `Bad`.
 
@@ -555,7 +555,7 @@ Administrators monitoring PiedPiper on Slack can immediately contact the user to
 
 The final piece of code you'll add to `app.js` is a little more complex. The `expire` route below is called by FusionAuth when the user's subscription Action instance ends. To ban the user from logging in after this time, PiedPiper applies the **Prevent Login** Action to the user by calling the FusionAuth API.  Add this code directly below the mock Slack code you just added.
 
-<LocalCode lang="js" src="example-user-actions-guide/app.js.snippet.expire.js" />
+<LocalCode lang="js" src="example-user-actions-guide/app.snippet.expire.js" />
 
 ## Testing
 

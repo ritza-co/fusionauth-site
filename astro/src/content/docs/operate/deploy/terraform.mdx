@@ -92,7 +92,7 @@ Here's a screenshot of the page.
 
 Here's what your `main.tf` file should look like at this point.
 
-<LocalCode lang="hcl" title="Example main.tf File" src="example-terraform/examples/import/main.tf.snippet.terraformProvider.tf" />
+<LocalCode lang="hcl" title="Example main.tf File" src="example-terraform/main.snippet.terraformProvider.tf" />
 
 Finally, the following command prepares the current working directory for use with Terraform.
 
@@ -134,7 +134,7 @@ While you can use the default Tenant for all your Applications, when using Terra
 
 As outlined in the [Tenant Terraform Resource documentation](https://registry.terraform.io/providers/fusionauth/fusionauth/latest/docs/resources/tenant), add the following code to `main.tf`.
 
-<LocalCode lang="hcl" title="Default Tenant Import" src="example-terraform/examples/import/main.tf.snippet.defaultTenantImport.tf" />
+<LocalCode lang="hcl" title="Default Tenant Import" src="example-terraform/main.snippet.defaultTenantImport.tf" />
 
 To make things easier, you only have to update the first Id in the import section with the default Tenant Id. You can find this Id in the FusionAuth admin UI under <Breadcrumb>Tenants</Breadcrumb>.
 
@@ -215,9 +215,9 @@ Review the [tenant](https://registry.terraform.io/providers/fusionauth/fusionaut
 
 Here's an example of how you might add data sources to your Terraform file:
 
-<LocalCode lang="hcl" title="A Data Source For The default Tenant" src="example-terraform/examples/data-source/main.tf.snippet.defaultTenantDataSource.tf" />
+<LocalCode lang="hcl" title="A Data Source For The default Tenant" src="example-terraform/main.snippet.defaultTenantDataSource.tf" />
 
-<LocalCode lang="hcl" title="A Data Source For The FusionAuth Application" src="example-terraform/examples/data-source/main.tf.snippet.defaultApplicationDataSource.tf" />
+<LocalCode lang="hcl" title="A Data Source For The FusionAuth Application" src="example-terraform/main.snippet.defaultApplicationDataSource.tf" />
 
 <Aside type="tip">
 If you manage the default Tenant and FusionAuth Application outside of Terraform but want specific actions (scripts, API calls, etc.) integrated and triggered by your Terraform configuration, you could use [Provisioners](https://developer.hashicorp.com/terraform/language/provisioners). Terraform includes the concept of provisioners as a measure of pragmatism and last resort since provisioners are non-declarative and potentially unpredictable.
@@ -259,29 +259,29 @@ Next, update the `main.tf` file.
 
 If you haven't worked through the prerequisites above, make sure you add the `required_providers` and `provider` sections.
 
-<LocalCode lang="hcl" title="main.tf Initial Sections" src="example-terraform/examples/import/main.tf.snippet.terraformProvider.tf" />
+<LocalCode lang="hcl" title="main.tf Initial Sections" src="example-terraform/main.snippet.terraformProvider.tf" />
 
 Then, configure the `Forum` Tenant; this Tenant will contain users and applications.
 
-<LocalCode lang="hcl" title="Creating A Forum Tenant" src="example-terraform/examples/create/main.tf.snippet.createForumTenant.tf" />
+<LocalCode lang="hcl" title="Creating A Forum Tenant" src="example-terraform/main.snippet.createForumTenant.tf" />
 
 Then, configure the signing key. This will be used to sign access tokens for the `Forum` Application.
 
-<LocalCode lang="hcl" title="Creating A Signing Key" src="example-terraform/examples/create/main.tf.snippet.createKey.tf" />
+<LocalCode lang="hcl" title="Creating A Signing Key" src="example-terraform/main.snippet.createKey.tf" />
 
 Next, set up the email templates. Because email templates can be long, use the [`file()` function](https://developer.hashicorp.com/terraform/language/functions/file). You'll need to create files in the `email_templates` directory and give them the same names. Terraform will import these files. 
 
-<LocalCode lang="hcl" title="Creating An Email Template" src="example-terraform/examples/create/main.tf.snippet.createEmailTemplate.tf" />
+<LocalCode lang="hcl" title="Creating An Email Template" src="example-terraform/main.snippet.createEmailTemplate.tf" />
 
 While the values of the email templates don't matter for this guide, you can find [sample files in the GitHub repository](https://github.com/FusionAuth/fusionauth-example-terraform/tree/main/examples/create/email_templates).
 
 Now, create the Application in the Tenant. This configuration represents what users actually log in to.
 
-<LocalCode lang="hcl" title="Creating A Forum Application In The Forum Tenant" src="example-terraform/examples/create/main.tf.snippet.createForumApplication.tf" />
+<LocalCode lang="hcl" title="Creating A Forum Application In The Forum Tenant" src="example-terraform/main.snippet.createForumApplication.tf" />
 
 Create the roles for the Application. These roles will be used by the `Forum` Application.
 
-<LocalCode lang="hcl" title="Creating Roles In The Forum Application" src="example-terraform/examples/create/main.tf.snippet.createForumApplicationRoles.tf" />
+<LocalCode lang="hcl" title="Creating Roles In The Forum Application" src="example-terraform/main.snippet.createForumApplicationRoles.tf" />
 
 Finally, get the plan.
 
@@ -414,11 +414,11 @@ lifecycle {
 
 A good example of an element to apply `prevent_destroy` to would be a Tenant currently in use. Deleting a Tenant removes all the associated Applications, Groups, and Users. Below, notice that the `Forum` Tenant can't be destroyed.
 
-<LocalCode lang="hcl" title="Creating A Forum Tenant" src="example-terraform/examples/create/main.tf.snippet.createForumTenant.tf" />
+<LocalCode lang="hcl" title="Creating A Forum Tenant" src="example-terraform/main.snippet.createForumTenant.tf" />
 
 You should always apply the `prevent_destroy` same meta-argument for Terraform managed non-deletable resources like the default Tenant and the FusionAuth Application, since Terraform can't delete these anyway.
 
-<LocalCode lang="hcl" title="Default Tenant Import" src="example-terraform/examples/import/main.tf.snippet.defaultApplicationImport.tf" />
+<LocalCode lang="hcl" title="Default Tenant Import" src="example-terraform/main.snippet.defaultApplicationImport.tf" />
 
 ## Tips
 

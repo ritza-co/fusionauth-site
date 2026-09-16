@@ -91,11 +91,11 @@ Once you have a schema, add authorization data to define entity relationships an
 
 The following example assigns each user a role at a bank with an Id of `1`:
 
-<LocalCode lang="typescript" src="example-fine-grained-authorization/permify-setup/src/loaddata.snippet.loadRelationships.ts" title="Loading relationships" />
+<LocalCode lang="typescript" src="example-fine-grained-authorization/loaddata.snippet.loadRelationships.ts" title="Loading relationships" />
 
 You can also assign attributes to entities. The following example assigns the bank with the Id of `1` an opening hour and a closing hour:
 
-<LocalCode lang="typescript" src="example-fine-grained-authorization/permify-setup/src/loaddata.snippet.loadAttributes.ts" title="Loading attributes" />
+<LocalCode lang="typescript" src="example-fine-grained-authorization/loaddata.snippet.loadAttributes.ts" title="Loading attributes" />
 
 ### Add Permission Checks
 
@@ -113,7 +113,7 @@ Here's an example which has the following data:
 * a subject of type `user` with an identifier drawn from a token
 * the current hour
 
-<LocalCode lang="typescript" src="example-fine-grained-authorization/app/src/index.snippet.checkingPermission.ts" title="Checking permissions" />
+<LocalCode lang="typescript" src="example-fine-grained-authorization/index.snippet.checkingPermission.ts" title="Checking permissions" />
 
 This check compares the value returned from Permify to the `CHECK_RESULT_ALLOWED` constant to determine if the check succeeded.
 

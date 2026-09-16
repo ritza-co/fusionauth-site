@@ -171,27 +171,27 @@ You can store the `grant` object (or some portion of it) in various locations fo
 
 In the companion application, the `grant` object is loaded via a middleware function and appended to the `user` object so it is available in the `req` object for each request. This middleware function is called `loadGrants` and is shown below.
 
-<LocalCode src="example-modeling-organizations/complete-application/middleware/loadGrants.js.snippet.loadGrants.js" lang="javascript" />
+<LocalCode src="example-modeling-organizations/loadGrants.snippet.loadGrantsMW.js" lang="javascript" />
 
 The `loadGrants` function is then added to the Express `app` request pipeline:
 
-<LocalCode src="example-modeling-organizations/complete-application/app.js.snippet.loadGrantsPipeline.js" lang="javascript" />
+<LocalCode src="example-modeling-organizations/app.snippet.loadGrantsPipeline.js" lang="javascript" />
 
 
 The `loadGrants` middleware function first checks if the user is authenticated before trying to retrieve the Grants, as the User is needed to find the Grants. Therefore, immediately before authentication with Passport in the `passport.authenticate` callback pipeline, the `loadGrants` middleware exits early because the User is not yet available. To tack the Grants onto the user object in this special request flow, the `loadGrants` middleware function is added to the `passport.authenticate` callback pipeline.
 
-<LocalCode src="example-modeling-organizations/complete-application/app.js.snippet.loadGrantsPassport.js" lang="javascript" />
+<LocalCode src="example-modeling-organizations/app.snippet.loadGrantsPassport.js" lang="javascript" />
 
 
 Once the Grant with permissions is loaded, you can use it to authorize actions in your application. For example, you can check if the user has the `billing` permission before allowing them to view the billing page. 
 
 The companion application uses another custom middleware function called `checkGrantPermissions` to check if the user has the required permission to access a route.
 
-<LocalCode src="example-modeling-organizations/complete-application/middleware/checkGrantPermissions.js.snippet.checkGrantPermissions.js" lang="javascript" />
+<LocalCode src="example-modeling-organizations/checkGrantPermissions.snippet.checkGrantPermissions.js" lang="javascript" />
 
 This middleware function can be used on individual routes as below.
 
-<LocalCode src="example-modeling-organizations/complete-application/routes/billing.js.snippet.billingPost.js" lang="javascript" />
+<LocalCode src="example-modeling-organizations/billing.snippet.billingPost.js" lang="javascript" />
 
 Notice that [all routes in the companion application](https://github.com/fusionauth/fusionauth-example-modeling-organizations/tree/main/complete-application/routes) are protected by the `checkGrantPermissions` middleware function, with the appropriate permissions required to access the route.
 
@@ -247,11 +247,11 @@ This response indicates that the user belongs to three organizations and has dif
 
 Notice that in the companion app `passport.authenticate` pipeline, when the user is authenticated the first time, the first Grant is selected as the default Entity for the user and added to the `req.session` object on the `selectedGrant` property.
 
-<LocalCode src="example-modeling-organizations/complete-application/app.js.snippet.loadGrantsPassport.js" lang="javascript" />
+<LocalCode src="example-modeling-organizations/app.snippet.loadGrantsPassport.js" lang="javascript" />
 
 When the user selects another Entity to work on from the index page, the `selectedGrant` is updated with the new Entity.  
 
-<LocalCode src="example-modeling-organizations/complete-application/routes/index.js.snippet.companyPost.js" lang="javascript" />
+<LocalCode src="example-modeling-organizations/index.snippet.companyPost.js" lang="javascript" />
 
 ## Managing Users
 
@@ -265,7 +265,7 @@ In the companion app, managing Users is demonstrated in the [`routes/users.js` f
 
 After filtering for the Users you want to manage, use the [grant search API function](/docs/apis/entities/grants#search-for-grants) to retrieve the Grants for each User. In the companion application, Grants are managed for a single Entity (or company) at a time. Since the API returns all Grants to all Entities associated with a User, the application filters the Grants to only show the Grant for the selected Entity.
 
-<LocalCode src="example-modeling-organizations/complete-application/routes/users.js.snippet.getGrantsForAllUsers.js" lang="javascript" />
+<LocalCode src="example-modeling-organizations/users.snippet.getGrantsForAllUsers.js" lang="javascript" />
 
 
 ## Custom Data And Search
@@ -307,7 +307,7 @@ Beyond managing users, some applications allow you to rename or modify a User's 
 
 This is demonstrated in the companion app in the [`routes/admin.js` file](https://github.com/fusionauth/fusionauth-example-modeling-organizations/blob/main/complete-application/routes/admin.js). This route can update the Entity name and the company address. Use the `PATCH` HTTP method for this type of operation, as it allows you to update only the fields that have changed, even when updating custom data.
 
-<LocalCode src="example-modeling-organizations/complete-application/routes/admin.js.snippet.updateEntity.js" lang="javascript" />
+<LocalCode src="example-modeling-organizations/admin.snippet.updateEntity.js" lang="javascript" />
 
 
 ## Conclusion

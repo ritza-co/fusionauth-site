@@ -227,7 +227,7 @@ Here's the entire `index.js` file, which should be placed at `routes/index.js`:
 
 This code handles a number of paths. Let's look at the code in more detail.
 
-<LocalCode lang="javascript" src="example-node-sso/pied-piper/routes/index.js.snippet.constants.javascript" title="Constants section" />
+<LocalCode lang="javascript" src="example-node-sso/index.snippet.constants.js" title="Constants section" />
 
 The top of the `index.js` file has configuration values and some needed constants.
 
@@ -235,25 +235,25 @@ The `clientId` and `clientSecret` are the values noted in the administrative use
 
 The first argument to the FusionAuth client creation is `noapikeyneeded` because the client interactions this application performs do not require an API key. If you extend these applications to update user data or make other privileged API calls, you'll need to change that value to a [real API key](/docs/apis/authentication#managing-api-keys).
 
-<LocalCode lang="javascript" src="example-node-sso/pied-piper/routes/index.js.snippet.homepageroute.javascript" title="Home page route" />
+<LocalCode lang="javascript" src="example-node-sso/index.snippet.homepageroute.js" title="Home page route" />
 
 In this SSO implementation, users can't view the homepage if they aren't signed in. This is a design choice you can make. The code checks for the presence of a user in the session and if it isn't present, the user is redirected to the FusionAuth login page.
 
-<LocalCode lang="javascript" src="example-node-sso/pied-piper/routes/index.js.snippet.loginpageroute.javascript" title="Login page route" />
+<LocalCode lang="javascript" src="example-node-sso/index.snippet.loginpageroute.js" title="Login page route" />
 
 This page is available to users who are not logged in. For this guide, the only information on this page is a login link, but for a real application you'd probably want to entice the user to register or log in.
 
-<LocalCode lang="javascript" src="example-node-sso/pied-piper/routes/index.js.snippet.logoutpageroute.javascript" title="Logout page route" />
+<LocalCode lang="javascript" src="example-node-sso/index.snippet.logoutpageroute.js" title="Logout page route" />
 
 This route removes the user object from the session and then redirects to the FusionAuth logout URL.
 
 Recall that there are three sessions present in this system: the FusionAuth session and one for each application. This route invalidates the local node application's session and then sends the browser to FusionAuth's logout URL, which will invalidate both the FusionAuth session and all other Node application sessions.
 
-<LocalCode lang="javascript" src="example-node-sso/pied-piper/routes/index.js.snippet.endsessionroute.javascript" title="End session route" />
+<LocalCode lang="javascript" src="example-node-sso/index.snippet.endsessionroute.js" title="End session route" />
 
 This route is what FusionAuth requests when a user logs out from any other application in this tenant. If a user is in the Hooli application and logs out, they will be signed out from the Pied Piper application as well. You configured this endpoint in the FusionAuth application details; FusionAuth is responsible for calling this endpoint. This is a separate endpoint from the `/logout` endpoint because in this request, the browser needs to end up on a page accessible to unauthenticated users, but in the `/logout` case, the user needs to be sent to FusionAuth.
 
-<LocalCode lang="javascript" src="example-node-sso/pied-piper/routes/index.js.snippet.oauthredirectroute.javascript" title="OAuth redirect route" />
+<LocalCode lang="javascript" src="example-node-sso/index.snippet.oauthredirectroute.js" title="OAuth redirect route" />
 
 This route is responsible for catching the authorization code request from FusionAuth after the user has signed in. It retrieves an access token and from that gathers the user data. This code ensures that the user is registered for this application, and then places the user data in the session.
 

@@ -57,13 +57,13 @@ You need Node `22.x` or newer to run this example.
 
 Let's take a quick look at how this app interacts with FusionAuth. First, open `templates/home.html`: the homepage. You should see the following code:
 
-<LocalCode src="example-get-started/templates/home.html.snippet.login.html" lang="html" />
+<LocalCode src="example-get-started/home.snippet.login.html" lang="html" />
 
 This renders a login button that, when clicked, navigates to `/login`.
 
 Open `src/index.mts`, which contains the Node and Express backend code. You should see the following route:
 
-<LocalCode src="example-get-started/src/index.mts.snippet.login.mts" lang="typescript" />
+<LocalCode src="example-get-started/index.snippet.login.mts" lang="typescript" />
 
 When someone opens this route in a browser, the app checks their login status:
 * If the user is logged in, the app redirects them to the `/account` page.

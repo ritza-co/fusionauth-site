@@ -50,13 +50,13 @@ You can also take this chance to validate any information deemed relevant to you
 
 It is important to note that the `FusionAuthClient` that has been created for this applications handles the setting of the [API Key](/docs/apis/api-keys) and location of the FusionAuth server. These settings are stored in the `App.settings` file for the project.
 
-<LocalCode src="example-dotnet-windowsform-api/sourcecode/FusionAuthAPIDemoFrontEnd/frmMain.cs.snippet.btnCreateUser.cs" lang="csharp" />
+<LocalCode src="example-dotnet-windowsform-api/frmMain.snippet.btnCreateUser.cs" lang="csharp" />
 
 ### Creating The User
 
 Because you decorated your User objects correctly using the JSONProperty attribute, you can use the JSON Serializer to serialize the object with the `JsonConvert.SerializeObject` method. You also need to encode it properly before you submit it. Once that is complete, you can submit the request to the FusionAuth server. You will do so here using the async pattern so as to not hold up the processing for a request that may take some time or give the application an unresponsive feel. Once you receive the return values, you can interrogate them and act accordingly.
 
-<LocalCode src="example-dotnet-windowsform-api/sourcecode/FusionDemoAPI/FusionAuthClient.cs.snippet.CreateUser.cs" lang="csharp" />
+<LocalCode src="example-dotnet-windowsform-api/FusionAuthClient.snippet.CreateUser.cs" lang="csharp" />
 
 ## User Workflow With FusionAuth APIs
 *“Amateurs do it till they get it right. Professionals do it until they can not get it wrong.”*
@@ -73,12 +73,12 @@ Once again, you will need to create a few objects to help us organize your group
 ### Taking Input From The User
 As with creating the user, you need to take the input from the application and assign the values to your Group objects. Again, the `IsGroupValid` function simply returns true for the sample application but you can also validate any data you want before actually adding the user to the group. After you are satisfied the user should be added, you can submit the information to the method that will submit your request to the FusionAuth server.
 
-<LocalCode src="example-dotnet-windowsform-api/sourcecode/FusionAuthAPIDemoFrontEnd/frmMain.cs.snippet.btnAddUserToGroup.cs" lang="csharp" />
+<LocalCode src="example-dotnet-windowsform-api/frmMain.snippet.btnAddUserToGroup.cs" lang="csharp" />
 
 ### Adding The User To The Group
 Because the JSON format expected in the request body is not readily serializable given the Group objects you have created, you will have to perform a little wizardry to manipulate the Group objects. While this does not have to do with FusionAuth specifically, the code has been abstracted in the `FormatGroupUserJSON` function and can be found [here](https://github.com/FusionAuth/fusionauth-example-dotnet-windowsform-api/blob/35307a11e43caa098d3366be58b07cf0452b6488/sourcecode/FusionDemoAPI/FusionAuthClient.cs#L267-L295) if you are interested. Once the API call has returned, you can retrieve whichever values you see as relevant and pass it back in the result object.
 
-<LocalCode src="example-dotnet-windowsform-api/sourcecode/FusionDemoAPI/FusionAuthClient.cs.snippet.AddUserToGroup.cs" lang="csharp" />
+<LocalCode src="example-dotnet-windowsform-api/FusionAuthClient.snippet.AddUserToGroup.cs" lang="csharp" />
 
 ## Branding Your User Management With FusionAuth
 *“Design is the silent ambassador of your brand.”*

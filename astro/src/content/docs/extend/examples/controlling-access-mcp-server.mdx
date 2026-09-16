@@ -102,7 +102,7 @@ Let's examine the unprotected MCP server, which allows access from any client th
 * HTTP transport on port 8000
 * no authentication
 
-<LocalCode src="example-protected-mcp-server/unprotected-local-mcp/mcp-server/server.py.snippet.starter-server.py" lang="python" />
+<LocalCode src="example-protected-mcp-server/unprotected-local-mcp/mcp-server/server.py" lang="python" />
 
 ### Test The Unprotected Server
 
@@ -169,7 +169,7 @@ If you try to use FusionAuth's introspect endpoint, it will return a 401. Intros
 
 To configure the MCP server to connect to FusionAuth and import needed OAuth packages, replace the existing imports at the top of `server.py` with the following:
 
-<LocalCode src="example-protected-mcp-server/protected-local-mcp/mcp-server/server.py.snippet.imports.py" lang="python" />
+<LocalCode src="example-protected-mcp-server/server.snippet.imports.py" lang="python" />
 
 You also need to add the FusionAuth Python client to `mcp-server/requirements.txt`. Here's what that entire file should look like:
 
@@ -185,7 +185,7 @@ In this code:
 
 Add the following code just after the `logger` variable is declared:
 
-<LocalCode src="example-protected-mcp-server/protected-local-mcp/mcp-server/server.py.snippet.token-verifier.py" lang="python" />
+<LocalCode src="example-protected-mcp-server/server.snippet.token-verifier.py" lang="python" />
 
 This code implements a token verifier that ensures that the MCP server responds only to authorized requests. To verify tokens, the MCP server:
 
@@ -201,7 +201,7 @@ The MCP server should never forward the access token provided to downstream serv
 
 Wire up authentication to the server by replacing the basic `mcp = FastMCP(...)` initialization with the following OAuth-enabled version:
 
-<LocalCode src="example-protected-mcp-server/protected-local-mcp/mcp-server/server.py.snippet.mcp-init.py" lang="python" />
+<LocalCode src="example-protected-mcp-server/server.snippet.mcp-init.py" lang="python" />
 
 This code configures the MCP server's protected resource metadata, which advertises available authorization server details to MCP clients. This updated initialization does the following:
 
@@ -218,7 +218,7 @@ With authentication enabled, you can now access information about the authentica
 
 Replace the entire `get_name` tool definition with the following implementation:
 
-<LocalCode src="example-protected-mcp-server/protected-local-mcp/mcp-server/server.py.snippet.get-name-tool.py" lang="python" />
+<LocalCode src="example-protected-mcp-server/server.snippet.get-name-tool.py" lang="python" />
 
 Now, the `get_name` tool:
 
@@ -301,7 +301,7 @@ You'll find `setup_clients.py` in the `setup` directory. Let's look at the key p
 
 The script prompts you for a name for the client, then creates an OAuth application in FusionAuth. Run it once for each MCP client you want to register. It registers exact redirect URLs for a fixed callback port (default `3334`):
 
-<LocalCode src="example-protected-mcp-server/protected-local-mcp/setup/setup_clients.py.snippet.create-client-application.py" lang="python" />
+<LocalCode src="example-protected-mcp-server/setup_clients.snippet.create-client-application.py" lang="python" />
 
 This includes the following key configuration values:
 

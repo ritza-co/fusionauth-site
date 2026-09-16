@@ -5,13 +5,13 @@ Of course, for every login, there should be a corresponding logout. Log out by c
 
 Here's the pug code which builds a link to log the user out.
 
-<LocalCode lang="javascript" title="The Logout Link" src="example-5-minute-guide/views/index.pug.snippet.logoutLink.pug" />
+<LocalCode lang="javascript" title="The Logout Link" src="example-5-minute-guide/index.snippet.logoutLink.pug" />
 
 When you visit this link, you're sent to FusionAuth, where the FusionAuth session is destroyed, and then to the application's logout URL. This URL was configured when you set up the Application in FusionAuth, and has the value of `http://localhost:3000/logout`.
 
 That route destroys the local session, logging you out from the Node.js application, and then sending you back to the home page.
 
-<LocalCode lang="javascript" title="Destroying the Local Session" src="example-5-minute-guide/routes/index.js.snippet.logoutRoute.js" />
+<LocalCode lang="javascript" title="Destroying the Local Session" src="example-5-minute-guide/index.snippet.logoutRoute.js" />
 
 Now you are logged out.
 

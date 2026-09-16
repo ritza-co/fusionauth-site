@@ -39,7 +39,6 @@ for repo in extractedcode/*/; do
 		--ignore 'package*.json' \
 		--ignore '*.lock' \
 		--ignore 'repositoryUrl.txt' \
-		--ignore 'tests' \
 		--ignore 'LICENSE' \
 		--ignore 'SECURITY.md' \
 		2>&1) || status=$?

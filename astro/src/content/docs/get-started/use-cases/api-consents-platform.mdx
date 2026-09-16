@@ -128,11 +128,11 @@ Next, associate every API with one or more scopes. If a request comes in with an
 
 Here are two routes that offer up banking information and check scopes.
 
-<LocalCode lang="javascript" src="example-api-consents-platform/changebank-apis/routes/index.js.snippet.routes.js" title="Example Changebank API routes" />
+<LocalCode lang="javascript" src="example-api-consents-platform/index.snippet.routes.js" title="Example Changebank API routes" />
 
 The `hasScope` method looks like this:
 
-<LocalCode lang="javascript" src="example-api-consents-platform/changebank-apis/services/hasScope.js.snippet.hasScope.js" title="The hasScope logic" />
+<LocalCode lang="javascript" src="example-api-consents-platform/hasScope.snippet.hasScope.js" title="The hasScope logic" />
 
 You could check claims and signatures at your API gateway rather than in your code, but the process for handling scopes is the same:
 
@@ -185,11 +185,11 @@ You can use the admin UI to configure scopes for your application.
 
 You can also do this with [our SDKs](/docs/sdks). Here's sample code to create the application:
 
-<LocalCode lang="javascript" src="example-api-consents-platform/create-application/create-application.js.snippet.createApplication.js" title="Using the TypeScript SDK to create the application" />
+<LocalCode lang="javascript" src="example-api-consents-platform/create-application.snippet.createApplication.js" title="Using the TypeScript SDK to create the application" />
 
 Here's sample code to add needed scopes:
 
-<LocalCode lang="javascript" src="example-api-consents-platform/create-application/create-application.js.snippet.createScopes.js" title="Using the TypeScript SDK to create the application" />
+<LocalCode lang="javascript" src="example-api-consents-platform/create-application.snippet.createScopes.js" title="Using the TypeScript SDK to create the application" />
 
 You could also use the [FusionAuth Terraform provider](/docs/operate/deploy/terraform) to manage the application and scopes.
 

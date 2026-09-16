@@ -119,11 +119,11 @@ sequenceDiagram
 
 You obtain the access token using [the Client Credentials grant](/docs/lifecycle/authenticate-users/oauth/#example-client-credentials-grant). If needed, modify the body of the access token by using a [Client Credentials JWT Populate lambda](/docs/extend/code/lambdas/client-credentials-jwt-populate). Here's an example of the grant request made by a clock radio.
 
-<LocalCode lang="javascript" src="example-machine-to-machine/request-api/request-news.js.snippet.requestAccessToken.js" title="Request the access token" />
+<LocalCode lang="javascript" src="example-machine-to-machine/request-news.snippet.requestAccessToken.js" title="Request the access token" />
 
 Present the access token to the API along with your request. This is typically done using the `Authorization` header, but can be customized based on what the API expects.
 
-<LocalCode lang="javascript" src="example-machine-to-machine/request-api/request-news.js.snippet.fetchNews.js" title="Make the API request with the access token in the Authorization header" />
+<LocalCode lang="javascript" src="example-machine-to-machine/request-news.snippet.fetchNews.js" title="Make the API request with the access token in the Authorization header" />
 
 ### Building The API Response
 
