@@ -1,0 +1,239 @@
+<style>
+    #drop-zone {
+        cursor: pointer;
+    }
+
+    #drop-zone > * {
+        pointer-events: none;
+    }
+
+    video {
+        inset: 0;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<div x-data="video">
+    <div class="d-flex flex-column gap-3" :style="{'pointer-events': posting ? 'none' : 'auto'}">
+        <span>
+            Hello <%= user %>!
+        </span>
+
+        <div class="alert alert-danger" role="alert" x-show="error" x-text="error" x-transition></div>
+
+        <div class="alert alert-danger" role="alert" x-show="results?.error.length" x-transition>
+            <p>Error posting video!</p>
+
+            <ul>
+                <template x-for="error in results?.error">
+                    <li>
+                        <span x-text="error.name"></span>:
+                        <span x-text="error.message"></span>
+                    </li>
+                </template>
+            </ul>
+        </div>
+
+        <div class="alert alert-success" role="alert" x-show="results?.success.length" x-transition>
+            <p>Video successfully posted!</p>
+            <ul>
+                <template x-for="link in results?.success">
+                    <li>
+                        <span x-text="link.name"></span>:
+                        <a :href="link.url" target="_blank" rel="noopener noreferrer" x-text="link.url"></a>
+                    </li>
+                </template>
+            </ul>
+        </div>
+
+        <div class="ratio ratio-4x3 position-relative">
+            <div id="drop-zone" class="rounded border border-primary p-4 text-center" x-data="{ dragging: false }"
+                 :class="{'bg-light': dragging}"
+                 @dragover.prevent="dragging = true"
+                 @dragleave.prevent="dragging = false"
+                 @click="selectFile"
+                 @drop.prevent="upload($event.dataTransfer.files[0])"
+                 x-show="!file">
+                <div>Drag and drop video file</div>
+                <div>or</div>
+                <label for="file-upload" class="btn btn-primary">click to choose file</label>
+                <input type="file" id="file-upload" name="file" class="d-none" accept="video/*"
+                       @change="upload($event.target.files[0])"/>
+            </div>
+
+            <div class="rounded border border-primary p-4 text-center" x-show="file">
+                <video controls :src="file"></video>
+
+                <div class="position-absolute top-0 end-0 p-1 z-1">
+                    <button class="btn btn-outline-danger" @click="resetFile"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress" x-show="uploading" x-transition x-transition:leave.duration.500ms id="progress"
+             role="progressbar"
+             aria-label="Basic example" aria-valuenow="0"
+             aria-valuemin="0"
+             aria-valuemax="100">
+            <div class="progress-bar" id="progress-bar" :class="{'bg-success': progress >= 99}"
+                 :style="{width: progress + '%'}" x-text="!uploaded ? progress + '%' : 'Uploaded!'">
+            </div>
+        </div>
+
+        <div class="row row-cols-2 g-3" id="link">
+            <% links.forEach(function(link){ %>
+                <div class="d-flex gap-2" x-data="<%= JSON.stringify(link) %>">
+                    <div class="d-flex flex-column flex-grow-1">
+                        <input type="checkbox" class="btn-check" id="link-<%= link.id %>"
+                               value="<%= link.id %>"
+                               x-model="links"
+                        <% if(link.disabled) { %>
+                               disabled
+                                <% } %>
+                        >
+                        <label class="btn text-start" for="link-<%= link.id %>">
+                            <i class="<%= link.icon %>" style="color: <%= link.color %>"></i>
+                            <%= link.name %>
+                        </label>
+                    </div>
+                    <% if(link.disabled) { %>
+                        <button class="float-end d-flex align-items-center btn btn-outline-info"
+                            title="Do link your account, logout and use the <%= link.name %> IdP to login"
+                            @click="link(providerId)">
+                            <i class="bi bi-link-45deg"></i>
+                        </button>
+                    <% } else { %>
+                        <button class="float-end d-flex align-items-center btn btn-outline-info"
+                                title="Unlink account" @click="unlink(providerId)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    <% } %>
+                </div>
+            <% }); %>
+        </div>
+
+        <button class="btn btn-primary" id="post-video" :disabled="!uploaded || !links.length" @click="postFiles">
+            Post
+        </button>
+
+        <div class="d-flex justify-content-end">
+            <a href="/auth/logout" class="btn btn-warning">Logout</a>
+        </div>
+    </div>
+
+    <div class="container w-100 h-100 position-absolute top-0 start-0 d-flex justify-content-center align-items-center bg-secondary bg-opacity-50"
+         x-show.important="posting" x-transition x-transition.opacity>
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    addEventListener('alpine:init', () => {
+        const SUPPORTED_TYPES = <%- JSON.stringify(mimeTypes) %>;
+        const links = <%- JSON.stringify(links) %>;
+
+        Alpine.data('video', () => ({
+            file: null,
+            links: links.filter(link => !link.disabled).map(link => link.id),
+            progress: 0,
+            uploading: false,
+            uploaded: false,
+            dragging: false,
+            posting: false,
+            results: null,
+
+            error: null,
+
+            resetFile() {
+                this.file = null;
+                this.progress = 0;
+                this.uploading = false;
+                this.uploaded = false;
+                this.posting = false;
+            },
+
+            selectFile() {
+                document.getElementById('file-upload').click();
+            },
+
+            async upload(file) {
+                if (!SUPPORTED_TYPES.includes(file.type)) {
+                    this.error = 'File type not supported';
+                    return;
+                }
+
+                this.error = null;
+
+                const formData = new FormData();
+                formData.append('file', file);
+
+                this.file = URL.createObjectURL(file);
+
+                this.uploading = true;
+                this.uploaded = false;
+
+                const xhr = new XMLHttpRequest();
+                xhr.upload.addEventListener('progress', e => {
+                    if (e.lengthComputable) {
+                        this.progress = (e.loaded / e.total) * 100;
+                    }
+                });
+
+                xhr.addEventListener('readystatechange', () => {
+                    if (xhr.readyState !== 4) {
+                        return;
+                    }
+                    this.uploaded = true;
+                })
+
+                xhr.open('POST', '/upload');
+                xhr.send(formData);
+            },
+
+            postFiles() {
+                this.posting = true;
+                fetch('/upload/post', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        links: this.links
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.posting = false;
+
+                        const results = data.map(link => ({
+                            ...link,
+                            name: links.find(link => link.id === link.id).name,
+                        }));
+
+                        this.results = {
+                            success: results.filter(link => link.status === 'success'),
+                            error: results.filter(link => link.status === 'error'),
+                        }
+
+                        this.resetFile();
+                    });
+            },
+
+            link(providerId) {
+                if (confirm('Do you want to link your account? You will be logged out and redirected to the IdP to login.')) {
+                    document.location.href = '/links/' + providerId + '/link';
+                }
+            },
+
+            unlink(providerId) {
+                if (confirm('Are you sure you want to unlink this account?')) {
+                    document.location.href = '/links/' + providerId + '/unlink';
+                }
+            }
+        }));
+    });
+</script>
