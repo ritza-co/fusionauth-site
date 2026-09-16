@@ -1,0 +1,43 @@
+---
+/**
+ * Loads an email template file from the shared email directory and renders it with Prism.
+ * This component is specifically for FreeMarker email templates that are documentation content.
+ */
+
+import { Prism } from '@astrojs/prism';
+import fs from 'fs';
+import path from 'path';
+
+interface Props {
+  /** Path to the file, relative to the email templates directory */
+  src: string;
+  /** Optional title shown above the code block as a .code-title tab. */
+  title?: string;
+}
+
+const {
+  src,
+  title,
+} = Astro.props;
+
+const emailRoot = path.join(process.cwd(), 'src', 'content', 'docs', '_shared', 'email');
+const filePath = path.join(emailRoot, src);
+
+let code = '';
+try {
+  code = fs.readFileSync(filePath, 'utf-8').trim();
+} catch (err) {
+  throw new Error(
+    `[LocalEmailCode] Could not read ${filePath}: ${(err as Error).message}`
+  );
+}
+---
+
+{title ? (
+  <figure class="code-figure">
+    <figcaption class="code-title">{title}</figcaption>
+    <Prism code={code} lang="ftl" />
+  </figure>
+) : (
+  <Prism code={code} lang="ftl" />
+)}

@@ -616,6 +616,14 @@ These files contain only tags that are NOT referenced by any documentation. Revi
 - Old: `tag::tagName[]` / `end::tagName[]`
 - New: `:snippet-start: tagName` / `:snippet-end:`
 
+### Email Template Files (2026-09-16)
+- **Converted**: All 28 email template MDX files from `FreemarkerTemplate` to `LocalEmailCode`
+- **New component**: `astro/src/components/LocalEmailCode.astro` - reads from `src/content/docs/_shared/email/`, defaults to `lang="ftl"`
+- **Files affected**: `_shared/email/_*.mdx` (26 files), `_shared/_passwordless-login-templates.mdx`, `_shared/_set-password-templates.mdx`
+- **Location unchanged**: `astro/src/content/docs/_shared/email/*.ftl` - no file moves needed
+- **Workflow unchanged**: `.github/workflows/update-email-templates.yml` continues to work as-is
+- **Simplified**: Removed redundant `lang` attributes from all LocalEmailCode usages since all files are `.ftl`
+
 
 ## Cleanup Actions (2026-09-15)
 
