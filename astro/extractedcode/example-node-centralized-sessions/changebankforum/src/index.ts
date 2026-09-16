@@ -100,7 +100,7 @@ app.use(cookieParser());
 /** Decode Form URL Encoded data */
 app.use(express.urlencoded());
 
-// :snippet-start: redirectmiddleware[]
+// :snippet-start: redirectmiddleware
 app.use(redirectFunction);
 // :snippet-end:
 
@@ -211,7 +211,7 @@ app.get('/logout', (req, res, next) => {
   res.redirect('/endsession');
 });
 
-// :snippet-start: endsession[]
+// :snippet-start: endsessionForum
 app.get('/endsession', async (req, res, next) => {
   console.log('Ending session...')
   const refreshTokenId = req.cookies[refreshToken];
