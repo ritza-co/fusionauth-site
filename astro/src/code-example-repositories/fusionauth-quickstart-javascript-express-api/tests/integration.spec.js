@@ -59,6 +59,41 @@ test('Teller can access /make-change endpoint', async ({ request }) => {
   expect(changeData.pennies).toBe(2);
 });
 
+test('Basic authorization scheme is rejected', async ({ request }) => {
+  const loginResponse = await request.post('http://localhost:9011/api/login', {
+    headers: _header,
+    data: {
+      loginId: 'teller@example.com',
+      password: 'password',
+      applicationId: 'e9fdb985-9173-4e01-9d73-ac2d60d1dc8e'
+    }
+  });
+  expect(loginResponse.ok()).toBeTruthy();
+  const loginData = await loginResponse.json();
+  const makeChangeResponse = await request.get('http://localhost:3000/make-change?total=1.02', {
+    headers: { 'Authorization': `Basic ${loginData.token}` }
+  });
+  expect(makeChangeResponse.status()).toBe(401);
+});
+
+test('Totals with more than two decimal places are rejected', async ({ request }) => {
+  const loginResponse = await request.post('http://localhost:9011/api/login', {
+    headers: _header,
+    data: {
+      loginId: 'teller@example.com',
+      password: 'password',
+      applicationId: 'e9fdb985-9173-4e01-9d73-ac2d60d1dc8e'
+    }
+  });
+  expect(loginResponse.ok()).toBeTruthy();
+  const loginData = await loginResponse.json();
+  const makeChangeResponse = await request.get('http://localhost:3000/make-change?total=1.005', {
+    headers: { 'Authorization': `Bearer ${loginData.token}` }
+  });
+  expect(makeChangeResponse.status()).toBe(400);
+  expect(await makeChangeResponse.json()).toEqual({ error: 'Invalid or missing "total" parameter' });
+});
+
 test('Teller can access /panic endpoint', async ({ request }) => {
   const loginResponse = await request.post('http://localhost:9011/api/login', {
     headers: _header,

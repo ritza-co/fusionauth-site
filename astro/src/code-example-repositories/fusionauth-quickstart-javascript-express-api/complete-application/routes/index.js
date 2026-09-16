@@ -12,7 +12,7 @@ router.post('/panic', hasRole(['teller']), function (req, res, next) {
 
 router.get('/make-change', hasRole(['customer', 'teller']), function (req, res, next) {
   const amount = req.query.total;
-  const error = ! /^(\d+(\.\d*)?|\.\d+)$/.test(amount);
+  const error = ! /^(?:\d+(?:\.\d{1,2})?|\.\d{1,2})$/.test(amount);
   if (error)
     return res.status(400).json({ error: 'Invalid or missing "total" parameter' })
   const result = { total: 0, nickels: 0, pennies: 0};
