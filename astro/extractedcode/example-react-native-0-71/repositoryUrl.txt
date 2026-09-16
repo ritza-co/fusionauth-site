@@ -1,0 +1,1 @@
+github.com/FusionAuth/fusionauth-example-react-native-0-71.git

@@ -1,0 +1,301 @@
+{
+    "variables": {
+        "applicationId": "E9FDB985-9173-4E01-9D73-AC2D60D1DC8E",
+        "apiKey": "this_really_should_be_a_long_random_alphanumeric_value_but_this_still_works",
+        "asymmetricKeyId": "#{UUID()}",
+        "newThemeId": "#{UUID()}",
+        "defaultTenantId": "d7d09513-a3f5-401c-9685-34ab6c552453",
+        "adminEmail": "admin@example.com",
+        "adminPassword": "password",
+        "adminUserId":  "00000000-0000-0000-0000-000000000000",
+        "userEmail": "richard@example.com",
+        "userPassword": "password",
+        "userUserId":  "00000000-0000-0000-0000-111111111111"
+    },
+    "apiKeys": [
+        {
+            "key": "#{apiKey}",
+            "description": "Unrestricted API key"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "url": "/api/key/generate/#{asymmetricKeyId}",
+            "tenantId": "#{defaultTenantId}",
+            "body": {
+              "key": {
+                  "algorithm": "RS256",
+                  "name": "For fusiondesk",
+                  "length": 2048
+              }
+            }
+        },
+        {
+            "method": "PATCH",
+            "url": "api/system-configuration",
+            "body": {
+                "systemConfiguration": {
+                    "corsConfiguration": {
+                        "allowCredentials": true,
+                        "allowedMethods": [
+                            "GET",
+                            "POST",
+                            "OPTIONS"
+                        ],
+                        "allowedOrigins": [ "http://localhost:3000" ],
+                        "debug": false,
+                        "enabled": true,
+                        "preflightMaxAgeInSeconds": 0
+                    }
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "url": "/api/user/registration/#{adminUserId}",
+            "body": {
+              "user": {
+                  "email": "#{adminEmail}",
+                  "password": "#{adminPassword}",
+                  "firstName": "Daisy",
+                  "lastName": "Robs",
+                  "imageUrl": "https://i.pravatar.cc/400?u=#{adminEmail}"
+              },
+              "registration": {
+                "applicationId": "#{FUSIONAUTH_APPLICATION_ID}",
+                "roles": [
+                  "admin"
+                ]
+              }
+            }
+        },
+        {
+            "method": "POST",
+            "url": "/api/application/#{applicationId}",
+            "tenantId": "#{defaultTenantId}",
+            "body": {
+              "application": {
+                  "name": "FusionDesk",
+                  "oauthConfiguration": {
+                      "authorizedRedirectURLs": [
+                          "http://localhost:3000"
+                      ],
+                      "authorizedOriginURLs": [
+                          "http://localhost:3000"
+                      ],
+                      "clientSecret": "super-secret-secret-that-should-be-regenerated-for-production",
+                      "logoutURL": "http://localhost:3000",
+                      "enabledGrants": [
+                          "authorization_code",
+                          "refresh_token"
+                      ],
+                      "debug": true,
+                      "generateRefreshTokens": true
+                  },
+                  "jwtConfiguration": {
+                      "enabled": true,
+                      "accessTokenKeyId": "#{asymmetricKeyId}",
+                      "idTokenKeyId": "#{asymmetricKeyId}"
+                  },
+                  "registrationConfiguration": {
+                      "enabled": true
+                  },
+                  "roles": [
+                        {
+                            "name": "agent",
+                            "description": "Agent role"
+                        },
+                        {
+                            "name": "customer",
+                            "description": "Customer role",
+                            "isDefault": true
+                        }
+                  ]
+              }
+            }
+        },
+        {
+            "method": "POST",
+            "url": "/api/user/registration/#{userUserId}",
+            "body": {
+                "user": {
+                    "birthDate": "1985-11-23",
+                    "email": "#{userEmail}",
+                    "firstName": "Richard",
+                    "lastName": "Hendricks",
+                    "password": "#{userPassword}",
+                    "imageUrl": "https://i.pravatar.cc/400?u=#{userEmail}"
+                },
+                "registration": {
+                    "applicationId": "#{applicationId}"
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "url": "/api/user/registration/00000000-0000-0000-0000-111111111112",
+            "body": {
+                "user": {
+                    "birthDate": "1985-11-23",
+                    "email": "olive@example.com",
+                    "firstName": "Olive",
+                    "lastName": "Floyd",
+                    "password": "#{userPassword}",
+                    "imageUrl": "https://i.pravatar.cc/400?u=olive@example.com"
+                },
+                "registration": {
+                    "applicationId": "#{applicationId}"
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "url": "/api/user/registration/00000000-0000-0000-0000-111111111113",
+            "body": {
+                "user": {
+                    "birthDate": "1985-11-23",
+                    "email": "oaklynn@example.com",
+                    "firstName": "Oaklynn",
+                    "lastName": "Schultz",
+                    "password": "#{userPassword}",
+                    "imageUrl": "https://i.pravatar.cc/400?u=oaklynn@example.com"
+                },
+                "registration": {
+                    "applicationId": "#{applicationId}"
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "url": "/api/user/registration/00000000-0000-0000-0000-111111111114",
+            "body": {
+                "user": {
+                    "birthDate": "1985-11-23",
+                    "email": "jason@example.com",
+                    "firstName": "Jason",
+                    "lastName": "Mckinney",
+                    "password": "#{userPassword}",
+                    "imageUrl": "https://i.pravatar.cc/400?u=jason@example.com"
+                },
+                "registration": {
+                    "applicationId": "#{applicationId}"
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "url": "/api/user/registration/00000000-0000-0000-0000-111111111115",
+            "body": {
+                "user": {
+                    "birthDate": "1985-11-23",
+                    "email": "walter@example.com",
+                    "firstName": "Walter",
+                    "lastName": "Cooper",
+                    "password": "#{userPassword}",
+                    "imageUrl": "https://i.pravatar.cc/400?u=walter@example.com"
+                },
+                "registration": {
+                    "applicationId": "#{applicationId}"
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "url": "/api/user/registration/00000000-0000-0000-0000-111111111116",
+            "body": {
+                "user": {
+                    "birthDate": "1985-11-23",
+                    "email": "emanuel@example.com",
+                    "firstName": "Emanuel",
+                    "lastName": "Hanson",
+                    "password": "#{userPassword}",
+                    "imageUrl": "https://i.pravatar.cc/400?u=emanuel@example.com"
+                },
+                "registration": {
+                    "applicationId": "#{applicationId}"
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "url": "/api/user/registration/00000000-0000-0000-0000-111111111117",
+            "body": {
+                "user": {
+                    "birthDate": "1985-11-23",
+                    "email": "samantha@example.com",
+                    "firstName": "Samantha",
+                    "lastName": "Cook",
+                    "password": "#{userPassword}",
+                    "imageUrl": "https://i.pravatar.cc/400?u=samantha@example.com"
+                },
+                "registration": {
+                    "applicationId": "#{applicationId}"
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "url": "/api/user/registration/00000000-0000-0000-0000-111111111118",
+            "body": {
+                "user": {
+                    "birthDate": "1985-11-23",
+                    "email": "augustus@example.com",
+                    "firstName": "Augustus",
+                    "lastName": "Sanders",
+                    "password": "#{userPassword}"
+                },
+                "registration": {
+                    "applicationId": "#{applicationId}"
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "url": "/api/user/registration/#{adminUserId}",
+            "body": {
+                "registration": {
+                    "applicationId": "#{applicationId}",
+                    "roles": [
+                        "agent"
+                    ]
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "url": "/api/theme/#{newThemeId}",
+            "body": {
+                "sourceThemeId": "75a068fd-e94b-451a-9aeb-3ddb9a3b5987",
+                "theme": {
+                    "name": "FusionDesk theme"
+                } 
+            }
+        },
+        {
+            "method": "PATCH",
+            "url": "/api/theme/#{newThemeId}",
+            "body": {
+                "theme": {
+                    "stylesheet": "@{css/styles.css}",
+                    "templates": {
+                        "helpers": "@{templates/helpers.ftl}",
+                        "oauth2Authorize": "@{templates/oauth2Authorize.ftl}",
+                        "oauth2Logout": "@{templates/oauth2Logout.ftl}",
+                        "oauth2Register": "@{templates/oauth2Register.ftl}",
+                        "passwordForgot": "@{templates/passwordForgot.ftl}"
+                    }
+                }
+            }
+        },
+        {
+            "method": "PATCH",
+            "url": "/api/tenant/#{defaultTenantId}",
+            "body": {
+                "tenant": {
+                    "themeId": "#{newThemeId}"
+                } 
+            }
+        }
+    ]
+}
