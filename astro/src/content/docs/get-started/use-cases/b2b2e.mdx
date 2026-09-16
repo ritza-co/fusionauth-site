@@ -4,10 +4,9 @@ description: Let your customers' users log in to your application with identitie
 order: 40
 ---
 import B2B2EDescription from 'src/content/docs/get-started/use-cases/_b2b2e-description.mdx';
-import Aside from 'src/components/Aside.astro';
 import UserSegmentTable from 'src/content/docs/get-started/core-concepts/_user-segment-table.mdx';
 import CrossTenantUserAccess from 'src/content/docs/get-started/core-concepts/_cross-tenant-access.mdx';
-import APIKeyCrossTenantNote from 'src/content/docs/apis/_api-key-cross-tenant-note.mdx';
+import APIKeyCrossTenantNote from 'src/content/docs/apis/_shared/_api-key-cross-tenant-note.mdx';
 import TenantAuthorizationWarning from 'src/content/docs/get-started/use-cases/_tenant-authorization.mdx';
 
 ## Overview
@@ -177,7 +176,7 @@ You can script these configuration steps using one of the [SDKs](/docs/sdks). Yo
 
 Record information such as the API key, the identity provider Id, the client Id and client secret from the application configuration in your application's database. Later, your application will look up this information based on the request hostname.
 
-When using FusionAuth Cloud, you can [configure FusionAuth to respond to different hostnames](/docs/get-started/run-in-the-cloud/cloud#custom-domains). You can also do the same with self-hosted FusionAuth. In addition to the hostnames above, you could also have:
+When using FusionAuth Cloud, you can [configure FusionAuth to respond to different hostnames](/docs/cloud/operate/custom-domains). You can also do the same with self-hosted FusionAuth. In addition to the hostnames above, you could also have:
 
 * `auth.ringling.example.com` for Ringling Bros. and Barnum & Bailey Circus login host
 * `auth.cirquedesoleil.example.com` for Cirque du Soleil login host
@@ -195,13 +194,13 @@ Pick one or more methods that work for your use case; FusionAuth supports them a
 
 ### User Authentication
 
-When a user comes to the Ringling site hosted by ClownTime, they must be redirected to a FusionAuth authorization URL with the appropriate client Id and redirect URL. This starts the Authorization Code grant to authenticate this user. Here's an [explanation of how to create the URL and what each component means](/docs/apis/oauth#authorization-code-grant-request).
+When a user comes to the Ringling site hosted by ClownTime, they must be redirected to a FusionAuth authorization URL with the appropriate client Id and redirect URL. This starts the Authorization Code grant to authenticate this user. Here's an [explanation of how to create the URL and what each component means](/docs/apis/oauth/authorize#authorization-code-grant-request).
 
 Additionally, the `idp_hint` parameter with a value of the identity provider Id should be added to the authorization URL. This skips the FusionAuth login page entirely. Instead, the browser transparently redirects the user to the identity provider.
 
 If you don't use an `idp_hint`, the user will see a custom themed page. Other interactions with FusionAuth, such as the account locked page, should be themed as well.
 
-After the user authenticates and is redirected to the ClownTime application, the client Id and client secret can be looked up in the application database based on the hostname in the redirect URL. The circus time tracking web application handles many client Ids and secrets, one for each customer. The client Id and client secret are provided to FusionAuth to complete the Authorization Code grant. Here's an [explanation of that request](/docs/apis/oauth#complete-the-authorization-code-grant-request).
+After the user authenticates and is redirected to the ClownTime application, the client Id and client secret can be looked up in the application database based on the hostname in the redirect URL. The circus time tracking web application handles many client Ids and secrets, one for each customer. The client Id and client secret are provided to FusionAuth to complete the Authorization Code grant. Here's an [explanation of that request](/docs/apis/oauth/token#complete-the-authorization-code-grant-request).
 
 The [tokens](/docs/lifecycle/authenticate-users/oauth/tokens) contain information about the user and their roles. The ClownTime application can use them to determine correct levels of access or data to retrieve.
 
@@ -256,9 +255,7 @@ The word `tenant` can be overloaded. When you are planning for this use case, ma
 
 Use tenants to model customers when using SCIM to add their users. It's not recommended to have multiple SCIM servers provisioning users into one FusionAuth tenant. SCIM provisioning requires additional work to register users for roles.
 
-When the user logs out of your application, they are logged out of FusionAuth but not out of the identity provider. Logging them out of the identity provider requires identity provider dependent functionality.
-
-If you have users who are managed locally and users that are managed via an identity provider in the same tenant and you require local users to set up MFA, the identity provider managed users may [run into this issue](https://github.com/FusionAuth/fusionauth-issues/issues/2357).
+When the user logs out of your application, they are logged out of FusionAuth but not out of the identity provider. Logging them out of the identity provider requires identity provider-dependent functionality.
 
 ## Other Example Scenarios
 
@@ -277,7 +274,7 @@ In each of these cases the customer organization is buying the solution from you
 
 * [Multi-tenant guide](/docs/extend/examples/multi-tenant)
 * [Determining the tenant for a user](/docs/extend/examples/multi-tenant#data-plane-application-tenant-determination)
-* [Options for segmenting users](/docs/get-started/core-concepts/users#segmenting-users)
+* [Options for segmenting users](/docs/get-started/core-concepts/types/users#segmenting-users)
 * [Theme customization](/docs/customize/look-and-feel/)
 * [Email template customization](/docs/customize/email-and-messages/)
 * [Blog post about private labeling](/blog/private-labeling-with-multi-tenant)

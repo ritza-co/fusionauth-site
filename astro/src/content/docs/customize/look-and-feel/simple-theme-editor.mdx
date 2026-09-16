@@ -3,18 +3,10 @@ title: Simple Theme Editor
 description: Quickly and easily style FusionAuth with no code.
 order: 1
 ---
-import APIBlock from 'src/components/api/APIBlock.astro';
-import APIField from 'src/components/api/APIField.astro';
-import Aside from 'src/components/Aside.astro';
-import AvailableSince from 'src/components/api/AvailableSince.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import Icon from 'src/components/icon/Icon.astro';
 import ThemeTroubleshooting from 'src/content/docs/customize/look-and-feel/_theme-troubleshooting.mdx';
 import { YouTube } from '@astro-community/astro-embed-youtube';
 
-<Aside type="version">
-  Available since version `1.51.0`
-</Aside>
+<AvailableSince since="1.51.0"/>
 
 <YouTube id="hn7RqbkmHt8" />
 
@@ -22,7 +14,7 @@ The Simple Theme Editor allows you to quickly get up and running with a custom F
 
 The alternative is to use the [Advanced Theme Editor](/docs/customize/look-and-feel/advanced-themes), which lets you control every aspect of the look and feel of your themes but with significantly more complexity.
 
-### Difference From Advanced Themes
+## Difference From Advanced Themes
 
 FusionAuth allows you to take full control over all of the hosted pages by creating an advanced theme and editing the HTML, CSS, and messages. This is a powerful way to create a fully custom experience, but it can be complex and time-consuming.
 

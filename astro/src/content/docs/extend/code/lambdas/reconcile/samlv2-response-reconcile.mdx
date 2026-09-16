@@ -2,8 +2,6 @@
 title: SAML v2 Reconcile Lambda
 description: An overview of the SAML v2 Response Reconcile lambda.
 ---
-import AvailableSince from 'src/components/api/AvailableSince.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import ReconcileLambdaIntro from 'src/content/docs/extend/code/lambdas/_reconcile-lambda-intro.mdx';
 import ReconcileLambdaUserRegistrationParameters from 'src/content/docs/extend/code/lambdas/_reconcile-lambda-user-registration-parameters.mdx';
 import SamlResponseFields from 'src/content/docs/extend/code/lambdas/_saml-response-fields.mdx';
@@ -48,7 +46,7 @@ function reconcile(user, registration, samlResponse) {
   // Set Assign a custom attribute from the SAML attribute named 'favoriteColor'
   registration.data.favoriteColor = samlResponse.assertion.attributes['favoriteColor'];
 
-  // Create an event log of type 'Debug' when the lambda has Debug enabled
+  // Create an event log of type 'Debug' when the lambda has debug logging enabled
   console.debug('FusionAuth reconciled a User from a SAML v2 IdP and I helped!');
 }
 ```

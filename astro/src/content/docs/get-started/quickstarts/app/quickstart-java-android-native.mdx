@@ -1,18 +1,16 @@
 ---
 title: Android Java - AppAuth
-description: Quickstart integration of a Java-based Android app with FusionAuth.
+description: QuickStart integration of a Java-based Android app with FusionAuth.
+htmlTitle: FusionAuth QuickStart for Android Java - AppAuth
 codeRoot: https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-java-android-native/main
+icon: /img/icons/android.svg
 ---
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import DockerSpinup from 'src/components/quickstarts/DockerSpinup.astro';
-import IconButton from 'src/components/IconButton.astro';
 import Intro from 'src/components/quickstarts/Intro.astro';
 import {Content as LoginArchitectureWeb} from 'src/components/quickstarts/LoginArchitectureWeb.mdx';
 import NextSteps from 'src/components/quickstarts/NextSteps.astro';
 import QuickstartNgrok from 'src/components/quickstarts/quickstart-ngrok.mdx';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
-import RemoteCode from 'src/components/RemoteCode.astro';
 
 <Intro fulltext="an Android app with Java"
        repositoryUrl="https://github.com/FusionAuth/fusionauth-quickstart-java-android-native"/>
@@ -39,11 +37,11 @@ In this section, you'll get FusionAuth up and running and use `git` to create a 
 
 First off, grab the code from the repository and navigate into that directory:
 
-```console
+```shell-session
 git clone https://github.com/FusionAuth/fusionauth-quickstart-java-android-native.git
 ```
 
-```console
+```shell-session
 cd fusionauth-quickstart-java-android-native
 ```
 
@@ -71,14 +69,14 @@ You must create new keys after modifying the `Tenant` because the **Issuer** fie
 
 Now you are going to create an Android app. While this section builds a simple Android app on top of the [AppAuth demo app](https://github.com/openid/AppAuth-Android), you can use the same configuration to integrate your existing app with FusionAuth.
 
-```shell
+```shell-session
 git clone https://github.com/FusionAuth/openid-AppAuth-Android.git
 cd openid-AppAuth-Android
 ```
 
 Start by removing some unused files:
 
-```shell
+```shell-session
 rm app/java/io/fusionauth/app/BrowserSelectionAdapter.java
 rm app/res/layout/browser_selector_layout.xml
 ```
@@ -146,7 +144,7 @@ Modify strings shown in the user interface by updating `app/res/values/strings.x
 
 Now, add image assets to make this look like a real application with the following shell commands.
 
-```shell
+```shell-session
 curl -o app/res/drawable/changebank.png https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-java-android-native/main/complete-application/app/res/drawable/changebank.png
 curl -o app/res/mipmap-hdpi/ic_launcher.png https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-java-android-native/main/complete-application/app/res/mipmap-hdpi/ic_launcher.png
 curl -o app/res/mipmap-hdpi/ic_launcher.png https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-java-android-native/main/complete-application/app/res/mipmap-hdpi/ic_launcher.png

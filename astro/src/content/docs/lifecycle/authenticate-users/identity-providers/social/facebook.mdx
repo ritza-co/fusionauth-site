@@ -1,10 +1,7 @@
 ---
-title: Facebook
+title: Add a Facebook IdP
 description: Learn how to add a login with Facebook button to your application.
 ---
-import APIBlock from 'src/components/api/APIBlock.astro';
-import APIField from 'src/components/api/APIField.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import {Content as IdentityProviderOverviewDiagram} from 'src/content/docs/_shared/_identity-provider-overview-diagram.mdx';
 import IdpApplicationConfiguration from 'src/content/docs/_shared/_idp-application-configuration.mdx';
 import LinkingStrategyEditLimit from 'src/content/docs/_shared/_idp-linking-strategy-edit-limits.mdx';
@@ -118,8 +115,8 @@ This will take you to the `Add Facebook` panel, and you'll fill out the `App Id`
 
     To configure a lambda, navigate to <Breadcrumb>Customizations -> Lambdas</Breadcrumb>.
   </APIField>
-  <APIField name="Debug enabled" optional defaults="false">
-    Enable debug to create an event log to assist you in debugging integration errors.
+  <APIField name="Enable debug logging" optional defaults="false">
+    Creates event log entries to help debug integration errors. Check <Breadcrumb>System -> Event Log</Breadcrumb>.
   </APIField>
 </APIBlock>
 

@@ -2,18 +2,14 @@
 title: Modeling Hierarchies
 description: Using the FusionAuth Entity Management feature to model hierarchical organizations and users that belong to organizations.
 ---
-import PremiumPlanBlurb from 'src/content/docs/_shared/_premium-plan-blurb.mdx';
-import EnterprisePlanBlurb from 'src/content/docs/_shared/_enterprise-plan-blurb.mdx';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import Aside from 'src/components/Aside.astro';
 
 This guide discusses ways of modeling hierarchical organizations and entities, with users and permissions, and provides an example script you can use in your own website. Entities are not available in the free version of FusionAuth.
 
-<PremiumPlanBlurb />
+<PlanBlurb plan="starter" />
 
 ## Understand FusionAuth Types And Their Relationships
 
-Before continuing, please read the [review of FusionAuth types](/docs/get-started/core-concepts/types-and-relationships) and how they relate. You need to understand these types well to adjust the hierarchical system design in this guide to suit your situation.
+Before continuing, please read the [review of FusionAuth types](/docs/get-started/core-concepts/types/) and how they relate. You need to understand these types well to adjust the hierarchical system design in this guide to suit your situation.
 
 To avoid confusion with FusionAuth applications in this guide, the service you provide your users will be called your "website", as opposed to an application, app, or service.
 
@@ -101,7 +97,7 @@ Open a terminal in the directory containing the repository files.
 
 Run the command below to start FusionAuth.
 
-```sh
+```shell-session
 cd light
 docker compose up
 ```
@@ -109,7 +105,7 @@ docker compose up
 <Aside type="note">
   If you have completed any FusionAuth tutorials before, you might need to first delete any existing FusionAuth containers with the same name and the database volumes. Run the command below to do that.
 
-  ```sh
+  ```shell-session
   docker rm fa fa_db; docker compose down -v
   ```
 </Aside>
@@ -190,7 +186,7 @@ FusionAuth now represents your corporate hierarchy and you can start work on the
 
 ### Run Your Website To Calculate All The User Permissions
 
-In this section, you'll write a script to get all the direct and indirect (through the company hierarchy) permissions a user has to all documents in FusionAuth. All you need is the user's email address or Id. Though this is a simple script, you can use exactly the same code after the user has logged in to your website with FusionAuth. (To learn how to make a simple Node.js website that uses FusionAuth, read the [quickstart](/docs/get-started/quickstarts/web/express).)
+In this section, you'll write a script to get all the direct and indirect (through the company hierarchy) permissions a user has to all documents in FusionAuth. All you need is the user's email address or Id. Though this is a simple script, you can use exactly the same code after the user has logged in to your website with FusionAuth. (To learn how to make a simple Node.js website that uses FusionAuth, read the [QuickStart](/docs/get-started/quickstarts/web/express).)
 
 For this script, you'll use TypeScript. It's easy to make errors when working with a tree structure, like these parent and child entities. TypeScript's strong typing will prevent errors, and enable you to see exactly which properties are available on each object. If you prefer JavaScript, you can delete all the type syntax, rename the file with `.js`, and the code will still run fine.
 
@@ -298,7 +294,7 @@ This code is a little tricky if you haven't worked with a tree structure before.
 
 In a new terminal, run the commands below to install Axios and run the script to check what permissions Richard has to both documents. Here, to save time, you use Docker again, with the Deno 2 image, which can run TypeScript without any compile step, as well as allowing you to freely mix JavaScript, ES modules, and CommonJS modules. In reality, you could use the TypeScript compiler, and Node, Bun, or any other JavaScript environment you like.
 
-```sh
+```shell-session
 docker run --platform=linux/amd64 --rm --network faNetwork -v ".:/app" -w "/app" denoland/deno:alpine-2.1.3 sh -c  "deno run --allow-net --allow-read ./getPermissions.ts"
 ```
 
@@ -348,7 +344,7 @@ All documents and permissions to them for richard@example.com
 
 To remove all the Docker volumes, containers, images, and networks used in this guide, run the commands below.
 
-```sh
+```shell-session
 docker compose down -v
 docker rm fa fa_db
 docker rmi postgres:16.0-bookworm fusionauth/fusionauth-app:latest denoland/deno:alpine-2.1.3
@@ -363,7 +359,7 @@ With these constraints in mind, below are alternatives to using entities and gra
 
 ### Fine-Grained Authorization
 
-<EnterprisePlanBlurb />
+<PlanBlurb plan="enterprise" />
 
 Fine-grained authorization (FGA) allows for more granular permissions than Entities, including:
 

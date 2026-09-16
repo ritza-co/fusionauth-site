@@ -2,8 +2,6 @@
 title: Cloudflare Worker Functions (API Gateway)
 description: Learn about the Cloudflare Worker Functions and JWT integration.
 ---
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import FrameworkIntegrationTutorialList from 'src/content/docs/_shared/_framework-integration-tutorial-list.mdx';
 
 Cloudflare is a global cloud platform designed to make everything you connect to the internet secure, private, fast, and reliable. Creating an API Gateway app on Cloudflare is a great way to manage, secure, and optimize your APIs. Cloudflare offers several services that can help you achieve this, such as Cloudflare Workers, Cloudflare Gateway, and Cloudflare Load Balancing.
@@ -26,7 +24,7 @@ First, you need to make sure the JWT issuer setting is correct for your FusionAu
 
 If you are running FusionAuth locally and want to expose it publicly using ngrok, you can run the following command.
 
-```shell
+```shell-session
 ngrok http 9011
 ```
 
@@ -45,7 +43,7 @@ Your application should look like this.
 
 ![The FusionAuth example configuration](/img/docs/extend/examples/api-gateways/application-configuration.png)
 
-On the <Breadcrumb>JWT</Breadcrumb> tab, toggle the <Breadcrumb>Enabled</Breadcrumb> switch and set the **Access Token signing key** and **Id Token signing key** to `Auto generate a new key on save...`.
+On the <Breadcrumb>JWT</Breadcrumb> tab, toggle the <Breadcrumb>Enable application-level JWT override</Breadcrumb> switch and set the **Access Token signing key** and **Id Token signing key** to `Auto generate a new key on save...`.
 
 ![The JWT configuration](/img/docs/extend/examples/api-gateways/jwt-config.png)
 
@@ -245,7 +243,7 @@ Copy the `token` value. This is a JWT, which we can use to access the API gatewa
 
 Now call the API gateway with the following curl command:
 
-```shell
+```shell-session
 curl --location --request GET '<PUBLIC_WORKER_URL>' \
 --header 'Authorization: Bearer <JWT_TOKEN>'
 ```

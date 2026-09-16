@@ -1,8 +1,3 @@
-import APIBlock from 'src/components/api/APIBlock.astro';
-import APIField from 'src/components/api/APIField.astro';
-import JSON from 'src/components/JSON.astro';
-
-#### Request Body
 
 <APIBlock>
   <APIField name="entityType.data" type="Object" optional>
@@ -12,6 +7,11 @@ import JSON from 'src/components/JSON.astro';
     The unique id of the signing key used to sign the access token.
 
     Required when **enabled** is set to `true`.
+  </APIField>
+  <APIField name="entityType.jwtConfiguration.accessTokenVerificationKeyIds" type="Array<UUID>" optional since="1.69.0">
+    The list of access token verification key Ids that are trusted for this entity type when entity JWTs are presented to `/oauth2/introspect` or in SCIM use cases. This list always implicitly includes **`entityType.jwtConfiguration.accessTokenKeyId`**.
+
+    Facilitates key rotation by trusting multiple keys: if you change **`entityType.jwtConfiguration.accessTokenKeyId`** to a new key and supply the previous key in this field, FusionAuth will trust JWTs signed by both keys, while only signing JWTs with the new key.
   </APIField>
   <APIField name="entityType.jwtConfiguration.enabled" type="Boolean" optional defaults="false">
     Indicates if this application is using the JWT configuration defined here or the global JWT configuration defined by the Tenant. If this is `false` the signing algorithm configured in the Tenant will be used. If `true` the signing algorithm defined in this application will be used.

@@ -3,7 +3,6 @@ title: Deploy with k8s
 description: Learn how to deploy FusionAuth in a Kubernetes Cluster.
 tags: docker, kubernetes, k8s, container, aws
 ---
-import Aside from 'src/components/Aside.astro';
 import TroubleshootingRuntimeModeMismatch from 'src/content/docs/get-started/download-and-install/_troubleshooting-runtime-modes-at-startup.mdx';
 
 Kubernetes is an extensible and open-source container-orchestration system used for automating application deployments. Some of the most notable features it provides include self-healing, auto-scaling, and automated rollouts and rollbacks.
@@ -249,7 +248,7 @@ export SVC_NAME=$(kubectl get svc --namespace default -l "app.kubernetes.io/name
 Forwarding from 127.0.0.1:9011 -> 9011
 ```
 
-Navigate to `http://localhost:9011` and you will land on the FusionAuth Setup Wizard. For a complete tutorial walking you through the initial FusionAuth configuration, see [Setup Wizard & First Login](/docs/get-started/download-and-install/setup/).
+Navigate to `http://localhost:9011` and you will land on the FusionAuth Setup Wizard. For a complete tutorial walking you through the initial FusionAuth configuration, see [Setup Wizard & First Login](/docs/get-started/download-and-install/setup).
 
 ![FusionAuth bootstrap](/img/docs/get-started/download-and-install/kubernetes/fa-initial-config.png)
 

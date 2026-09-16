@@ -8,7 +8,6 @@ categories: Tutorial
 tags: registration forms, themes
 excerpt_separator: "{/* more */}"
 ---
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 When a user is registering, the last thing you want to do is get in their way or confuse them. In this tutorial, you'll improve an advanced registration form's display by modifying a theme.
 
@@ -198,7 +197,7 @@ You can customize your field display more extensively by modifying the `customFi
 
 Navigate to <Breadcrumb>Themes</Breadcrumb> and edit your theme. Click on <Breadcrumb>Helpers</Breadcrumb> and scroll to the bottom. You'll be modifying the `customField` macro. Here's the default implementation for this [FreeMarker macro](https://freemarker.apache.org/):
 
-```
+```ftl
 [#macro customField field key autofocus=false placeholder=""]
   [#assign fieldId = field.key?replace(".", "_") /]
   [#local leftAddon = field.data.leftAddon!'info' /]
@@ -232,7 +231,7 @@ It looks a little wonky if you aren't used to it, but this is a series of if/the
 
 Let's add a label to each field. Right after `[#assign fieldId = field.key?replace(".", "_") /]`, add this:
 
-```
+```ftl
 <label for="${fieldId}">${theme.optionalMessage(field.key)}:</label>
 ```
 

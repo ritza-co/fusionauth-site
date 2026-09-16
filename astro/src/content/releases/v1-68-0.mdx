@@ -7,9 +7,9 @@ description: "FusionAuth 1.68.0 makes MFA easier to configure and more robust th
 import Item from 'src/components/docs/release-notes/ReleaseNotesItem.astro';
 
 <Item category="breaking-change">
-The [Retrieve Recovery Codes](/docs/apis/two-factor#retrieve-recovery-codes) endpoint (`GET /api/user/two-factor/recovery-code/{userId}`) (deprecated since `1.64.0`), now always returns an empty list. Because recovery codes are now hashed at rest, they can no longer be retrieved in plaintext after creation.
+The [Retrieve Recovery Codes](/docs/apis/two-factor/retrieve-recovery-codes) endpoint (`GET /api/user/two-factor/recovery-code/{userId}`) (deprecated since `1.64.0`), now always returns an empty list. Because recovery codes are now hashed at rest, they can no longer be retrieved in plaintext after creation.
 
-If you need to provide a user access to their recovery codes, use the [Generate Recovery Codes](/docs/apis/two-factor#generate-recovery-codes) API (`POST /api/user/two-factor/recovery-code/{userId}`) to generate a new set.
+If you need to provide a user access to their recovery codes, use the [Generate Recovery Codes](/docs/apis/two-factor/generate-recovery-codes) API (`POST /api/user/two-factor/recovery-code/{userId}`) to generate a new set.
 </Item>
 
 <Item category="new-feature" issue="3502">
@@ -28,18 +28,34 @@ Email and message templates can now build links using the new `baseUrl` [variabl
 </Item>
 
 <Item category="new-feature" issue="3473">
-Created the [MFA Deleter](/docs/get-started/core-concepts/roles#the-mfa_deleter-role) role, a granular permission that enables a user to remove an MFA method from a user account without full FusionAuth administrator permissions.
+Created the [MFA Deleter](/docs/get-started/core-concepts/types/roles#the-mfa_deleter-role) role, a granular permission that enables a user to remove an MFA method from a user account without full FusionAuth administrator permissions.
 </Item>
 
 <Item category="enhancement">
-When importing users via the [Import Users API](/docs/apis/users#import-users) with plaintext recovery codes, FusionAuth will now hash each code during import. For large imports containing many users with recovery codes, this will increase import time.
+When importing users via the [Import Users API](/docs/apis/users/import) with plaintext recovery codes, FusionAuth will now hash each code during import. For large imports containing many users with recovery codes, this will increase import time.
 
-To avoid this overhead, you may pre-hash recovery codes before import and provide `twoFactor.recoveryCodeEncryptionScheme` and `twoFactor.recoveryCodeWorkFactor` alongside the pre-hashed values in `twoFactor.recoveryCodes`. For more information, see the [Import Users API](/docs/apis/users#import-users).
+To avoid this overhead, you may pre-hash recovery codes before import and provide `twoFactor.recoveryCodeEncryptionScheme` and `twoFactor.recoveryCodeWorkFactor` alongside the pre-hashed values in `twoFactor.recoveryCodes`. For more information, see the [Import Users API](/docs/apis/users/import).
 </Item>
 
 <Item category="enhancement" issue="2739">
 Users can now specify a custom name when adding a two-factor method. This helps to disambiguate during MFA method selection and management.
 You can rename existing methods using the API or self-service.
+</Item>
+
+<Item category="known-issue" viaIssue="3525" resolvedIn="1.69.0">
+Enabling "Email Plus content" on a consent fails to send an email with an error: `Cannot read field "baseURL" because "tenant" is null`.
+</Item>
+
+<Item category="known-issue" viaIssue="3523" resolvedIn="1.69.0">
+The Impossible Travel [Risk Signal](/docs/lifecycle/authenticate-users/risk-signals) always reports status `LOW` if the instance has not yet fetched the IP geolocation dataset.
+</Item>
+
+<Item category="known-issue" viassue="3533" resolvedIn="1.68.0">
+A user may be unable to complete a registration missing required fields for a [social IdP](/docs/lifecycle/authenticate-users/identity-providers/).
+</Item>
+
+<Item category="fix" viaIssue="3538" resolvedIn="1.68.0">
+Custom form field labels may not appear correctly on registration forms.
 </Item>
 
 <Item category="fix" issue="3323" >

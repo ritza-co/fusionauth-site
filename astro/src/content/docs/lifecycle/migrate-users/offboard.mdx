@@ -2,7 +2,6 @@
 title: Export from FusionAuth
 description: Learn how to export your data from FusionAuth to migrate to another authentication service.
 ---
-import Aside from 'src/components/Aside.astro';
 
 This guide explains how to export user data from FusionAuth to prepare it for migration to another system. This information may be useful for you to:
 - Export user data to a data warehouse for analysis.
@@ -40,7 +39,7 @@ To run a new self-hosted FusionAuth instance with Docker:
 
 While the FusionAuth Java code is closed-source, your database data is always freely available to you, unadulterated. You should not edit the data manually and risk breaking your system, but reading the data is fine. You can browse your database using a free, cross-platform database IDE like [DBeaver](https://dbeaver.io/download) or [Azure Data Studio](https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall#download-azure-data-studio)(ADS). If you use ADS, install the PostgreSQL extension in the sidebar before creating a database connection.
 
-If you use [FusionAuth Cloud](/docs/get-started/run-in-the-cloud/cloud#accessing-user-data) (the paid, cloud-hosted version of FusionAuth), please contact support to request a backup file of your database. Import the backup file you receive from FusionAuth into a PostgreSQL instance on your computer to explore the data and schema.
+If you use [FusionAuth Cloud](/docs/cloud/reference/user-data#access-user-data) (the paid, cloud-hosted version of FusionAuth), please contact support to request a backup file of your database. Import the backup file you receive from FusionAuth into a PostgreSQL instance on your computer to explore the data and schema.
 
 The screenshot below shows DBeaver connected to the FusionAuth PostgreSQL database from the example repository using a connection string with port `5432`, database `fusionauth`, username `fusionauth`, and password `hkaLBM3RVnyYeYeqE3WI1w2e4Avpy0Wd5O3s3`. To connect to FusionAuth on a remote server, change the **Host** from `localhost` to your server name. The image shows the main user data table, `identities`.
 
@@ -213,7 +212,7 @@ If you are changing only your authentication gateway and the domain name for you
 
 If you cannot do a bulk migration and take your application offline, you need to know how to migrate individual users. FusionAuth provides two useful tools for this, [webhooks](/docs/extend/events-and-webhooks) and [APIs](/docs/apis).
 
-It is possible to do a [slow migration](/docs/lifecycle/migrate-users/#user-by-user-slow-migration) using the [users](/docs/apis/users#search-for-users) API instead of a database script, but it would be slower unless your database is small.
+It is possible to do a [slow migration](/docs/lifecycle/migrate-users/#user-by-user-slow-migration) using the [users](/docs/apis/users/search) API instead of a database script, but it would be slower unless your database is small.
 
 Slow migrations generally involve choosing relevant FusionAuth [events](/docs/extend/events-and-webhooks/events), and using those to trigger a webhook that calls a web service you've written. The web service can then call the relevant API to get user data, and call the API of the authentication service you are migrating to, to update user data.
 

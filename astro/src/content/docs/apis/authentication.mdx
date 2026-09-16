@@ -4,15 +4,10 @@ description: Learn how the FusionAuth APIs authenticate requests.
 order: 0
 ---
 import APIAuthenticationIcon from "src/components/api/APIAuthenticationIcon.astro";
-import APIBlock from 'src/components/api/APIBlock.astro';
-import APIField from 'src/components/api/APIField.astro';
-import APIKeyCrossTenantNote from 'src/content/docs/apis/_api-key-cross-tenant-note.mdx';
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
+import APIKeyCrossTenantNote from 'src/content/docs/apis/_shared/_api-key-cross-tenant-note.mdx';
 import ClientSideApiKeys from 'src/content/docs/_shared/_client-side-api-keys.mdx';
-import NewApiKey401 from 'src/content/docs/apis/_new-api-key-401.mdx';
-import EnterprisePlanBlurb from 'src/content/docs/_shared/_enterprise-plan-blurb.mdx';
-import TenantAuthentication from 'src/content/docs/apis/_tenant-authentication.mdx';
+import NewApiKey401 from 'src/content/docs/apis/_shared/_new-api-key-401.mdx';
+import TenantAuthentication from 'src/content/docs/apis/_shared/_tenant-authentication.mdx';
 import { YouTube } from '@astro-community/astro-embed-youtube';
 
 The FusionAuth APIs are primarily secured using API keys. A few APIs may use alternate credentials, such as a JWT, basic authentication. Certain APIs are accessible with no authentication. All secured APIs will return an `401 Unauthorized` response if improper credentials are provided.
@@ -45,7 +40,7 @@ Authorization: 7DUrRlA75b5LBRARYoTmScCTk6G6U1nG8R9mr7MGnvzA7AMxEXAMPLE
 
 The following is a curl example using the Authorization header using the above API key to retrieve a user. The line breaks and spaces are for readability.
 
-```shell
+```shell-session
 curl -H 'Authorization: 7DUrRlA75b5LBRARYoTmScCTk6G6U1nG8R9mr7MGnvzA7AMxEXAMPLE' \
      'https://local.fusionauth.io/api/user?email=richard@piedpiper.com'
 ```
@@ -58,9 +53,7 @@ Here's a brief video covering some aspects of API keys:
 
 ## Global API Key Authentication
 
-<Aside type="version">
-This authentication method has been available since `1.65.0`
-</Aside>
+<AvailableSince since="1.65.0"/>
 
 When an API is marked with a red lock icon such as <APIAuthenticationIcon classList={["px-1"]} type="global-api-key"/>, use a global API key. Attempts with a tenant-scoped API key fail.
 
@@ -68,9 +61,7 @@ In addition if an `X-FusionAuth-TenantId` header is provided to this endpoint, t
 
 ## Basic Authentication using an API Key
 
-<Aside type="version">
-This authentication method has been available since `1.27.0`
-</Aside>
+<AvailableSince since="1.27.0"/>
 
 When an API endpoint is marked with a shield such as <APIAuthenticationIcon classList={["px-1"]} type="basic"/> it means you call this API and authenticate using HTTP basic authentication. HTTP basic authentication is a simple, standards based, authentication method. A username and password are supplied, separated by a `:`. It must be prefaced by the string `Basic` and a space. The `username:password` string is base64 encoded.
 
@@ -86,7 +77,7 @@ Authorization: Basic YXBpa2V5OjY5Y1dxVW8wNGhpNFdMdUdBT2IzMmRXZXQwalpkVzBtSkNjOU9
 ```
 
 The following is a curl example using the HTTP Basic Authorization header with a line break and spaces for readability.
-```shell
+```shell-session
 curl -X GET  \
 -H 'Authorization: Basic YXBpa2V5OjY5Y1dxVW8wNGhpNFdMdUdBT2IzMmRXZXQwalpkVzBtSkNjOU9yLUxEamNIUXFMSzJnR29mS3plZg==' \
 'https://local.fusionauth.io/api/prometheus/metrics'
@@ -101,7 +92,7 @@ When an API is marked with a blue passport icon such as <APIAuthenticationIcon c
 
 If the JWT is expired or incorrect, the request will fail.
 
-The requesting and target entities, as well as permissions, are all managed using [Entities](/docs/get-started/core-concepts/entity-management).
+The requesting and target entities, as well as permissions, are all managed using [Entities](/docs/get-started/core-concepts/types/entity-management).
 
 ## Client Credentials Examples
 
@@ -144,16 +135,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0ODUxNDA5O
 The following is a curl example using the HTTP Authorization header using the `Bearer` scheme with a line break and spaces for readability.
 
 
-```shell
+```shell-session
 curl -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0ODUxNDA5ODQsImlhdCI6MTQ4NTEzNzM4NCwiaXNzIjoiYWNtZS5jb20iLCJzdWIiOiIyOWFjMGMxOC0wYjRhLTQyY2YtODJmYy0wM2Q1NzAzMThhMWQiLCJhcHBsaWNhdGlvbklkIjoiNzkxMDM3MzQtOTdhYi00ZDFhLWFmMzctZTAwNmQwNWQyOTUyIiwicm9sZXMiOltdfQ.Mp0Pcwsz5VECK11Kf2ZZNF_SMKu5CgBeLN9ZOP04kZo' \
      https://example.fusionauth.io/api/user
 ```
 
-<Aside type="version">
-  DPoP bound JWTs have been available since `1.63.0`
-</Aside>
+<AvailableSince since="1.63.0"/>
 
-<EnterprisePlanBlurb />
+<PlanBlurb plan="enterprise" />
 
 The following example demonstrates the HTTP Authorization header using the `DPoP` scheme.
 
@@ -168,7 +157,7 @@ If a cookie is provided on a request to an endpoint which accepts an API key or 
 
 The following is an HTTP GET request with the JWT Access Token provided as a cookie.
 
-```shell
+```http
 GET /api/user HTTP/1.1
 Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0ODUxNDA5ODQsImlhdCI6MTQ4NTEzNzM4NCwiaXNzIjoiYWNtZS5jb20iLCJzdWIiOiIyOWFjMGMxOC0wYjRhLTQyY2YtODJmYy0wM2Q1NzAzMThhMWQiLCJhcHBsaWNhdGlvbklkIjoiNzkxMDM3MzQtOTdhYi00ZDFhLWFmMzctZTAwNmQwNWQyOTUyIiwicm9sZXMiOltdfQ.Mp0Pcwsz5VECK11Kf2ZZNF_SMKu5CgBeLN9ZOP04kZo
 ```
@@ -247,7 +236,7 @@ Prior to version `1.26.0`, the FusionAuth administrative user interface was the 
   <APIField name="Access Control List">
     The optional [IP Access Control List](/docs/apis/ip-acl) for restricting the usage of this API key by network address.
 
-    <EnterprisePlanBlurb />
+    <PlanBlurbApi plan="enterprise" feature="IP access control lists" />
   </APIField>
   <APIField name="Expiration">
     The optional date and time at which this API key will expire and no longer be usable for API authentication.

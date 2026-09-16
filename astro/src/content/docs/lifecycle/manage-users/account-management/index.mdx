@@ -3,34 +3,23 @@ title: Self-Service Account Management
 description: Setting up multi-factor authentication as an admin and user, as well as configuring the self-service account management pages.
 order: 0
 ---
-import PremiumPlanBlurb from 'src/content/docs/_shared/_premium-plan-blurb.mdx';
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import Icon from 'src/components/icon/Icon.astro';
 import AccountLogout from 'src/content/docs/lifecycle/manage-users/account-management/_account-logout.mdx';
 import { YouTube } from '@astro-community/astro-embed-youtube';
 
-<PremiumPlanBlurb />
+<PlanBlurb plan="starter" />
 
-<Aside type="version">
-Available since version `1.26.0`
-</Aside>
+<AvailableSince since="1.26.0"/>
 
-FusionAuth self-service account management allows users to manage their accounts, including the ability to add Multi-factor Authentication (MFA).  This documentation section covers:
+FusionAuth self-service account management allows users to manage their accounts, including the ability to add Multi-factor Authentication (MFA).
 
-* [Update User Data & Password](/docs/lifecycle/manage-users/account-management/updating-user-data)
-* [Add Two-Factor Method - Authenticator](/docs/lifecycle/manage-users/account-management/two-factor-authenticator)
-* [Add Two-Factor Method - Email](/docs/lifecycle/manage-users/account-management/two-factor-email)
-* [Add Two-Factor Method- Phone](/docs/lifecycle/manage-users/account-management/two-factor-phone)
-* [Add WebAuthn Passkey](/docs/lifecycle/manage-users/account-management/add-webauthn)
-* [Customizing Account Management](/docs/lifecycle/manage-users/account-management/customizing-account-management)
-* [Troubleshooting](/docs/lifecycle/manage-users/account-management/troubleshooting)
+
+<ChildCards />
 
 Here's a brief video showing account management functionality.
 
 <YouTube id="_HJ4yymXYrs" />
 
-### A Note About User Images in this Documentation
+## A Note About User Images in this Documentation
 
 Throughout this self service account management section we will use:
 
@@ -51,6 +40,16 @@ From here copy and paste the account URL into a browser. Use a different browser
 In a real world application this link would be part of the navigation for your application.
 
 ![Home Screen](/img/docs/lifecycle/manage-users/account-management/applications-home.png)
+
+<AvailableSince since="1.69.0"/>
+
+Self-service provides a **Return to application** link at the top of the page. By default, this links to the `Referer` header of the request that brought the user to self-service. To specify a return link to your application, pass the `redirect_uri` query parameter in the self-service URL:
+
+```uri
+https://example.com/account/?client_id=<client_id>&redirect_uri=https://your-app.example.com
+```
+
+Self-service pages do not display a return link for users from the FusionAuth Admin UI.
 
 ### Account Home
 

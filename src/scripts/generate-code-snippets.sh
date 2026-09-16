@@ -8,7 +8,24 @@ cd "$ASTRO_DIR"
 
 mkdir -p src/generated-code-snippets
 
-for repo in src/code-example-repositories/*/; do
+# Compute a hash of all extractedcode file contents to detect changes
+compute_hash() {
+  find extractedcode -type f | sort | xargs sha256sum 2>/dev/null \
+    || find extractedcode -type f | sort | xargs shasum -a 256 2>/dev/null
+}
+HASH_FILE="src/generated-code-snippets/.extractedcode-hash"
+current_hash=$(compute_hash | sha256sum 2>/dev/null | cut -d' ' -f1 \
+  || compute_hash | shasum -a 256 | cut -d' ' -f1)
+snippet_count=$(find src/generated-code-snippets -type f -not -name '.extractedcode-hash' 2>/dev/null | wc -l)
+
+if [ -f "$HASH_FILE" ] && [ "$(cat "$HASH_FILE")" = "$current_hash" ] && [ "$snippet_count" -gt 0 ]; then
+  echo "Code snippets: up to date ($((snippet_count + 0)) files)"
+  exit 0
+fi
+
+total_written=0
+
+for repo in extractedcode/*/; do
 	output_dir="src/generated-code-snippets/$(basename "$repo")"
 	mkdir -p "$output_dir"
 	status=0
@@ -16,6 +33,7 @@ for repo in src/code-example-repositories/*/; do
 		--output "$output_dir" \
 		--plugin bluehawk-languages.js \
 		--ignore 'node_modules' \
+		--ignore 'vendor' \
 		--ignore '.gitignore' \
 		--ignore '.DS_Store' \
 		--ignore 'package*.json' \
@@ -28,11 +46,15 @@ for repo in src/code-example-repositories/*/; do
 		--ignore 'tmp' \
 		--ignore '*.cache' \
 		2>&1) || status=$?
-	printf '%s\n' "$out" | grep -v 'parsed file' | grep -v 'found binary file' || true
 	if [ $status -ne 0 ] || printf '%s\n' "$out" | grep -q 'bluehawk errors'; then
 		echo "Error: bluehawk snip failed for $repo" >&2
+		printf '%s\n' "$out" | grep -v 'parsed file' | grep -v 'found binary file' >&2 || true
 		exit 1
 	fi
+	written=$(printf '%s\n' "$out" | grep -c 'wrote text file') || true
+	total_written=$((total_written + written))
 done
 
-find src/generated-code-snippets -type d -empty -delete
+find src/generated-code-snippets -mindepth 1 -type d -empty -delete
+echo "$current_hash" > "$HASH_FILE"
+echo "Code snippets: $total_written written"

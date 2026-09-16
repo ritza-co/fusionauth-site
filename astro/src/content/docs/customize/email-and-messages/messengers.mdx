@@ -3,16 +3,12 @@ title: Messengers
 description: Learn about adding and configuring messengers.
 order: 3
 ---
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
-<Aside type="version">
-Available since version `1.26.0`
-</Aside>
+<AvailableSince since="1.26.0"/>
 
 Messengers are used to send messages from within FusionAuth to other systems.
 
-### Message Types
+## Message Types
 Beginning in version `1.65.0`, each messenger can be configured with one or more message types in **messageTypes**. This tells FusionAuth which workflows the messenger may be assigned to.
 
 For example, when configuring SMS or Voice settings in [multi-factor configuration](/docs/lifecycle/authenticate-users/multi-factor-authentication#tenant-mfa-settings-enable-methods-policies-templates) on a tenant, you can assign a messenger that supports the corresponding message type.

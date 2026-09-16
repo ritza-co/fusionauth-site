@@ -9,15 +9,13 @@ categories: Tutorial
 tags: javascript, angular, oauth, fusionauth, integration
 excerpt_separator: "{/* more */}"
 ---
-import Aside from '../../components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 In this post, we'll walk through setting up an Angular app to securely authenticate with an OAuth2 server. We'll use a proxy server between the Angular application and the OAuth server, in order to use the authorization code grant (rather than the [insecure implicit grant](https://medium.com/oauth-2/why-you-should-stop-using-the-oauth-implicit-grant-2436ced1c926)). 
 
 {/* more */}
 
-<Aside type="tip" nodark="true">
-This blog post walks through low-level details of OAuth in Angular. If you want to add login, logout, and registration buttons to your Angular application, using pre-built buttons or service, you should take a look at our [Angular SDK](/docs/sdks/angular-sdk). You can also work through a [tutorial using the SDK](/docs/get-started/quickstarts/spa/quickstart-javascript-angular-web/).
+<Aside type="tip">
+This blog post walks through low-level details of OAuth in Angular. If you want to add login, logout, and registration buttons to your Angular application, using pre-built buttons or service, you should take a look at our [Angular SDK](/docs/sdks/angular-sdk). You can also work through a [tutorial using the SDK](/docs/get-started/quickstarts/spa/quickstart-javascript-angular-web).
 </Aside>
 
 At the end of this tutorial, you will have a working Angular application which allows a user to sign in, sign out and view and update profile data. 
@@ -58,7 +56,7 @@ curl -o .env https://raw.githubusercontent.com/FusionAuth/fusionauth-containers/
 docker compose up
 ```
 
-Check out the [Download FusionAuth page](/download) for other installation options (rpm, deb, etc) if you don't have Docker installed.
+Check out the [Download FusionAuth page](/docs/get-started/download-and-install/docker) for other installation options (rpm, deb, etc) if you don't have Docker installed.
 
 After you sign in as a FusionAuth administrator, create a new application. I named mine 'Secure Angular', and will refer to this throughout the tutorial.
 
@@ -558,7 +556,7 @@ router.get('/', (req, res) => {
 module.exports = router;
 ```
 
-If we have a token, we'll get user information, including their email address, via the userinfo endpoint. We'll also retrieve more information from the registration endpoint and return both to our Angular application. If all we want is the data available from the [userinfo endpoint](/docs/apis/oauth#userinfo), we don't need to make that second API call.
+If we have a token, we'll get user information, including their email address, via the userinfo endpoint. We'll also retrieve more information from the registration endpoint and return both to our Angular application. If all we want is the data available from the [userinfo endpoint](/docs/apis/oauth/userinfo), we don't need to make that second API call.
 
 Restart your express server by going to the terminal where it is running, hitting control-C and then running
 
@@ -627,7 +625,7 @@ router.get('/', (req, res) => {
 module.exports = router;
 ```
 
-This route destroys the express session and then sends the user to FusionAuth to a crafted URL which invalidates the session via the [logout endpoint](/docs/apis/oauth#logout). Again, restart your express server by going to the terminal where it is running, hitting control-C and then running
+This route destroys the express session and then sends the user to FusionAuth to a crafted URL which invalidates the session via the [logout endpoint](/docs/apis/oauth/logout). Again, restart your express server by going to the terminal where it is running, hitting control-C and then running
 
 ```shell
 $ npm run server

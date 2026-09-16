@@ -2,7 +2,6 @@
 title: FusionAuth and Proxies
 description: Learn more about HTTP proxies and FusionAuth.
 ---
-import Aside from 'src/components/Aside.astro';
 import ProxyTroubleshooting from 'src/content/docs/operate/deploy/_proxy-troubleshooting.mdx';
 
 While FusionAuth doesn't require a proxy, using one offers additional flexibility.
@@ -128,7 +127,7 @@ However, `X-Forwarded-Server` should change as requests pass through each proxy.
 
 ### Proxies and Tenants
 
-If you are running [multiple tenants](/docs/get-started/core-concepts/tenants) in FusionAuth, a proxy can be useful to add the tenant Id to all requests for a given domain or path. Clients use the domain without needing to know or care about the tenant they are interacting with.
+If you are running [multiple tenants](/docs/get-started/core-concepts/types/tenants) in FusionAuth, a proxy can be useful to add the tenant Id to all requests for a given domain or path. Clients use the domain without needing to know or care about the tenant they are interacting with.
 
 Suppose we have with two tenants, Pied Piper and Hooli:
 
@@ -164,7 +163,7 @@ If you are self-hosting, you can also proxy requests *from* FusionAuth, such as 
 
 ## FusionAuth Cloud Instances
 
-If you are using a proxy with a FusionAuth Cloud instance, see our [Using a Proxy with FusionAuth Cloud](/docs/get-started/run-in-the-cloud/cloud#using-a-proxy-with-fusionauth-cloud) documentation for more Cloud-specific requirements.
+If you are using a proxy with a FusionAuth Cloud instance, see our [Using a Proxy with FusionAuth Cloud](/docs/cloud/operate/configure-proxy) documentation for more Cloud-specific requirements.
 
 ## Limits
 

@@ -1,20 +1,18 @@
 ---
 title: iOS Swift - FusionAuth SDK
-description: Quickstart integration of a Swift-based iOS app with FusionAuth Swift SDK for iOS.
+description: QuickStart integration of a Swift-based iOS app with FusionAuth Swift SDK for iOS.
+htmlTitle: FusionAuth QuickStart for iOS Swift - FusionAuth SDK
 codeRoot: https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-swift-ios-native/main
+icon: /img/icons/swift-iOS-mobile.svg
 ---
-import Aside from 'src/components/Aside.astro';
-import IconButton from 'src/components/IconButton.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import Intro from 'src/components/quickstarts/Intro.astro';
 import DockerSpinup from 'src/components/quickstarts/DockerSpinup.astro';
 import {Content as LoginArchitectureWeb} from 'src/components/quickstarts/LoginArchitectureWeb.mdx';
 import NextSteps from 'src/components/quickstarts/NextSteps.astro';
 import RemoteContent from 'src/components/RemoteContent.astro';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
-import RemoteCode from 'src/components/RemoteCode.astro';
 
-This quickstart is built on top of [FusionAuth iOS SDK](/docs/sdks/swift-sdk) demonstrating the different functionalities of the SDK available.
+This QuickStart is built on top of [FusionAuth iOS SDK](/docs/sdks/swift-sdk) demonstrating the different functionalities of the SDK available.
 
 <Intro fulltext="an iOS app with Swift" repositoryUrl="https://github.com/FusionAuth/fusionauth-quickstart-swift-ios-native"/>
 
@@ -34,8 +32,11 @@ In this section, you'll get FusionAuth up and running and use `git` to create a 
 
 First off, grab the code from the repository and change into that directory.
 
-```shell
+```shell-session
 git clone https://github.com/FusionAuth/fusionauth-quickstart-swift-ios-native.git
+```
+
+```shell-session
 cd fusionauth-quickstart-swift-ios-native
 ```
 
@@ -59,7 +60,7 @@ Now you have a standard "Hello World" app. You can run it in the simulator by cl
 
 We'll use the [FusionAuth iOS SDK](/docs/sdks/swift-sdk), which simplifies integrating with FusionAuth and creating a secure web application.
 
-Add the [FusionAuth Swift SDK as a dependency](https://github.com/FusionAuth/fusionauth-swift-sdk) to your project by [Add Package Dependencies..](https://developer.apple.com/documentation/xcode/adding-package-dependencies-to-your-app) with the latest version. Select the Quickstart Application as a target and click `Add Package`.
+Add the [FusionAuth Swift SDK as a dependency](https://github.com/FusionAuth/fusionauth-swift-sdk) to your project by [Add Package Dependencies..](https://developer.apple.com/documentation/xcode/adding-package-dependencies-to-your-app) with the latest version. Select the QuickStart Application as a target and click `Add Package`.
 
 ### Configure FusionAuth
 
@@ -77,13 +78,13 @@ Replace the contents of the `Quickstart/FusionAuthStateObject.swift` file with t
 
 <RemoteCode url={frontmatter.codeRoot + "/complete-application/Quickstart/FusionAuthStateObject.swift"} lang="swift"/>
 
-Finally, update the quickstart app `Quickstart/QuickstartApp.swift` to use the `AuthorizationManager` and register `FusionAuthStateObject` as an environment object.
+Finally, update the QuickStart app `Quickstart/QuickstartApp.swift` to use the `AuthorizationManager` and register `FusionAuthStateObject` as an environment object.
 
 <RemoteCode url={frontmatter.codeRoot + "/complete-application/Quickstart/QuickstartApp.swift"} lang="swift"/>
 
 ### Change Views
 
-A [View](https://developer.apple.com/documentation/uikit/views_and_controls) and controls are the visual building blocks of your app’s user interface. Use them to draw and organize your app’s content onscreen.
+A [View](https://developer.apple.com/documentation/uikit/views_and_controls) and controls are the visual building blocks of your app's user interface. Use them to draw and organize your app's content onscreen.
 
 Start by creating login view by selecting <Breadcrumb>File -> New -> File from Template</Breadcrumb> from the menu bar. Select <Breadcrumb>SwiftUI View</Breadcrumb> as the template. Click <Breadcrumb>Next</Breadcrumb>. Set the name of the file to `LoginView.swift`. Click <Breadcrumb>Create</Breadcrumb>. Replace the contents of the `Quickstart/LoginView.swift` file with the following code.
 
@@ -127,7 +128,7 @@ Add the colors and styles in the file `Quickstart/Styles.swift`.
 
 Now, add image assets to make this look like a real application with the following shell commands, run in the root of your project.
 
-```shell
+```shell-session
 curl --create-dirs -o Quickstart/Assets.xcassets/AccentColor.colorset/Contents.json https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-swift-ios-native/refs/heads/main/complete-application/Quickstart/Assets.xcassets/AccentColor.colorset/Contents.json
 curl --create-dirs -o Quickstart/Assets.xcassets/AppIcon.appiconset/Contents.json https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-swift-ios-native/refs/heads/main/complete-application/Quickstart/Assets.xcassets/AppIcon.appiconset/Contents.json
 curl --create-dirs -o Quickstart/Assets.xcassets/AppIcon.appiconset/fa_icon.png https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-swift-ios-native/refs/heads/main/complete-application/Quickstart/Assets.xcassets/AppIcon.appiconset/fa_icon.png
@@ -141,7 +142,7 @@ Once you've created these files, you can test the application out.
 
 ## Run the App
 
-The quickstart app is configured to run on an [iOS Simulator or iOS device.](https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device)
+The QuickStart app is configured to run on an [iOS Simulator or iOS device.](https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device)
 
 ### Running The App On A Simulator
 

@@ -9,8 +9,6 @@ tags: user, analysis, retention
 excerpt_separator: "{/* more */}"
 ---
 
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 Understanding users' behavior can help guide product development and improve customer retention. This article demonstrates how to use FusionAuth to track customer statistics. Understanding *why* customers stay or leave might require data from your application database. But FusionAuth login statistics can help you understand *who* your customers are, and help you sort them into cohorts (groups). Cohort analysis allows you to answer questions like:
 
@@ -140,7 +138,7 @@ The friction chart groups users by how long it takes a user to log in for the fi
 This example chart shows that nearly all users do log in (indicating high interest), but only after a month, suggesting the business should make it easier.
 
 <Aside type="note">
-FusionAuth [creates a login record at the moment of application registration](/docs/get-started/core-concepts/users#what-makes-a-user-active), so the extraction code skips the first login date for each user. Without this, every user would appear to have zero friction, since their first login would always match their registration date.
+FusionAuth [creates a login record at the moment of application registration](/docs/get-started/core-concepts/types/users#what-makes-a-user-active), so the extraction code skips the first login date for each user. Without this, every user would appear to have zero friction, since their first login would always match their registration date.
 </Aside>
 
 ### Login Frequency Chart
@@ -175,15 +173,15 @@ While application databases like FusionAuth store data in a normalized structure
 
 The first step to analyze your user data in FusionAuth is to extract it and store it in a usable format.
 
-Use Git to clone the [accompanying repository](https://github.com/FusionAuth/fusionauth-example-cohort-analysis.git):
+Use Git to clone the accompanying repository:
 
-```console
+```shell-session
 git clone https://github.com/FusionAuth/fusionauth-example-cohort-analysis.git
 ```
 
 Navigate into the repo:
 
-```console
+```shell-session
 cd fusionauth-user-charts
 ```
 
@@ -203,7 +201,7 @@ On up-to-date FusionAuth instances, the script reads the `verified` status from 
 
 To run the user extraction, use the following command:
 
-```console
+```shell-session
 go mod tidy && go run extractUsers.go
 ```
 
@@ -233,7 +231,7 @@ The last step is to run the web server that displays the charts.
 
 Run the following command:
 
-```console
+```shell-session
 go mod tidy && go run charts.go
 ```
 
@@ -261,29 +259,29 @@ If you see any patterns you want to investigate further, you can modify the `get
 
 ## Appendix — How to Create Fake Customer Data in FusionAuth
 
-To create fake users and login data for a FusionAuth application, you need to run a Go file and SQL script. There is no way to create fake dates using the FusionAuth API, so you need direct database access to run the SQL. This works great when you are [running locally](/docs/get-started/download-and-install/docker) or when you [self-host](/download), but instances running in [FusionAuth Cloud](/docs/get-started/run-in-the-cloud/cloud) don't allow direct database access.
+To create fake users and login data for a FusionAuth application, you need to run a Go file and SQL script. There is no way to create fake dates using the FusionAuth API, so you need direct database access to run the SQL. This works great when you are [running locally](/docs/get-started/download-and-install/docker) or when you [self-host](/docs/get-started/download-and-install/docker), but instances running in [FusionAuth Cloud](/docs/cloud/) don't allow direct database access.
 
-If you haven't done so already, use Git to clone the [accompanying repository](https://github.com/FusionAuth/fusionauth-example-cohort-analysis.git):
+If you haven't done so already, use Git to clone the accompanying repository:
 
-```console
+```shell-session
 git clone https://github.com/FusionAuth/fusionauth-example-cohort-analysis.git
 ```
 
 Navigate into the repo:
 
-```console
+```shell-session
 cd fusionauth-user-charts
 ```
 
 If you skipped the extraction step, copy `.env.example` to `.env` and edit it to match your FusionAuth instance. Then run the file with the following command:
 
-```console
+```shell-session
 go run createMockData.go
 ```
 
 Once the users are registered, you need to randomize their registration dates, set 5% of user email addresses to unverified, and create thousands of login events. To do this, you can either connect to your FusionAuth database in a SQL browser and run the contents of `createMockData.sql`, or use the following command with the PostgreSQL binary:
 
-```console
+```shell-session
 PGPASSWORD=<your_db_password> psql -h <your_db_host> -U <your_db_user> -d fusionauth -v fusionauth_app_id=<your_application_id> -f createMockData.sql
 ```
 

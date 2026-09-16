@@ -2,8 +2,6 @@
 title: Add a Theme to a Kickstart
 description: Learn how to use Kickstart to create a FusionAuth Instance with a custom theme.
 ---
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 [FusionAuth Kickstart](/docs/get-started/download-and-install/development/kickstart) enables you to spin up a reproducible FusionAuth environment using a template file. This guide will walk you through the process of using Kickstart to set up a FusionAuth instance with a custom theme.
 
@@ -257,7 +255,7 @@ curl -o docker-compose.yml https://raw.githubusercontent.com/FusionAuth/fusionau
 curl -o .env https://raw.githubusercontent.com/FusionAuth/fusionauth-containers/main/docker/fusionauth/.env
 ```
 
-To enable Kickstart to run from this `docker-compose.yml` file, we must make some modifications. They are described in detail at [this link](/docs/get-started/download-and-install/docker#kickstart) and copied here for your convenience:
+To enable Kickstart to run from this `docker-compose.yml` file, we must make some modifications. They are described in detail at [this link](/docs/get-started/download-and-install/docker) and copied here for your convenience:
 
 - In the `volumes:` section of the FusionAuth service, add `- ./kickstart:/usr/local/fusionauth/kickstart`.
 
@@ -274,7 +272,7 @@ git clone https://github.com/FusionAuth/fusionauth-example-5-minute-guide \
 
 This folder contains a file called `.env.sample`:
 
-```shell
+```shell-session
 CLIENT_ID=CHANGEME
 CLIENT_SECRET=CHANGEME
 BASE_URL=http://localhost:9011
@@ -282,7 +280,7 @@ BASE_URL=http://localhost:9011
 
 Change the **`CLIENT_ID`** and **`CLIENT_SECRET`** so that they match the **`applicationId`** and **`clientSecret`** variables from your `kickstart.json` file. Then save the file as `.env`
 
-```shell
+```shell-session
 CLIENT_ID=404e516b-06b8-49da-9c68-c1cd1928c81d
 CLIENT_SECRET=RBLhJrfRsa0-YxVPrn_aZfzIGccWyncdvHvDNTy-Hrs
 BASE_URL=http://localhost:9011

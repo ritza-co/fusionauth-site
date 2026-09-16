@@ -3,8 +3,6 @@ title: Migrate From Microsoft Azure AD B2C
 description: Learn how to migrate your users to FusionAuth from Microsoft Azure AD B2C.
 ---
 import AdditionalSupport from 'src/content/docs/lifecycle/migrate-users/provider-specific/_additional-support.mdx';
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import CreateApiKey from 'src/content/docs/lifecycle/migrate-users/provider-specific/_create-api-key.mdx';
 import CreateTestApplication from 'src/content/docs/lifecycle/migrate-users/provider-specific/_create-test-application.mdx';
 import CreateTestTenant from 'src/content/docs/lifecycle/migrate-users/provider-specific/_create-test-tenant.mdx';
@@ -13,14 +11,12 @@ import GetScript from 'src/content/docs/lifecycle/migrate-users/provider-specifi
 import Identifiers from 'src/content/docs/lifecycle/migrate-users/provider-specific/_identifiers.mdx';
 import MappingUserAttributes from 'src/content/docs/lifecycle/migrate-users/provider-specific/_mapping-user-attributes.mdx';
 import OtherEntitiesIntro from 'src/content/docs/lifecycle/migrate-users/provider-specific/_other-entities-intro.mdx';
-import PremiumPlanBlurb from 'src/content/docs/_shared/_premium-plan-blurb.mdx';
 import SetUpFusionauth from 'src/content/docs/lifecycle/migrate-users/provider-specific/_set-up-fusionauth.mdx';
 import SlowMigrationTimeline from 'src/content/docs/lifecycle/migrate-users/provider-specific/_slow-migration-timeline.mdx';
 import SocialLoginMigration from 'src/content/docs/lifecycle/migrate-users/provider-specific/_social-login-migration.mdx';
 import VerifyImport from 'src/content/docs/lifecycle/migrate-users/provider-specific/_verify-import.mdx';
 import WhatNext from 'src/content/docs/lifecycle/migrate-users/provider-specific/_what-next.mdx';
 import WhatNextAzureAdB2c from 'src/content/docs/lifecycle/migrate-users/provider-specific/_what-next-azure-ad-b2c.mdx';
-import RemoteCode from 'src/components/RemoteCode.astro';
 
 export const migration_source_name = 'AD B2C';
 export const migration_source_dir = 'azureadb2c';
@@ -59,7 +55,7 @@ You can learn more about the [types of migrations that FusionAuth supports here]
 
 ### One Tenant or Many
 
-In Azure AD B2C, users are placed in [Tenants](https://learn.microsoft.com/en-us/azure/active-directory-b2c/technical-overview). FusionAuth also has the concept of [Tenants](/docs/get-started/core-concepts/tenants). Both of these include data about users, applications and other configuration.
+In Azure AD B2C, users are placed in [Tenants](https://learn.microsoft.com/en-us/azure/active-directory-b2c/technical-overview). FusionAuth also has the concept of [Tenants](/docs/get-started/core-concepts/types/tenants). Both of these include data about users, applications and other configuration.
 
 Each tenant in FusionAuth is a distinct user space. You may choose to merge multiple Azure AD B2C tenants into one FusionAuth tenant or keep them separate.
 
@@ -86,17 +82,17 @@ To retrieve the user information, use the approach documented in the [Export Use
 <OtherEntitiesIntro migration_source_name={migration_source_name} other_migrated_entities="app clients or password policies" />
 
 * [User Flows and Custom Policies](https://learn.microsoft.com/en-us/azure/active-directory-b2c/user-flow-overview) are ways for you to customize authentication or authorization workflows with Azure AD B2C. FusionAuth has a similar concept called [Lambdas](/docs/extend/code/lambdas/). FusionAuth also has [webhooks](/docs/extend/events-and-webhooks/) fired at certain points in the user lifecycle; in certain configurations, they can also stop a particular authentication flow.
-* Azure AD B2C does not have a standardized roles-and-permissions concept. Roles and permissions are usually handled with custom attributes or secondary data stores. FusionAuth has [roles](/docs/get-started/core-concepts/roles) that are configured on an application by application basis and made available in a token after a successful authentication.
+* Azure AD B2C does not have a standardized roles-and-permissions concept. Roles and permissions are usually handled with custom attributes or secondary data stores. FusionAuth has [roles](/docs/get-started/core-concepts/types/roles) that are configured on an application by application basis and made available in a token after a successful authentication.
 * Azure AD B2C has the concept of [User Flow Page Layouts](https://learn.microsoft.com/en-us/azure/active-directory-b2c/customize-ui?pivots=b2c-user-flow) where users can log in or register. FusionAuth has [hosted login pages](/docs/get-started/core-concepts/integration-points#hosted-login-pages) which offer a superset of the functionality of Azure AD B2C User Flow. They are [customized via themes](/docs/customize/look-and-feel/).
-* In Azure AD B2C, users log into [App Registrations](https://learn.microsoft.com/en-us/azure/active-directory-b2c/app-registrations-training-guide). In FusionAuth, [Applications](/docs/get-started/core-concepts/applications) are a similar construct, but users are associated with them through [Registrations](/docs/get-started/core-concepts/registrations). You can migrate both your Client Id and Client Secret from Azure AD B2C to FusionAuth.
+* In Azure AD B2C, users log into [App Registrations](https://learn.microsoft.com/en-us/azure/active-directory-b2c/app-registrations-training-guide). In FusionAuth, [Applications](/docs/get-started/core-concepts/types/applications) are a similar construct, but users are associated with them through [Registrations](/docs/get-started/core-concepts/types/registrations). You can migrate both your Client Id and Client Secret from Azure AD B2C to FusionAuth.
 * Azure AD B2C sends emails on your behalf, such as forgot password notifications. FusionAuth can do so too; [the templates are customizable](/docs/customize/email-and-messages/).
-* Azure AD B2C offers the Client Credentials grant. FusionAuth offers a constrained version of this using [Entity Management](/docs/get-started/core-concepts/entity-management); this is available in all paid plans.
-* Refresh tokens allow JWTs to be refreshed without a user logging in. These can be migrated from Azure AD B2C using the [Import Refresh Tokens API](/docs/apis/users#import-refresh-tokens).
+* Azure AD B2C offers the Client Credentials grant. FusionAuth offers a constrained version of this using [Entity Management](/docs/get-started/core-concepts/types/entity-management); this is available in all paid plans.
+* Refresh tokens allow JWTs to be refreshed without a user logging in. These can be migrated from Azure AD B2C using the [Import Refresh Tokens API](/docs/apis/users/import-refresh-tokens).
 * Azure AD B2C allows for custom attributes, but they must be configured at the Directory level. In FusionAuth, as mentioned above, custom user attributes are stored on the **user.data** field and are dynamic, searchable and unlimited in size. Any valid JSON value may be stored in this field.
 * Azure AD B2C supports MFA. FusionAuth also [supports MFA](/docs/lifecycle/authenticate-users/multi-factor-authentication), which may be enabled for a tenant and configured for a user at any time.
 
 <Aside type="note">
-In FusionAuth, users are explicitly mapped to applications with a [Registration](/docs/get-started/core-concepts/registrations).
+In FusionAuth, users are explicitly mapped to applications with a [Registration](/docs/get-started/core-concepts/types/registrations).
 
 Azure AD B2C, in contrast, gives users access to all Azure AD B2C applications in a Tenant by default.
 </Aside>
@@ -431,7 +427,7 @@ Now you need to set up a Connector to use the Azure AD B2C API you created. You 
 
 Log back into the FusionAuth administrative user interface if needed.
 
-<PremiumPlanBlurb />
+<PlanBlurb plan="starter" />
 
 Connectors are a feature limited to paid plans, so you must ensure you have a valid reactor license. Learn more about [activating reactor](/docs/get-started/core-concepts/licensing).
 
@@ -464,7 +460,7 @@ Click the **Add policy** button to set up a new Connector policy.
 
 ![Connector policies for this Tenant.](/img/docs/lifecycle/migrate-users/provider-specific/azureadb2c/connector-policies.png)
 
-Set the **Connector** field value to the name of the Connector created previously. Make sure that the **Migrate user** field is enabled. You can leave the **Domains** field with the value of `*`, which will apply this Connector to every user.
+Set the **Connector** field value to the name of the Connector created previously. Make sure that the **Migrate to FusionAuth** field is enabled. You can leave the **Domains** field with the value of `*`, which will apply this Connector to every user.
 
 After configuration, the Policy entry form should look similar to this:
 
@@ -490,7 +486,7 @@ Copy this URL and open it in a new incognito browser window. (If you don't use a
 
 Enter credentials for a Azure AD B2C user account; it can be the same one you used to test the API with curl and log in. The user will be transparently migrated over to FusionAuth.
 
-If the user was not migrated or the login was unsuccessful, you can troubleshoot. In the administrative user interface, enable the **Debug enabled** field in the Connector configuration by navigating to <Breadcrumb>Settings -> Connectors</Breadcrumb> and editing the Generic Connector you added.
+If the user was not migrated or the login was unsuccessful, you can troubleshoot. In the administrative user interface, enable the **Enable debug logging** field in the Connector configuration by navigating to <Breadcrumb>Settings -> Connectors</Breadcrumb> and editing the Generic Connector you added.
 
 After enabling enhanced debug messages, try to log in again with the test user. In the administrative user interface, navigate to <Breadcrumb>System -> Event Log</Breadcrumb> and look for useful messages.
 
@@ -561,7 +557,7 @@ To bulk migrate users, the following steps are needed:
 * Set up FusionAuth
 * Extract all user data from Azure AD B2C
 * Reformat the data into FusionAuth compatible JSON
-* Import the users using the [Import User API](/docs/apis/users#import-users)
+* Import the users using the [Import User API](/docs/apis/users/import)
 * Reset all user passwords
 
 Let's look at each of these steps in more detail.
@@ -807,7 +803,7 @@ You may also want to migrate additional data. Currently, the following attribute
 
 The migrated user will have the Azure AD B2C original user identities stored on the **user.data** object. If you have additional user attributes to migrate, review and modify the `map_user` method.
 
-You may also want to assign Roles, or associate users with Groups, by creating the appropriate JSON data structures in the import call. These are documented in the [Import User API docs](/docs/apis/users#import-users). This will require modifying the `import.rb` code.
+You may also want to assign Roles, or associate users with Groups, by creating the appropriate JSON data structures in the import call. These are documented in the [Import User API docs](/docs/apis/users/import). This will require modifying the `import.rb` code.
 
 ### Verify the Import
 
@@ -833,7 +829,7 @@ Review the `Change Password` template to ensure the messaging is correct. Here i
 
 Retrieve the `loginId` from the Azure AD B2C JSON export files and place it in a single file. The `loginId` will either be the username or the email address. Update the script below to use the API key created in [Set Up FusionAuth For a Bulk Migration](#set-up-fusionauth-for-a-bulk-migration) step.
 
-The script below will call the [forgot password API](/docs/apis/users#start-forgot-password-workflow) for every user. It sleeps periodically to avoid overloading the SMTP server.
+The script below will call the [forgot password API](/docs/apis/users/forgot-password) for every user. It sleeps periodically to avoid overloading the SMTP server.
 
 ```shell title="Example User Password Reset"
 #!/bin/bash

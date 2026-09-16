@@ -4,11 +4,11 @@ import tseslint from "typescript-eslint";
 import * as mdx from 'eslint-plugin-mdx';
 import eslintPluginAstro from 'eslint-plugin-astro';
 import tsParser from "@typescript-eslint/parser";
-import astroParser from 'astro-eslint-parser';
+import * as astroParser from 'astro-eslint-parser';
 
 export default [
   {files: ["**/*.{js,mjs,cjs,ts,md,mdx}"]},
-  {ignores: ["src/code-example-repositories/**/eslint.config.js", "src/code-example-repositories/**/vite.config.ts"]},
+  {ignores: ["localcode/**/eslint.config.js", "localcode/**/vite.config.ts"]},
   {languageOptions: { globals: globals.browser }},
   {
     ...pluginJs.configs.recommended,
@@ -68,7 +68,7 @@ export default [
     }
   },
   {
-    files: ['src/code-example-repositories/**/*.js'],
+    files: ['localcode/**/*.js'],
     languageOptions: {
       globals: {
         ...globals.node,

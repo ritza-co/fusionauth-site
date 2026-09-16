@@ -1,19 +1,20 @@
 ---
-title: Identity Providers
+title: Add an Identity Provider (IdP)
 description: An overview of all FusionAuth Identity Providers, which allow authentication delegation.
 order: 0
 tags: authorization hub, idp, identity, identity provider, provider
 ---
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import IdentityProviderLimitations from 'src/content/docs/_shared/_identity-provider-limits.mdx';
 import { YouTube } from '@astro-community/astro-embed-youtube';
+import IdpApplicationConfiguration from 'src/content/docs/_shared/_idp-application-configuration.mdx';
 
 Identity Providers enable third-party login. This includes social options such as Facebook and Google, and enterprise options such as OIDC and SAML.
 
 Find the FusionAuth Identity Providers in the Admin UI by navigating to <Breadcrumb>Settings -> Identity Providers</Breadcrumb> or use the [Identity Providers](/docs/apis/identity-providers/) APIs.
 
-![Identity Providers](/img/docs/get-started/core-concepts/identity-providers.png)
+## Add an Identity Provider
+
+<IdpApplicationConfiguration />
 
 ## Social Identity Providers
 
@@ -146,7 +147,9 @@ Each email domain can be managed by at most one identity provider in the context
 * A single global identity provider
 * Any number of tenant-scoped identity providers
 
-Configuring managed domains on an identity provider and then configuring the identity provider to be enabled for an application changes the login page experience for all users logging into this application. Every user viewing the application login page will be required to enter their email address first. 
+Configuring managed domains on an identity provider and then configuring the identity provider to be enabled for an application changes the login page experience for all users logging into this application. Every user viewing the application login page will be required to enter their email address first.
+
+To configure managed domains, open <Breadcrumb>Settings -> Identity Providers</Breadcrumb> and edit a SAML v2 or OIDC identity provider. Navigate to the **Managed domains** tab and specify one domain on each line.
 
 ## Account Security
 
@@ -169,9 +172,7 @@ To mitigate these attacks, consider the following strategies:
 
 ## Attribute Mappings
 
-<Aside type="version">
-Available since 1.65.0.
-</Aside>
+<AvailableSince since="1.65.0"/>
 
 <Aside type="note">
 Saving an identity provider in Tenant Manager reapplies Tenant Manager-managed values. This replaces `attributeMappings` and `applicationConfiguration` with Tenant Manager-managed values by design. See [Tenant Manager Identity Provider Restrictions](/docs/lifecycle/manage-users/tenant-manager#tenant-manager-identity-provider-restrictions).
@@ -245,9 +246,7 @@ The FusionAuth hosted login pages are being used. Similar behavior is available 
 
 ### Disabled
 
-<Aside type="version">
-Available since 1.37.0.
-</Aside>
+<AvailableSince since="1.37.0"/>
 
 This is useful when you do not want to link automatically, and you wish to control all linking manually via the Link API. This provides you the greatest level of control of which users become linked from the identity provider to FusionAuth.
 

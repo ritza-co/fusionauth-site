@@ -2,8 +2,6 @@
 title: Securing your APIs with FusionAuth
 description: Learn about how to use FusionAuth to control access to an API.
 ---
-import PremiumPlanBlurb from 'src/content/docs/_shared/_premium-plan-blurb.mdx';
-import Aside from 'src/components/Aside.astro';
 
 If you have an application which provides an HTTP API (application programming interface), you may want to protect access to it. For example, you may have an API which provides access to information about tasks. The tasks may be stored in a database, or in some other manner, but the API allows them to be queried and returns JSON over HTTP. Let's call this the **Todo API**.
 
@@ -30,13 +28,11 @@ Let's examine each of these in turn.
 
 ### Client Credentials Grant
 
-<PremiumPlanBlurb />
+<PlanBlurb plan="starter" />
 
 This is the recommended approach.
 
-<Aside type="version">
-This grant has been available since 1.26.
-</Aside>
+<AvailableSince since="1.26"/>
 
 With this choice, two entities are created in FusionAuth. One represents the Todo App and is the target entity. The other represents the Reminder App and is the recipient entity. It's called the recipient entity because it receives a grant to access the target entity. The Reminder App is granted permissions on the Todo App, which can be done via API or the administrative user interface.
 
@@ -120,7 +116,7 @@ In this case, you'd create an application called "Dev Center" and enable Authent
 
 Each time the Reminder App called the Todo API, it would present the email address and the authentication token, perhaps in an `Authorization` header. 
 
-The Todo API would in turn call the Login API against FusionAuth with these two credentials. FusionAuth would return a [status code as documented](/docs/apis/login#authenticate-a-user); either a 200 if the program's user authenticated correctly and was registered with the "Dev Center" application, a 202 if the application authenticated correctly but was not registered, or a 404 if the credentials were invalid.
+The Todo API would in turn call the Login API against FusionAuth with these two credentials. FusionAuth would return a [status code as documented](/docs/apis/login/authenticate); either a 200 if the program's user authenticated correctly and was registered with the "Dev Center" application, a 202 if the application authenticated correctly but was not registered, or a 404 if the credentials were invalid.
 
 Strengths of this approach:
 

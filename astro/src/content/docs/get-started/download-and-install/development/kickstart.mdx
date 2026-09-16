@@ -2,12 +2,7 @@
 title: Kickstart
 description: Learn how to automate development and production deployment using Kickstart.
 ---
-import Aside from 'src/components/Aside.astro';
-import AvailableSince from 'src/components/api/AvailableSince.astro';
-import APIBlock from 'src/components/api/APIBlock.astro';
-import APIField from 'src/components/api/APIField.astro';
 import DefaultEntities from 'src/content/docs/_shared/_default-entities.mdx';
-import JSON from 'src/components/JSON.astro';
 import KickstartLicenseText from 'src/content/docs/_shared/_kickstart-license-text.mdx';
 import KickstartTroubleshooting from 'src/content/docs/get-started/download-and-install/development/_kickstart-troubleshooting.mdx';
 
@@ -339,9 +334,7 @@ The value resolved when using the **`FUSIONAUTH_TENANT_ID`** variable will refle
 
 ### Modify the Tenant Manager Application Id
 
-<Aside type="version">
-  Available since 1.60.0
-</Aside>
+<AvailableSince since="1.60.0"/>
 
 FusionAuth generates the Id for the Tenant Manager application when the database schema is first created. For development and production environments, it may be helpful to have a known `application.id` for consistency across environments.
 
@@ -376,9 +369,7 @@ To add an [air-gapped license](/docs/get-started/download-and-install/reference/
 
 ### Settings
 
-<Aside type="version">
-Available since 1.20.1
-</Aside>
+<AvailableSince since="1.20.1"/>
 
 Kickstart works by making API calls. By default each API request has a read and a connect timeout, and the API call will fail if it does not succeed within the timeout period.
 

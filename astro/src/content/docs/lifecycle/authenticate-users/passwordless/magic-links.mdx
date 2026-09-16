@@ -2,9 +2,6 @@
 title: Authentication With Magic Links & One-Time Passwords
 description: Learn how to create a passwordless experience for your end users using magic links.
 ---
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import JSON from 'src/components/JSON.astro';
 import PasswordlessLoginTemplates from 'src/content/docs/_shared/_passwordless-login-templates.mdx';
 import PasswordlessLoginTemplate from 'src/content/docs/_shared/message/_passwordless-txt.mdx';
 
@@ -29,15 +26,15 @@ The user don't need to provide any other credentials; ownership and access to th
 
 You are not required to use email or SMS as a transport mechanism, though it is quite common. If you are [Using the API Directly](#using-the-api-directly), you can use push notifications, send it via Whatsapp, or deliver it via carrier pigeon. As long as the user can provide the value to FusionAuth, it will be validated and the user will be logged in.
 
-<Aside title="Since 1.41.0" type="version">
+<AvailableSince since="1.41.0">
 Prior to version 1.41.0, magic links and codes were the only form of passwordless authentication supported by FusionAuth.
 
 Therefore the user interface and API use the term `passwordless`, even though versions 1.41.0 and beyond support multiple kinds of passwordless authentication.
-</Aside>
+</AvailableSince>
 
-<Aside title="Available since 1.59.0" type="version">
-  Built-in phone number/SMS passwordless logins are available in FusionAuth 1.59.0 and later.
-</Aside>
+<AvailableSince since="1.59.0">
+Built-in phone number/SMS passwordless logins are available in FusionAuth 1.59.0 and later.
+</AvailableSince>
 
 ## When Does Using Magic Links Make Sense
 
@@ -130,7 +127,7 @@ There are four parts to build your own magic link flow.
 
 #### Starting the login
 
-You start a magic link login by calling the [`/api/passwordless/start`](/docs/apis/passwordless#start-passwordless-login) endpoint.
+You start a magic link login by calling the [`/api/passwordless/start`](/docs/apis/passwordless/start-passwordless-login) endpoint.
 
 ```shell title="Start Magic Link Login API call"
 API_KEY=...
@@ -150,7 +147,7 @@ For example, if you have a shopping site, you may want to allow a user to add it
 { "cart_id" : 1234 }
 ```
 
-The call to [`/api/passwordless/start`](/docs/apis/passwordless#start-passwordless-login) begins the authentication process, and returns a response with a code:
+The call to [`/api/passwordless/start`](/docs/apis/passwordless/start-passwordless-login) begins the authentication process, and returns a response with a code:
 
 <JSON title="Start Magic Link Email Login Response JSON" src="passwordless/start-response.json" />
 
@@ -160,7 +157,7 @@ Possession of this one-time code authenticates the end user. Deliver this code t
 
 #### Sending the Code Using FusionAuth
 
-This is an optional API call. If you want to send the code via the email server or SMS messenger configured in FusionAuth, you may use the [`/api/passwordless/send`](/docs/apis/passwordless#send-passwordless-login) API endpoint.
+This is an optional API call. If you want to send the code via the email server or SMS messenger configured in FusionAuth, you may use the [`/api/passwordless/send`](/docs/apis/passwordless/send-passwordless-login) API endpoint.
 
 Using this API call allows you the benefits of FusionAuth locale-aware email or SMS templates and delivery capabilities without requiring you to use the FusionAuth login forms.
 
@@ -172,7 +169,7 @@ For phone number use cases, the typical pattern is for your application to prese
 
 #### Completing the Login
 
-When the user provides the code to you, call the [`/api/passwordless/login`](/docs/apis/passwordless#complete-a-passwordless-login) endpoint. You can pass other information such as IP address, but only the code is required.
+When the user provides the code to you, call the [`/api/passwordless/login`](/docs/apis/passwordless/complete-a-passwordless-login) endpoint. You can pass other information such as IP address, but only the code is required.
 
 <JSON title="Complete Magic Link Email Login Request JSON" src="passwordless/start-response.json" />
 
@@ -194,7 +191,7 @@ To do so, set the `noJWT` parameter to true when you call the complete API endpo
 
 Every time you start a magic link or OTP login for a given user, all other codes for that user are marked invalid. Codes are also invalidated after a configurable time limit.
 
-If a user provides a code that is invalid, if their account is locked, or if there is any other issue in the request, a status code in the 400 range will be returned. Please consult the [passwordless API reference docs](/docs/apis/passwordless#response-3) for more details about return status codes.
+If a user provides a code that is invalid, if their account is locked, or if there is any other issue in the request, a status code in the 400 range will be returned. Please consult the [passwordless API reference docs](/docs/apis/passwordless/complete-a-passwordless-login#response-3) for more details about return status codes.
 
 ## Two-Factor Authentication
 
@@ -212,9 +209,9 @@ Two-factor authentication also works when [Using the API Directly](#using-the-ap
 {"twoFactorId":"VnNILnXs_EDG-cjwokwITRApmAxCMkojeT3CUqqLhLc"}
 ```
 
-Your application must then prompt the user for their two-factor code, from SMS or an application like Google Authenticator. Note that this is an entirely different code than the one-time code returned when you started the magic link login. Pass the `twoFactorId` and the two-factor code to the [`/api/two-factor/login`](/docs/apis/login#complete-multi-factor-authentication) endpoint in order to complete the two-factor authentication.
+Your application must then prompt the user for their two-factor code, from SMS or an application like Google Authenticator. Note that this is an entirely different code than the one-time code returned when you started the magic link login. Pass the `twoFactorId` and the two-factor code to the [`/api/two-factor/login`](/docs/apis/login/complete-mfa) endpoint in order to complete the two-factor authentication.
 
-If a user has previously completed a two-factor authentication and has decided to trust the device, you may have a `twoFactorTrustId` value. This can be passed to the [`/api/passwordless/login`](/docs/apis/passwordless#complete-a-passwordless-login) endpoint. If valid, this will skip the two-factor challenge.
+If a user has previously completed a two-factor authentication and has decided to trust the device, you may have a `twoFactorTrustId` value. This can be passed to the [`/api/passwordless/login`](/docs/apis/passwordless/complete-a-passwordless-login) endpoint. If valid, this will skip the two-factor challenge.
 
 ## Customizing Magic Link Authentication
 
@@ -222,7 +219,7 @@ You can configure the FusionAuth passwordless implementation to meet your applic
 
 ### Templates
 
-If you are using the FusionAuth provided email or phone templates, whether you are using the standard FusionAuth user interface or the [`/api/passwordless/send`](/docs/apis/passwordless#send-passwordless-login) API call, you will need to customize them.
+If you are using the FusionAuth provided email or phone templates, whether you are using the standard FusionAuth user interface or the [`/api/passwordless/send`](/docs/apis/passwordless/send-passwordless-login) API call, you will need to customize them.
 
 #### Email Template Customization
 
@@ -252,7 +249,7 @@ Here is more information about [email and message templates](/docs/customize/ema
 
 Here's an example of how to customize the subject with FreeMarker. The subject below shows how to customize the subject with the time the link expires.
 
-```plaintext title=Customizing the subject
+```ftl title=Customizing the subject
 [#setting time_zone = (user.timezone)!"US/Denver"]
 [#setting time_format = "h:mm a"]
 Expires at: ${((.now?date?long + timeToLive * 1000)?number_to_time)?string}
@@ -303,7 +300,7 @@ If you use the passwordless API, follow the principle of least privilege, and li
 
 ### What About Users' Passwords
 
-You can choose to disable passwords to enforce passwordless login. See the [Password enabled](/docs/get-started/core-concepts/tenants#password-settings) tenant setting for more information.
+You can choose to disable passwords to enforce passwordless login. See the [Password enabled](/docs/get-started/core-concepts/types/tenants#password-settings) tenant setting for more information.
 
 ## Troubleshooting
 

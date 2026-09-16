@@ -2,10 +2,7 @@
 title: HAProxy API Gateway
 description: Learn about the HAProxy JWT integration.
 ---
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import FrameworkIntegrationTutorialList from 'src/content/docs/_shared/_framework-integration-tutorial-list.mdx';
-import IconButton from 'src/components/IconButton.astro';
 
 [HAProxy](https://www.haproxy.com) is a popular load balancer that can also be used as an [API Gateway](https://www.haproxy.com/blog/using-haproxy-as-an-api-gateway-part-1/).
 
@@ -34,7 +31,7 @@ First, you need to make sure that the JWT issuer setting is correct. Navigate to
 
 Next, you need to configure a FusionAuth application to issue tokens to access the HAProxy services.
 
-Navigate to <Breadcrumb>Applications</Breadcrumb> and create a new application. Fill out the **Name** field, then click the <Breadcrumb>JWT</Breadcrumb> tab and toggle the <Breadcrumb>Enabled</Breadcrumb> switch. Select `Auto generate a new key on save...` for the **Access Token signing key** and **Id token signing key** fields. This will generate an RS256 asymmetric key pair specifically for this application.
+Navigate to <Breadcrumb>Applications</Breadcrumb> and create a new application. Fill out the **Name** field, then click the <Breadcrumb>JWT</Breadcrumb> tab and toggle the <Breadcrumb>Enable application-level JWT override</Breadcrumb> switch. Select `Auto generate a new key on save...` for the **Access Token signing key** and **Id token signing key** fields. This will generate an RS256 asymmetric key pair specifically for this application.
 
 ![Application JWT settings](/img/docs/extend/examples/api-gateways/haproxy-application-jwt-settings.png)
 
@@ -66,7 +63,7 @@ After saving this user, click <Breadcrumb>Manage</Breadcrumb> and go to the <Bre
 
 ## Configure HAProxy
 
-After following the HAProxy quickstart guide noted earlier, you can execute the following command in the terminal:
+After following the HAProxy QuickStart guide noted earlier, you can execute the following command in the terminal:
 
 ```shell title="Test HAProxy setup"
 curl -X GET -I http://localhost:80

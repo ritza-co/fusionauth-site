@@ -6,9 +6,6 @@ section: extend
 subcategory: examples
 codeRoot: https://raw.githubusercontent.com/fusionauth/fusionauth-example-protected-mcp-server/main
 ---
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
 
 Starting with an unprotected Model Context Protocol (MCP) server, this guide demonstrates how to:
 
@@ -32,17 +29,17 @@ This guide requires the following prerequisites:
 
 Clone the repository and navigate to the starter code:
 
-```console
+```shell-session
 git clone https://github.com/fusionauth/fusionauth-example-protected-mcp-server.git
 ```
 
-```console
+```shell-session
 cd fusionauth-example-protected-mcp-server/unprotected-local-mcp
 ```
 
 This guide walks you through adding OAuth protection to an existing MCP server, built on the FastMCP python framework. If you prefer to skip ahead and see a working solution, navigate to the `protected-local-mcp` folder instead:
 
-```console
+```shell-session
 cd fusionauth-example-protected-mcp-server/protected-local-mcp
 ```
 
@@ -52,7 +49,7 @@ Before starting the services, add your FusionAuth license key to the Kickstart c
 
 Open `kickstart/kickstart.json` and replace the `licenseId` value of `YOUR_LICENSE_KEY_HERE` with your actual FusionAuth license key:
 
-```plaintext
+```json
 {
   "variables": { ... },
   "apiKeys": [ ... ],
@@ -108,7 +105,7 @@ Let's examine the unprotected MCP server, which allows access from any client th
 
 Start the Docker stack:
 
-```console
+```shell-session
 docker compose up -d
 ```
 
@@ -122,7 +119,7 @@ It also installs your license key to enable advanced features.
 
 This may take a few minutes, but after that you can test it. To test the unprotected `get_name` MCP server, run the following command:
 
-```console
+```shell-session
 curl -X POST http://localhost:8000/mcp \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
@@ -159,7 +156,7 @@ To protect an MCP server, you need to add:
 1. **Scope Enforcement:** MCP clients require specific scopes (permissions) to execute tools, and the MCP server must verify that the access token has the correct permissions for the tools being called.
 1. **User Context:** The MCP server may use the token to identify which user made the request, if functionality depends on which person is using the MCP client.
 
-This guide uses the [JWT validation API](/docs/apis/jwt#validate-a-jwt) for token validation. This API verifies the token's signature and expiration using FusionAuth's public keys and returns the token claims, including scopes, if the token is valid.
+This guide uses the [JWT validation API](/docs/apis/jwt/validate-a-jwt) for token validation. This API verifies the token's signature and expiration using FusionAuth's public keys and returns the token claims, including scopes, if the token is valid.
 
 <Aside type="note">
 If you try to use FusionAuth's introspect endpoint, it will return a 401. Introspection requires that the credentials used to call the endpoint belong to the same application that issued the token. Because the MCP server is a separate FusionAuth application for each MCP client, it cannot introspect the client's tokens. See [this open GitHub issue](https://github.com/FusionAuth/fusionauth-issues/issues/3010) for details. The `/api/jwt/validate` endpoint does not have this restriction.
@@ -232,7 +229,7 @@ For a production MCP server, this method is where you'd access your database, se
 
 Rebuild the MCP server container with the new code:
 
-```console
+```shell-session
 docker compose up -d --build mcp-server
 ```
 
@@ -242,7 +239,7 @@ Wait a few seconds for the container to restart. The MCP server now requires OAu
 
 Let's verify that the authentication works. Try calling the tool without authentication:
 
-```console
+```shell-session
 curl -X POST http://localhost:8000/mcp \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
@@ -317,21 +314,21 @@ The script returns the generated client Id and a full MCP configuration block to
 
 Install the dependencies and run the setup script:
 
-```console
+```shell-session
 cd setup
 ```
 
-```console
+```shell-session
 pip install -r requirements.txt
 ```
 
-```console
+```shell-session
 python setup_clients.py
 ```
 
 By default, the script registers port `3334` as the OAuth callback port. If port `3334` is already in use on your machine, pass `--port` to use a different one:
 
-```console
+```shell-session
 python setup_clients.py --port 3335
 ```
 
@@ -391,7 +388,7 @@ It also outputs a test user that you'll use to log in to FusionAuth when prompte
 
 Next, configure the MCP client to connect to the OAuth-protected MCP server. The script output this JSON:
 
-```
+```json
 {
   "mcpServers": {
     "name-server": {
@@ -480,7 +477,7 @@ The MCP client validated the access token and executed the tool call. In this ca
 
 If you don't see the message, check the MCP server logs for any errors:
 
-```console
+```shell-session
 docker compose logs mcp-server
 ```
 
@@ -498,7 +495,7 @@ This example demonstrates the core patterns for OAuth-protected MCP servers. For
 * **Token caching:** Cache token validation responses to avoid calling FusionAuth's JWT validation endpoint on every request. Set the cache TTL to match token expiration.
 * **Refresh tokens:** Configure your FusionAuth application to issue refresh tokens for long-lived sessions by enabling the refresh grant and requesting the `offline_access` scope. `mcp-remote` stores tokens in `~/.mcp-auth` and handles token refresh automatically. Support for the refresh grant varies across other MCP clients, so check your client's documentation.
 * **Multiple scopes:** As you add more tools, create specific scopes for each set of tools and configure the token verifier to require the appropriate scopes.
-* **Monitoring:** Log token validations and tool calls in the MCP server. In FusionAuth, use the [login records API](/docs/apis/login#search-login-records) to track which users have authenticated against which MCP clients and when.
+* **Monitoring:** Log token validations and tool calls in the MCP server. In FusionAuth, use the [login records API](/docs/apis/login/search) to track which users have authenticated against which MCP clients and when.
 * **Rate limiting:** Implement per-user rate limits in the MCP server and return HTTP `429` responses when limits are exceeded.
 * **Preregistering clients at scale:** If you need to onboard many MCP clients, automate registration by modifying the setup script to create many applications.
 
@@ -524,7 +521,7 @@ The [`protected-remote-mcp`](https://github.com/fusionauth/fusionauth-example-pr
 
 If you are running docker on your remote server and the hostname of the MCP server is `mcp.example.com` and the hostname of the FusionAuth server is `auth.example.com`, you'd run this:
 
-```console
+```shell-session
 MCP_SERVER_URL=https://mcp.example.com \
 FUSIONAUTH_URL=https://auth.example.com \
 FUSIONAUTH_EXTERNAL_URL=https://auth.example.com \

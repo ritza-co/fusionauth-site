@@ -1,14 +1,14 @@
 ---
 title: Node.js/Express.js API
-description: Quickstart integration of a JavaScript Express.js API application action as a resource server with FusionAuth.
+description: QuickStart integration of a JavaScript Express.js API application action as a resource server with FusionAuth.
+htmlTitle: FusionAuth QuickStart for Node.js/Express.js API
 codeRoot: https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-javascript-express-api/main
+icon: /img/icons/javascript.svg
 ---
-import Aside from 'src/components/Aside.astro';
 import DockerSpinup from 'src/components/quickstarts/DockerSpinup.astro';
 import Intro from 'src/components/quickstarts/Intro.astro';
 import {Content as LoginArchitectureApi} from 'src/components/quickstarts/LoginArchitectureApi.mdx';
 import NextStepsApi from 'src/components/quickstarts/NextStepsApi.astro';
-import LocalCode from 'src/components/LocalCode.astro';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
 
 <Intro technology="Express"
@@ -17,7 +17,7 @@ import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.
 
 ## Prerequisites
 
-For this quickstart, you'll need:
+For this QuickStart, you'll need:
 
 * [Git](https://git-scm.com/downloads) to clone the example repository.
 * [Node.js](https://nodejs.org/en/download) version 18 or later.
@@ -78,7 +78,7 @@ Now, create the `.env` file in your `your-application` folder and add the follow
 This is a different environment file to the one in the root folder used by Docker for FusionAuth
 </Aside>
 
-<LocalCode src="fusionauth-quickstart-javascript-express-api/complete-application/.env" lang="shell" />
+<ExtractedCode src="fusionauth-quickstart-javascript-express-api/complete-application/.env" lang="shell" />
 
  ## Authentication
 
@@ -86,7 +86,7 @@ Before you configure authentication, you need to change the default `app.js` fil
 
 Add the following lines in `app.js` just above `app.use('/', indexRouter);`.
 
-<LocalCode src="fusionauth-quickstart-javascript-express-api/app.snippet.verifyToken.js" lang="javascript" />
+<ExtractedCode src="fusionauth-quickstart-javascript-express-api/app.snippet.verifyToken.js" lang="javascript" />
 
 The line, `const verifyJWT = require('./services/verifyJWT');`, imports middleware to add authentication to the app. Let's create that file now.
 
@@ -98,7 +98,7 @@ mkdir services
 
 In this `services` folder, add the file `verifyJWT.js`, and copy in the following code.
 
-<LocalCode src="fusionauth-quickstart-javascript-express-api/complete-application/services/verifyJWT.js" lang="javascript" />
+<ExtractedCode src="fusionauth-quickstart-javascript-express-api/complete-application/services/verifyJWT.js" lang="javascript" />
 
 The first line, `require('dotenv/config');`, tells the application to use the settings from `.env` you created earlier.
 
@@ -108,7 +108,7 @@ Now, you'll add one more file that will check if the user has a role with permis
 
 In the `services` folder, add the file `hasRole.js` and copy in the following code.
 
-<LocalCode src="fusionauth-quickstart-javascript-express-api/complete-application/services/hasRole.js" lang="javascript" />
+<ExtractedCode src="fusionauth-quickstart-javascript-express-api/complete-application/services/hasRole.js" lang="javascript" />
 
 This function is given a list of roles, any of which allow the user's request. It returns a middleware function that checks if the JWT contains one of the required roles, and either returns an error or allows the next function in the middleware stack to proceed.
 
@@ -122,7 +122,7 @@ All that's left to do is write the two endpoints that will demonstrate your auth
 
 Overwrite `routes/index.js` with the following code.
 
-<LocalCode src="fusionauth-quickstart-javascript-express-api/complete-application/routes/index.js" lang="javascript" />
+<ExtractedCode src="fusionauth-quickstart-javascript-express-api/complete-application/routes/index.js" lang="javascript" />
 
 The POST `panic` route uses the `hasRole` function with the `'teller'` parameter to disallow non-tellers.
 

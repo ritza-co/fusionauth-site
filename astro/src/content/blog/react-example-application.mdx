@@ -8,9 +8,6 @@ image: /img/blogs/react-example-application/using-fusionauth-react-sdk-react-app
 tags: tutorial, react, typescript, oauth, javascript
 excerpt_separator: "{/* more */}"
 ---
-import Aside from "../../components/Aside.astro";
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
 
 The React SDK from FusionAuth enables developers to implement the login, logout, and registration flows in a React application with ease.
 
@@ -34,7 +31,7 @@ To follow along with this article, you will need to have the following installed
 * Git
 * Docker with Docker Compose (optional)
 
-<Aside type="tip" nodark="true">
+<Aside type="tip">
 If you want to run the example application on another domain than `localhost`, you need to make sure that FusionAuth runs on the same domain as the backend of the application.
 
 FusionAuth will set the **SameSite** attribute of the access token `app.at` cookie to `Lax`. This enables the cookie to be sent with requests to applications in the same subdomain. If the backend of the application runs on a different domain, the cookie will not be sent. This will result in the backend not being able to validate the token.
@@ -132,7 +129,7 @@ For this example application, we integrate Tailwind CSS and DaisyUI into the the
 
 The React SDK enables developers to implement the login, logout, and registration flows in a React application.
 
-It provides pre-built buttons for login, logout, and registration. It also provides a `withFusionAuth` [HOC](https://reactjs.org/docs/higher-order-components.html) that can be used to wrap a component and provide the user information to the component.
+It provides pre-built buttons for login, logout, and registration. It also provides a `withFusionAuth` [HOC](https://legacy.reactjs.org/docs/higher-order-components.html) that can be used to wrap a component and provide the user information to the component.
 With `RequireAuth` you can wrap a component and require the user to be authenticated before the component is rendered. The `withRole` option also enables you to restrict the user to a specific role.
 
 `RequireAuth` is used in the `LoggedInMenu` component, which is used to display the user information, profile, and logout button if the user is authenticated.
@@ -145,7 +142,7 @@ We are using the React Router v6 in the example application. To protect routes, 
 
 <RemoteCode url="https://raw.githubusercontent.com/fusionauth/fusionauth-example-react-fusiondesk/main/client/src/components/ProtectedRoutes.tsx" lang="tsx" />
 
-<Aside type="note" nodark="true">For more information about the React SDK, see the [FusionAuth React SDK](/docs/sdks/react-sdk) documentation.</Aside>
+<Aside type="note">For more information about the React SDK, see the [FusionAuth React SDK](/docs/sdks/react-sdk) documentation.</Aside>
 
 ### Login Page
 

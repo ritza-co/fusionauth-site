@@ -2,9 +2,6 @@
 title: OIDC & CockroachDB
 description: Learn how to set up CockroachDB to allow users to log in using FusionAuth via OIDC.
 ---
-import Aside from 'src/components/Aside.astro';
-import Icon from 'src/components/icon/Icon.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 [CockroachDB](https://www.cockroachlabs.com/) is a distributed SQL database designed for speed and scale. It offers a self-hosted deployment model, where you run the clusters in your own environment, and two SaaS options: dedicated and serverless. We'll use the dedicated version to set up Single Sign-On, allowing users to log in to your CockroachDB Console interface using their FusionAuth credentials.
 
@@ -18,7 +15,7 @@ First, you have to change the issuer of your tenant. Navigate to <Breadcrumb>Ten
 
 ![Edit tenant to change the issuer.](/img/docs/lifecycle/authenticate-users/integrations/oidc/edit-tenant.png)
 
-Now, navigate to <Breadcrumb>Applications</Breadcrumb> and create a new application. Fill out the **Name** field (e.g. `CockroachDB`), then click the <Breadcrumb>OAuth</Breadcrumb> tab. Make sure that the **Enabled grants** checkboxes have the `Authorization Code` and `Refresh Token` grants enabled. Now, click the <Breadcrumb>JWT</Breadcrumb> tab, toggle the <Breadcrumb>Enabled</Breadcrumb> field and set both **Access Token signing key** and **Id Token signing key** to `Auto generate a new key on save...`, like shown in the image below.
+Now, navigate to <Breadcrumb>Applications</Breadcrumb> and create a new application. Fill out the **Name** field (e.g. `CockroachDB`), then click the <Breadcrumb>OAuth</Breadcrumb> tab. Make sure that the **Enabled grants** checkboxes have the `Authorization Code` and `Refresh Token` grants enabled. Now, click the <Breadcrumb>JWT</Breadcrumb> tab, toggle the <Breadcrumb>Enable application-level JWT override</Breadcrumb> field and set both **Access Token signing key** and **Id Token signing key** to `Auto generate a new key on save...`, like shown in the image below.
 
 ![Configuring your application.](/img/docs/lifecycle/authenticate-users/integrations/oidc/application.png)
 

@@ -1,9 +1,7 @@
 ---
-title: Github
+title: Add a Github IdP
 description: Set up user login using Github as an OpenID Connect Identity Provider.
 ---
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import GitHubTroubleshooting from 'src/content/docs/lifecycle/authenticate-users/identity-providers/social/_github-troubleshooting.mdx';
 import {Content as IdentityProviderOverviewDiagram} from 'src/content/docs/_shared/_identity-provider-overview-diagram.mdx';
 import OpenidConnectExampleLambda from 'src/content/docs/_shared/_openid-connect-example-lambda.mdx';
@@ -18,7 +16,7 @@ Once you have completed this configuration you may enable an OpenID Connect <Bre
 
 <IdentityProviderOverviewDiagram identity_provider_name="GitHub" />
 
-### Register a GitHub OAuth2 Application
+## Register a GitHub OAuth2 Application
 
 You will first need to log in to [GitHub](https://github.com/).
 
@@ -32,7 +30,7 @@ Here we have configured our application `Authorization callback URL`. If FusionA
 
 Once the application has been created, note the `Client ID` and the `Client Secret`. These will be used respectively as the **Client Id** value and the **Client secret** value in your FusionAuth OpenID Connect Identity Providers configuration. Please note that you may have to click on "Generate a new client secret".
 
-### Configure a New FusionAuth OpenID Connect Identity Provider
+## Configure a New FusionAuth OpenID Connect Identity Provider
 
 To create a GitHub Identity Provider return to FusionAuth and navigate to <Breadcrumb>Settings -> Identity Providers</Breadcrumb> and click <Breadcrumb>Add provider</Breadcrumb> and select `OpenID Connect` from the dialog.
 
@@ -54,11 +52,11 @@ In the following screenshot you will see that we have enabled this login provide
 
 GitHub does not implement OpenID Connect to spec. In order to pull in some additional data for populating the user profile (GitHub shortname, Image URL, etc.) you can enable a **Reconcile lambda**. This example lambda below is based on a GitHub use case. This is optional.
 
-#### Example lambda
+### Example lambda
 
 <OpenidConnectExampleLambda />
 
-#### Options
+### Options
 
 The final item to configure is under the <Breadcrumb>Options</Breadcrumb> tab. For GitHub, you will want to configure:
 

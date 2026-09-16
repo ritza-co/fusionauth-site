@@ -1,12 +1,7 @@
 ---
-title: Google
+title: Add a Google IdP
 description: Learn how to add a login with Google button to your application.
 ---
-import APIBlock from 'src/components/api/APIBlock.astro';
-import APIField from 'src/components/api/APIField.astro';
-import AvailableSince from 'src/components/api/AvailableSince.astro';
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import {Content as IdentityProviderOverviewDiagram} from 'src/content/docs/_shared/_identity-provider-overview-diagram.mdx';
 import IdpApplicationConfiguration from 'src/content/docs/_shared/_idp-application-configuration.mdx';
 import LinkingStrategyEditLimit from 'src/content/docs/_shared/_idp-linking-strategy-edit-limits.mdx';
@@ -157,8 +152,8 @@ This will take you to the <Breadcrumb>Add Google</Breadcrumb> panel, and you'll 
 
     To configure a lambda, navigate to <Breadcrumb>Customizations -> Lambdas</Breadcrumb>.
   </APIField>
-  <APIField name="Debug enabled" optional defaults="false">
-    Enable debug to create an event log to assist you in debugging integration errors.
+  <APIField name="Enable debug logging" optional defaults="false">
+    Creates event log entries to help debug integration errors. Check <Breadcrumb>System -> Event Log</Breadcrumb>.
   </APIField>
 </APIBlock>
 
@@ -221,7 +216,7 @@ Google One Tap can be enabled in FusionAuth `1.44.0` and later by:
 
 ## Additional Steps For Your Google Application
 
-If you are in development or building a personal application, the above steps are enough. Otherwise you'll need to [publish your OAuth application with Google](https://support.google.com/cloud/answer/10311615#publishing-status).
+If you are in development or building a personal application, the above steps are enough. Otherwise you'll need to [publish your OAuth application with Google](https://support.google.com/cloud/answer/15549049).
 
 If you are deploying to production and request sensitive scopes, you'll need to [verify your application with Google](https://support.google.com/cloud/answer/13463073?hl=en).
 

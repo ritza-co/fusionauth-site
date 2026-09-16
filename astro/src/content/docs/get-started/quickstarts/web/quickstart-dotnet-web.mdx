@@ -1,16 +1,15 @@
 ---
 title: .NET
-description: Quickstart integration of .NET web application with FusionAuth.
+description: QuickStart integration of .NET web application with FusionAuth.
+htmlTitle: FusionAuth QuickStart for .NET
 codeRoot: https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-dotnet-web/main
+icon: /img/icons/dotnet-c.svg
 ---
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import DockerSpinup from 'src/components/quickstarts/DockerSpinup.astro';
 import Intro from 'src/components/quickstarts/Intro.astro';
 import {Content as LoginArchitectureWeb} from 'src/components/quickstarts/LoginArchitectureWeb.mdx';
 import NextSteps from 'src/components/quickstarts/NextSteps.astro';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
-import RemoteCode from 'src/components/RemoteCode.astro';
 
 <Intro technology=".NET"
        repositoryUrl="https://github.com/FusionAuth/fusionauth-quickstart-dotnet-web"/>
@@ -33,8 +32,11 @@ In this section, you'll get FusionAuth up and running and use .NET to create a n
 
 First off, grab the code from the repository and change into that directory.
 
-```
+```shell-session
 git clone https://github.com/FusionAuth/fusionauth-quickstart-dotnet-web.git
+```
+
+```shell-session
 cd fusionauth-quickstart-dotnet-web
 ```
 
@@ -51,7 +53,7 @@ You'll use [Razor Pages](https://learn.microsoft.com/en-us/aspnet/core/razor-pag
 <Aside type="note">
 If you simply want to run the application , there is a completed version in the 'complete-application' directory. You can use the following commands to get it up and running if you do not want to create your own.
 
-```shell
+```shell-session
 cd complete-application
 dotnet run
 ```
@@ -61,8 +63,11 @@ Then view the website at the following location `http://localhost:5000`.
 
 To get started building your own application, open your command-line shell (i.e. Terminal on a Mac or PowerShell on Windows) and navigate to the directory of your choice. Then create a new web application using the `dotnet` CLI and go to that directory:
 
-```shell
+```shell-session
 dotnet new webapp -o your-application
+```
+
+```shell-session
 cd your-application
 ```
 
@@ -72,13 +77,13 @@ Creating a new application in Visual Studio will work as well. You will use the 
 
 Once the application has been created, you can start up the web application using the following command in.
 
-```shell
+```shell-session
 dotnet run
 ```
 
 The output should look similar to the following.
 
-```shell
+```plaintext
 Building...
 info: Microsoft.Hosting.Lifetime[14]
       Now listening on: http://localhost:5146
@@ -98,7 +103,7 @@ Press Control+C in the terminal window to stop the application from running.
 
 It's always smart to leverage existing libraries as they are likely to be more secure and better handle edge cases. You're going to add an `OpenIdConnect` library to the application. In your terminal window, make sure you're in the root directory for your application and run the command below to add the library.
 
-```shell
+```shell-session
 dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
 ```
 
@@ -109,7 +114,7 @@ Create `Account.cshtml` and `Account.cshtml.cs` in the `Pages` directory. To pro
 Copy the following code into `Account.cshtml.cs`:
 
 <RemoteCode url={frontmatter.codeRoot + "/complete-application/Pages/Account.cshtml.cs"}
-  lang="c#" />
+  lang="csharp" />
 
 Copy the following code into `Account.cshtml`:
 
@@ -121,7 +126,7 @@ Create `MakeChange.cshtml` and `MakeChange.cshtml.cs` in the `Pages` directory. 
 Copy the following code into `MakeChange.cshtml.cs`:
 
 <RemoteCode url={frontmatter.codeRoot + "/complete-application/Pages/MakeChange.cshtml.cs"}
-  lang="c#" />
+  lang="csharp" />
 
 Copy the following code into `MakeChange.cshtml`:
 
@@ -138,7 +143,7 @@ FusionAuth will then destroy its session and redirect the user back to the app's
 Add the following file to the `Pages` directory and call it `Logout.cshtml.cs`:
 
 <RemoteCode url={frontmatter.codeRoot + "/complete-application/Pages/Logout.cshtml.cs"}
-  lang="c#" />
+  lang="csharp" />
 
 `OnGet` is the important method. Here you sign out using a method of the authentication library, delete the JWT cookie, and send the user to the FusionAuth OAuth logout endpoint.
 
@@ -160,13 +165,13 @@ Replace the text in the `appsettings.json` file with the text below. The importa
 Replace the text in the `Program.cs` file. Since you are using unsecured cookies, you need to allow this in the configuration. Safari and Chrome require different settings and that is reflected in the code below.
 
 <RemoteCode url={frontmatter.codeRoot + "/complete-application/Program.cs"}
-  lang="c#" />
+  lang="csharp" />
 
 #### Startup Settings
 Add the `Startup.cs` file in the root directory of the application. This sets the correct port and manages unsecured cookies for the browsers. The `CheckSameSite` and `DisallowsSameSiteNone` functions help manage the cookie settings for the different browsers.
 
 <RemoteCode url={frontmatter.codeRoot + "/complete-application/Startup.cs"}
-  lang="c#" />
+  lang="csharp" />
 
 <Aside type="caution">
 There are a few settings applied to simplify the sample application. In a production application, do not allow cookies over `http` or keep the `ClientSecret` in a .json file for production applications. Get the `ClientSecret` from an environmental variable that has been set on a production machine or some other secure way.
@@ -184,7 +189,7 @@ Update the default page.
 Copy the following code into `Pages/Index.cshtml.cs`:
 
 <RemoteCode url={frontmatter.codeRoot + "/complete-application/Pages/Index.cshtml.cs"}
-  lang="c#" />
+  lang="csharp" />
 
 Copy the following code into `Index.cshtml` and notice the logic to show a different view to users that have not logged in.
 
@@ -201,7 +206,7 @@ Add the `changebank.css` file in the `wwwroot/css` directory of the application.
 
 Copy the money image for the `Index` page. Run the following command in a terminal window. Make sure you are in the root directory for your application.
 
-```shell
+```shell-session
 curl --create-dirs --output wwwroot/img/money.jpg https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-ruby-on-rails-web/main/complete-app/app/assets/images/money.jpg
 ```
 
@@ -211,27 +216,27 @@ Next we need to do a little clean up and make sure all the namespaces work toget
 Replace the text in the `Pages/_ViewImports.cshtml` file with the following code.
 
 <RemoteCode url={frontmatter.codeRoot + "/complete-application/Pages/_ViewImports.cshtml"}
-  lang="c#" />
+  lang="csharp" />
 
 Replace the text in the `Pages/Error.cshtml.cs` file with the following code.
 
 <RemoteCode url={frontmatter.codeRoot + "/complete-application/Pages/Error.cshtml.cs"}
-  lang="c#" />
+  lang="csharp" />
 
 Replace the text in the `Pages/Privacy.cshtml.cs` file with the following code.
 
 <RemoteCode url={frontmatter.codeRoot + "/complete-application/Pages/Privacy.cshtml.cs"}
-  lang="c#" />
+  lang="csharp" />
 
 ## Run The Application
 
 You can start up the .NET application using this command in a terminal window from the root directory of your application:
 
-```shell
+```shell-session
 dotnet run
 ```
 
-You can now open up an incognito window and visit the app at http://localhost:5000. Log in with the user account you created when setting up FusionAuth, and you’ll see the email of the user next to a logout button.
+You can now open up an incognito window and visit the app at http://localhost:5000. Log in with the user account you created when setting up FusionAuth, and you'll see the email of the user next to a logout button.
 
 <QuickstartTshirtCTA/>
 

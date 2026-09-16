@@ -2,7 +2,6 @@
 title: Upgrade FusionAuth
 description: Learn how to upgrade FusionAuth using our bundles and migration scripts.
 ---
-import Aside from 'src/components/Aside.astro';
 import ClientLibraryVersioning from 'src/content/docs/operate/deploy/_client-library-versioning.mdx';
 import RuntimeModes from 'src/content/docs/get-started/download-and-install/_modes.mdx';
 import TroubleshootingUninstallUpgradeReinstallRpm from 'src/content/docs/_shared/_troubleshooting-uninstall-upgrade-reinstall-rpm.mdx';
@@ -291,7 +290,7 @@ Here are the steps for initiating a rollback:
 2. Initiate the process to restore from the database backup taken prior to starting the upgrade.
 3. Redeploy FusionAuth using your previous version. How you do this will depend on your deployment method.
 
-If you are running a FusionAuth Cloud deployment, you can find instructions for rolling back an upgrade here: [Rolling Back From a Problematic Upgrade](/docs/get-started/run-in-the-cloud/cloud#rolling-back-from-a-problematic-upgrade).
+If you are running a FusionAuth Cloud deployment, you can find instructions for rolling back an upgrade here: [Rolling Back From a Problematic Upgrade](/docs/cloud/upgrade-a-deployment#roll-back-to-a-backup).
 
 It's important to consider the timing implications of a rollback or any disaster recovery process. RTO, or Recovery Time Objective, is the targeted period time within which a service should be restored after an outage to avoid unacceptable consequences. Simply put, it is how long you can afford to be without the service or system before it severely impacts your business. It represents the goal for the time taken to recover from failure.
 
@@ -327,7 +326,7 @@ This section will guide you with detailed technical instructions on how to upgra
 
 ### Cloud
 
-To upgrade your FusionAuth Cloud instance, see the [Cloud Installation Guide](/docs/get-started/run-in-the-cloud/cloud#upgrading-a-deployment).
+To upgrade your FusionAuth Cloud instance, see the [Cloud Installation Guide](/docs/cloud/upgrade-a-deployment).
 
 ### Docker
 
@@ -339,7 +338,7 @@ To upgrade an instance you installed with Homebrew, see the [Homebrew Upgrade gu
 
 ### ZIP Packages
 
-FusionAuth is available in a ZIP package for macOS, Linux, and Windows. If you are using the ZIP package, please use this guide to update an existing instance of FusionAuth. Find the ZIP packages at the FusionAuth [Downloads](/download) page.
+FusionAuth is available in a ZIP package for macOS, Linux, and Windows. If you are using the ZIP package, please use this guide to update an existing instance of FusionAuth. Find the ZIP packages at the FusionAuth [Downloads](/docs/get-started/download-and-install/docker) page.
 
 #### macOS and Linux
 

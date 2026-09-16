@@ -1,16 +1,10 @@
 ---
-title: Twilio Messenger
+title: Send Messages with Twilio
 description: Learn how to add and configur Twilio messengers.
 order: 5
 ---
-import APIBlock from 'src/components/api/APIBlock.astro';
-import APIField from 'src/components/api/APIField.astro';
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
-<Aside type="version">
-Available since version `1.26.0`
-</Aside>
+<AvailableSince since="1.26.0"/>
 
 This page explains how to connect your FusionAuth instance to Twilio messenger to send SMS and voice messages.
 
@@ -49,7 +43,7 @@ Complete the following fields:
   <APIField name="Messaging service Id" optional>
     Provided by Twilio and is often used in conjunction with the Copilot service.
   </APIField>
-  <APIField name="Debug enabled" optional>
+  <APIField name="Enable debug logging" optional>
     When enabled, each message sent using this messenger will generate a new Debug Event Log which can be viewed using the Event Log API or from the admin UI by navigating to <Breadcrumb>System -> Event Log</Breadcrumb>.
   </APIField>
 </APIBlock>

@@ -4,20 +4,14 @@ description: An overview of how FusionAuth provides an OAuth 2.0 and OpenID Conn
 order: 0
 tags: machine to machine, oauth, oauth2, oauth 2.0, oauth 2
 ---
-import APIBlock from 'src/components/api/APIBlock.astro';
-import APIField from 'src/components/api/APIField.astro';
 import ApplicationOAuthSettings from 'src/content/docs/_shared/_application-oauth-settings.mdx';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import PremiumPlanBlurb from 'src/content/docs/_shared/_premium-plan-blurb.mdx';
-import Aside from 'src/components/Aside.astro';
 import ClientCredentialsPermissionsExplanation from 'src/content/docs/lifecycle/authenticate-users/oauth/_client_credentials_permissions_explanation.mdx';
-import JSON from 'src/components/JSON.astro';
 import ClientCredentialsScopesOmitted from 'src/content/docs/lifecycle/authenticate-users/oauth/_client_credentials_scopes_omitted.mdx';
 import ClientCredentialsScopesSingleEntity from 'src/content/docs/lifecycle/authenticate-users/oauth/_client_credentials_scopes_single_entity.mdx';
 import ClientCredentialsScopesMultipleEntities from 'src/content/docs/lifecycle/authenticate-users/oauth/_client_credentials_scopes_multiple_entities.mdx';
 import { YouTube } from '@astro-community/astro-embed-youtube';
 
-FusionAuth supports the following grant types as defined by the OAuth 2.0 framework in [RFC 6749](https://tools.ietf.org/html/rfc6749), [RFC 8628](https://tools.ietf.org/html/rfc8628), and [OpenID Connect Core](https://openid.net/specs/openid-connect-core-1_0.html).
+FusionAuth supports the following grant types as defined by the OAuth 2.0 framework in [RFC 6749](https://tools.ietf.org/html/rfc6749), [RFC 8628](https://tools.ietf.org/html/rfc8628), [RFC 9207](https://www.rfc-editor.org/rfc/rfc9207), and [OpenID Connect Core](https://openid.net/specs/openid-connect-core-1_0.html).
 
 * Authorization Code Grant
 * Implicit Grant
@@ -41,6 +35,8 @@ It is recommended to utilize the Authorization Code Grant unless you have a tech
 
 You can also learn about [OAuth Modes](/docs/lifecycle/authenticate-users/oauth/modes), which are different methods of using OAuth that are higher level than the individual grants.
 
+You can also learn about [Response Modes](/docs/lifecycle/authenticate-users/oauth/response-modes), which control how authorization response parameters are delivered to the client (`query`, `fragment`, or `form_post`).
+
 ## Configure Application OAuth Settings
 
 Navigate to the Application configuration from the main menu, <Breadcrumb>Applications</Breadcrumb>.
@@ -49,7 +45,7 @@ If you have already created a FusionAuth Application for the purpose of your app
 
 In this example you will see we have created a new Application named `Pied Piper` and have filled out the fields in the <Breadcrumb>OAuth Configuration</Breadcrumb> tab. A FusionAuth application represents an authenticated resource that you will be using with FusionAuth.
 
-Additional OAuth controls can be managed through [Tenant Configuration](/docs/get-started/core-concepts/tenants#tenant-configuration).
+Additional OAuth controls can be managed through [Tenant Configuration](/docs/get-started/core-concepts/types/tenants#tenant-configuration).
 
 ![Application OAuth Configuration](/img/docs/lifecycle/authenticate-users/oauth/oauth-application.png)
 
@@ -63,9 +59,9 @@ The supported OAuth grant types that involve user interaction allow specifying a
 
 ## Configure Entities
 
-<PremiumPlanBlurb />
+<PlanBlurb plan="starter" />
 
-The Client Credentials grant takes place between two Entities. You can learn more about [Entities](/docs/get-started/core-concepts/entity-management) in the <Breadcrumb>Core Concepts</Breadcrumb> section.
+The Client Credentials grant takes place between two Entities. You can learn more about [Entities](/docs/get-started/core-concepts/types/entity-management) in the <Breadcrumb>Core Concepts</Breadcrumb> section.
 
 There are two entities which take part in a Client Credentials grant in FusionAuth: the recipient Entity and the target Entity.
 
@@ -123,7 +119,7 @@ Mobile applications require additional security in implementing the Authorizatio
 
 For these reasons, it is best practice to implement the Authorization Code Grant Flow with [Proof Key for Code Exchange](https://tools.ietf.org/html/rfc7636) (PKCE, pronounced "pixie").
 
-Review the [Authorization](/docs/apis/oauth#authorize) and [Token](/docs/apis/oauth#token) endpoint documentation for additional detail on these necessary request parameters.
+Review the [Authorization](/docs/apis/oauth/authorize) and [Token](/docs/apis/oauth/token) endpoint documentation for additional detail on these necessary request parameters.
 </Aside>
 
 
@@ -133,7 +129,7 @@ Now that your FusionAuth application has been configured to use the OAuth provid
 
 For the purposes of this example, I will make the assumption that FusionAuth App is running locally at `http://localhost:9011`, the `client_id` will be found on the <Breadcrumb>OAuth</Breadcrumb> tab in the application configuration, the `redirect_uri` will be where you wish FusionAuth to redirect the browser when the authorization step has completed. This value will need to be predefined in the authorized redirect URLs in the OAuth configuration. The `response_type` will always be `code` for this grant type.  The `tenantId` will be the unique Id of the tenant this request is scoped for, the tenant's configured theme will be applied.
 
-Review the [Authorization](/docs/apis/oauth#authorize) endpoint documentation for more detail.
+Review the [Authorization](/docs/apis/oauth/authorize) endpoint documentation for more detail.
 
 ```
 http://localhost:9011/oauth2/authorize?client_id=06494b74-a796-4723-af44-1bdb96b48875&redirect_uri=https://www.piedpiper.com/login&response_type=code&tenantId=78dda1c8-14d4-4c98-be75-0ccef244297d
@@ -143,10 +139,10 @@ http://localhost:9011/oauth2/authorize?client_id=06494b74-a796-4723-af44-1bdb96b
 
 When the authorize request completes successfully it will respond with a status code of `302` to the location provided by the redirect_uri parameter. The request will contain a code parameter which can be exchanged for an access token. The access token contains the user Id of the authenticated user which can then be used to retrieve the entire user object.
 
-Review the [Token](/docs/apis/oauth#token) endpoint documentation for more detail. The following is an example redirect URI containing the authorization code.
+Review the [Token](/docs/apis/oauth/token) endpoint documentation for more detail. The following is an example redirect URI containing the authorization code.
 
 ```
-https://www.piedpiper.com/login?code=+WYT3XemV4f81ghHi4V+RyNwvATDaD4FIj0BpfFC4Wzg=&userState=Authenticated
+https://www.piedpiper.com/login?code=+WYT3XemV4f81ghHi4V+RyNwvATDaD4FIj0BpfFC4Wzg=&iss=https%3A%2F%2Fpiedpiper.fusionauth.io&userState=Authenticated
 ```
 
 ### Exchange the authorization code for an access token
@@ -189,9 +185,9 @@ retrieved in one of several ways. If you have an API key you can retrieve the Us
 payload. The email address is returned in the `email` identity claim, and the User's Id is returned in the `sub` identity claim. You may
 also retrieve the User without an API key by utilizing the JWT as returned in the `access_token` property in the response body.
 
-See the [Retrieve a User](/docs/apis/users#retrieve-a-user) API for examples.
+See the [Retrieve a User](/docs/apis/users/retrieve) API for examples.
 
-You may also choose to use the [Introspect](/docs/apis/oauth#introspect) or [Userinfo](/docs/apis/oauth#userinfo) endpoints to validate the access token returned from the Token endpoint and to provide you decoded claims as a JSON object.
+You may also choose to use the [Introspect](/docs/apis/oauth/introspect) or [Userinfo](/docs/apis/oauth/userinfo) endpoints to validate the access token returned from the Token endpoint and to provide you decoded claims as a JSON object.
 
 Now that you have the user, or retrieved the roles from the JWT, you may review their roles and registration to ensure they have adequate
 authority for the intended action, and if the user is not yet registered for the requested application, you can either fail their login,
@@ -252,6 +248,7 @@ HTTP/1.1 302 Found
 Location: https://piedpiper.com/callback#
            access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0ODUxNDA5ODQsImlhdCI6MTQ4NTEzNzM4NCwiaXNzIjoiYWNtZS5jb20iLCJzdWIiOiIyOWFjMGMxOC0wYjRhLTQyY2YtODJmYy0wM2Q1NzAzMThhMWQiLCJhcHBsaWNhdGlvbklkIjoiNzkxMDM3MzQtOTdhYi00ZDFhLWFmMzctZTAwNmQwNWQyOTUyIiwicm9sZXMiOltdfQ.Mp0Pcwsz5VECK11Kf2ZZNF_SMKu5CgBeLN9ZOP04kZo
            &expires_in=3599
+           &iss=https%3A%2F%2Fpiedpiper.fusionauth.io
            &locale=fr
            &token_type=Bearer
            &userState=Authenticated
@@ -333,7 +330,7 @@ client_id=3c219e58-ed0e-4b18-ad48-f4f92793ae32
 
 ## Example Client Credentials Grant
 
-<PremiumPlanBlurb />
+<PlanBlurb plan="starter" />
 
 Most OAuth grants are designed to allow users to delegate permissions.
 
@@ -412,15 +409,15 @@ This will redirect to the configured OAuth **redirect_uri** per the typical Auth
 The Device Authorization Grant will be considered approved when the Authorization Grant **code** has been exchanged for a token.
 
 Default values are provided for the durations that the device code and user code remain valid, as well as the user code generator settings.
-These values may be adjusted through the <Breadcrumb>Advanced</Breadcrumb> tab of [Tenant Configuration](/docs/get-started/core-concepts/tenants#advanced).
+These values may be adjusted through the <Breadcrumb>Advanced</Breadcrumb> tab of [Tenant Configuration](/docs/get-started/core-concepts/types/tenants#advanced).
 
 ### Initiate the Device Authorization Grant flow
 
-In order to initiate the Device Authorization Grant flow, make a request from the device to the [Device Authorize endpoint](/docs/apis/oauth#device), which is also discoverable via the [OpenID Configuration](/docs/apis/oauth#openid-configuration).
+In order to initiate the Device Authorization Grant flow, make a request from the device to the [Device Authorize endpoint](/docs/apis/oauth/device), which is also discoverable via the [OpenID Configuration](/docs/apis/oauth/openid-configuration).
 
 {/*  If I have this paragraph be part of the other one, I think the # in the links causes the **scope** text to be misinterpreted */}
 
-This request may be made with the optional **scope** field in order to request OAuth scopes on tokens from the eventual [`/oauth2/token` endpoint](/docs/apis/oauth#complete-the-device-authorization-grant-request) return. A refresh token can be requested by including `offline_access` in the **scope** request parameter.
+This request may be made with the optional **scope** field in order to request OAuth scopes on tokens from the eventual [`/oauth2/token` endpoint](/docs/apis/oauth/token#complete-the-device-authorization-grant-request) return. A refresh token can be requested by including `offline_access` in the **scope** request parameter.
 The **scope** value here will be used for the interactive portion of the workflow when the [user_code is passed to FusionAuth](/docs/lifecycle/authenticate-users/oauth#pass-user_code-to-fusionauth). See [Scopes](/docs/lifecycle/authenticate-users/oauth/scopes) for more information on configuring the application's OAuth scope policies, managing custom OAuth scopes, and prompting for user consent to granting scopes to third-party applications.
 
 This request will return a JSON response with values necessary to fulfill the remainder of the grant flow.
@@ -451,8 +448,8 @@ client_id=3c219e58-ed0e-4b18-ad48-f4f92793ae32
 ```
 
 ### Poll Token endpoint
-Upon receiving a response from the Device Authorize endpoint the device may begin polling the [Token endpoint](/docs/apis/oauth#complete-the-device-authorization-grant-request) with the **device_code** at the requested **interval** in seconds returned in the response.
-Requests to the [Token endpoint](/docs/apis/oauth#complete-the-device-authorization-grant-request) will return an error stating that authorization is pending, until the end-user approves the request, at which point an access token will be returned.
+Upon receiving a response from the Device Authorize endpoint the device may begin polling the [Token endpoint](/docs/apis/oauth/token#complete-the-device-authorization-grant-request) with the **device_code** at the requested **interval** in seconds returned in the response.
+Requests to the [Token endpoint](/docs/apis/oauth/token#complete-the-device-authorization-grant-request) will return an error stating that authorization is pending, until the end-user approves the request, at which point an access token will be returned.
 
 Line breaks have been added for readability.
 
@@ -498,17 +495,17 @@ The user should then navigate to the displayed URL, and enter the activation cod
 ![OAuth Device Example - User Interaction](/img/docs/lifecycle/authenticate-users/oauth/oauth-device-user-interaction.png)
 
 ### Pass `user_code` to FusionAuth
-Once the `user_code` has been received from the end-user, it may be validated by making a request to the [Device Validate endpoint](/docs/apis/oauth#device-validate).
+Once the `user_code` has been received from the end-user, it may be validated by making a request to the [Device Validate endpoint](/docs/apis/oauth/device#device-validate).
 This endpoint will return a `200` response code without a JSON body on successful validation.
 
 Upon validating the end-user provided `user_code` the typical Authorization Grant, Implicit Grant, or Password Grant flows may be followed for authentication.
 The OAuth endpoints that facilitate these typical OAuth flows take a `user_code` parameter to facilitate the Device Authorization Grant approval.
-See the [Authorize endpoint](/docs/apis/oauth#authorize) and [Token endpoint](/docs/apis/oauth#token) documentation for more information.
+See the [Authorize endpoint](/docs/apis/oauth/authorize) and [Token endpoint](/docs/apis/oauth/token) documentation for more information.
 
 ![OAuth Device Example - Success](/img/docs/lifecycle/authenticate-users/oauth/oauth-device-success.png)
 
 ### Receive `access_token`
-Once the user has provided a valid `user_code` and successfully authenticated, the request from the device to the [Token endpoint](/docs/apis/oauth#complete-the-device-authorization-grant-request) will return successfully with an access token.
+Once the user has provided a valid `user_code` and successfully authenticated, the request from the device to the [Token endpoint](/docs/apis/oauth/token#complete-the-device-authorization-grant-request) will return successfully with an access token.
 
 Line breaks have been added for readability.
 

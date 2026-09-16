@@ -3,8 +3,6 @@ title: Migrate From Ping Identity
 description: Learn how to migrate your users to FusionAuth from Ping Identity.
 ---
 import AdditionalSupport from 'src/content/docs/lifecycle/migrate-users/provider-specific/_additional-support.mdx';
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import CreateApiKeySocial from 'src/content/docs/lifecycle/migrate-users/provider-specific/_create-api-key-social.mdx';
 import CreateTestApplication from 'src/content/docs/lifecycle/migrate-users/provider-specific/_create-test-application.mdx';
 import CreateTestTenant from 'src/content/docs/lifecycle/migrate-users/provider-specific/_create-test-tenant.mdx';
@@ -12,13 +10,11 @@ import FinalDestination from 'src/content/docs/lifecycle/migrate-users/provider-
 import GetScript from 'src/content/docs/lifecycle/migrate-users/provider-specific/_get-script.mdx';
 import MappingUserAttributes from 'src/content/docs/lifecycle/migrate-users/provider-specific/_mapping-user-attributes.mdx';
 import OtherEntitiesIntro from 'src/content/docs/lifecycle/migrate-users/provider-specific/_other-entities-intro.mdx';
-import PremiumPlanBlurb from 'src/content/docs/_shared/_premium-plan-blurb.mdx';
 import SetUpFusionauth from 'src/content/docs/lifecycle/migrate-users/provider-specific/_set-up-fusionauth.mdx';
 import SlowMigrationTimeline from 'src/content/docs/lifecycle/migrate-users/provider-specific/_slow-migration-timeline.mdx';
 import SocialLoginMigration from 'src/content/docs/lifecycle/migrate-users/provider-specific/_social-login-migration.mdx';
 import SocialLoginNote from 'src/content/docs/lifecycle/migrate-users/provider-specific/_social-login-note.mdx';
 import WhatNext from 'src/content/docs/lifecycle/migrate-users/provider-specific/_what-next.mdx';
-import RemoteCode from 'src/components/RemoteCode.astro';
 
 export const migration_source_name = 'Ping Identity';
 export const migration_source_dir = 'pingidentity';
@@ -27,7 +23,7 @@ export const codeRoot = 'https://raw.githubusercontent.com/FusionAuth/fusionauth
 
 This document will help you migrate your users from Ping Identity to FusionAuth.
 
-There are a number of different ways applications can be integrated with Ping Identity, and it would be difficult to cover them all. This guide focuses on migrating user data, including profile data and passwords. However, Ping Identity does not allow for password hash export. Therefore, you must perform a slow migration if you don’t want to force users to reset their passwords.
+There are a number of different ways applications can be integrated with Ping Identity, and it would be difficult to cover them all. This guide focuses on migrating user data, including profile data and passwords. However, Ping Identity does not allow for password hash export. Therefore, you must perform a slow migration if you don't want to force users to reset their passwords.
 
 Alternatively, you can do a bulk migration and force everyone to reset their passwords. This option is discussed below, but the primary focus of this guide is enabling you to migrate your users from Ping Identity without requiring any password resets.
 
@@ -51,9 +47,9 @@ You can learn more about the types of migrations that FusionAuth supports [here]
 
 ### One Tenant Or Many
 
-The [Ping Identity platform](https://docs.pingidentity.com/r/en-us/pingone/p1_c_introduction) uses an organization-based model to define tenant accounts and their related entities. The organization is the top-level identifier. It defines your entire enterprise within the platform.
+The [Ping Identity platform](https://docs.pingidentity.com/pingone/introduction_to_pingone/p1_introduction.html) uses an organization-based model to define tenant accounts and their related entities. The organization is the top-level identifier. It defines your entire enterprise within the platform.
 
-FusionAuth has the concept of [Tenants](/docs/get-started/core-concepts/tenants). Both FusionAuth Tenants and Ping Identity organizations include data about users, applications, and other configuration.
+FusionAuth has the concept of [Tenants](/docs/get-started/core-concepts/types/tenants). Both FusionAuth Tenants and Ping Identity organizations include data about users, applications, and other configuration.
 
 Each tenant in FusionAuth is a distinct user space. You may choose to merge multiple Ping Identity organizations into one FusionAuth Tenant or keep them separate.
 
@@ -61,7 +57,7 @@ Learn more about [FusionAuth Tenants](/docs/extend/examples/multi-tenant).
 
 ### Identity Providers
 
-With Ping Identity, you can use the PingOne user directory or an [external identity provider (IdP)](https://docs.pingidentity.com/r/en-us/pingone/p1_c_identityproviders). Using an external IdP allows linked users to authenticate using the credentials provided by the external IdP. An external IdP includes mapping PingOne user attributes to attributes from the IdP. With FusionAuth, these are also called [Identity Providers](/docs/lifecycle/authenticate-users/identity-providers/).
+With Ping Identity, you can use the PingOne user directory or an [external identity provider (IdP)](https://docs.pingidentity.com/pingone/integrations/p1_external_idps.html). Using an external IdP allows linked users to authenticate using the credentials provided by the external IdP. An external IdP includes mapping PingOne user attributes to attributes from the IdP. With FusionAuth, these are also called [Identity Providers](/docs/lifecycle/authenticate-users/identity-providers/).
 
 Review the supported FusionAuth [Identity Providers](/docs/lifecycle/authenticate-users/identity-providers/) to ensure any you need are supported. At this time, while there is considerable overlap between the supported identity providers, there are a number of differences.
 
@@ -81,18 +77,18 @@ To retrieve the user information, use the approach documented in the [Export Use
 
 <OtherEntitiesIntro migration_source_name={migration_source_name} other_migrated_entities="app clients or password policies" />
 
-* Ping Identity uses [DaVinci](https://docs.pingidentity.com/r/en-us/davinci/davinci_landing_page), an orchestration platform that lets you create flows using connections and logical operators. These flows guide users through defined processes that can present customized pages, modify values, or perform other actions. In FusionAuth, [Applications](/docs/get-started/core-concepts/applications) are a similar construct, but users are associated with them through [Registrations](/docs/get-started/core-concepts/registrations).
-* Ping Identity uses [Flows in DaVinci](https://docs.pingidentity.com/r/en-us/davinci/davinci_flows). A flow is a user journey, such as registration or authentication, built from a set of capabilities and logical operators. FusionAuth has a similar concept called [Lambdas](/docs/extend/code/lambdas/). FusionAuth also has [webhooks](/docs/extend/events-and-webhooks/) fired at certain points in the user lifecycle; in certain configurations, they can also stop a particular authentication flow.
-* In Ping Identity a [role](https://docs.pingidentity.com/r/en-us/pingone/p1_c_roles) is a collection of permissions that can be assigned to a user, application, or connection. FusionAuth has [roles](/docs/get-started/core-concepts/roles) that are configured on an application-by-application basis and made available in a token after successful authentication.
-* Ping Identity allows using [groups](https://docs.pingidentity.com/r/en-us/pingone/p1_c_groups) to organize a collection of user identities to manage access to applications. FusionAuth also has [groups](/docs/get-started/core-concepts/groups).
-* Ping Identity makes use of [populations](https://docs.pingidentity.com/r/en-us/pingone/p1_c_populations). A population defines a set of users and can help you make user management simple. In FusionAuth, you can manage a set of users via a [Tenant](/docs/get-started/core-concepts/tenants).
+* Ping Identity uses [DaVinci](https://docs.pingidentity.com/davinci/davinci_introduction.html), an orchestration platform that lets you create flows using connections and logical operators. These flows guide users through defined processes that can present customized pages, modify values, or perform other actions. In FusionAuth, [Applications](/docs/get-started/core-concepts/types/applications) are a similar construct, but users are associated with them through [Registrations](/docs/get-started/core-concepts/types/registrations).
+* Ping Identity uses [Flows in DaVinci](https://docs.pingidentity.com/davinci/flows/davinci_how_to_create_a_flow.html). A flow is a user journey, such as registration or authentication, built from a set of capabilities and logical operators. FusionAuth has a similar concept called [Lambdas](/docs/extend/code/lambdas/). FusionAuth also has [webhooks](/docs/extend/events-and-webhooks/) fired at certain points in the user lifecycle; in certain configurations, they can also stop a particular authentication flow.
+* In Ping Identity a [role](https://docs.pingidentity.com/pingone/directory/p1_roles.html) is a collection of permissions that can be assigned to a user, application, or connection. FusionAuth has [roles](/docs/get-started/core-concepts/types/roles) that are configured on an application-by-application basis and made available in a token after successful authentication.
+* Ping Identity allows using [groups](https://docs.pingidentity.com/pingone/directory/p1_groups.html) to organize a collection of user identities to manage access to applications. FusionAuth also has [groups](/docs/get-started/core-concepts/types/groups).
+* Ping Identity makes use of [populations](https://docs.pingidentity.com/pingone/directory/p1_populations.html). A population defines a set of users and can help you make user management simple. In FusionAuth, you can manage a set of users via a [Tenant](/docs/get-started/core-concepts/types/tenants).
 * Ping Identity sends emails on your behalf, such as forgotten password notifications. FusionAuth also sends emails, and [the templates are customizable](/docs/customize/email-and-messages/).
-* Ping Identity supports Client Credentials grant. FusionAuth offers a constrained version of this using [Entity Management](/docs/get-started/core-concepts/entity-management); this is available in all paid plans.
+* Ping Identity supports Client Credentials grant. FusionAuth offers a constrained version of this using [Entity Management](/docs/get-started/core-concepts/types/entity-management); this is available in all paid plans.
 * Ping Identity allows for custom attributes, but they must be configured at the Directory level. In FusionAuth, as mentioned above, custom user attributes are stored on the **user.data** field and are dynamic, searchable, and unlimited in size. Any valid JSON value may be stored in this field.
 * Ping Identity supports multi-factor authentication (MFA). FusionAuth also [supports MFA](/docs/lifecycle/authenticate-users/multi-factor-authentication), which may be enabled for a tenant and configured for a user at any time.
 
 <Aside type="note">
-  In FusionAuth, users are explicitly mapped to applications with a [Registration](/docs/get-started/core-concepts/registrations).
+  In FusionAuth, users are explicitly mapped to applications with a [Registration](/docs/get-started/core-concepts/types/registrations).
   In Ping Identity:
   * Users get assigned to a directory in the environment as part of an organization.
   * These users then by default get access to the applications defined in this environment, but access might be dependent on certain roles.
@@ -108,7 +104,7 @@ Once you've planned the migration of other entities, the next step is to set up 
 
 ### Login UI
 
-Ping Identity allows custom [branding and theming](https://docs.pingidentity.com/r/en-us/pingone/p1_c_branding_themes) on the UI. Login pages are highly variable across Ping Identity instances. This is beyond the scope of this document.
+Ping Identity allows custom [branding and theming](https://docs.pingidentity.com/pingone/user_experience/p1_branding_themes.html) on the UI. Login pages are highly variable across Ping Identity instances. This is beyond the scope of this document.
 
 The FusionAuth login experience follows two paths: You can choose to build your own login pages or use the FusionAuth-hosted login pages. [Read more about these choices](/docs/get-started/core-concepts/integration-points#login-options).
 
@@ -159,12 +155,12 @@ This guide will show you how to create an ngrok endpoint that will use a Flask A
 <Aside type="note">
   ngrok can be downloaded at https://ngrok.com. There are free and paid plans available. This guide uses a free plan.
 
-  Follow this [quickstart to get ngrok up and running](https://ngrok.com/docs/getting-started/).
+  Follow this [QuickStart to get ngrok up and running](https://ngrok.com/docs/start).
 </Aside>
 
 When ngrok is installed, start it with this command.
 
-```sh
+```shell-session
 ngrok http 5001
 ```
 
@@ -180,11 +176,11 @@ There are several ways you can set up a Ping Identity authentication stub.
 
 This guide will show you how to use Flask and ngrok.
 
-The authentication stub accepts a login request from FusionAuth over TLS and performs an [ROPC login](https://docs.pingidentity.com/r/en-us/developer/kwc1601508084434) request on Ping Identity, returning the relevant user data via the PingOne API.
+The authentication stub accepts a login request from FusionAuth over TLS and performs an ROPC login request on Ping Identity, returning the relevant user data via the PingOne API.
 
 #### Add The PingOne Authorize Service To Your Environment
 
-To connect to the Ping Identity API, add the PingOne Authorize service to your environment and then create a [worker application](https://docs.pingidentity.com/r/en-us/pingone/p1az_adding_worker_app) in the environment. To add the PingOne Authorize service to your environment, go to <Breadcrumb>Overview -> Services</Breadcrumb> and click the <Breadcrumb>+</Breadcrumb> button. Click <Breadcrumb>+ Add</Breadcrumb> next to PingOne Authorize service to add the service.
+To connect to the Ping Identity API, add the PingOne Authorize service to your environment and then create a [worker application](https://docs.pingidentity.com/pingone/authorization_using_pingone_authorize/p1az_adding_worker_app.html) in the environment. To add the PingOne Authorize service to your environment, go to <Breadcrumb>Overview -> Services</Breadcrumb> and click the <Breadcrumb>+</Breadcrumb> button. Click <Breadcrumb>+ Add</Breadcrumb> next to PingOne Authorize service to add the service.
 
 ![Add PingOne Authorize service to environment.](/img/docs/lifecycle/migrate-users/provider-specific/pingidentity/authorise_service.png)
 
@@ -206,7 +202,7 @@ On the <Breadcrumb>Overview</Breadcrumb> tab of the application take note of the
 
 #### Add An OIDC Application In Your Ping Environment
 
-Create an [OIDC application](https://docs.pingidentity.com/r/en-us/pingfederate-pingone-mfa-ik/pingfederate_pingone_mfa_ik_creating_a_web_or_native_application_in_pingone) in your Ping Environment to call from the Flask app. Under <Breadcrumb>Applications -> Applications</Breadcrumb> click the <Breadcrumb>+</Breadcrumb> button to create a new application. Set the **Application Name** and select the `OIDC Web App` application type. Save the application. After saving, enable the application by clicking the toggle button (top right) next to the application name.
+Create an [OIDC application](https://docs.pingidentity.com/pingone/applications/p1_application_types.html) in your Ping Environment to call from the Flask app. Under <Breadcrumb>Applications -> Applications</Breadcrumb> click the <Breadcrumb>+</Breadcrumb> button to create a new application. Set the **Application Name** and select the `OIDC Web App` application type. Save the application. After saving, enable the application by clicking the toggle button (top right) next to the application name.
 
 On the <Breadcrumb>Configuration</Breadcrumb> tab click the pencil edit button to edit the configuration details of the application.
 
@@ -233,25 +229,25 @@ On the <Breadcrumb>Configuration</Breadcrumb> tab click the pencil edit button t
 
 Create a directory to set up the Flask application.
 
-```sh
+```shell-session
 mkdir authenticator_app && cd authenticator_app
 ```
 
 Set up a virtual environment in the `authenticator_app` directory by running the following command.
 
-```sh
+```shell-session
 python -m venv venv
 ```
 
 Activate the virtual environment with the command.
 
-```sh
+```shell-session
 source venv/bin/activate
 ```
 
 Install requirements for the Flask application in the virtual environment with the following command.
 
-```sh
+```shell-session
 pip install requests flask
 ```
 
@@ -271,7 +267,7 @@ Following successful authentication, the function calls the [PingOne API `users`
 
 Now run the application.
 
-```sh
+```shell-session
 python pingIdentityAuth.py
 ```
 
@@ -287,7 +283,7 @@ Modify the `transform_json_user` function to match the user properties you want 
 
 Test the deployed API with the command below. Remember to use the credentials for your own Ping Identity test user.
 
-```sh
+```shell-session
 curl -X POST 'https://random-ngrok-string.ngrok-free.app/api/RopcProxy?code=s0ndU863xdbXsFO4dLZAJQXLzyTU789iaUJ43uLAtIkXm_AzFuFWP1zg=='  \
   -H 'Content-type: application/json' \
   -d '{
@@ -427,7 +423,7 @@ The `transform_json_user` function will transform the returned JSON into FusionA
 
 ### Set Up The Connector
 
-<PremiumPlanBlurb />
+<PlanBlurb plan="starter" />
 
 Now you'll set up a Connector to use the ngrok Flask API you created. Connectors are a feature limited to paid plans of FusionAuth, so ensure you have a valid Reactor license. Learn more about [activating Reactor](/docs/get-started/core-concepts/licensing).
 
@@ -450,7 +446,7 @@ Configure the Connector:
 
 Save the Connector.
 
-Note that if you have problems with the Connector, you can enable **Debug enabled** to have errors or warnings logged in the FusionAuth system event log.
+Note that if you have problems with the Connector, you can turn on **Enable debug logging** to have errors or warnings logged in the FusionAuth system event log.
 
 #### Configure The Tenant
 
@@ -462,7 +458,7 @@ Click the <Breadcrumb>Add policy</Breadcrumb> button to set up a new Connector p
 
 ![Connector policies for this Tenant.](/img/docs/lifecycle/migrate-users/provider-specific/pingidentity/connector-policies.png)
 
-Set the **Connector** field value to the name of the Connector you created. Make sure that the **Migrate user** field is enabled. You can leave the **Domains** field with the value of `*`, which will apply this Connector to every user. Submit the policy.
+Set the **Connector** field value to the name of the Connector you created. Make sure that the **Migrate to FusionAuth** field is enabled. You can leave the **Domains** field with the value of `*`, which will apply this Connector to every user. Submit the policy.
 
 Ensure the new Connector Policy is at the top of the list of policies. Use the arrow buttons to move the policy if necessary. With this configuration, all users are checked against this Connector the first time they are seen. If they log in, they'll be migrated to the FusionAuth user database.
 
@@ -486,7 +482,7 @@ Copy this URL and open it in a new incognito browser window (if you don't use an
 
 Enter credentials for a Ping Identity user account; you can use the same account you used to test the API with curl and log in. The user will be transparently migrated over to FusionAuth.
 
-If the user was not migrated or the login was unsuccessful, enable **Debug enabled** in the Connector configuration to troubleshoot. Navigate to <Breadcrumb>Settings -> Connectors</Breadcrumb> and edit the Connector.
+If the user was not migrated or the login was unsuccessful, enable **Enable debug logging** in the Connector configuration to troubleshoot. Navigate to <Breadcrumb>Settings -> Connectors</Breadcrumb> and edit the Connector.
 
 Try to log in again with the test user, then return to the FusionAuth UI and navigate to <Breadcrumb>System -> Event Log</Breadcrumb> to see if it contains any useful information.
 
@@ -566,7 +562,7 @@ Clone the code below to a file named `exportPingUsers.py` and make modifications
 
 Run the script with the following command.
 
-```sh
+```shell-session
 python exportPingUsers.py
 ```
 
@@ -840,7 +836,7 @@ You may want to migrate additional data. Currently, the following attributes are
 
 The migrated user will have the original Ping Identity user Id. If you have additional user attributes to migrate, review and modify the `map_user` method.
 
-You may also want to assign roles or associate users with groups by creating the appropriate JSON data structures in the import call. These are documented in the [Import User API docs](/docs/apis/users#import-users). This will require modifying the `import.rb` code.
+You may also want to assign roles or associate users with groups by creating the appropriate JSON data structures in the import call. These are documented in the [Import User API docs](/docs/apis/users/import). This will require modifying the `import.rb` code.
 
 ### Verify The Bulk Import
 
@@ -866,7 +862,7 @@ Review the `Change Password` template to ensure the messaging is correct. Here i
 
 Retrieve the `loginId` from the Ping Identity JSON export files and place it in a single file. The `loginId` will either be the username or the email address. Update the script below to use the API Key created in [Set Up FusionAuth](#set-up-fusionauth) step.
 
-The script below will call the [forgot password API](/docs/apis/users#start-forgot-password-workflow) for every user. It sleeps periodically to avoid overloading the SMTP server. Make sure the API Key has the `POST` to the `api/user/forgot-password` endpoint permission enabled.
+The script below will call the [forgot password API](/docs/apis/users/forgot-password) for every user. It sleeps periodically to avoid overloading the SMTP server. Make sure the API Key has the `POST` to the `api/user/forgot-password` endpoint permission enabled.
 
 ```sh title="Example User Password Reset"
 #!/bin/bash

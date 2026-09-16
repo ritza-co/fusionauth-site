@@ -1,10 +1,13 @@
 ---
 import Font from 'astro/components/Font.astro';
+import SchemaMarkup from './SchemaMarkup.astro';
 
 interface Props {
   description?: string;
   enableBaseParent?: boolean;
   enableGTM?: boolean;
+  llmsTxtHref?: string;
+  markdownTitle?: string;
   title?: string;
   openGraphImage?: string;
   canonicalUrl?: string;
@@ -16,13 +19,16 @@ const {
   description,
   enableBaseParent = false,
   enableGTM = true,
+  llmsTxtHref = '/docs/.well-known/llms.txt',
+  markdownTitle,
   title, openGraphImage,
   canonicalUrl,
   applyTheme = true,
   isIndexPage = false,
 } = Astro.props;
+
 const openGraphImageUrl = openGraphImage ? new URL(openGraphImage, Astro.url): new URL("/img/og/articles-developers-v1.png", Astro.url);
-const normalizedUrl = Astro.url.toString().replace(/.html$/, '');
+const normalizedUrl = Astro.url.toString().replace(/\.html$/, '');
 const isProd = import.meta.env.PROD as boolean;
 
 let canonical = canonicalUrl;
@@ -32,13 +38,10 @@ if (!canonical) {
   canonical = new URL(canonical, Astro.url).href;
 }
 
-if (canonical.endsWith('index.html')) {
-  canonical = canonical.slice(0, canonical.indexOf('index.html'));
-  if (!canonical.endsWith('/')) {
-    canonical += '/';
-  }
+if (canonical.endsWith('/index.html')) {
+  canonical = canonical.slice(0, -'index.html'.length); // keeps trailing '/'
 } else if (canonical.endsWith('.html')) {
-  canonical = canonical.slice(0, canonical.indexOf('.html'));
+  canonical = canonical.slice(0, -'.html'.length);
 }
 
 // Pages built from index.mdx are served as a directory (with trailing slash);
@@ -46,6 +49,7 @@ if (canonical.endsWith('index.html')) {
 if (isIndexPage && !canonical.endsWith('/')) {
   canonical += '/';
 }
+
 const slug = Astro.params.slug;
 ---
 <head>
@@ -54,10 +58,17 @@ const slug = Astro.params.slug;
   <link rel="icon" type="image/png" href="/img/favicon.png"/>
   { canonical && <link rel="canonical" href={canonical} /> }
   <meta name="algolia-site-verification" content="857638C054AD182F" />
-  <link rel="sitemap" href="/sitemap-index.xml">
+  <link rel="sitemap" href="/sitemap.xml">
+  <link rel="alternate" type="text/plain" title="LLM Index" href={llmsTxtHref} />
+  <link 
+    id="llm-md-link" 
+    rel="alternate" 
+    type="text/markdown" 
+    title="Page Markdown Source" 
+    href={Astro.url.pathname + "?format=md"} 
+  />
   <Font cssVariable="--font-inter-var" preload />
-  <script src="../scripts/ScrollSpy.ts"></script>
-  <script src="../scripts/Visibility.ts"></script>
+<script src="../scripts/Visibility.ts"></script>
   {applyTheme && <script is:inline>
     const getTheme = () => {
       const theme = localStorage?.getItem('theme');
@@ -75,7 +86,11 @@ const slug = Astro.params.slug;
     applyThemeClass();
   </script>}
   <title>{title}</title>
+  <link type="application/rss+xml" rel="alternate" href="/docs/releases.xml" title="Release Notes Feed">
+  <link type="application/rss+xml" rel="alternate" href="/blog/feed.xml" title="Blog Feed">
+
   <meta name="description" content={description}/>
+  {markdownTitle && <meta name="markdown-title" content={markdownTitle} />}
   <meta property="og:site_name" content="FusionAuth"/>
   <meta property="og:url" content={normalizedUrl}/>
   <meta property="og:description" content={description}/>
@@ -105,4 +120,6 @@ const slug = Astro.params.slug;
   { enableBaseParent &&
     <base target="_parent"/>
   }
+
+  <SchemaMarkup title={title} />
 </head>

@@ -2,8 +2,6 @@
 title: Kong Gateway
 description: Learn about the Kong Gateway JWT integration.
 ---
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import Aside from 'src/components/Aside.astro';
 import FrameworkIntegrationTutorialList from 'src/content/docs/_shared/_framework-integration-tutorial-list.mdx';
 
 Kong Gateway is an API management tool that allows you to connect client API calls to the appropriate services.
@@ -15,12 +13,12 @@ In this document, you'll learn how to set up Kong Gateway with FusionAuth as the
 ## Prerequisites
 
 * A FusionAuth instance running on a publicly accessible URL. You can spin up a [basic FusionAuth Cloud instance](/pricing) or [install it on any server](/docs/get-started/download-and-install).
-* A Kong Gateway instance with service routes. You can follow the Kong quickstart guide at [to set up Kong locally](https://docs.konghq.com/gateway/3.1.x/get-started/). You should complete both the [Get Kong](https://docs.konghq.com/gateway/3.1.x/get-started/) and [Services and Routes](https://docs.konghq.com/gateway/3.1.x/get-started/services-and-routes/) sections.
+* A Kong Gateway instance with service routes. You can follow the Kong QuickStart guide at [to set up Kong locally](https://docs.konghq.com/gateway/3.1.x/get-started/). You should complete both the [Get Kong](https://docs.konghq.com/gateway/3.1.x/get-started/) and [Services and Routes](https://docs.konghq.com/gateway/3.1.x/get-started/services-and-routes/) sections.
 ** Note: If the terminal seems to hang after outputting `Debugging info logged to 'kong-quickstart.log'`, it may be having trouble connecting to Docker. Try [resetting Docker to factory defaults](https://www.kindacode.com/article/how-to-reset-docker-desktop/) to solve this issue.
 
 ## Restrict Access to your Kong Gateway Service
 
-After following the Kong Quickstart Guide above, you can execute the following command in the terminal.
+After following the Kong QuickStart Guide above, you can execute the following command in the terminal.
 
 ```shell title="Curl to test Kong setup"
 curl -I http://localhost:8000/mock/requests
@@ -53,7 +51,7 @@ First, you need to make sure the JWT issuer setting is correct. Navigate to <Bre
 
 Next, you need to configure an application that will issue tokens to access the Kong Gateway service.
 
-Navigate to <Breadcrumb>Applications</Breadcrumb> and create a new application. Fill out the **Name** field, then click the <Breadcrumb>JWT</Breadcrumb> tab and toggle the <Breadcrumb>Enabled</Breadcrumb> switch. Select `Auto generate a new key on save...` for the **Access Token signing key** field. This will generate an RS256 asymmetric key pair specifically for this application.
+Navigate to <Breadcrumb>Applications</Breadcrumb> and create a new application. Fill out the **Name** field, then click the <Breadcrumb>JWT</Breadcrumb> tab and toggle the <Breadcrumb>Enable application-level JWT override</Breadcrumb> switch. Select `Auto generate a new key on save...` for the **Access Token signing key** field. This will generate an RS256 asymmetric key pair specifically for this application.
 
 ![FusionAuth application JWT settings](/img/docs/extend/examples/api-gateways/kong-gateway-fusionauth-jwt-settings.png)
 

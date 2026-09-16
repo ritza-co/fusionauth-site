@@ -8,9 +8,6 @@ categories: Product, Education, Engineering
 tags: dotnet template mvc blazor webapi
 excerpt_separator: "{/* more */}"
 ---
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
 
 Reduce the overhead associated with customer authentication and authorization when creating a .NET web application using FusionAuth templates. 
 {/* more */} 
@@ -18,9 +15,9 @@ Reduce the overhead associated with customer authentication and authorization wh
 ## Introduction
 *Templates for nothing and your security for free.* 
 
-Literally. The [FusionAuth Templates for Microsoft .NET](https://marketplace.visualstudio.com/items?itemName=FusionAuth.FusionAuthVSTemplates) are free to use and so is the self-hosted [Community plan](/pricing?step=plan&hosting=self-hosting) of FusionAuth.
+Literally. The FusionAuth Templates for Microsoft .NET are free to use and so is the self-hosted [Community plan](/pricing?step=plan&hosting=self-hosting) of FusionAuth.
 
-As a Developer Relations Engineer at FusionAuth, my goal is to help developers develop faster. That's why I'm so excited about the release of our new .NET templates. They're available through the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=FusionAuth.FusionAuthVSTemplates) and as a [NuGet](https://www.nuget.org/packages/FusionAuth.Templates) package, making it easy for developers to get started with FusionAuth and build secure applications quickly and easily.
+As a Developer Relations Engineer at FusionAuth, my goal is to help developers develop faster. That's why I'm so excited about the release of our new .NET templates. They're available through the Visual Studio Marketplace and as a NuGet package, making it easy for developers to get started with FusionAuth and build secure applications quickly and easily.
 
 ## Getting Started
 
@@ -175,7 +172,7 @@ This is also where the logic to display the `Login` link or the `Profile` and `L
 
 If the user is not logged in and clicks the `Login` link, they will be taken to the `AccountController` triggering the `Login` function. This function will take the values in the settings and issue the login dialog for the user.
 
-```c#
+```csharp
 public async Task Login(string returnUrl = "/")
   {
     var authenticationProperties = new AuthenticationProperties();
@@ -188,7 +185,7 @@ After the user is authenticated, it redirects them to the homepage again. This t
 
 The `Logout` link will again take the user to the `AccountController` and perform the logout logic.
 
-```c#
+```csharp
 public async Task Logout()
 {
   var authenticationProperties = new AuthenticationProperties();
@@ -201,7 +198,7 @@ public async Task Logout()
 
 The `Profile` link will take to user to the `AccountController` and attempt to return the `Profile` view. Notice the **Authorize** attribute above the function name. This attribute lets the application know not to issue this view unless the user is authenticated.
 
-```c#
+```csharp
 [Authorize]
 public IActionResult Profile()
 {
@@ -220,8 +217,8 @@ Authentication and Authorization are a critical part of any application. You cou
 
 If you enjoyed this article, I suggest you download the FusionAuth .NET Templates and create your project with them. Please check out some of the other links and resources about FusionAuth and the .NET Templates.
 
-* [Download FusionAuth for Free](/download)
-* [FusionAuth .NET Templates in Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=FusionAuth.FusionAuthVSTemplates)
-* [FusionAuth .NET Templates in NuGet](https://www.nuget.org/packages/FusionAuth.Templates)
+* [Download FusionAuth for Free](/docs/get-started/download-and-install/docker)
+* FusionAuth .NET Templates in Visual Studio Marketplace
+* FusionAuth .NET Templates in NuGet
 * [FusionAuth - Getting Started](/docs/get-started/)
 

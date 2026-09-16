@@ -1,9 +1,7 @@
 ---
-title: SAML v2 with ADFS
+title: Add a SAML v2 with ADFS IdP
 description: Configure SAML v2 for Active Directory Federation Services (ADFS).
 ---
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import Icon from 'src/components/icon/Icon.astro';
 
 This page will guide you in configuring SAML v2 for Active Directory Federation Services (ADFS), enabling a <Breadcrumb>Login with ADFS</Breadcrumb> button in your FusionAuth login flow.
 
@@ -27,7 +25,7 @@ Enable the **Debug** toggle to receive debug logs in the FusionAuth Event Log.
 
 Enable the **Use NameId for email** toggle.
 
-Set the **Verification key** to the ADFS certificate you imported in the previous step.
+Under **Verification keys**, add the ADFS certificate you imported in the previous step.
 
 ![ADFS Import Certificate](/img/docs/lifecycle/authenticate-users/identity-providers/enterprise/samlv2-adfs-add.png)
 

@@ -1,5 +1,5 @@
 ---
-publish_date: 2020-09-10 
+publish_date: 2020-09-10
 title: Building a user profile portal with Flask, OAuth, and APIs
 description: Advanced registration forms let you easily build out multi-step registration forms, but how do you let the users modify their profile data?
 authors: Dan Moore
@@ -9,7 +9,6 @@ updated_date: 2022-06-20
 tags: registration forms, profile portal, flask, oauth
 excerpt_separator: "{/* more */}"
 ---
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 Once a user registers, you can view their data in the administrative user interface. But how can you allow the user to view or change their data themselves?
 
@@ -17,7 +16,7 @@ Once a user registers, you can view their data in the administrative user interf
 
 _Note that user profile editing functionality is now available in paid plans of FusionAuth. [Learn more](/docs/lifecycle/manage-users/account-management/)._
 
-Previously, we built a [self service registration form](/blog/advanced-registration-form) for a real estate application. It was a two step form which captured specific information about their home buying needs. We also themed the [registration form](/blog/theme-registration-form). This tutorial builds on the previous two and will walk through building a python flask application to let a user sign in and modify the profile data they provided at registration. 
+Previously, we built a [self service registration form](/blog/advanced-registration-form) for a real estate application. It was a two step form which captured specific information about their home buying needs. We also themed the [registration form](/blog/theme-registration-form). This tutorial builds on the previous two and will walk through building a python flask application to let a user sign in and modify the profile data they provided at registration.
 
 While this tutorial will reference the previous registration form, you can adapt it to an existing registration flow too.
 
@@ -77,7 +76,7 @@ Make a directory for this codebase. You could call it something flashy, but I'm 
 Next, activate this virtual environment by running this command: `. venv/bin/activate`. You should now see `(venv)` in front of your shell prompt:
 
 ```shell
-(venv) dan@MacBook-Pro flask % 
+(venv) dan@MacBook-Pro flask %
 ```
 
 > There are other python tools out there which provide similar functionality to `venv`, such as `pyenv` and `pipenv`.
@@ -136,7 +135,7 @@ You are going to use flask templates to create the HTML pages. Create a director
 <title>Hello from FusionAuth</title>
 <body>
 
-This is a sample OAuth/Flask application. 
+This is a sample OAuth/Flask application.
 </body>
 </html>
 ```
@@ -169,7 +168,7 @@ What you just did was start up flask and having it display a rendered template. 
 You've already installed an OAuth python library, so now it is time to use it. Let's use the configuration capabilities of flask to keep our environment specific config values separate. Create a file named `settings.py`; add this to the contents:
 
 ```python
-class Config(object): 
+class Config(object):
   CLIENT_ID="85a03867-dccf-4882-adde-1a79aeec50df"
   CLIENT_SECRET="5E_pVQeSQ2v4d7ckDy6rz_Z0HZjNSShUEbWPRYst2hg"
   FA_URL='http://localhost:9011'
@@ -187,12 +186,12 @@ The rest of the configuration values are standard OAuth/OIDC endpoints as well a
 
 Let's update `index.html` as well, to add links for login and registration. Here's the new HTML:
 
-```jinja
+```django
 <!doctype html>
 <title>Hello from FusionAuth</title>
 <body>
 
-This is a sample OAuth/Flask application. 
+This is a sample OAuth/Flask application.
 <br/>
 <br/>
 {% if user %}
@@ -271,7 +270,7 @@ def callback():
   if state != expected_state:
     print("Error, state doesn't match, redirecting without getting token.")
     return redirect('/')
-    
+
   fusionauth = OAuth2Session(app.config['CLIENT_ID'], redirect_uri=app.config['REDIRECT_URI'])
   token = fusionauth.fetch_token(app.config['TOKEN_URL'], client_secret=app.config['CLIENT_SECRET'], authorization_response=request.url)
 
@@ -347,21 +346,21 @@ def register():
 # ...
 ```
 
-All of these build links when called, and then send a redirect to the generated URL. 
+All of these build links when called, and then send a redirect to the generated URL.
 
 > You don't need these routes. You could hard code URLs into the template. But doing this makes for a more maintainable application, as well as nicer looking URLs.
 
-The `/login` route uses the `requests_oauthlib` library to generate a proper authorization URL. The parameters for this URL are all defined by the [RFC](https://tools.ietf.org/html/rfc6749). When the link is clicked, the end user will be shown the FusionAuth themeable hosted pages, where they may log in. 
+The `/login` route uses the `requests_oauthlib` library to generate a proper authorization URL. The parameters for this URL are all defined by the [RFC](https://tools.ietf.org/html/rfc6749). When the link is clicked, the end user will be shown the FusionAuth themeable hosted pages, where they may log in.
 
-`/logout` deletes the user's session and calls the FusionAuth `logout` endpoint. This ensures that the systems where user state is maintained, your application and FusionAuth, have logged out the user. 
+`/logout` deletes the user's session and calls the FusionAuth `logout` endpoint. This ensures that the systems where user state is maintained, your application and FusionAuth, have logged out the user.
 
-The `/register` route uses the `requests_oauthlib` library to generate the URL, just like the `/login` route. But it also modifies the URL: `registration_url = authorization_url.replace("authorize","register", 1)`. What's going on there? 
+The `/register` route uses the `requests_oauthlib` library to generate the URL, just like the `/login` route. But it also modifies the URL: `registration_url = authorization_url.replace("authorize","register", 1)`. What's going on there?
 
 This code works because the registration process in FusionAuth is embedded in an OAuth Authorization Code grant. The `register` endpoint takes the same parameters. When someone is done registering for an application, they are in the same state as if they'd logged in:
 
 * A valid `redirect_uri` must be provided.
 * The callback code at the `redirect_uri` can call the `token` endpoint to receive a JWT. It also receives and should check the `state` parameter.
-* The user is authenticated. 
+* The user is authenticated.
 
 Let's look at the callback route, which the authorization server, FusionAuth, will redirect the browser to after the user signs in:
 
@@ -374,7 +373,7 @@ def callback():
   if state != expected_state:
     print("Error, state doesn't match, redirecting without getting token.")
     return redirect('/')
-    
+
   fusionauth = OAuth2Session(app.config['CLIENT_ID'], redirect_uri=app.config['REDIRECT_URI'])
   token = fusionauth.fetch_token(app.config['TOKEN_URL'], client_secret=app.config['CLIENT_SECRET'], authorization_response=request.url)
 
@@ -407,7 +406,7 @@ Now, visit `http://localhost:5000` in your browser. You'll be able to register o
 
 ## Editing profile data
 
-You could stop here if you wanted, I suppose. You're showing the user data that is retrieved from the [`userinfo` OIDC endpoint](/docs/apis/oauth#userinfo), and you could display other data like the user's name. 
+You could stop here if you wanted, I suppose. You're showing the user data that is retrieved from the [`userinfo` OIDC endpoint](/docs/apis/oauth/userinfo), and you could display other data like the user's name.
 
 But you're no schmuck. You want more. I promised the ability to edit the profile data, and the below code will deliver.
 
@@ -418,7 +417,7 @@ Let's take that next step and display not only the user's email address, but als
 First, add more configuration settings. Update your `settings.py` file like so:
 
 ```python
-class Config(object): 
+class Config(object):
   CLIENT_ID="85a03867-dccf-4882-adde-1a79aeec50df"
 # ...
   USERINFO_URL='http://localhost:9011/oauth2/userinfo'
@@ -435,12 +434,12 @@ The **`FORM_ID`** allows our code to retrieve the form fields which comprise tha
 
 Let's update the `index.html` file to display the user's data as well as to generate a form to update that data:
 
-```jinja
+```django
 <!doctype html>
 <title>Hello from FusionAuth</title>
 <body>
 
-This is a sample OAuth/Flask application. 
+This is a sample OAuth/Flask application.
 <br/>
 <br/>
 {% if user %}
@@ -450,11 +449,11 @@ This is a sample OAuth/Flask application.
   <h1>Hello {{ user.email }}!</h1>
 
   {% if error %}
-    <p style="color:red">Error: {{ error }}</p> 
+    <p style="color:red">Error: {{ error }}</p>
   {% endif %}
   <div>
   <h3>Current preferences</h3>
-  {% if registration_data %}  
+  {% if registration_data %}
     {% for key in registration_data.keys() %}
       <p>
       {% if key == 'geographicarea' and registration_data['geographicarea'] | length > 0 %}
@@ -475,7 +474,7 @@ This is a sample OAuth/Flask application.
   <h3>Update your preferences</h3>
 
     <form action="/update" method="post">
-      {% if registration_data %}  
+      {% if registration_data %}
         {% for key in registration_data.keys() %}
           <p>
           {% if key == 'geographicarea' %}
@@ -507,10 +506,10 @@ This is a sample OAuth/Flask application.
 
 Here are the changed, relevant sections. First, this is displays the profile information:
 
-```jinja
+```django
 <!-- ... -->
 <h3>Current preferences</h3>
-{% if registration_data %}  
+{% if registration_data %}
   {% for key in registration_data.keys() %}
     <p>
     {% if key == 'geographicarea' and registration_data['geographicarea'] | length > 0 %}
@@ -528,14 +527,14 @@ Here are the changed, relevant sections. First, this is displays the profile inf
 <!-- ... -->
 ```
 
-This display code iterates and displays the values in the `registration_data` array. If appropriate, the field is formatted. 
+This display code iterates and displays the values in the `registration_data` array. If appropriate, the field is formatted.
 
 The code which builds a form for updating is also worth checking out:
 
-```jinja
+```django
 <!-- ... -->
 <form action="/update" method="post">
-  {% if registration_data %}  
+  {% if registration_data %}
     {% for key in registration_data.keys() %}
       <p>
       {% if key == 'geographicarea' %}
@@ -557,13 +556,13 @@ The code which builds a form for updating is also worth checking out:
 
 This builds a form from the same `registration_data` array. But it does something else which you might find intriguing. Let's take a deeper look at the maximum price form field, which has some additional newlines added below:
 
-```jinja
+```django
 <!-- ... -->
-Maximum home price: 
-  <input 
-  type='{{ fields['registration.data.'+key].control }}' 
-  {% if fields['registration.data.'+key].required %}required{% endif %} 
-  name='{{ key }}' 
+Maximum home price:
+  <input
+  type='{{ fields['registration.data.'+key].control }}'
+  {% if fields['registration.data.'+key].required %}required{% endif %}
+  name='{{ key }}'
   value='{{ registration_data['maxprice'] }}' />
 <!-- ... -->
 ```
@@ -672,7 +671,7 @@ def callback():
   if state != expected_state:
     print("Error, state doesn't match, redirecting without getting token.")
     return redirect('/')
-    
+
   fusionauth = OAuth2Session(app.config['CLIENT_ID'], redirect_uri=app.config['REDIRECT_URI'])
   token = fusionauth.fetch_token(app.config['TOKEN_URL'], client_secret=app.config['CLIENT_SECRET'], authorization_response=request.url)
 
@@ -688,7 +687,7 @@ def get_fields(fusionauth_api_client):
     field_ids = client_response.success_response['form']['steps'][1]['fields']
     for id in field_ids:
       client_response = fusionauth_api_client.retrieve_form_field(id)
-      if client_response.was_successful(): 
+      if client_response.was_successful():
         field = client_response.success_response['field']
         fields[field['key']] = field
   else:
@@ -742,7 +741,7 @@ def get_fields(fusionauth_api_client):
     field_ids = client_response.success_response['form']['steps'][1]['fields']
     for id in field_ids:
       client_response = fusionauth_api_client.retrieve_form_field(id)
-      if client_response.was_successful(): 
+      if client_response.was_successful():
         field = client_response.success_response['field']
         fields[field['key']] = field
   else:
@@ -750,7 +749,7 @@ def get_fields(fusionauth_api_client):
   return fields
 ```
 
-This looks at the form and retrieves ids of all fields on the second step: `['form']['steps'][1]`. It then gets all each field configuration. 
+This looks at the form and retrieves ids of all fields on the second step: `['form']['steps'][1]`. It then gets all each field configuration.
 
 The code then adds that form field configuration information to a dictionary, keyed off of the key of the field. A key is a string like `registration.data.minprice`. This dictionary is what is used to build certain attributes of the update form, as shown above. This would need to be modified to loop over steps if you had more than one step collecting profile data.
 
@@ -789,7 +788,7 @@ def update():
          error = "Unable to save data"
          return render_template('index.html', user=user, registration_data=registration_data, fields=fields, error=error)
   return redirect('/')
-# ... 
+# ...
 ```
 
 This code retrieves the user's registration object for this application. It then updates the `data` object with new values, perhaps transforming a field from a string to a different datatype if required. Currently it handles only the `number` type, but could be extended to handle `boolean` or other data types.
@@ -798,7 +797,7 @@ After the object has been updated, a `PATCH` request is made. This updates only 
 
 ## Putting it all together
 
-You can run the code with the display and update of profile data in the same way you did previously: 
+You can run the code with the display and update of profile data in the same way you did previously:
 
 ```shell
 OAUTHLIB_INSECURE_TRANSPORT=1 FLASK_APP=oauth.py python3 -m flask run

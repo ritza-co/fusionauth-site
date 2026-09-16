@@ -2,10 +2,8 @@
 title: Search
 description: Learn about search options within FusionAuth.
 ---
-import Aside from 'src/components/Aside.astro';
 import ReIndexingElasticsearch from 'src/content/docs/_shared/_re-indexing-elasticsearch.mdx';
 import PaginatingSearchResults from 'src/content/docs/_shared/_paginating-search-results.mdx';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 FusionAuth ships with two options for search: a simple search via the database search engine and the Elasticsearch search engine.
 
@@ -63,7 +61,7 @@ Regular expressions, ranges, and other complicated queries can not be used.
 
 Leveraging Elasticsearch enables advanced search capabilities on more numerous and granular data. It also provides a performance improvement.
 
-The Elasticsearch search engine is appropriate for systems that are dependent on the FusionAuth APIs (such as [user search](/docs/apis/users#search-for-users)), are expected to have a large number of results, or require more granularity in search than is provided by the standard database search engine.
+The Elasticsearch search engine is appropriate for systems that are dependent on the FusionAuth APIs (such as [user search](/docs/apis/users/search)), are expected to have a large number of results, or require more granularity in search than is provided by the standard database search engine.
 
 ### Reindexing Elasticsearch
 
@@ -81,9 +79,7 @@ See the [Extended Pagination](#extended-pagination) section for more details.
 
 ### Extended Pagination
 
-<Aside type="version">
-Available since 1.48.0
-</Aside>
+<AvailableSince since="1.48.0"/>
 
 Starting in version 1.48.0 of FusionAuth every search using the Elasticsearch engine will return a **nextResults** token in the response. You may use this token on subsequent calls to continue paging forward in the result set and go past the 10,000 results limit with Elasticsearch. Every search request made using a **nextResults** token will return a page of results and another **nextResults** token that can be used to retrieve the next page. These calls can be made indefinitely until the number of returned results is 0.
 

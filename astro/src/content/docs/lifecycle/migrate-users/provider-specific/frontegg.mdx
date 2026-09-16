@@ -3,12 +3,9 @@ title: Migrate From Frontegg
 description: How to migrate your users from Frontegg to FusionAuth.
 ---
 import AdditionalSupport from 'src/content/docs/lifecycle/migrate-users/provider-specific/_additional-support.mdx';
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import MakeWebservicePublic from 'src/content/docs/lifecycle/migrate-users/provider-specific/_make-webservice-public.mdx';
 import MappingUserAttributes from 'src/content/docs/lifecycle/migrate-users/provider-specific/_mapping-user-attributes.mdx';
 import OtherEntitiesIntro from 'src/content/docs/lifecycle/migrate-users/provider-specific/_other-entities-intro.mdx';
-import PremiumPlanBlurb from 'src/content/docs/_shared/_premium-plan-blurb.mdx';
 import SlowMigrationTimeline from 'src/content/docs/lifecycle/migrate-users/provider-specific/_slow-migration-timeline.mdx';
 import SocialLoginMigration from 'src/content/docs/lifecycle/migrate-users/provider-specific/_social-login-migration.mdx';
 import SocialLoginNote from 'src/content/docs/lifecycle/migrate-users/provider-specific/_social-login-note.mdx';
@@ -22,7 +19,7 @@ This guide is a low-level, technical tutorial focusing on calling APIs and prepa
 
 To follow this tutorial, you need:
 - [Node.js](https://nodejs.org/en) to run the migration scripts, and npm.
-- [FusionAuth](/download). The easiest way to run FusionAuth locally is to use [Docker](https://docs.docker.com/get-docker/) with the configuration file provided later in this tutorial.
+- [FusionAuth](/docs/get-started/download-and-install/docker). The easiest way to run FusionAuth locally is to use [Docker](https://docs.docker.com/get-docker/) with the configuration file provided later in this tutorial.
 
 ## Planning Considerations
 
@@ -59,9 +56,9 @@ This tutorial will cover all the bulk and slow migration steps.
 
 <OtherEntitiesIntro migration_source_name="Frontegg" other_migrated_entities="connections or roles" />
 
-* In Frontegg, a [role](https://docs.frontegg.com/docs/roles-1) is a collection of permissions that can be assigned to a user or application. FusionAuth has [roles](/docs/get-started/core-concepts/roles) that are configured on an application-by-application basis and made available in a token after successful authentication.
-* With Frontegg, you can use [groups](https://docs.frontegg.com/docs/groups) to organize a collection of user identities to manage access to applications. FusionAuth also has [Groups](/docs/get-started/core-concepts/groups).
-* Frontegg uses [tenants](https://docs.frontegg.com/docs/user-admin-management#tenants) to define sets of users and help you manage users. You can also manage a set of users via a [Tenant](/docs/get-started/core-concepts/tenants) in FusionAuth.
+* In Frontegg, a [role](https://developers.frontegg.com/ciam/guides/authorization/rbac/roles) is a collection of permissions that can be assigned to a user or application. FusionAuth has [roles](/docs/get-started/core-concepts/types/roles) that are configured on an application-by-application basis and made available in a token after successful authentication.
+* With Frontegg, you can use [groups](https://developers.frontegg.com/ciam/guides/admin-portal/workspace-modules) to organize a collection of user identities to manage access to applications. FusionAuth also has [Groups](/docs/get-started/core-concepts/types/groups).
+* Frontegg uses [tenants](https://developers.frontegg.com/ciam/api/tenants) to define sets of users and help you manage users. You can also manage a set of users via a [Tenant](/docs/get-started/core-concepts/types/tenants) in FusionAuth.
 
 
 #### Identifiers
@@ -112,7 +109,7 @@ You're now done working with the Frontegg web portal and have sample user data t
 
 FusionAuth provides export and import scripts under a permissive open-source license. To get the scripts, clone the Git repository.
 
-```sh
+```shell-session
 git clone https://github.com/FusionAuth/fusionauth-import-scripts
 ```
 
@@ -120,19 +117,19 @@ The `frontegg` directory contains all the scripts you need for this tutorial, an
 
 Navigate to the `frontegg/src` directory.
 
-```sh
+```shell-session
 cd fusionauth-import-scripts/frontegg/src
 ```
 
 Install the required npm dependencies by running the following command.
 
-```sh
+```shell-session
 npm install
 ```
 
 Export your users from Frontegg by running the command below. Use the Frontegg client Id and API key you noted in the previous section.
 
-```sh
+```shell-session
 node 1_exportUsers.mjs yourclientid yourapikey
 ```
 
@@ -163,7 +160,7 @@ You need to add these role names in your FusionAuth Application. Users will be l
 
 To use this script, you need an instance of FusionAuth running. Start a local instance of FusionAuth running in Docker by running the commands below in a new terminal.
 
-```sh
+```shell-session
 cd fusionauth-import-scripts/frontegg/fusionAuthDockerFiles
 docker compose up
 ```
@@ -174,7 +171,7 @@ This configuration makes use of a bootstrapping feature of FusionAuth called [Ki
 
 In another terminal, navigate to the `frontegg/src/` directory. Now you can run the role creation script below.
 
-```sh
+```shell-session
 node 2_addRoles.mjs
 ```
 
@@ -200,7 +197,7 @@ If you are uncertain about what a user attribute in FusionAuth does, read more i
 
 In a terminal in the `fusionauth-import-scripts/frontegg/src` directory, run the script with the following command.
 
-```sh
+```shell-session
 node 3_convertFeUserToFaUser.mjs
 ```
 
@@ -212,7 +209,7 @@ Now you'll run the Node.js import script to import the users into FusionAuth.
 
 In a terminal in the `fusionauth-import-scripts/frontegg/src` directory, run the command below.
 
-```sh
+```shell-session
 node 4_import.mjs
 ```
 
@@ -226,13 +223,13 @@ Log in to the [FusionAuth admin UI](http://localhost:9011/admin) with `admin@exa
 
 ![List of imported users](/img/docs/lifecycle/migrate-users/provider-specific/frontegg/imported-users.png)
 
-Manage users by clicking on the <Breadcrumb>Manage</Breadcrumb> button (black button) to the right of the user in the list of users. Review the details of the imported user’s profile. In the <Breadcrumb>Source</Breadcrumb> tab, you can see all the user details as a JSON object.
+Manage users by clicking on the <Breadcrumb>Manage</Breadcrumb> button (black button) to the right of the user in the list of users. Review the details of the imported user's profile. In the <Breadcrumb>Source</Breadcrumb> tab, you can see all the user details as a JSON object.
 
 ## Slow Migration
 
 This step of the tutorial is optional. In this section, you'll learn how to create a Connector for FusionAuth to import your users' passwords individually as each user logs in.
 
-<PremiumPlanBlurb />
+<PlanBlurb plan="starter" />
 
 If you don't need to do this, please skip to the [What To Do Next](#what-to-do-next) section below.
 
@@ -270,13 +267,13 @@ Create a new user with an alias like `myemail+test@gmail.com` and password `pass
 
 Export the new user by running the `frontegg/src/1_exportUsers.mjs` script.
 
-```sh
+```shell-session
 node 1_exportUsers.mjs yourclientid yourapikey
 ```
 
 If not already created, create roles in FusionAuth by running the `frontegg/src/2_addRoles.mjs` script.
 
-```sh
+```shell-session
 node 2_addRoles.mjs
 ```
 
@@ -290,13 +287,13 @@ In the `frontegg/src/3_convertFeUserToFaUser.mjs` script, comment out the follow
 
 Map the users in the exported `users.json` file to FusionAuth-compatible objects by running the `3_convertFeUserToFaUser.mjs` script.
 
-```sh
+```shell-session
 node 3_convertFeUserToFaUser.mjs
 ```
 
 ### Configure A Connector Between FusionAuth And Frontegg
 
-<PremiumPlanBlurb />
+<PlanBlurb plan="starter" />
 
 Now configure a FusionAuth Connector to point to an intermediary web service between FusionAuth and Frontegg. The web service will expose an API endpoint that can be called from a FusionAuth Connector to retrieve the user's details to be imported to FusionAuth.
 
@@ -316,7 +313,7 @@ Enter the field values below.
 - **Name**: `FronteggConnector`
 - **Authentication URL**: `http://host.docker.internal:6252`. If you are running FusionAuth directly on your machine and not in Docker you can use `http://localhost:6252`.
 - Adjust the timeout values to higher values to cater for network latency when the API requests are being made
-- Enable <Breadcrumb>Debug enabled</Breadcrumb>
+- Enable <Breadcrumb>Enable debug logging</Breadcrumb>
 
 <Aside>
   You may need to update your hosts file to include an entry for `127.0.0.1 host.docker.internal` if it's not already present. On macOS and Linux you can achieve this by running the following command:
@@ -340,12 +337,12 @@ Now browse to <Breadcrumb>Tenants</Breadcrumb> and do the following.
 - Click <Breadcrumb>Add policy</Breadcrumb>.
 - Select `FronteggConnector`.
 - Leave **Domains** with the value `*` to apply this Connector to every user.
-- Enable <Breadcrumb>Migrate user</Breadcrumb> so that FusionAuth will no longer use Frontegg for subsequent logins of the same user.
+- Enable <Breadcrumb>Migrate to FusionAuth</Breadcrumb> so that FusionAuth will no longer use Frontegg for subsequent logins of the same user.
 - Click <Breadcrumb>Submit</Breadcrumb>.
 
 ![Connector policy details in FusionAuth](/img/docs/lifecycle/migrate-users/provider-specific/frontegg/connector-policy.png)
 
-Move the `FronteggConnector` policy to the top of the list. Use the arrow buttons to move the policy if necessary. With this configuration, all users are checked against this Connector the first time they are seen. If they log in, they’ll be migrated to the FusionAuth user database.
+Move the `FronteggConnector` policy to the top of the list. Use the arrow buttons to move the policy if necessary. With this configuration, all users are checked against this Connector the first time they are seen. If they log in, they'll be migrated to the FusionAuth user database.
 
 After configuration, the Connector entry form should look similar to this:
 
@@ -382,7 +379,7 @@ await getUserDetailsFromFile(email);
 
 Run this web service now using the command below.
 
-```sh
+```shell-session
 node 5_connectorService.mjs yourfronteggclientid yourfronteggapikey
 ```
 

@@ -1,8 +1,7 @@
 ---
-title: SAML v2 with Okta
+title: Add a SAML v2 with Okta IdP
 description: Configure SAML v2 for Okta.
 ---
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 This documentation will guide you in configuring SAML v2 IdP for Okta. In this case, FusionAuth will act as Service Provider (SP) to Okta (IdP). Functionally, the result will allow you to display a <Breadcrumb>Login with Okta</Breadcrumb> button on your FusionAuth application's login page and allow users to connect via SAML to Okta applications.
 
@@ -67,11 +66,11 @@ Navigate to <Breadcrumb>Settings -> Identity Providers</Breadcrumb> and add a ne
 
 ![new identity provider](/img/docs/lifecycle/authenticate-users/identity-providers/enterprise/okta-saml-new-idp.png)
 
-Provide a **Name**, for example, `OKTA SAML`. For the **IdP endpoint**, paste the **Identity Provider Single Sign-On URL** from the Okta <Breadcrumb>SAML setup instructions</Breadcrumb> page. For the verification key, select from the dropdown the name of the key you just created in the Key Master. Optionally, change the **Button text** to `Login with Okta`.
+Provide a **Name**, for example, `OKTA SAML`. For the **IdP endpoint**, paste the **Identity Provider Single Sign-On URL** from the Okta <Breadcrumb>SAML setup instructions</Breadcrumb> page. Under **Verification keys**, add the key you just created in the Key Master. Optionally, change the **Button text** to `Login with Okta`.
 
 ![new idp settings](/img/docs/lifecycle/authenticate-users/identity-providers/enterprise/okta-saml-new-idp-settings.png)
 
-Make sure your application has the <Breadcrumb>Enabled</Breadcrumb> switch toggled. Then, navigate to the <Breadcrumb>Options</Breadcrumb> tab and supply the names that you chose for the **user.Id** and **user.email** attribute statements in Okta.
+Make sure your application has the <Breadcrumb>Enable identity provider</Breadcrumb> switch toggled. Then, navigate to the <Breadcrumb>Options</Breadcrumb> tab and supply the names that you chose for the **user.Id** and **user.email** attribute statements in Okta.
 
 ![claim options](/img/docs/lifecycle/authenticate-users/identity-providers/enterprise/okta-saml-claim-options.png)
 

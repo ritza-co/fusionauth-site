@@ -2,8 +2,6 @@
 title: Multi-tenancy
 description: Learn how to run multiple tenants in a single FusionAuth instance.
 ---
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import CrossTenantUserAccess from 'src/content/docs/get-started/core-concepts/_cross-tenant-access.mdx';
 import MultiTenantLimitations from 'src/content/docs/get-started/core-concepts/_multi-tenant-limitations.mdx';
 
@@ -19,7 +17,7 @@ There are many reasons why you might be interested in a multi-tenant FusionAuth 
 * To easily manage multiple developer environments. Having each developer use a tenant on a dedicated development server allows developers free reign to add, remove and modify configuration, while keeping them relatively isolated from each other.
 * Per-client custom tenant level settings are needed. Examples of such settings include password rules, the issuer of JWTs, or webhook transaction levels.
 
-FusionAuth's performant, lightweight multi-tenancy can help with any of these scenarios. If you want to learn more about FusionAuth tenants, there's an entire [Tenant core concepts section](/docs/get-started/core-concepts/tenants).
+FusionAuth's performant, lightweight multi-tenancy can help with any of these scenarios. If you want to learn more about FusionAuth tenants, there's an entire [Tenant core concepts section](/docs/get-started/core-concepts/types/tenants).
 
 ## Levels of Isolation
 
@@ -253,7 +251,7 @@ Below, basic self service registration is enabled. Doing this will allow a user 
 
 Then, you need to configure your control plane application to use FusionAuth for auth. This is framework dependent, but typically involves an OAuth library.
 
-You also need to create a Key Manager API key. Navigate to <Breadcrumb>Settings -> API Keys</Breadcrumb> and create a global API key. Make sure you enable **Key manager** as this will be used to mint tenant scoped API keys.
+You also need to create a Key Manager API key. Navigate to <Breadcrumb>Settings -> API Keys</Breadcrumb> and create a global API key. Make sure you enable **Allow this key to manage other keys** as this will be used to mint tenant scoped API keys.
 
 ![Creating a key manager API key.](/img/docs/extend/examples/creating-key-manager-api-key.png)
 
@@ -538,7 +536,7 @@ Consult your DNS provider documentation on how to point a wildcard DNS entry to 
 
 Consult your web server documentation to determine how to accept multiple hostname requests. Below is an example Apache configuration file to send traffic for multiple `piedpipervideochat.com` addresses to a proxied local web application running on port 8000.
 
-```
+```apacheconf
 <VirtualHost *:443>
   ServerName app.piedpipervideochat.com
   ServerAlias *.piedpipervideochat.com

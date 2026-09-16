@@ -8,7 +8,6 @@ categories: Product, News
 tags: email templates, branding
 excerpt_separator: "{/* more */}"
 ---
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 The email templates in FusionAuth can be customized allowing you to present a consistent brand across all customer touch points. In this post, we show you how to set up the email templates to be ready to use FusionAuth's integrated email features.
 
@@ -66,7 +65,7 @@ To complete your email verification click on the following link.
 
 Here's the text template.
 
-```
+```ftl
 To complete your email verification click on the following link.
 
 https://login.piedpiper.com/email/verify/${verificationId}

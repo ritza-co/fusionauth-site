@@ -4,7 +4,6 @@ description: Let your customers' users log in to your application and manage the
 order: 30
 ---
 import B2B2CDescription from 'src/content/docs/get-started/use-cases/_b2b2c-description.mdx';
-import Aside from 'src/components/Aside.astro';
 import UserSegmentTable from 'src/content/docs/get-started/core-concepts/_user-segment-table.mdx';
 import CrossTenantUserAccess from 'src/content/docs/get-started/core-concepts/_cross-tenant-access.mdx';
 import TenantAuthorizationWarning from 'src/content/docs/get-started/use-cases/_tenant-authorization.mdx';
@@ -162,7 +161,7 @@ You can script these configuration steps using one of the [SDKs](/docs/sdks). Yo
 
 Record information such as the API key, the client Id and client secret from the FusionAuth Application configuration in your web or mobile application's database. Later, your application will look up this information based on the request hostname.
 
-When using FusionAuth Cloud, you can [configure FusionAuth to respond to different hostnames](/docs/get-started/run-in-the-cloud/cloud#custom-domains). You can also do the same with self-hosted FusionAuth. In addition to the hostnames above, you could also have:
+When using FusionAuth Cloud, you can [configure FusionAuth to respond to different hostnames](/docs/cloud/operate/custom-domains). You can also do the same with self-hosted FusionAuth. In addition to the hostnames above, you could also have:
 
 * `auth.ringling.example.com` for Ringling Bros. and Barnum & Bailey Circus login host
 * `auth.cirquedesoleil.example.com` for Cirque du Soleil login host
@@ -180,11 +179,11 @@ Pick one or more methods that work for your use case; FusionAuth supports them a
 
 ### User Authentication
 
-When a user comes to the Ringling site hosted by ClownApp, they must be redirected to a FusionAuth authorization URL with the appropriate client Id and redirect URL. This starts the Authorization Code grant to authenticate this user. Here's an [explanation of how to create the URL and what each component means](/docs/apis/oauth#authorization-code-grant-request).
+When a user comes to the Ringling site hosted by ClownApp, they must be redirected to a FusionAuth authorization URL with the appropriate client Id and redirect URL. This starts the Authorization Code grant to authenticate this user. Here's an [explanation of how to create the URL and what each component means](/docs/apis/oauth/authorize#authorization-code-grant-request).
 
 The user sees a Ringling themed page because of the previous customization and the provided client Id. Other interactions with FusionAuth, such as a "forgot password" email, should be Ringling themed as well.
 
-After the user authenticates and is redirected to the ClownPass application, the client Id and client secret is looked up in the application database based on the hostname in the redirect URL. The circus ticketing web application handles many client Ids and secrets, one for each customer. The client Id and client secret are provided to FusionAuth to complete the Authorization Code grant. Here's an [explanation of that request](/docs/apis/oauth#complete-the-authorization-code-grant-request).
+After the user authenticates and is redirected to the ClownPass application, the client Id and client secret is looked up in the application database based on the hostname in the redirect URL. The circus ticketing web application handles many client Ids and secrets, one for each customer. The client Id and client secret are provided to FusionAuth to complete the Authorization Code grant. Here's an [explanation of that request](/docs/apis/oauth/token#complete-the-authorization-code-grant-request).
 
 The [tokens](/docs/lifecycle/authenticate-users/oauth/tokens) contain information about the user and their roles. The ClownPass application can use them to determine correct levels of access or data to retrieve.
 
@@ -257,7 +256,7 @@ In each of these cases there is a clear differentiation between the customer org
 
 * [Multi-tenant guide](/docs/extend/examples/multi-tenant)
 * [Determining the tenant for a user](/docs/extend/examples/multi-tenant#data-plane-application-tenant-determination)
-* [Options for segmenting users](/docs/get-started/core-concepts/users#segmenting-users)
+* [Options for segmenting users](/docs/get-started/core-concepts/types/users#segmenting-users)
 * [Theme customization](/docs/customize/look-and-feel/)
 * [Email template customization](/docs/customize/email-and-messages/)
 * [Blog post about private labeling](/blog/private-labeling-with-multi-tenant)

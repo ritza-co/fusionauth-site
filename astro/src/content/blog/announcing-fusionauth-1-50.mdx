@@ -8,7 +8,6 @@ categories: Release Updates, Product
 tags: release notes, oauth, scopes, custom scopes, lambdas, userinfo, setup wizard
 excerpt_separator: "{/* more */}"
 ---
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 FusionAuth versions 1.50.0 and 1.50.1 shipped in late April, 2024. These versions include OAuth scopes support, a UserInfo lambda, an easier setup screen, and more.
 
@@ -61,7 +60,7 @@ Prompting the user for consent is limited to certain paid plans. Learn more by r
 
 ## UserInfo Lambda
 
-The [UserInfo endpoint](/docs/apis/oauth#userinfo), as defined in the OIDC specification, takes an access token and returns information about the user. Per the specification:
+The [UserInfo endpoint](/docs/apis/oauth/userinfo), as defined in the OIDC specification, takes an access token and returns information about the user. Per the specification:
 
 > The UserInfo Endpoint is an OAuth 2.0 Protected Resource that returns Claims about the authenticated End-User.
 
@@ -71,11 +70,11 @@ Customizing the UserInfo response allows you a lot of flexibility. You can:
 
 * Remove any personally identifiable information (PII) that is not required.
 * Add additional claims needed by callers of the endpoint, even if they depend on the access token.
-* Augment the provided claims by calling other APIs using [Lambda HTTP Connect](/docs/extend/code/lambdas/#using-lambda-http-connect).
+* Augment the provided claims by calling other APIs using [Lambda HTTP Connect](/docs/extend/code/lambdas/#http-connect).
 
 Here's an example UserInfo lambda which removes a user's PII, but leaves the email domain available for any service consuming the token. The `sub` claim is also untouched.
 
-```
+```javascript
 function populate(response, user, registration, jwt) {
   response.email = user.email.replace(/[^@]*@/,"deleted@");
   response.given_name = "deleted";

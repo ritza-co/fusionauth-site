@@ -1,8 +1,8 @@
 ---
 title: Refresh Token Revoke
+htmlTitle: JWT Refresh Token Revoke Event
 description: Learn about the JWT Refresh Token Revoke event.
 ---
-import APIField from 'src/components/api/APIField.astro';
 import Event from 'src/content/docs/extend/events-and-webhooks/events/_event.astro';
 import EventBody from 'src/content/docs/extend/events-and-webhooks/events/_event-body.astro';
 import ReferenceLink from 'src/content/docs/_shared/_reference-link.mdx';
@@ -66,7 +66,7 @@ export const eventType = 'jwt.refresh-token.revoke';
   </APIField>
 
   <APIField slot="trailing-fields" name="event.refreshToken" type="Object" since="1.37.0">
-    The refresh token being revoked. This is only returned when a single refresh token is revoked.  See the [JWT API](/docs/apis/jwt#retrieve-refresh-tokens) for property definitions and example JSON.
+    The refresh token being revoked. This is only returned when a single refresh token is revoked.  See the [JWT API](/docs/apis/jwt/retrieve-refresh-tokens) for property definitions and example JSON.
   </APIField>
 
   <APIField slot="trailing-fields" name="event.tenantId" type="UUID" since="1.8.0">

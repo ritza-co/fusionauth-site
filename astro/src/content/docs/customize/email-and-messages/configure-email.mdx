@@ -2,10 +2,6 @@
 title: Configure SMTP
 description: Learn how to enable and configure the SMTP server.
 ---
-import Aside from 'src/components/Aside.astro';
-import APIBlock from 'src/components/api/APIBlock.astro';
-import APIField from 'src/components/api/APIField.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 Before you can use email templates and other email features in FusionAuth, you must first enable and configure a Simple Mail Transfer Protocol (SMTP) server.
 
@@ -133,8 +129,8 @@ Below are descriptions of the SMTP settings you will configure in FusionAuth in 
   <APIField name="Additional headers" optional since="1.32.0">
     One or more line-separated SMTP headers to be added to each outgoing email. The header name and value should be separated by an equals sign, for example, `X-SES-CONFIGURATION-SET=Value`.
   </APIField>
-  <APIField name="Debug enabled" optional since="1.37.0">
-    When enabled, SMTP and JavaMail debug information will be output to the Event Log.
+  <APIField name="Enable debug logging" optional since="1.37.0">
+    Creates event log entries to help debug SMTP and email delivery errors. Check <Breadcrumb>System -> Event Log</Breadcrumb>.
   </APIField>
 </APIBlock>
 
@@ -210,7 +206,7 @@ SES is more complicated than the other SMTP services. If the troubleshooting sec
 
 ### Gmail
 
-As well as being a popular ESP, Gmail can be used by programs to send email through SMTP. Gmail is not recommended for production use, since it has a [number of limits](https://support.google.com/a/answer/166852). However, it can be useful to test email functionality.
+As well as being a popular ESP, Gmail can be used by programs to send email through SMTP. Gmail is not recommended for production use, since it has a [number of limits](https://knowledge.workspace.google.com/admin/gmail/gmail-sending-limits-in-google-workspace). However, it can be useful to test email functionality.
 
 For Gmail, use [application passwords](https://support.google.com/accounts/answer/185833) or you may get a generic `Unable to send email via JavaMail / Prime Messaging Exception` error. The application passwords support article says you need to enable two-factor authentication, then create an app password on the security tab. However, there is no `App password` setting on the tab. You need to browse to https://myaccount.google.com/apppasswords manually to create one.
 
@@ -352,7 +348,7 @@ Below are some common errors you might get when configuring SMTP and how to fix 
 
 ### Authentication Error
 
-```text
+```plaintext
 Unable to send email via JavaMail
 
 Prime Messaging Exception
@@ -363,7 +359,7 @@ This error indicates that your username or password is incorrect. Re-enter them 
 
 If the error looks like the one below, you need to set up a [Google application password](https://support.google.com/accounts/answer/185833).
 
-```text
+```plaintext
 Prime Messaging Exception
 535-5.7.8 Username and Password not accepted. For more information, go to
 535 5.7.8  https://support.google.com/mail/?p=BadCredentials
@@ -371,7 +367,7 @@ Prime Messaging Exception
 
 ### Account Suspended
 
-```text
+```plaintext
 Unable to send email via JavaMail
 
 Prime Messaging Exception
@@ -382,7 +378,7 @@ Some providers automatically disable your account at registration. Contact suppo
 
 ### Socket Timeout
 
-```text
+```plaintext
 Error:
 
 Unable to send email via JavaMail
@@ -396,7 +392,7 @@ You may need to change the port number. Try `587`.
 
 ### Domain Not Verified
 
-```text
+```plaintext
 Unable to send email via JavaMail
 
 Prime Messaging Exception
@@ -409,14 +405,14 @@ Be aware that DNS records take time to change. If you make a change to a record 
 
 ### Email Address Not Verified
 
-```text
+```plaintext
 Unable to send email via JavaMail
 
 Prime Messaging Exception
 554 Message rejected: Email address is not verified. The following identities failed the check in region EU-WEST-1: address/fa@simplelogin.com
 ```
 
-```text
+```plaintext
 Unable to send email via JavaMail
 
 Prime Messaging Exception
@@ -440,7 +436,7 @@ Try the following:
 This section lists some recommendations by SMTP providers for transactional emails. Your primary aim should be to keep your sender reputation high to avoid emails being marked as spam.
 
 - Ensure that you add all SPF, DKIM, DMARC, and MX records to your DNS records.
-- For extra trustworthiness and brand building, set up Brand Indicators for Message Identification (BIMI), which enables email inboxes to display a brand’s logo next to the company’s authenticated email messages.
+- For extra trustworthiness and brand building, set up Brand Indicators for Message Identification (BIMI), which enables email inboxes to display a brand's logo next to the company's authenticated email messages.
 - Send emails only to people who have requested to receive them. Always first send a confirmation link to confirm their address is valid.
 - Follow your SMTP provider's documentation to configure analytics for your emails (click tracking).
 - Track your emails and adjust your sending based on feedback from ESPs and recipients. Don't send emails to recipients who have unsubscribed or complained of spam. Monitor the results of email sending on your SMTP provider's analytics web page.

@@ -9,7 +9,6 @@ categories: Tutorial
 tags: cognito, migrations, compare
 excerpt_separator: "{/* more */}"
 ---
-import Aside from "../../components/Aside.astro";
 
 Amazon Cognito is a serverless CIAM service from Amazon Web Services with deep AWS integration. It offers authentication and authorization and supports a number of OAuth grants, including the Authorization Code grant, the Implicit grant and the Client Credentials grant.
 
@@ -51,7 +50,7 @@ If you need Cognito's unique deep integration with AWS, including the ability to
 
 After you have decided to migrate from Amazon Cognito, the first decision you'll need to make is "Am I okay with forcing all my users to reset their passwords?" This unfortunate choice is required since Cognito won't allow you to export password hash.
 
-<Aside type="note" nodark="true">
+<Aside type="note">
 This blog post gives general guidance on migration off of Amazon Cognito to any other auth provider. If you are looking for step by step instructions on how to migrate from Amazon Cognito to FusionAuth, please review our [Amazon Cognito migration guide](/docs/lifecycle/migrate-users/provider-specific/cognito).
 </Aside>
 

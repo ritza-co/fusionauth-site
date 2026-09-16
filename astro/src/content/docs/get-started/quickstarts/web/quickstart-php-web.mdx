@@ -1,20 +1,18 @@
 ---
 title: PHP
-description: Quickstart integration of PHP web application with FusionAuth.
+description: QuickStart integration of PHP web application with FusionAuth.
+htmlTitle: FusionAuth QuickStart for PHP
 url: https://github.com/FusionAuth/fusionauth-quickstart-php-web
 codeRoot: https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-php-web/main
+icon: /img/icons/php.svg
 ---
-import Aside from 'src/components/Aside.astro';
 import DockerSpinup from 'src/components/quickstarts/DockerSpinup.astro';
 import Intro from 'src/components/quickstarts/Intro.astro';
 import {Content as LoginArchitectureWeb} from 'src/components/quickstarts/LoginArchitectureWeb.mdx';
 import NextSteps from 'src/components/quickstarts/NextSteps.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
-import RemoteValue from 'src/components/RemoteValue/RemoteValue.astro';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
 
-<Intro technology="PHP"
-       repositoryUrl={frontmatter.url}/>
+<Intro technology="PHP" repositoryUrl={frontmatter.url}/>
 
 <Aside type="note">
   When developing PHP web applications, it's advisable to consider using a framework. Frameworks provide a structured environment, streamlining development and enhancing code organization. With built-in security features, community support, and time-saving tools, frameworks offer a robust foundation for efficient and maintainable projects.
@@ -22,7 +20,7 @@ import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.
 
 ## Prerequisites
 
-For this quickstart, you'll need:
+For this QuickStart, you'll need:
 
 * [PHP](https://www.php.net/downloads.php) 8.1+
 * [Composer](https://getcomposer.org/)
@@ -40,8 +38,11 @@ Start with getting FusionAuth up and running and creating a new PHP application.
 
 First, grab the code from the repository and change to that directory.
 
-```shell
+```shell-session
 git clone https://github.com/FusionAuth/fusionauth-quickstart-php-web.git
+```
+
+```shell-session
 cd fusionauth-quickstart-php-web
 ```
 
@@ -60,7 +61,7 @@ While this guide builds a new PHP project, you can use the same method to integr
 <Aside type="note">
   If you simply want to run the application and not create your own, there is a completed version in the `complete-application` directory. You can use the following commands to get it up and running.
 
-  ```shell
+  ```shell-session
   cd complete-application
   composer install
   php -S localhost:9012 -t public
@@ -88,7 +89,7 @@ Authentication in PHP is managed by [FusionAuth community member Jerry Hopper's 
 
 Create an `.env` file within `your-application` directory and insert the following lines.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/.env"}/>
+<ExtractedCode src="quickstart-php-web/complete-application/.env" lang="shell"/>
 
 This tells PHP where to find and connect to FusionAuth.
 
@@ -98,15 +99,13 @@ The login file is based almost exactly on Jerry Hopper's code, but is split into
 
 Create a `public` directory within `your-application`.
 
-```shell
+```shell-session
 mkdir public
 ```
 
 In the `public` directory, create a `login.php` file and insert the following code.
 
-<RemoteCode
-  url={frontmatter.codeRoot + "/complete-application/public/login.php"}
-  lang="php"/>
+<ExtractedCode src="quickstart-php-web/complete-application/public/login.php" lang="php"/>
 
 This setup code:
 
@@ -129,9 +128,7 @@ The login page handles both the initial user request to start the login process 
 
 Logging out is much simpler. Create a `logout.php` file in the `public` directory and insert the following code.
 
-<RemoteCode
-  url={frontmatter.codeRoot + "/complete-application/public/logout.php"}
-  lang="php"/>
+<ExtractedCode src="quickstart-php-web/complete-application/public/logout.php" lang="php"/>
 
 This code terminates the session on the server for this user and redirects them back to the home page.
 
@@ -143,36 +140,29 @@ Now that authentication is done, the last task is to create example pages that a
 
 Create a `static` directory within `your-application/public` directory.
 
-```shell
+```shell-session
 mkdir public/static
 ```
 
-Copy images from the example app.
+Copy the money image from the example app.
 
-```shell
+```shell-session
 cp ../complete-application/public/static/money.jpg public/static/money.jpg
-cp ../complete-application/public/static/changebank.svg public/static/changebank.svg
 ```
 
 Create a `changebank.css` stylesheet file in `your-application/public/static` directory and add the following code to it.
 
-<RemoteCode
-  url={frontmatter.codeRoot + "/complete-application/public/static/changebank.css"}
-  lang="css"/>
+<ExtractedCode src="quickstart-php-web/complete-application/public/static/changebank.css" lang="css"/>
 
 Next, you'll create three more pages in the `your-application/public` directory. First create the home page, `index.php`, and paste the following code into it.
 
-<RemoteCode
-  url={frontmatter.codeRoot + "/complete-application/public/index.php"}
-  lang="php"/>
+<ExtractedCode src="quickstart-php-web/complete-application/public/index.php" lang="php"/>
 
 The index page contains nothing to note except a link to the login page `<a href="login.php">`.
 
 Next, create an `account.php` file and paste the following code into it.
 
-<RemoteCode
-  url={frontmatter.codeRoot + "/complete-application/public/account.php"}
-  lang="php"/>
+<ExtractedCode src="quickstart-php-web/complete-application/public/account.php" lang="php"/>
 
 The account page displays the user's email from FusionAuth with `<p class="header-email"><?= $_SESSION['email'] ?></p>`.
 
@@ -180,9 +170,7 @@ The account page is only visible to logged in users. If a session Id is not foun
 
 Finally, create a `change.php` file and paste the following code into it.
 
-<RemoteCode
-  url={frontmatter.codeRoot + "/complete-application/public/change.php"}
-  lang="php"/>
+<ExtractedCode src="quickstart-php-web/complete-application/public/change.php" lang="php"/>
 
 In addition to verifying login, the code at the top of the change page checks if the CSRF token is valid on POST requests. The CSRF token is hidden in the form in the HTML, `<input type="hidden" name="csrftoken" value="<?= $_SESSION["csrftoken"] ?>" />`. Although any attacker can make a POST request on behalf of a logged in user, a server will reject a GET request if it's not made from the same origin (URL). Including this CSRF token in your page requires an attacker to make a GET request to obtain it before making the POST request, which isn't possible.
 
@@ -213,7 +201,7 @@ Browse to the app at http://localhost:9012. Log in using `richard@example.com` a
 
 ## Troubleshooting
 
-- I get "This site can’t be reached localhost refused to connect" when I click the login button.
+- I get "This site can't be reached localhost refused to connect" when I click the login button.
 
 Ensure FusionAuth is running in the Docker container. You should be able to log in as the admin user `admin@example.com` with the password `password` at [http://localhost:9011/admin](http://localhost:9011/admin).
 
@@ -229,7 +217,7 @@ Browse to the home page, log out, and try to log in again. If that still doesn't
 
 You can always pull down a complete running application and compare what's different.
 
-```shell
+```shell-session
 git clone https://github.com/FusionAuth/fusionauth-quickstart-php-web.git
 cd fusionauth-quickstart-php-web
 docker compose up

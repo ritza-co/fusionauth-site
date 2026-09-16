@@ -1,17 +1,12 @@
 ---
-title: OAuth Scopes
+title: Access Control with OAuth Scopes
 description: Learn about OAuth scope policy configuration, managing custom scopes, and using scopes in an OAuth2 workflow.
 tags: api consents
 ---
-import AdvancedPlanBlurb from 'src/content/docs/_shared/_advanced-plan-blurb.mdx';
 import ApplicationScopesSettings from 'src/content/docs/_shared/_application-scopes-settings.mdx';
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 import OAuthScopeMessageLookup from 'src/content/docs/_shared/_oauth-scope-message-lookup.mdx';
 
-<Aside type="version">
-  Available since `1.50.0`
-</Aside>
+<AvailableSince since="1.50.0"/>
 
 OAuth scopes provide you with another dimension for applying access controls to applications. Scopes are requested by OAuth clients (applications) during authorization and optionally consented to by the user providing the authorization. The consented scopes make their way into the access token granted to the client and can be checked when the client uses the access token to access protected resources.
 
@@ -34,7 +29,7 @@ The <Breadcrumb>Scopes</Breadcrumb> tab allows you to configure the application'
 The application's **Scope handling policy** controls behavior when populating access tokens, Id tokens, and the UserInfo response.
 
 The `Compatibility` option is meant to maintain backwards compatibility with versions of FusionAuth before `1.50.0` or when the integration does not support the requirements of `Strict` mode.
-The `Strict` option follows specification recommendations by populating access tokens, Id tokens, and the UserInfo response based on the requested and consented scopes. It also restricts the tokens the [UserInfo](/docs/apis/oauth#userinfo) endpoint will accept. New applications default to the `Strict` policy.
+The `Strict` option follows specification recommendations by populating access tokens, Id tokens, and the UserInfo response based on the requested and consented scopes. It also restricts the tokens the [UserInfo](/docs/apis/oauth/userinfo) endpoint will accept. New applications default to the `Strict` policy.
 
 The [JWT populate](/docs/extend/code/lambdas/jwt-populate) and [UserInfo populate](/docs/extend/code/lambdas/userinfo-populate) lambdas can be used to override the claims in both configurations.
 
@@ -89,7 +84,7 @@ These scope names cannot be used to define [custom scopes](/docs/get-started/cor
 The `openid` scope is used to request identity information according to the [OpenID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
 
 The `offline_access` scope is used to request a refresh token on the authorization response.
-Its behavior is controlled by the **Generate refresh tokens** and **Enabled grants** configurations on the application [<Breadcrumb>OAuth</Breadcrumb> tab](/docs/get-started/core-concepts/applications#oauth).
+Its behavior is controlled by the **Generate refresh tokens** and **Enabled grants** configurations on the application [<Breadcrumb>OAuth</Breadcrumb> tab](/docs/get-started/core-concepts/types/applications#oauth).
 
 ### Reserved Prefixes
 
@@ -98,7 +93,7 @@ Scope names starting with these prefixes cannot be used when defining [custom sc
 
 ## Consent Mode
 
-<AdvancedPlanBlurb />
+<PlanBlurb plan="essentials" />
 
 An application whose **Relationship** has been configured as `Third-party` (which requires a paid plan) has the option to prompt users to consent to the requested OAuth scopes in order to complete the OAuth workflow.
 The [consent prompt](#consent-prompt) is a mechanism for users to limit the information shared with third-party applications.
@@ -111,7 +106,7 @@ The **Consent mode** controls when users will be prompted to grant consent to th
 * `Remember decision` - Remember previous consents; only prompt if the choice expires or if the requested or required scopes have changed. The duration of this persisted choice is controlled by the tenant's **Remember OAuth scope consent choice** configuration.
 * `Never prompt` - The user will be never be prompted to consent to requested OAuth scopes. Permission will be granted implicitly as if this were a `First-party` application. This configuration is meant for testing purposes only and should not be used in production.
 
-The `Remember decision` option requires some additional context. The duration that a user's decision is persisted can be controlled on the tenant's [Advanced](/docs/get-started/core-concepts/tenants#advanced) tab using the **Remember scope consent choice** configuration.
+The `Remember decision` option requires some additional context. The duration that a user's decision is persisted can be controlled on the tenant's [Advanced](/docs/get-started/core-concepts/types/tenants#advanced) tab using the **Remember scope consent choice** configuration.
 After a user has made a consent decision for an application configured with the `Remember decision` option, the user will only be prompted again when any of the following is true:
 
 * Their persisted choice has expired based on the tenant's configured duration.
@@ -141,7 +136,7 @@ Users are prompted for consent using the **OAuth consent prompt** [themed](/docs
 
 The page informs the user of the requested OAuth scopes. Required scopes are listed first with a checkmark icon and cannot be de-selected. Optional scopes use a checkbox form element to allow the user to decline consent to the corresponding scope.
 
-Clicking the <Breadcrumb>Allow</Breadcrumb> button will complete the OAuth workflow and grant consent to the selected scopes. The consented scopes will be added to the `scope` claim on the resulting tokens. Clicking the <Breadcrumb>Cancel</Breadcrumb> button will terminate the OAuth workflow and send the user to the `redirect_uri` with an [OAuth error](/docs/apis/oauth#oautherror).
+Clicking the <Breadcrumb>Allow</Breadcrumb> button will complete the OAuth workflow and grant consent to the selected scopes. The consented scopes will be added to the `scope` claim on the resulting tokens. Clicking the <Breadcrumb>Cancel</Breadcrumb> button will terminate the OAuth workflow and send the user to the `redirect_uri` with an [OAuth error](/docs/apis/oauth/oauth-error).
 
 The `OAuth2 consent` template can be customized like any other [themed](/docs/customize/look-and-feel/) page and also features an expanded message lookup policy in order to allow customizing scope consent messages and details without requiring a separate theme for each verbiage change.
 

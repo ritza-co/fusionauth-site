@@ -4,10 +4,6 @@ description: Learn about customer support operations on users in the FusionAuth 
 ---
 import AdminUserForm from 'src/content/docs/_shared/_admin-user-form.mdx';
 import AdminUserRegistrationForm from 'src/content/docs/_shared/_admin-user-registration-form.mdx';
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import Icon from 'src/components/icon/Icon.astro';
-import PremiumPlanBlurb from 'src/content/docs/_shared/_premium-plan-blurb.mdx';
 
 This guide provides step-by-step instructions for basic operations in the FusionAuth admin UI. This is intended for customer service representatives supporting end users with login problems, resetting passwords or removing account lockout, and resolving other authentication related issues.
 
@@ -15,7 +11,7 @@ This guide also contains information on customizing the admin UI forms which may
 
 ## Adding Users And Assigning Roles In The FusionAuth Admin UI
 
-The FusionAuth administrative user interface allows you to assign one of several built-in roles to users registered with the FusionAuth admin application. These roles control access to functionality within the FusionAuth administrative user interface. Refer to the  [roles](/docs/get-started/core-concepts/roles#fusionauth-admin-ui-roles) documentation for more information about roles in FusionAuth.
+The FusionAuth administrative user interface allows you to assign one of several built-in roles to users registered with the FusionAuth admin application. These roles control access to functionality within the FusionAuth administrative user interface. Refer to the  [roles](/docs/get-started/core-concepts/types/roles#fusionauth-admin-ui-roles) documentation for more information about roles in FusionAuth.
 
 Customer service reps are likely to be assigned one of two roles:
 
@@ -36,7 +32,7 @@ Click on the green <Icon name="plus" /> icon to open the "Add User" form:
 
 ![image](/img/docs/operate/deploy/new-user-form.png)
 
-Complete the fields for the new user. You can choose to set the user’s password or let the user set their own password by toggling the <Breadcrumb>Send email to set up password</Breadcrumb> button.
+Complete the fields for the new user. You can choose to set the user's password or let the user set their own password by toggling the <Breadcrumb>Send email to set up password</Breadcrumb> button.
 
 Click on the <Icon name="save" /> icon in the top right corner to save.
 
@@ -214,7 +210,7 @@ Do not combine `mfa_deleter` with roles that can modify tenant configuration (fo
 
 ## Customizing Admin UI Forms
 
-<PremiumPlanBlurb />
+<PlanBlurb plan="starter" />
 
 You can customize the forms and fields used in the FusionAuth admin UI. While the instructions below document how to do so using the admin UI, you can also create and manage these forms via [the Form APIs](/docs/apis/custom-forms/forms).
 
