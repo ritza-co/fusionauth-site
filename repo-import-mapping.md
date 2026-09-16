@@ -24,7 +24,7 @@ This file tracks which repositories need to be imported into `astro/extractedcod
 ```bash
 # Search for repositoryUrl.txt files across all branches
 for branch in $(git branch -a --format='%(refname:short)'); do
-  git ls-tree -r "$branch" --name-only 2>/dev/null | grep "repositoryUrl.txt$" | grep -E "(extractedcode|localcode|code-example-repositories)"
+   git ls-tree -r "$branch" --name-only 2>/dev/null | grep "repositoryUrl.txt$" | grep -E "(extractedcode|code-example-repositories)"
 done
 ```
 
