@@ -1,4 +1,4 @@
-#tag::baseApplication[]
+# :snippet-start: baseApplication
 import json
 import math
 from os import environ as env
@@ -36,9 +36,9 @@ if __name__ == "__main__":
 
 def get_logout_url():
   return env.get("ISSUER") + "/oauth2/logout?" + urlencode({"client_id": env.get("CLIENT_ID")},quote_via=quote_plus)
-#end::baseApplication[]
+# :snippet-end:
 
-#tag::homeRoute[]
+# :snippet-start: homeRoute
 @app.route("/")
 def home():
   if request.cookies.get(ACCESS_TOKEN_COOKIE_NAME, None) is not None:
@@ -46,19 +46,19 @@ def home():
     return redirect("/account")
 
   return render_template("home.html")
-#end::homeRoute[]
+# :snippet-end:
 
 
-#tag::loginRoute[]
+# :snippet-start: loginRoute
 @app.route("/login")
 def login():
   return oauth.FusionAuth.authorize_redirect(
     redirect_uri=url_for("callback", _external=True)
   )
-#end::loginRoute[]
+# :snippet-end:
 
 
-#tag::callbackRoute[]
+# :snippet-start: callbackRoute
 @app.route("/callback")
 def callback():
   token = oauth.FusionAuth.authorize_access_token()
@@ -71,10 +71,10 @@ def callback():
   session["user"] = token["userinfo"]
 
   return resp
-#end::callbackRoute[]
+# :snippet-end:
 
 
-#tag::logoutRoute[]
+# :snippet-start: logoutRoute
 @app.route("/logout")
 def logout():
   session.clear()
@@ -85,13 +85,13 @@ def logout():
   resp.delete_cookie(USERINFO_COOKIE_NAME)
 
   return resp
-#end::logoutRoute[]
+# :snippet-end:
 
 
 #
 # This is the logged in Account page.
 #
-#tag::accountRoute[]
+# :snippet-start: accountRoute
 @app.route("/account")
 def account():
   access_token = request.cookies.get(ACCESS_TOKEN_COOKIE_NAME, None)
@@ -104,13 +104,13 @@ def account():
     "account.html",
     session=json.loads(request.cookies.get(USERINFO_COOKIE_NAME, None)),
     logoutUrl=get_logout_url())
-#end::accountRoute[]
+# :snippet-end:
 
 
 #
 # Takes a dollar amount and converts it to change
 #
-#tag::makeChangeRoute[]
+# :snippet-start: makeChangeRoute
 @app.route("/make-change", methods=['GET', 'POST'])
 def make_change():
   access_token = request.cookies.get(ACCESS_TOKEN_COOKIE_NAME, None)
@@ -145,4 +145,4 @@ def make_change():
     session=json.loads(request.cookies.get(USERINFO_COOKIE_NAME, None)),
     change=change,
     logoutUrl=get_logout_url())
-#end::makeChangeRoute[]
+# :snippet-end:

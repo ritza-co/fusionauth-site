@@ -40,7 +40,7 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    //tag::appAuthRedirectScheme[]
+    // :snippet-start: appAuthRedirectScheme
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.fusionauth.flutterdemo"
@@ -54,7 +54,7 @@ android {
             'appAuthRedirectScheme': 'com.fusionauth.flutterdemo'
         ]
     }
-    //end::appAuthRedirectScheme[]
+    // :snippet-end:
 
     buildTypes {
         release {
