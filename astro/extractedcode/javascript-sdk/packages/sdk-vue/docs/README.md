@@ -30,9 +30,7 @@ Please also use ``` instead of indenting for code blocks. The backticks are tran
 
 # Overview
 
-<!--
-:snippet-start: forDocSiteVueDocs
--->
+<!-- :snippet-start: forDocSiteVueDocs -->
 
 This SDK provides helpful methods and reactive values that integrate with FusionAuth to help automatically manage authentication state in your Vue app.
 
@@ -287,9 +285,7 @@ With the CSS variables, you can customize the buttons to match your app’s styl
 
 These docs are generated with [typedoc](https://typedoc.org/) and configured with [typedoc-plugin-markdown](https://www.npmjs.com/package/typedoc-plugin-markdown).
 
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 Use backticks for code in this readme. This readme is included on the FusionAuth website, and backticks show the code in the best light there.
 

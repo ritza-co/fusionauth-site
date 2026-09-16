@@ -1,7 +1,5 @@
 # Contributing to FusionAuth Homebrew Tap
-<!--
-:snippet-start: forDocSiteContributing
--->
+<!-- :snippet-start: forDocSiteContributing -->
 Thank you for your interest in contributing to FusionAuth Homebrew! This document provides guidelines and instructions for contributing to this project.
 
 Please only report issues for the FusionAuth Homebrew itself if you have an issue with documentation, a client library or fusionauth itself follow [these instructions.](https://github.com/FusionAuth/fusionauth-issues)
@@ -78,14 +76,10 @@ For more comprehensive testing, you can refer to the workflow defined in `.githu
 If you have any questions about contributing, feel free to open an issue asking for clarification.
 
 Thank you for helping to improve FusionAuth's Homebrew.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Release
-<!--
-:snippet-start: forDocSiteRelease
--->
+<!-- :snippet-start: forDocSiteRelease -->
 The maintainers manage the release process. If you have questions about the release process, please open an issue.
 
 ## Release Process
@@ -101,6 +95,4 @@ Without using Savant
 ```bash
 ./publish.sh <version>
 ```
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->

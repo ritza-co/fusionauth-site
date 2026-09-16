@@ -16,9 +16,7 @@ The following examples assume you will be installing `fusionauth-app`. And `post
 
 ## Prerequisites
 
-<!--
-:snippet-start: forDocSitePrerequisites
--->
+<!-- :snippet-start: forDocSitePrerequisites -->
 FusionAuth requires a database and a search engine. The recommended database is PostgreSQL, and the recommended search engine is OpenSearch.
 
 > [!IMPORTANT]
@@ -57,15 +55,11 @@ brew install opensearch
 brew services info opensearch
 brew services start opensearch
 ```
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 ## Install FusionAuth
 
-<!--
-:snippet-start: forDocSiteInstall
--->
+<!-- :snippet-start: forDocSiteInstall -->
 To install FusionAuth using Homebrew, you can use the following commands:
 
 ```bash
@@ -73,15 +67,11 @@ brew tap fusionauth/fusionauth
 brew trust fusionauth/fusionauth
 brew install fusionauth-app
 ```
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 ### Silent Configuration
 
-<!--
-:snippet-start: forDocSiteConfiguration
--->
+<!-- :snippet-start: forDocSiteConfiguration -->
 After installing FusionAuth, you can configure it before starting the service to run a silent configuration. The configuration file is located at `$(brew --prefix)/etc/fusionauth/fusionauth.properties`.
 
 ```bash
@@ -98,15 +88,11 @@ echo "search.servers=http://localhost:9200" >> $(brew --prefix)/etc/fusionauth/f
 # Check the full configuration
 cat $(brew --prefix)/etc/fusionauth/fusionauth.properties
 ```
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 ## Manage FusionAuth
 
-<!--
-:snippet-start: forDocSiteManage
--->
+<!-- :snippet-start: forDocSiteManage -->
 After installing and configuring FusionAuth, you can manage the service using Homebrew.
 
 ### Start
@@ -146,16 +132,12 @@ To stop the FusionAuth service, you can use:
 ```bash
 brew services stop fusionauth-app
 ```
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 
 ## Uninstall FusionAuth
 
-<!--
-:snippet-start: forDocSiteUninstall
--->
+<!-- :snippet-start: forDocSiteUninstall -->
 To uninstall FusionAuth, you can use the following command:
 
 ```bash
@@ -174,6 +156,4 @@ If you want to remove the configuration and log files as well, you can search fo
 ```bash
 brew untap fusionauth/fusionauth
 ```
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->

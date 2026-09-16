@@ -7,9 +7,7 @@
 ## Intro
 
 
-<!--
-:snippet-start: forDocSite
--->
+<!-- :snippet-start: forDocSite -->
 
 This gem is the Ruby client library that helps connect Ruby applications
 to the FusionAuth (<https://fusionauth.io>) Identity and User Management
@@ -195,9 +193,7 @@ handle_response(response)
 Documentation can be found at
 [doc](https://github.com/FusionAuth/fusionauth-ruby-client/tree/master/doc).
 
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 ## Questions and support
 

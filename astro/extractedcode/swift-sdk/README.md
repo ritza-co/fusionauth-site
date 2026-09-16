@@ -33,9 +33,7 @@ Please also use ``` instead of indenting for code blocks. The backticks are tran
 -->
 
 # Overview
-<!--
-:snippet-start: forDocSiteOverview
--->
+<!-- :snippet-start: forDocSiteOverview -->
 This SDK allows you to use OAuth 2.0 and OpenId Connect functionality in an iOS app with FusionAuth as the
 authorization server. It also provides a Token Manager to store, refresh, and retrieve tokens.
 
@@ -50,15 +48,11 @@ Following OAuth 2.0 and OpenID Connect functionality are covered:
 [AppAuth-iOS](https://github.com/openid/AppAuth-iOS) is used for the OAuth 2.0 Authorization Code Grant flow and OpenID Connect functionality.
 
 The SDK is written in Swift and compatible with Object-C.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Getting Started
 
-<!--
-:snippet-start: forDocSiteGettingStarted
--->
+<!-- :snippet-start: forDocSiteGettingStarted -->
 To use the FusionAuth iOS SDK, add this repository as a dependency.
 
 By default the SDK uses the `FusionAuth.plist` file in the main bundle to read the configuration. The file should contain the following keys:
@@ -128,15 +122,11 @@ struct QuickstartApp: App {
 }
 ```
 
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Usage
 
-<!--
-:snippet-start: forDocSiteUsage
--->
+<!-- :snippet-start: forDocSiteUsage -->
 To start the OAuth 2.0 Authorization Code Grant, you can use the `oauth()` function on the `AuthorizationManager` to
 retrieve the `OAuthAuthorizationService`:
 
@@ -190,50 +180,32 @@ do {
 ```
 
 If the user is signed out, the auth state will be cleared.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Example App
 
-<!--
-:snippet-start: forDocSiteExampleApp
--->
+<!-- :snippet-start: forDocSiteExampleApp -->
 See the [FusionAuth iOS SDK Example](https://github.com/FusionAuth/fusionauth-quickstart-swift-ios-native) for a functional example of an iOS client that uses the SDK.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Quickstart
 
-<!--
-:snippet-start: forDocSiteQuickstart
--->
+<!-- :snippet-start: forDocSiteQuickstart -->
 See the [FusionAuth iOS Quickstart](https://fusionauth.io/docs/quickstarts/quickstart-swift-ios-native/) for a full tutorial on using FusionAuth and iOS.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Documentation
 
-<!--
-:snippet-start: forDocSiteDocumentation
--->
+<!-- :snippet-start: forDocSiteDocumentation -->
 See the latest [Full library documentation](https://github.com/FusionAuth/fusionauth-swift-sdk/blob/main/Documentation/Reference/README.md) for the complete documentation of the SDK.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Contributing
-<!--
-:snippet-start: forDocSiteContributing
--->
+<!-- :snippet-start: forDocSiteContributing -->
 We hope you love using FusionAuth Swift SDK, but in case you encounter a bug or an issue with the SDK, please do let us know.
 
 Please follow the detailed [Contributing](CONTRIBUTING.md) documentation.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Upgrade Policy
 

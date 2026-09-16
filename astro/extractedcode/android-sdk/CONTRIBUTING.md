@@ -1,7 +1,5 @@
 # Contributing
-<!--
-:snippet-start: forDocSiteContributing
--->
+<!-- :snippet-start: forDocSiteContributing -->
 We hope you love using FusionAuth Android SDK, but in case you encounter a bug or an issue with the SDK, please do let us know.
 
 Please only report issues for the FusionAuth Android SDK itself if you have an issue with documentation or a client library follow [these instructions.](https://github.com/FusionAuth/fusionauth-issues)
@@ -73,14 +71,10 @@ When you are ready to submit your pull request, visit the main repository on Git
 If you're creating a pull request for an issue, please include `Closes #XXX` in the message body where `#XXX` is the issue you're fixing. For example, `Closes #42` would close issue #42.
 
 After you have submitted your pull request, several checks will be run to ensure the changes meet the project's guidelines. If they do, the pull request will be reviewed by a maintainer and subsequently merged.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Release
-<!--
-:snippet-start: forDocSiteRelease
--->
+<!-- :snippet-start: forDocSiteRelease -->
 The release proceeds through three sequential steps: [Pre-Release Process](#pre-release-process), [Release Process](#release-process) and [Quickstart Release Process](#quickstart-release-process). Where [Pre-Release Process](#pre-release-process) gets repeated untill a stable release is possible.
 
 ## Pre-Release Process
@@ -120,6 +114,4 @@ After the release is published, update the version in the [FusionAuth Android Qu
 - Commit the changes with the commit message `chore(release): <version> 🎉`.
 - Create a new tag `<version>`.
 - Push the changes and the tag to the repository.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->

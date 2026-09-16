@@ -8,19 +8,13 @@ A full tutorial on FusionAuth Android SDK Test.
     - [Test Automation](#test-automation)
 
 # Testing
-<!--
-:snippet-start: forDocSiteTesting
--->
+<!-- :snippet-start: forDocSiteTesting -->
 Using OAuth2 with a browser popup for Authentication can be tricky to use during automated testing in an [Android Emulator](https://developer.android.com/studio/run/emulator). We made some efforts in the development of the FusionAuth Android SDK and made the test available in this Quickstart as well.
 
 In this doc, we go in to detail on how to create the test with a real FusionAuth backend and what to look for in an automated testing environment.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 ## Test Cases
-<!--
-:snippet-start: forDocSiteTest
--->
+<!-- :snippet-start: forDocSiteTest -->
 We intend to test all use cases relevant for this SDK, which include: `Login` `Refresh Token` `User Info` `Logout` in combination with certain [Test Data](#test-data).
 
 At first glance, these may seem like trivial tests, but we are seeking specific results for each use case and use them repeatedly in automated testing.
@@ -45,17 +39,13 @@ At first glance, these may seem like trivial tests, but we are seeking specific 
 * Does it invalidate the user session?
 * Does it return to the Login screen?
 
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 ## Test Data
 
 All the relevant data for testing is defined in FusionAuth which includes multiple flavors of Applicatoins and Users.
 
 ### Kickstart Details
-<!--
-:snippet-start: forDocSiteKickstart
--->
+<!-- :snippet-start: forDocSiteKickstart -->
 To be able to test the different scenarios FusionAuth will be initially configured with these settings:
 
 * An update to the Tenant Theme including the ChangeBank Theme to make the look and feel of the login the same as the ChangeBank App.
@@ -66,13 +56,9 @@ To be able to test the different scenarios FusionAuth will be initially configur
 * And an example user without access `erlich@example.com` to the `Example Android App`
 * Your FusionAuth admin username is `admin@example.com` and your password is `password`.
 * Your fusionAuthBaseUrl to access FusionAuth is `http://localhost:9011/`
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 ## Test Automation
-<!--
-:snippet-start: forDocSiteE2ETest
--->
+<!-- :snippet-start: forDocSiteE2ETest -->
 The Quickstart includes a [Full End 2 End Test](complete-application/app/src/androidTest/java/io/fusionauth/sdk/FullEnd2EndTest.kt) that uses all the different functionalities provided by the example App.
 
 ### Test Automation Prerequisites
@@ -169,6 +155,4 @@ The constants used in the test include:
 - `TIMEOUT_MILLIS`: The duration for which the test waits for the UI elements to appear in the system, expressed in milliseconds.
 
 Please note that the username, password, and timeouts would typically be environment-specific and not part of the test code.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->

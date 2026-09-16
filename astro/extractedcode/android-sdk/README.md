@@ -32,9 +32,7 @@ Please also use ``` instead of indenting for code blocks. The backticks are tran
 -->
 
 # Overview
-<!--
-:snippet-start: forDocSiteOverview
--->
+<!-- :snippet-start: forDocSiteOverview -->
 This SDK allows you to use OAuth 2.0 and OpenId Connect functionality in an Android app with FusionAuth as the
 authorization server. It also provides a Token Manager to store, refresh, and retrieve tokens.
 
@@ -49,15 +47,11 @@ The following OAuth 2.0 and OpenID Connect functionality are covered:
 [AppAuth-Android](https://github.com/openid/AppAuth-Android) is used for the OAuth 2.0 Authorization Code Grant flow and OpenID Connect functionality.
 
 The SDK is written in Kotlin and is compatible with Java.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Getting Started
 
-<!--
-:snippet-start: forDocSiteGettingStarted
--->
+<!-- :snippet-start: forDocSiteGettingStarted -->
 To use the FusionAuth Android SDK, add the following dependency to your `build.gradle.kts` file:
 
 ```kotlin
@@ -106,15 +100,11 @@ The `fusionauth_config.json` file should be placed in the `res/raw` directory an
 By default, the SDK uses the `MemoryStorage` for storing tokens. This means that tokens will be lost when the app is
 closed.
 To persist tokens, you can use the `DataStoreStorage` or implement your own `TokenStorage`.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Usage
 
-<!--
-:snippet-start: forDocSiteUsage
--->
+<!-- :snippet-start: forDocSiteUsage -->
 To start the OAuth 2.0 Authorization Code Grant, you can use the `oAuth()` function on the `AuthorizationManager` to
 retrieve the `OAuthAuthorizationService`:
 
@@ -174,50 +164,32 @@ AuthorizationManager
 ```
 
 If the user is signed out, the `LoginActivity` will be opened.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Example App
 
-<!--
-:snippet-start: forDocSiteExampleApp
--->
+<!-- :snippet-start: forDocSiteExampleApp -->
 See the [FusionAuth Android SDK Example](https://github.com/FusionAuth/fusionauth-quickstart-kotlin-android-native) for a functional example of an Android client that uses the SDK.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Quickstart
 
-<!--
-:snippet-start: forDocSiteQuickstart
--->
+<!-- :snippet-start: forDocSiteQuickstart -->
 See the [FusionAuth Android Quickstart](https://fusionauth.io/docs/quickstarts/quickstart-kotlin-android-native) for a full tutorial on using FusionAuth and Android.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Documentation
 
-<!--
-:snippet-start: forDocSiteDocumentation
--->
+<!-- :snippet-start: forDocSiteDocumentation -->
 See the latest [Full library documentation](https://fusionauth.github.io/fusionauth-android-sdk/index.html) for the complete documentation of the SDK.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Contributing
-<!--
-:snippet-start: forDocSiteContributing
--->
+<!-- :snippet-start: forDocSiteContributing -->
 We hope you love using FusionAuth Android SDK, but in case you encounter a bug or an issue with the SDK, please do let us know.
 
 Please follow the detailed [Contributing](CONTRIBUTING.md) documentation.
-<!--
-:snippet-end:
--->
+<!-- :snippet-end: -->
 
 # Upgrade Policy
 
