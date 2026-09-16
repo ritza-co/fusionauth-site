@@ -136,7 +136,6 @@ def webhook():
   return '', 204
 # :snippet-end:
 
-# :snippet-start: videoRoute
 # :snippet-start: createUser
 @app.route("/video")
 def video():
@@ -196,7 +195,6 @@ def video():
     patch_response = client.patch_user(user_id, patch_data).success_response
 # :snippet-end:
     return render_template("video.html")
-# :snippet-end:
 
 # :snippet-start: loginRoute
 @app.route("/login")
