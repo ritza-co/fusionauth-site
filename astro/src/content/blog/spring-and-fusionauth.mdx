@@ -9,7 +9,7 @@ image: /img/blogs/spring-fusionauth/adding-sign-in-spring-web-application-oidc.p
 excerpt_separator: "{/* more */}"
 ---
 import Breadcrumb from 'src/components/Breadcrumb.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 In this tutorial, we'll build a basic Java and [Spring](https://spring.io) web application that does user registration and authentication. You'll use FusionAuth to provide this functionality.
 
@@ -147,7 +147,7 @@ Spring Boot OAuth 2.0 Client has various configuration options through the `appl
 Update the `application.properties` file in the `resources` directory under the `main` source path to read as follows:
 
 {/*
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-java-spring/main/src/main/resources/application.properties" lang="java" />
+<LocalCode src="example-java-spring/src/main/resources/application.properties" lang="java" />
 */}
 
 Replace the values:
@@ -165,7 +165,7 @@ Most of the values can also be found by clicking on the "View" application setti
 Create a `config` directory under the `src/main/java/io/fusionauth/example/spring` source directory. Create a new file named `SecurityConfiguration.java` with the following contents:
 
 {/*
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-java-spring/main/src/main/java/io/fusionauth/example/spring/config/SecurityConfiguration.java" lang="java" />
+<LocalCode src="example-java-spring/src/main/java/io/fusionauth/example/spring/config/SecurityConfiguration.java" lang="java" />
 */}
 
 This adds a [Bean](https://docs.spring.io/spring-framework/docs/current/reference/html/core.html) to hook into the [Spring security filter chain](https://docs.spring.io/spring-security/site/docs/3.0.x/reference/security-filter-chain.html).
@@ -183,13 +183,13 @@ Then we add a few things to the HTTP request chain:
 In the `src/main/java/io/fusionauth/example/spring` source directory, create a new file named `HomeController.java`. Add the following contents to this file:
 
 {/*
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-java-spring/main/src/main/java/io/fusionauth/example/spring/HomeController.java" lang="java" />
+<LocalCode src="example-java-spring/src/main/java/io/fusionauth/example/spring/HomeController.java" lang="java" />
 */}
 
 Under the `src/main/resources/templates` directory, create a new file named `home.html`. Add the following contents to the file:
 
 {/*
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-java-spring/main/src/main/resources/templates/home.html" lang="html" />
+<LocalCode src="example-java-spring/src/main/resources/templates/home.html" lang="html" />
 */}
 
 ## Adding the user page and controller
@@ -199,13 +199,13 @@ We set the `user-info-uri` property in the `application.properties` file and add
 In the `src/main/java/io/fusionauth/example/spring` source directory, create a new file named `UserController.java`. Add the following contents to this file:
 
 {/*
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-java-spring/main/src/main/java/io/fusionauth/example/spring/UserController.java" lang="java" />
+<LocalCode src="example-java-spring/src/main/java/io/fusionauth/example/spring/UserController.java" lang="java" />
 */}
 
 Under the `src/main/resources/templates` directory, create a new file named `user.html`. Add the following contents to the file:
 
 {/*
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-java-spring/main/src/main/resources/templates/user.html" lang="html" />
+<LocalCode src="example-java-spring/src/main/resources/templates/user.html" lang="html" />
 */}
 
 Replace the values in the logout link in the snippet above:

@@ -12,7 +12,7 @@ codeRoot: https://raw.githubusercontent.com/FusionAuth/fusionauth-example-using-
 ---
 import Aside from 'src/components/Aside.astro';
 import Breadcrumb from 'src/components/Breadcrumb.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 In today's content-driven world, a regular requirement is to share content across multiple platforms to maximize reach and engagement. However, managing separate accounts and authentication flows for each platform can be cumbersome. What if you could build an application that allows users to upload videos to both YouTube (Google) and X.com (Twitter) with a single login? This is where FusionAuth's Identity Provider Links feature becomes invaluable.
 
@@ -84,7 +84,7 @@ npm i -D @types/passport-oauth2 @biomejs/biome
 
 Next, create a new file in the `src` directory called `utils.ts` and add the following code:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/src/utils.ts"} lang="typescript"/>
+<LocalCode src="example-using-links-fastify/complete-application/src/utils.ts" lang="typescript" />
 
 The `utils.ts` file contains helper functions that we'll use throughout the application. In our utilities we initialize the `faClient` using the previously installed [FusionAuth TypeScript Client](/docs/sdks/typescript) library which we use later on to `retrievUserLinksByUserId` and `deleteUserLink`.
 
@@ -92,31 +92,31 @@ The `utils.ts` file contains helper functions that we'll use throughout the appl
 
 We'll use EJS to render the views for our application. Create a new file in the `src/plugins` directory called `view.ts` and add the following code:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/src/plugins/view.ts"} lang="typescript"/>
+<LocalCode src="example-using-links-fastify/complete-application/src/plugins/view.ts" lang="typescript" />
 
 The plugin registers the EJS view engine with Fastify and configures the view directory.
 
 Next, create a new file in the root located `templates` directory called `_layout.ejs` and add the following code:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/templates/_layout.ejs"} lang="html"/>
+<LocalCode src="example-using-links-fastify/complete-application/templates/_layout.ejs" lang="html" />
 
 The layout file defines the basic structure of our application.
 
 Next, create a new file in the `templates` directory called `root.ejs` and add the following code:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/templates/root.ejs"} lang="html"/>
+<LocalCode src="example-using-links-fastify/complete-application/templates/root.ejs" lang="html" />
 
 The root template defines the layout for the home page if the user is authenticated.
 
 Finally, create a new file in the `templates` directory called `login.ejs` and add the following code:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/templates/login.ejs"} lang="html"/>
+<LocalCode src="example-using-links-fastify/complete-application/templates/login.ejs" lang="html" />
 
 The login template defines the layout for the login page.
 
 To render the views, we'll need to update the `src/routes/root.ts` file:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/src/routes/root.ts"} lang="typescript"/>
+<LocalCode src="example-using-links-fastify/complete-application/src/routes/root.ts" lang="typescript" />
 
 #### Setting Up Authentication
 
@@ -126,13 +126,13 @@ We'll use Passport to handle authentication.
 
 Create a new file in the `src/plugins` directory called `auth.ts` and add the following code:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/src/plugins/auth.ts"} lang="typescript"/>
+<LocalCode src="example-using-links-fastify/complete-application/src/plugins/auth.ts" lang="typescript" />
 
 The plugin registers the Passport OAuth2 strategy with Fastify and configures the OAuth2 settings.
 
 Next, create a new file in the `src/routes` directory called `auth.ts` and add the following code:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/src/routes/auth.ts"} lang="typescript"/>
+<LocalCode src="example-using-links-fastify/complete-application/src/routes/auth.ts" lang="typescript" />
 
 The routes handle the authentication flow and redirect the user to the login page.
 
@@ -142,13 +142,13 @@ We'll use Fastify Multipart to handle file uploads.
 
 Create a new file in the `src/plugins` directory called `upload.ts` and add the following code:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/src/plugins/multipart.ts"} lang="typescript"/>
+<LocalCode src="example-using-links-fastify/complete-application/src/plugins/multipart.ts" lang="typescript" />
 
 The plugin registers the Fastify Multipart plugin with Fastify and configures the upload settings.
 
 Next, create a new file in the `src/routes` directory called `upload.ts` and add the following code:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/src/routes/upload.ts"} lang="typescript"/>
+<LocalCode src="example-using-links-fastify/complete-application/src/routes/upload.ts" lang="typescript" />
 
 The routes handle the file uploads and posts to the appropriate video platforms.
 
@@ -247,7 +247,7 @@ npm i google-auth-library googleapis
 
 Then create a new file in the `src/links` directory called `youtube.ts` and add the following code:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/src/links/youtube.ts"} lang="typescript"/>
+<LocalCode src="example-using-links-fastify/complete-application/src/links/youtube.ts" lang="typescript" />
 
 The `youtube.ts` file contains the logic for interacting with the YouTube API.
 
@@ -311,13 +311,13 @@ npm i twitter-api-v2
 
 Then create a new file in the `src/links` directory called `twitter.ts` and add the following code:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/src/links/twitter.ts"} lang="typescript"/>
+<LocalCode src="example-using-links-fastify/complete-application/src/links/twitter.ts" lang="typescript" />
 
 #### Stitching It All Together
 
 Create a new file in the `src/links` directory called `index.ts` and add the following code:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/src/links/index.ts"} lang="typescript"/>
+<LocalCode src="example-using-links-fastify/complete-application/src/links/index.ts" lang="typescript" />
 
 The `index.ts` file combines all of the identity provider logic into a single file.
 
@@ -371,7 +371,7 @@ Let's look at how to use these endpoints in our application.
 
 To add linking functionality to the application, create a new file in the `src/routes` directory called `links.ts` and add the following code:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/src/routes/links.ts"} lang="typescript"/>
+<LocalCode src="example-using-links-fastify/complete-application/src/routes/links.ts" lang="typescript" />
 
 The route handles linking and unlinking a user and an identity provider.
 

@@ -33,7 +33,7 @@ We are currently on branch: `draft_bluehawkAllRepos`
 
 ---
 
-## IMPORTED Repos (42)
+## IMPORTED Repos (56)
 
 | Source Repository | Target Folder | Status | Referenced By |
 |---|---|---|---|
@@ -79,6 +79,20 @@ We are currently on branch: `draft_bluehawkAllRepos`
 | FusionAuth/fusionauth-quickstart-rust-actix-web | quickstart-rust-actix | IMPORTED | get-started/quickstarts/web/quickstart-rust-actix-web.mdx |
 | FusionAuth/fusionauth-quickstart-java-springboot-api | quickstart-springboot-api | IMPORTED | get-started/quickstarts/api/quickstart-java-springboot-api.mdx |
 | FusionAuth/fusionauth-quickstart-wordpress-web | quickstart-wordpress-web | IMPORTED | get-started/quickstarts/web/quickstart-wordpress-web.mdx |
+| FusionAuth/fusionauth-example-hostedbackend | example-hostedbackend | IMPORTED | blog/backend-for-frontend.mdx |
+| FusionAuth/fusionauth-example-ruby-on-rails-custom-scopes | example-ruby-on-rails-custom-scopes | IMPORTED | blog/custom-scopes-in-third-party-applications.mdx |
+| FusionAuth/fusionauth-example-dotnet-windowsform-api | example-dotnet-windowsform-api | IMPORTED | blog/get-more-value-out-of-fusionauth.mdx |
+| FusionAuth/fusionauth-example-node-deeplink | example-node-deeplink | IMPORTED | blog/javascript-sdks.mdx |
+| FusionAuth/fusionauth-example-family-api | example-family-api | IMPORTED | blog/modeling-family-and-consents.mdx |
+| FusionAuth/fusionauth-example-firebase-mock-testing-vs-emulation | example-firebase-mock-testing-vs-emulation | IMPORTED | blog/6-indicators-doing-mocking-wrong.mdx |
+| FusionAuth/fusionauth-example-nextjs-single-sign-on | example-nextjs-single-sign-on | IMPORTED | blog/nextjs-single-sign-on.mdx |
+| FusionAuth/fusionauth-example-permify-bulk-check | example-permify-bulk-check | IMPORTED | blog/permify-bulk-permissions-check.mdx |
+| FusionAuth/fusionauth-example-react-fusiondesk | example-react-fusiondesk | IMPORTED | blog/react-example-application.mdx |
+| FusionAuth/fusionauth-example-remix | example-remix | IMPORTED | blog/remix-demo.mdx |
+| FusionAuth/fusionauth-example-react-native-0-71 | example-react-native-0-71 | IMPORTED | blog/securing-react-native-with-oauth.mdx |
+| FusionAuth/fusionauth-example-java-spring | example-java-spring | IMPORTED | blog/spring-and-fusionauth.mdx |
+| FusionAuth/fusionauth-example-to-mock-or-not-mock | example-to-mock-or-not-mock | IMPORTED | blog/to-mock-or-not-mock-auth.mdx |
+| FusionAuth/fusionauth-example-using-links-fastify | example-using-links-fastify | IMPORTED | blog/using-identity-provider-links.mdx |
 
 ## NEEDS_REVIEW Repos (48)
 
@@ -149,7 +163,7 @@ We are currently on branch: `draft_bluehawkAllRepos`
 | FusionAuth/fusionauth-quickstart-php-laravel-api | quickstart-php-laravel-api | IMPORTED_IN_BRANCH | get-started/quickstarts/api/quickstart-php-laravel-api.mdx |
 | FusionAuth/fusionauth-quickstart-ruby-on-rails-web | quickstart-ruby-on-rails-web | IMPORTED_IN_BRANCH | get-started/quickstarts/web/quickstart-ruby-on-rails-web.mdx |
 
-## NOT_REFERENCED Repos (58)
+## NOT_REFERENCED Repos (44)
 
 These repos exist on GitHub but are not referenced in any documentation. They should NOT be imported:
 
@@ -162,16 +176,13 @@ These repos exist on GitHub but are not referenced in any documentation. They sh
 - fusionauth-example-cohort-analysis
 - fusionauth-example-cross-platform-game
 - fusionauth-example-django-single-sign-on
-- fusionauth-example-dotnet-windowsform-api
 - fusionauth-example-express-api
 - fusionauth-example-express-consents
 - fusionauth-example-express-twitter
-- fusionauth-example-family-api
 - fusionauth-example-flutter-dart
 - fusionauth-example-gaming-device-grant
 - fusionauth-example-go-device-code-grant
 - fusionauth-example-go-jwt-microservices
-- fusionauth-example-hostedbackend
 - fusionauth-example-java
 - fusionauth-example-lambda-webhook
 - fusionauth-example-laravel
@@ -180,26 +191,19 @@ These repos exist on GitHub but are not referenced in any documentation. They sh
 - fusionauth-example-netcore
 - fusionauth-example-netcore6
 - fusionauth-example-nextjs-magic-links
-- fusionauth-example-nextjs-single-sign-on
 - fusionauth-example-node
-- fusionauth-example-node-deeplink
 - fusionauth-example-node-services-gateway
 - fusionauth-example-node-services-gateway-jwtauth
 - fusionauth-example-php-connector
 - fusionauth-example-php-webhook
 - fusionauth-example-python-hotspot
-- fusionauth-example-rails-api
 - fusionauth-example-rails-oauth
 - fusionauth-example-react
 - fusionauth-example-react-2.0
-- fusionauth-example-react-fusiondesk
 - fusionauth-example-react-guide
-- fusionauth-example-remix
 - fusionauth-example-ruby-jwt
-- fusionauth-example-ruby-on-rails-custom-scopes
 - fusionauth-example-ruby-tenant-creation
 - fusionauth-example-spring-security
-- fusionauth-example-using-links-fastify
 - fusionauth-example-vercel-vue-deploy
 - fusionauth-example-wordpress-sso
 - fusionauth-javascript-sdk-express
@@ -227,11 +231,11 @@ These repos exist on GitHub but are not referenced in any documentation. They sh
 
 ## Summary
 
-- **IMPORTED**: 42 repos already in astro/extractedcode/
+- **IMPORTED**: 56 repos already in astro/extractedcode/
 - **NEEDS_REVIEW**: 48 repos imported but need human review
 - **IMPORTED_IN_BRANCH**: 10 repos imported in other branches, not yet merged to main
 - **NEEDS_IMPORT**: 0 repos referenced in docs but not yet imported
-- **NOT_REFERENCED**: 58 repos not referenced in any documentation (should not be imported)
+- **NOT_REFERENCED**: 44 repos not referenced in any documentation (should not be imported)
 
 ## Import Process
 

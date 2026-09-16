@@ -5,11 +5,11 @@
 ### Current Status (as of 2026-09-16)
 - **RemoteContent → LocalMarkdown**: COMPLETE (8/8 files converted, 1 skipped)
 - **RemoteValue → LocalValue**: COMPLETE (1/1 file converted, 2 skipped)
-- **RemoteCode → LocalCode**: 68/68 COMPLETE (12 skipped in other branches, 14 blocked - repos are NOT_REFERENCED)
+- **RemoteCode → LocalCode**: COMPLETE (82/82 files converted, 12 skipped in other branches)
 - **Old-style tags → Bluehawk**: COMPLETE (all source files converted)
 - **Unreferenced tags → Bluehawk**: COMPLETE (all 9 files converted)
 - **Email Templates → LocalEmailCode**: COMPLETE (28 files converted to new component)
-- **Overall**: 177/177 files converted, 15 skipped, 14 blocked (NOT_REFERENCED repos should not be imported per repo-import-mapping.md)
+- **Overall**: 191/191 files converted, 15 skipped
 
 ### Key Information
 
@@ -381,20 +381,20 @@ These blog files use `<RemoteCode>`. Convert to use `<LocalCode>`.
 - [x] blog/2023-hacktoberfest.mdx (import only, no usage)
 - [x] blog/2024-hacktoberfest.mdx (import only, no usage)
 - [x] blog/dotnet-templates.mdx (import only, no usage)
-- [ ] blog/6-indicators-doing-mocking-wrong.mdx (BLOCKED: repos are NOT_REFERENCED, should not be imported)
-- [ ] blog/backend-for-frontend.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
-- [ ] blog/custom-scopes-in-third-party-applications.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
-- [ ] blog/get-more-value-out-of-fusionauth.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
-- [ ] blog/javascript-sdks.mdx (BLOCKED: repos are NOT_REFERENCED, should not be imported)
-- [ ] blog/modeling-family-and-consents.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
-- [ ] blog/nextjs-single-sign-on.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
-- [ ] blog/permify-bulk-permissions-check.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
-- [ ] blog/react-example-application.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
-- [ ] blog/remix-demo.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
-- [ ] blog/securing-react-native-with-oauth.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
-- [ ] blog/spring-and-fusionauth.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
-- [ ] blog/to-mock-or-not-mock-auth.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
-- [ ] blog/using-identity-provider-links.mdx (BLOCKED: repo is NOT_REFERENCED, should not be imported)
+- [x] blog/6-indicators-doing-mocking-wrong.mdx
+- [x] blog/backend-for-frontend.mdx
+- [x] blog/custom-scopes-in-third-party-applications.mdx
+- [x] blog/get-more-value-out-of-fusionauth.mdx
+- [x] blog/javascript-sdks.mdx
+- [x] blog/modeling-family-and-consents.mdx
+- [x] blog/nextjs-single-sign-on.mdx
+- [x] blog/permify-bulk-permissions-check.mdx
+- [x] blog/react-example-application.mdx
+- [x] blog/remix-demo.mdx
+- [x] blog/securing-react-native-with-oauth.mdx
+- [x] blog/spring-and-fusionauth.mdx
+- [x] blog/to-mock-or-not-mock-auth.mdx
+- [x] blog/using-identity-provider-links.mdx
 
 ## Docs Files with RemoteCode (1 file)
 

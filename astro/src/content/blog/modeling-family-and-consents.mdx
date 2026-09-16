@@ -9,7 +9,7 @@ tags: consents, family api, api consents, express
 excerpt_separator: "{/* more */}"
 ---
 import Breadcrumb from 'src/components/Breadcrumb.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 In this tutorial, you'll build a basic Node.js + [Express](http://expressjs.com) web application that grants conditional access to users in a family structure. Specifically, an adult user will be able to grant access to child users to restricted areas of an application.  
 
@@ -182,7 +182,7 @@ The application will have only one page apart from the FusionAuth login page. Th
 
 For the landing page view, add the following to `views/index.pug`. Note that the page uses data from a view model, which you will populate in the home route later.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-family-api/main/app/views/index.pug" lang="javascript" />
+<LocalCode src="example-family-api/app/views/index.pug" lang="javascript" />
 
 Replace `clientId` with the Id of your FusionAuth application and `http://localhost:9011` with the fully qualified URL of your FusionAuth instance, including the protocol. For example, `clientId` might look like `7d31ada6-27b4-461e-bf8a-f642aacf5775` and your FusionAuth URL might look like `https://local.fusionauth.io`.
 
@@ -212,7 +212,7 @@ There are three main routes needed:
 
 Update the `routes/index.js` file to look like this:
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-family-api/main/app/routes/index.js" lang="javascript" />
+<LocalCode src="example-family-api/app/routes/index.js" lang="javascript" />
 
 Each route will be reviewed in more detail below.
 

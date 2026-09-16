@@ -10,7 +10,7 @@ tags: scopes, oauth
 excerpt_separator: "{/* more */}"
 ---
 import Aside from 'src/components/Aside.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 What are third-party applications and custom scopes? How would I implement OAuth scopes using FusionAuth?
 
@@ -56,7 +56,7 @@ The APIs use the [rack-jwt](https://github.com/FusionAuth/rack-jwt) Gem to help 
 
 The important part of the code in the controller is that it checks for the correct Budget Buddy Client Id and checks for the scope `balance:read`.  If those values are confirmed, then a balance is returned. If this were a real application, it would also retrieve the `change_bank_user_id` and look up the actual balance for the user.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-ruby-on-rails-custom-scopes/main/fusionauth-quickstart-ruby-on-rails-api-modifications/app/controllers/get_balance_controller.rb" lang="ruby" />
+<LocalCode src="example-ruby-on-rails-custom-scopes/fusionauth-quickstart-ruby-on-rails-api-modifications/app/controllers/get_balance_controller.rb" lang="ruby" />
 
 ## Budget Buddy Integration
 

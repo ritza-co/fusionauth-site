@@ -12,7 +12,7 @@ url: https://raw.githubusercontent.com/fusionauth/fusionauth-example-hostedbacke
 ---
 import Aside from 'src/components/Aside.astro';
 import Breadcrumb from 'src/components/Breadcrumb.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 
 This article discusses the dangers of storing OAuth tokens in the browser or on a client-side device – a common pattern in serverless architectures like single-page applications (SPAs) and mobile apps – and explains how to upgrade to using an OAuth proxy server. An OAuth proxy is also known as the token handler pattern or an OAuth backend for frontend (BFF).
@@ -214,7 +214,7 @@ FusionAuth redirects you back to the app, which detects you're logged in and dis
 
 The frontend for this app is simple. Look at the file `index.html`.
 
-<RemoteCode url={frontmatter.url + "/nodeApp/index.html"} lang="html"/>
+<LocalCode src="example-hostedbackend/nodeApp/index.html" lang="html" />
 
 The only text on this page is the login link. In reality, the HTML body could contain a full Angular, React, or Vue app – it wouldn't affect the BFF setup. To add BFF support, all you need to do is add a login link somewhere in your app.
 
@@ -222,13 +222,13 @@ The page has a `checkLoggedIn()` function, which gets the username of the curren
 
 The BFF is the tiniest Express.js server possible. It is in `app.js`.
 
-<RemoteCode url={frontmatter.url + "/nodeApp/app.js"} lang="js"/>
+<LocalCode src="example-hostedbackend/nodeApp/app.js" lang="js" />
 
 The code contains a lot of Node Express boilerplate, including imports of the session and the cookie parser packages. There are only four main routes: the first returns the HTML file, and the others use Passport.js to check the user's authentication status. Passport.js is a JavaScript wrapper to call authorization servers.
 
 The `authentication.js` file is more complicated.
 
-<RemoteCode url={frontmatter.url + "/nodeApp/authentication.js"} lang="js"/>
+<LocalCode src="example-hostedbackend/nodeApp/authentication.js" lang="js" />
 
 The code in this file is closely based on the [sample application from the Passport website](https://github.com/jaredhanson/passport-oauth2). Passport abstracts away all OAuth complexities. All you need to do is set the correct configuration values to access FusionAuth.
 
@@ -265,7 +265,7 @@ As before, browse to http://localhost:3000 to view the app. Click the login link
 
 Though this app looks identical to the previous one, it has no server and uses only FusionAuth for all authentication. The entire application is contained in the `index.html` file in the `serverlessApp` directory.
 
-<RemoteCode url={frontmatter.url + "/serverlessApp/index.html"} lang="html"/>
+<LocalCode src="example-hostedbackend/serverlessApp/index.html" lang="html" />
 
 In a full single-page app, you would probably use a client-side routing framework. However, this example checks for only two cases: either it handles a callback from the authentication server and verifies the challenge code, or it displays the login link for any other route. In either case, if a logged-in user Id cookie is present, the user's email address is displayed on the screen.
 

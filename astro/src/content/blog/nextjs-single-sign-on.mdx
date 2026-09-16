@@ -11,7 +11,7 @@ excerpt_separator: "{/* more */}"
 ---
 import Aside from '../../components/Aside.astro';
 import Breadcrumb from 'src/components/Breadcrumb.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import { Content as Install } from '../../components/blog/install-fusionauth.md';
 import { Content as Starting } from '../../components/blog/sso/starting.mdx';
 import { Content as Setup } from '../../components/blog/sso/setup.mdx';
@@ -148,29 +148,29 @@ Then create a file named `[...nextauth].js` in that directory.
 
 Next, you'll configure the [built-in support for FusionAuth](https://next-auth.js.org/providers/fusionauth). Doing so ensures every request to the `/api/auth/*` path is handled by NextAuth.js.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-nextjs-single-sign-on/main/app/src/pages/api/auth/[...nextauth].js" lang="jsx" />
+<LocalCode src="example-nextjs-single-sign-on/app/src/pages/api/auth/[...nextauth].js" lang="jsx" />
 
 ### Exposing session state
 
 To allow components to check whether the current user is logged in, change `src/pages/_app.js` to have your application rendered inside a `<SessionProvider>` context, like shown below.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-nextjs-single-sign-on/main/app/src/pages/_app.js" lang="jsx" />
+<LocalCode src="example-nextjs-single-sign-on/app/src/pages/_app.js" lang="jsx" />
 
 This will make the [`useSession()`](https://next-auth.js.org/getting-started/client#usesession) React Hook accessible to your entire application.
 
 Now, create a component that will either render a "Log in" or <Breadcrumb>Log out</Breadcrumb> button, depending on the session state, in a `src/components/login-button.jsx` file.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-nextjs-single-sign-on/main/app/src/components/login-button.jsx" lang="jsx" />
+<LocalCode src="example-nextjs-single-sign-on/app/src/components/login-button.jsx" lang="jsx" />
 
 Then, you change your home component located at `src/pages/index.js` to include the `<LoginButton />` component inside `<main>`.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-nextjs-single-sign-on/main/app/src/pages/index.js" lang="jsx" />
+<LocalCode src="example-nextjs-single-sign-on/app/src/pages/index.js" lang="jsx" />
 
 ## Environment variables
 
 If you cloned the demo repository, you can copy `.env.local.dist` to `.env.local` and change the values there. If not, create a `.env.local` file and fill in the details from your FusionAuth application.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-nextjs-single-sign-on/main/app/.env.local.dist" lang="shell" />
+<LocalCode src="example-nextjs-single-sign-on/app/.env.local.dist" lang="shell" />
 
 ## Testing
 

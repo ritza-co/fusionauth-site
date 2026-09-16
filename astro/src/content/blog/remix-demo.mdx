@@ -10,7 +10,7 @@ tags: remix, javascript, authentication
 excerpt_separator: "{/* more */}"
 updated_date: 2023-04-25
 ---
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import { Content as Install } from '../../components/blog/install-fusionauth.md';
 import Breadcrumb from 'src/components/Breadcrumb.astro';
 
@@ -107,7 +107,7 @@ Once you've done all this configuration, auth is easy because all the heavy lift
 
 The `/login` route looks like this:
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-remix/main/app/routes/login.tsx" lang="typescript" />
+<LocalCode src="example-remix/app/routes/login.tsx" lang="typescript" />
 
 This is all the app code you need to protect any route. As you can see, you use the `authenticator.authenticate` method, and redirect to either the `/dashboard` or the `/error` route on success or failure, respectively.
 
@@ -115,7 +115,7 @@ What is the `authenticator` all about?
 
 If you open the `/app/auth.server` file, you should see something like this:
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-remix/main/app/auth.server.ts" lang="typescript" />
+<LocalCode src="example-remix/app/auth.server.ts" lang="typescript" />
 
 This code leans very heavily on [@sergiodxa's](https://x.com/sergiodxa) OAuth work for Remix, the npm packages `remix-auth` and `remix-auth-oauth2`. It will handle all the tedious boilerplate necessary to negotiate between Remix apps and an OAuth2 server like FusionAuth. The `OAuth2Strategy` configuration informs FusionAuth, what app you are trying to log in from, and where you want to go afterward.
 
@@ -125,7 +125,7 @@ If you are not logged in, our Remix `/login` route will redirect you to the Fusi
 
 If you log in, you will be redirected to `/auth/callback` which checks your login again in code that should be familiar since it's almost identical to the `/login` route:
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-remix/main/app/routes/auth.callback.tsx" lang="typescript" />
+<LocalCode src="example-remix/app/routes/auth.callback.tsx" lang="typescript" />
 
 From there you'll be sent to `/dashboard` which is just a message saying you're logged in. If you then try the same click path again, you will get passed through to `/dashboard` without being forced to reauthenticate!
 

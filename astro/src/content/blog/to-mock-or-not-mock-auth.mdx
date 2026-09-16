@@ -10,7 +10,7 @@ excerpt_separator: "{/* more */}"
 url: https://raw.githubusercontent.com/fusionauth/fusionauth-example-to-mock-or-not-mock/refs/heads/main/
 publish_date: 2025-06-03
 ---
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import Aside from '../../components/Aside.astro';
 
 If you're outsourcing your authentication, you'll find that most vendors only allow you to test with mocks. Is that really good enough? Shouldn't you be able to mock when you want to, and test locally when you need to?
@@ -31,7 +31,7 @@ Here's a quick overview of common test doubles used to mock auth:
 
 For example, here is a service mock that acts as an authentication server.
 
-<RemoteCode url={frontmatter.url + "service_mock_auth_server.py"} lang="python"/>
+<LocalCode src="example-to-mock-or-not-mock/service_mock_auth_server.py" lang="python" />
 
 You can run this service mock in Docker and point your tests to it for full control without needing access to the real system.
 
@@ -78,7 +78,7 @@ Here is an example of a test that does not use mocking to check the reference fi
 
 Let's say you have an example Flask app like the one below.
 
-<RemoteCode url={frontmatter.url + "app.py"} lang="python"/>
+<LocalCode src="example-to-mock-or-not-mock/app.py" lang="python" />
 
 In this application, creating a payment requires a valid token. The app pulls the token from the request header, validates it by calling an external authentication service, and then generates a payment with a reference field (a UUID).
 
@@ -86,13 +86,13 @@ When testing, we're primarily interested in verifying that every time a payment 
 
 Here is how you might write a test for this behavior.
 
-<RemoteCode url={frontmatter.url + "test_without_mocking.py"} lang="python"/>
+<LocalCode src="example-to-mock-or-not-mock/test_without_mocking.py" lang="python" />
 
 You're now making two network calls: One to retrieve the token and another inside your app to validate it. Neither has anything to do with the reference field, the only thing you intended to validate. This test introduces real latency and real points of failure, but worst of all, it doesn't help you catch bugs effectively.
 
 Instead of calling the authentication server, you can override the `get_user_from_token()` function directly in the test to simulate a successful authentication.
 
-<RemoteCode url={frontmatter.url + "test_payments.py"} lang="python"/>
+<LocalCode src="example-to-mock-or-not-mock/test_payments.py" lang="python" />
 
 This version keeps the full `request/response` cycle, still expects an `Authorization` header, and passes through your actual handler code, but it doesn't depend on any real login flow or token infrastructure. You're simulating the outcome of a successful authentication, not the entire process.
 
@@ -106,7 +106,7 @@ Let's say you want to test what happens when a user's account is locked. In a re
 
 Neither is fast. Neither is repeatable. So, you can mock the outcome.
 
-<RemoteCode url={frontmatter.url + "test_locked_user.py"} lang="python"/>
+<LocalCode src="example-to-mock-or-not-mock/test_locked_user.py" lang="python" />
 
 The test above ensures the payment creation endpoint correctly returns a `403` error when the user's account is locked. You're testing your application's fallback behavior, not the identity provider.
 
@@ -140,11 +140,11 @@ Now imagine your webhook handler uses a helper function to authenticate and veri
 
 So, during testing, you can bypass the signature verification entirely.
 
-<RemoteCode url={frontmatter.url + "webhook_app.py"} lang="python"/>
+<LocalCode src="example-to-mock-or-not-mock/webhook_app.py" lang="python" />
 
 In your test, you now **bypass** the `verify_signature` function to focus on what happens after a valid webhook is received.
 
-<RemoteCode url={frontmatter.url + "test_webhook.py"} lang="python"/>
+<LocalCode src="example-to-mock-or-not-mock/test_webhook.py" lang="python" />
 
 In the code above, the `verify_signature` function is monkey patched during the test to always return `True`, bypassing the actual signature verification logic. Mocking works here because there is no need to go through signing or verification. You can assume a valid request and focus on checking the fields returned in the responses.
 

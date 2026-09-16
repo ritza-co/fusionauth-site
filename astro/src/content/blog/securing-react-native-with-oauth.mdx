@@ -12,7 +12,7 @@ updated_date: 2023-04-11
 ---
 import Breadcrumb from 'src/components/Breadcrumb.astro';
 import { Content as Install } from '../../components/blog/install-fusionauth.md';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 In this tutorial, we will set up a React Native application to work with OAuth. We'll use FusionAuth for auth, but the React Native code should work with any OAuth compliant server.
 
@@ -129,7 +129,7 @@ cd ios ; pod install
 
 Then, we need to open the React Native project with Xcode. Edit the `ios/RNfusionauth/info.plist` file and register the redirect URL scheme as shown below:
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-react-native-0-71/main/ios/RNfusionauth/Info.plist" lang="xml" />
+<LocalCode src="example-react-native-0-71/ios/RNfusionauth/Info.plist" lang="xml" />
 
 Here, the `CFBundleURLSchemes` defines the URL schemes handled by this application. The scheme we are registering, `fusionauth.demo`, should look familiar, as we configured FusionAuth to redirect to a URL with that scheme in it. If you modify it here, you should modify it there as well.
 
@@ -137,11 +137,11 @@ The last step is to change `ios/RNfusionauth/AppDelegate.h` and `ios/RNfusionaut
 
 Here's the `AppDelegate.h` file contents:
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-react-native-0-71/main/ios/RNfusionauth/AppDelegate.h" lang="objectivec" />
+<LocalCode src="example-react-native-0-71/ios/RNfusionauth/AppDelegate.h" lang="objectivec" />
 
 Here's the `AppDelegate.mm` file contents:
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-react-native-0-71/main/ios/RNfusionauth/AppDelegate.mm" lang="objectivec" />
+<LocalCode src="example-react-native-0-71/ios/RNfusionauth/AppDelegate.mm" lang="objectivec" />
 
 The changes in `AppDelegate.mm` allows authentication with [Magic Links](/docs/lifecycle/authenticate-users/passwordless/magic-links).
 
@@ -173,7 +173,7 @@ Big picture, we're going to be building out our logic and views in the `App.tsx`
 
 Here's what `App.tsx` will look like when we are done (don't worry, it looks like a lot, but we'll explain most of it):
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-react-native-0-71/main/App.tsx" lang="typescript" />
+<LocalCode src="example-react-native-0-71/App.tsx" lang="typescript" />
 
 [//]: # (TODO when we move to new blogging platform, have these fragments pulled out instead of hardcoded in here, because they'll decay if the content of `App.tsx` changes.)
 
