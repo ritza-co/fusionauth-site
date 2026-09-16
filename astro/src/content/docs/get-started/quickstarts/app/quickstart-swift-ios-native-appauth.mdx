@@ -13,7 +13,7 @@ import IconButton from 'src/components/IconButton.astro';
 import Breadcrumb from 'src/components/Breadcrumb.astro';
 import Field from 'src/components/Field.astro';
 import NextSteps from 'src/components/quickstarts/NextSteps.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import QuickstartNgrok from 'src/components/quickstarts/quickstart-ngrok.mdx';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
 
@@ -96,8 +96,7 @@ Add a new styles file to the project. Select <Breadcrumb>File -> New -> File</Br
 
 Add the following code to the `Styles.swift` file:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/ChangeBank/Styles.swift"}
-            lang="swift"/>
+<LocalCode src="quickstart-swift-ios-native-appauth/complete-application/ChangeBank/Styles.swift" lang="swift" />
 
 ### Add A P-List File
 
@@ -115,8 +114,7 @@ To read the settings from the p-list file, you need to add a new class to the pr
 
 Add the following code to the `AppSettingsReader.swift` file:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/ChangeBank/AppSettingsReader.swift"}
-            lang="swift"/>
+<LocalCode src="quickstart-swift-ios-native-appauth/complete-application/ChangeBank/AppSettingsReader.swift" lang="swift" />
 
 This code adds new structs to hold the credentials and issuer settings, and a class to read the settings from the p-list file. 
 
@@ -130,8 +128,7 @@ Select <Breadcrumb>File -> New -> File</Breadcrumb> from the menu bar. Select <B
 
 Add the following code to the `AppDelegate.swift` file:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/ChangeBank/AppDelegate.swift"}
-            lang="swift"/>
+<LocalCode src="quickstart-swift-ios-native-appauth/complete-application/ChangeBank/AppDelegate.swift" lang="swift" />
 
 The `AppDelegate` class extends `UIResponder` and adopts the `UIApplicationDelegate` protocol, which means it listens for events in the iOS app's lifecycle. 
 
@@ -143,15 +140,13 @@ Select the <Breadcrumb>File -> New -> File</Breadcrumb> from the menu bar. Selec
 
 Copy the following code into the `UserAuth.swift` file:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/ChangeBank/UserAuth.swift"}
-            lang="swift"/>
+<LocalCode src="quickstart-swift-ios-native-appauth/complete-application/ChangeBank/UserAuth.swift" lang="swift" />
 
 Since the `UserAuth` class will be used by multiple views to determine the user's logged in status and profile information, it is declared as an `ObservableObject`. This means that any SwiftUI views that use the `UserAuth` class will be notified when the `UserAuth` object changes. As we only want one instance of the `UserAuth` class, it should be instantiated in the main `App` class, and passed to the views that need it via the root view [`environmentObject` method](https://developer.apple.com/documentation/swiftui/view/environmentobject(_:)). This will make the `UserAuth` object available to all child views of the root view, and any views that need to access the `UserAuth` object can declare it as an `@EnvironmentObject` property.
 
 Update the `App` class in the `ChangBankApp.swift` file to instantiate the `UserAuth` object and pass it to the root view:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/ChangeBank/ChangeBankApp.swift"}
-            lang="swift"/>
+<LocalCode src="quickstart-swift-ios-native-appauth/complete-application/ChangeBank/ChangeBankApp.swift" lang="swift" />
 
 ### Create The `ContentView` View
 
@@ -159,8 +154,7 @@ The `ContentView` view is the root view of the app that will display the login s
 
 Update the `ContentView` class in the `ContentView.swift` file as follows.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/ChangeBank/ContentView.swift"}
-            lang="swift"/>
+<LocalCode src="quickstart-swift-ios-native-appauth/complete-application/ChangeBank/ContentView.swift" lang="swift" />
 
 ### Create The `LoginView` View
 
@@ -170,8 +164,7 @@ Select <Breadcrumb>File -> New -> File</Breadcrumb> from the menu bar. Select <B
 
 Copy the following code into the `LoginView.swift` file:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/ChangeBank/LoginView.swift"}
-            lang="swift"/>
+<LocalCode src="quickstart-swift-ios-native-appauth/complete-application/ChangeBank/LoginView.swift" lang="swift" />
 
 ### Add The Logged In Home View
 
@@ -181,8 +174,7 @@ Select <Breadcrumb>File -> New -> File</Breadcrumb> from the menu bar. Select <B
 
 Copy the following code into the `HomeView.swift` file:
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/ChangeBank/HomeView.swift"}
-            lang="swift"/>
+<LocalCode src="quickstart-swift-ios-native-appauth/complete-application/ChangeBank/HomeView.swift" lang="swift" />
 
 ### Add The Make Change View
 
@@ -192,8 +184,7 @@ Select <Breadcrumb>File -> New -> File</Breadcrumb> from the menu bar. Select <B
 
 Copy the following code into the `MakeChangeView.swift` file.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/ChangeBank/MakeChangeView.swift"}
-            lang="swift"/>
+<LocalCode src="quickstart-swift-ios-native-appauth/complete-application/ChangeBank/MakeChangeView.swift" lang="swift" />
 
 ## Run The Application
 

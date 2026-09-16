@@ -12,7 +12,7 @@ import Intro from 'src/components/quickstarts/Intro.astro';
 import {Content as LoginArchitectureWeb} from 'src/components/quickstarts/LoginArchitectureWeb.mdx';
 import NextSteps from 'src/components/quickstarts/NextSteps.astro';
 import QuickstartTshirtCTA from 'src/components/quickstarts/QuickstartTshirtCTA.astro'
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 <Intro technology="Python and Flask"
        repositoryUrl="https://github.com/FusionAuth/fusionauth-quickstart-python-flask-web"/>
@@ -61,8 +61,7 @@ python3.8 -m venv venv && source venv/bin/activate
 Next, create a `requirements.txt` file to name the project dependencies.
 
 `requirements.txt`
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/requirements.txt"}
- lang="python" />
+<LocalCode src="quickstart-python-flask-web/complete-application/requirements.txt" lang="python" />
 
 And then install the dependencies into your virtual env.
 
@@ -77,15 +76,12 @@ Now create your Flask app, which for now will consist of an environment file nam
 Create the environment file with these contents:
 
 `.env`
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/.env"}
- lang="ini" />
+<LocalCode src="quickstart-python-flask-web/complete-application/.env" lang="ini" />
 
 In `server.py`, you'll add all of the imports you'll need, declare some constants, and initialize the OAuth library.
 
 `server.py`
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/server.py"}
- lang="python"
- tags="baseApplication"/>
+<LocalCode src="quickstart-python-flask-web/complete-application/server.py.snippet.baseApplication.py" lang="python" />
 
 <Aside type="tip">
   You should be able to start your Flask application with `flask --app server.py --debug run`. Note that you won't be able to access it with a browser yet!
@@ -99,9 +95,7 @@ In the route function, you're going to look for an access token, which is create
 Add the route handling function to your server.py file.
 
 `server.py`
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/server.py"}
- lang="python"
- tags="homeRoute"/>
+<LocalCode src="quickstart-python-flask-web/complete-application/server.py.snippet.homeRoute.py" lang="python" />
 
 Next, create the home page in a `templates` directory. This page just has a login button, which won't do anything yet. These commands also install a CSS file and an image to make your app look nicer.
 
@@ -137,13 +131,9 @@ We also set the UserInfo object in the Flask session, to make it easy to use in 
 Add the `/login` and `/callback` routes to your server code.
 
 `server.py`
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/server.py"}
- lang="python"
- tags="loginRoute"/>
+<LocalCode src="quickstart-python-flask-web/complete-application/server.py.snippet.loginRoute.py" lang="python" />
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/server.py"}
- lang="python"
- tags="callbackRoute"/>
+<LocalCode src="quickstart-python-flask-web/complete-application/server.py.snippet.callbackRoute.py" lang="python" />
 
 <Aside type="tip">
 Once these steps are done, you should be able to successfully log into your application! Just note that after logging in, you're taking the user to `/account`, which doesn't exist yet.
@@ -160,9 +150,7 @@ wget -O templates/account.html https://raw.githubusercontent.com/FusionAuth/fusi
 
 Next, create a route to get to that page. This checks if an access token is present. If one isn't, it forces a logout at FusionAuth. If one is, it renders the `/account` page.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/server.py"}
- lang="python"
- tags="accountRoute"/>
+<LocalCode src="quickstart-python-flask-web/complete-application/server.py.snippet.accountRoute.py" lang="python" />
 
 <Aside type="tip">
 Now when you log in, you should see the `/account` page!
@@ -171,9 +159,7 @@ Now when you log in, you should see the `/account` page!
 ### Add Logout Support
 The last step is to implement logout. When you log a user out of an application, you'll take them to FusionAuth's `/oauth2/logout` endpoint. After logging the user out, FusionAuth will redirect the user to your app's `/logout` endpoint, which you'll create now. This endpoint deletes any cookies that your application created, and clears the Flask session.
 
-<RemoteCode url={frontmatter.codeRoot + "/complete-application/server.py"}
- lang="python"
- tags="logoutRoute"/>
+<LocalCode src="quickstart-python-flask-web/complete-application/server.py.snippet.logoutRoute.py" lang="python" />
 
 <Aside type="tip">
 Click the <Breadcrumb>Logout</Breadcrumb> button and watch the browser first go to FusionAuth to log out the user, then return to your home page.

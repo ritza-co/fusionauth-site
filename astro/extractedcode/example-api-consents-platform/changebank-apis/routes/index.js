@@ -7,7 +7,7 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-// tag::routes
+// :snippet-start: routes
 router.get('/read-balance', hasScope('accounts.read'), function (req, res, next) {
   res.json({ balance: 42 });
 });
@@ -18,6 +18,6 @@ router.post('/make-transfer', hasScope('transfers.write'), function (req, res, n
 
   res.json({ message: "ok"});
 });
-// end::routes
+// :snippet-end:
 
 module.exports = router;

@@ -13,10 +13,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//tag::verifyToken[]
+// :snippet-start: verifyToken
 const verifyJWT = require('./services/verifyJWT');
 app.use(verifyJWT);
-//end::verifyToken[]
+// :snippet-end:
 
 app.use('/', indexRouter);
 
