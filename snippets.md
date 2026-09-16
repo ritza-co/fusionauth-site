@@ -2,11 +2,14 @@
 
 ## CONTINUATION GUIDE FOR NEXT LLM SESSION
 
-### Current Status (as of last session)
+### Current Status (as of 2026-09-16)
 - **RemoteContent → LocalMarkdown**: COMPLETE (8/8 files converted, 1 skipped)
 - **RemoteValue → LocalValue**: COMPLETE (1/1 file converted, 2 skipped)
 - **RemoteCode → LocalCode**: COMPLETE (all non-SKIP'd files converted)
 - **Old-style tags → Bluehawk**: COMPLETE (all source files converted)
+- **Unreferenced tags → Bluehawk**: COMPLETE (all 9 files converted)
+- **Email Templates → LocalEmailCode**: COMPLETE (28 files converted to new component)
+- **Overall**: ALL TASKS COMPLETE (191/191 files converted, 15 skipped)
 
 ### Key Information
 
@@ -159,6 +162,7 @@ The snippet files are auto-generated from the `:snippet-start:` tags. You only n
 - **New-style tags**: `:snippet-start: tagName` / `:snippet-end:` (NO tag name on end tag!)
 - **Comment styles vary**: `//`, `#`, `<!-- -->` - match the file's comment style
 - **End tags have NO tag name** - just `:snippet-end:`, not `:snippet-end: tagName`
+- **Search ALL file types** - never use `--include` filters that exclude files. Check .md, .java, .ts, .js, .py, .yml, .json, .ftl, etc.
 
 #### Common Mistakes to Avoid
 1. Don't confuse "files I converted in this branch" with "files in other branches"
@@ -167,104 +171,6 @@ The snippet files are auto-generated from the `:snippet-start:` tags. You only n
 4. Don't add files to skip list without verifying they exist in OTHER branches
 5. Don't run git checkout/restore - only read-only git operations
 6. Don't forget to check if branches have been merged before deciding what to skip
-
-### Branch Analysis Results (2026-09-15)
-
-**Script location:** `/tmp/check_all_branches.py` and `/tmp/check_batch.py` (batch processor)
-**Results location:** `/tmp/bluehawk_branches_summary_corrected.txt`
-
-#### Summary
-- **Total branches from past year:** 143
-- **Branches with bluehawk work (excluding current branch):** 75
-- **Branches without bluehawk work:** 68
-
-#### Key Findings
-1. **Folder name variations across branches:**
-   - `astro/extractedcode/` - used in current branch (draft_bluehawkAllRepos) and some others
-   - `astro/localcode/` - used in bluehawk_quickstartLaravelApi, draft_bluehawkAngular, and others
-   - This means the SAME files exist in different folders across branches
-
-2. **Other major bluehawk branches (NOT current branch):**
-   - `bluehawk_quickstartLaravelApi`: 34 files (uses `astro/localcode/`)
-   - `origin/bluehawkCodeExamples`: 33 files (uses `astro/extractedcode/`)
-   - `draft_bluehawkAngular`: 28 files (uses `astro/localcode/`)
-   - `main`: 27 files (uses `astro/extractedcode/`)
-
-3. **Merge status:**
-   - Many branches have been merged into main
-   - Some branches are NOT merged yet (need to check individually)
-   - Use `git merge-base --is-ancestor <branch> main` to check merge status
-
-#### How to Use This Information
-1. **To check if a file was converted in another branch:**
-   - Search for the file in `/tmp/bluehawk_branches_summary_corrected.txt`
-   - Check which branches have it
-   - Use `git show <branch>:<filepath>` to see the actual content
-
-2. **To build the skip list:**
-   - Only include files that exist in OTHER branches (not current branch)
-   - Check if those branches have been merged
-   - Account for folder name changes (extractedcode vs localcode)
-
-3. **To verify folder names:**
-   - Use `git ls-tree -r <branch> | grep extractedcode` or `grep localcode`
-   - Different branches use different folder structures
-
-### Comprehensive Skip List Generator (2026-09-15)
-
-**Script location:** `/tmp/generate_skip_list_comprehensive.py`
-**Results location:** `/tmp/skip_list_comprehensive.txt`
-
-#### What This Script Does
-Generates a complete skip list by:
-1. Checking ALL branches from past year (excluding current branch)
-2. Getting FULL file lists for each branch (not samples)
-3. Normalizing paths across different folder structures
-4. Tracking merge status for each branch
-5. Outputting comprehensive list with merge status
-
-#### Key Features
-- **Excludes current branch** (draft_bluehawkAllRepos) - we don't skip our own work
-- **Includes ALL files** - including README.md files (they can be converted too)
-- **Handles timeouts** - uses nohup and background execution for long-running operations
-- **Tracks merge status** - shows which branches are merged vs not merged into current branch
-- **Normalizes paths** - handles different folder structures across branches
-
-#### How to Run
-```bash
-# Run in background to avoid timeouts
-cd /home/me/code/fusionauth-site
-nohup python3 /tmp/generate_skip_list_comprehensive.py > /tmp/skip_list_generation.log 2>&1 &
-
-# Check progress
-tail -f /tmp/skip_list_generation.log
-
-# View results
-cat /tmp/skip_list_comprehensive.txt
-```
-
-#### Output Format
-Each file entry shows:
-- File path (normalized)
-- Which branches have it
-- Merge status for each branch (merged vs not merged)
-
-Example:
-```
-- apis/webauthn.mdx (merged: bluehawkCodeExamples, fix/example-scripts-extractedcode | not merged: draft-bluehawkQuickstartReact)
-```
-
-#### How to Use Results
-1. **Files in merged branches** - These are safe to skip (already in main)
-2. **Files in non-merged branches** - These need careful consideration:
-   - If branch will be merged soon, skip the file
-   - If branch is abandoned, convert the file in current branch
-   - Use `git log --oneline <branch>` to check branch activity
-
-### Next Steps
-1. All conversions complete - only SKIP'd files remain
-2. Verify no RemoteCode imports remain in non-SKIP'd files
-3. Review the remaining files with unreferenced tags
 
 ---
 
@@ -565,7 +471,7 @@ These files contain `tag::`/`end::` markers that are actively used by documentat
 - [x] swift-sdk/README.md
 - [x] terraform-provider/docs/guides/handling_default_resources.md
 
-**Progress: 0/63**
+**Progress: 63/63**
 
 ---
 
@@ -583,7 +489,7 @@ These files contain only tags that are NOT referenced by any documentation. Revi
 - [x] quickstart-kotlin-android-native/TESTING.md (tag: forDocSiteE2ETest)
 - [x] swift-sdk/CONTRIBUTING.md (tag: forDocSiteContributing)
 
-**Progress: 0/9**
+**Progress: 9/9**
 
 ---
 
@@ -591,12 +497,13 @@ These files contain only tags that are NOT referenced by any documentation. Revi
 
 | Task | Total | Skip (Done in Other Branches) | To Do | Completed | Remaining |
 |------|-------|-------------------------------|-------|-----------|-----------|
-| RemoteCode → LocalCode | 94 | 12 | 82 | 25 | 57 |
+| RemoteCode → LocalCode | 94 | 12 | 82 | 82 | 0 |
 | RemoteValue → LocalValue | 3 | 2 | 1 | 1 | 0 |
 | RemoteContent → LocalMarkdown | 9 | 1 | 8 | 8 | 0 |
-| Old-style tags → Bluehawk | 63 | 0 | 63 | 37 | 26 |
-| Unreferenced tags review | 9 | 0 | 9 | 1 | 8 |
-| **TOTAL** | **178** | **15** | **163** | **64** | **99** |
+| Old-style tags → Bluehawk | 63 | 0 | 63 | 63 | 0 |
+| Unreferenced tags review | 9 | 0 | 9 | 9 | 0 |
+| Email Templates → LocalEmailCode | 28 | 0 | 28 | 28 | 0 |
+| **TOTAL** | **206** | **15** | **191** | **191** | **0** |
 
 ---
 
