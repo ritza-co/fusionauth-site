@@ -4,15 +4,10 @@ description: Limit an individual to administering the users of only one tenant i
 tags: tenant, tenant manager
 order: 0
 ---
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import EnterprisePlanBlurb from 'src/content/docs/_shared/_enterprise-plan-blurb.mdx';
 
-<EnterprisePlanBlurb />
+<PlanBlurb plan="enterprise" />
 
-<Aside type="version">
-Available since `1.58.0`
-</Aside>
+<AvailableSince since="1.58.0"/>
 
 The Tenant Manager is an application designed for a multi-tenant configuration where you assign a tenant to an individual customer. With it you can allow a customer to manage the users in only their tenant. Although the core FusionAuth application includes a role for managing users, it gives access to all tenants.
 
@@ -82,14 +77,12 @@ The down-arrow next to <Breadcrumb>Lock User</Breadcrumb> opens a menu of additi
 ## Manage Identity Providers
 
 <Aside type="note">
-This functionality only applies to [Universal Applications](/docs/get-started/core-concepts/applications#universal-applications).
+This functionality only applies to [Universal Applications](/docs/get-started/core-concepts/types/applications#universal-applications).
 </Aside>
 
 ### The Single Sign-On View
 
-<Aside type="version">
-Available since `1.65.0`
-</Aside>
+<AvailableSince since="1.65.0"/>
 
 ![SSO View](/img/docs/lifecycle/manage-users/tenant-manager/sso-view.png)
 
@@ -191,9 +184,7 @@ For complete field definitions and API-level behavior, see the [Identity Provide
 
 ### Attribute Mappings
 
-<Aside type="version">
-Available since `1.65.0`
-</Aside>
+<AvailableSince since="1.65.0"/>
 
 Attribute mappings in Tenant Manager control how identity provider response values populate FusionAuth user and registration fields.
 
@@ -221,9 +212,7 @@ Saving an identity provider in Tenant Manager reapplies Tenant Manager-managed v
 
 ### Test an Identity Provider Connection
 
-<Aside type="version">
-Available since `1.65.0`
-</Aside>
+<AvailableSince since="1.65.0"/>
 
 To test an identity provider, use the identity provider action menu in the <Breadcrumb>Single Sign-On</Breadcrumb> view and click <Breadcrumb>Test</Breadcrumb>.
 

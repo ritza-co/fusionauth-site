@@ -3,10 +3,6 @@ title: Message Variables
 description: Learn which replacement variables and corresponding message templates are available.
 ---
 import TemplateBaseUrlNote from 'src/content/docs/customize/email-and-messages/_template-base-url-note.mdx';
-import APIBlock from 'src/components/api/APIBlock.astro';
-import APIField from 'src/components/api/APIField.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import EnterprisePlanBlurb from 'src/content/docs/_shared/_enterprise-plan-blurb.mdx';
 import TwoFactorRemovePhone from 'src/content/docs/_shared/message/_two-factor-remove-txt.mdx';
 import PasswordlessLoginTemplates from 'src/content/docs/_shared/message/_passwordless-txt.mdx';
 import SetupPasswordTemplates from 'src/content/docs/_shared/message/_setup-password-txt.mdx';
@@ -223,7 +219,7 @@ This is also known as the "Change Password" template.
 
 ### Threat Detected
 
-<EnterprisePlanBlurb />
+<PlanBlurb plan="enterprise" />
 
 <ThreatDetectedPhone />
 
@@ -246,7 +242,7 @@ This is also known as the "Change Password" template.
 
 ### Two-Factor Authentication
 
-<EnterprisePlanBlurb />
+<PlanBlurb plan="enterprise" />
 
 <TwoFactorLoginPhone />
 
@@ -290,7 +286,7 @@ This is also known as the "Change Password" template.
 
 ### Two-Factor Authentication Method Added
 
-<EnterprisePlanBlurb />
+<PlanBlurb plan="enterprise" />
 
 <TwoFactorAddPhone />
 
@@ -319,7 +315,7 @@ This is also known as the "Change Password" template.
 
 ### Two-Factor Authentication Method Removed
 
-<EnterprisePlanBlurb />
+<PlanBlurb plan="enterprise" />
 
 <TwoFactorRemovePhone />
 

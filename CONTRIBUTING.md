@@ -41,10 +41,21 @@ Follow these guidelines when writing documentation (everything under [docs](astr
 - Page titles should be title-case, not sentences
 - Page descriptions should be full sentences
 - Use `order` (ascending) to change the default (alphabetical) sort of pages in a section
-- When importing a component, always use the full path, not a relative path:
-  
+- Most common components are auto-imported into every MDX file and do not need an explicit import statement. This includes `APIField`, `APIBlock`, `API`, `AvailableSince`, `DeprecatedSince`, `RemovedSince`, `JSON`, `Breadcrumb`, `Aside`, `RemoteCode`, `PlanBlurb`, `PlanBlurbApi`, `If`, `Icon`, `IconButton`, `ChildCards`, `Card`, `ExtractedCode`, `Tabs`, `TabItem`, `Details`, `Steps`, `Table`, and `MarkdownOnly`. The full list and their source paths are declared in `mdxComponentImports` near the top of `astro/astro.config.ts`.
+
+- If you add an explicit import for one of the auto-imported components, the build will fail with an error like:
+
+  ```
+  [mdx-component-importer] Redundant import in /path/to/file.mdx
+    `Aside` is auto-imported — remove the explicit import.
+  ```
+
+  Remove the import line and it will work.
+
+- For everything else, always use the full path, not a relative path:
+
   ```jsx
-  import Icon from 'src/components/icon/Icon.astro';
+  import MyComponent from 'src/components/MyComponent.astro';
   ```
 
 ## LLM cliches
@@ -188,6 +199,54 @@ To make a smoothie:
 - JSON files are their own content collection in astro. You can reference these using the [JSON component](astro/src/components/JSON.astro)
 - We have an alias mapped in [tsconfig](astro/tsconfig.json) that allows you to use absolute references from 'src'. Otherwise, imports must use relative paths.
 
+### Front matter fields
+
+Every docs page uses YAML front matter. The schema is defined in `astro/src/content.config.js`.
+
+Required fields:
+
+| Field | Type | Notes |
+|---|---|---|
+| `title` | string | Shown as the page heading and in the sidebar. Cannot end with punctuation. |
+| `description` | string | One sentence summary shown in search and card overviews. Must end with a period. |
+
+Common optional fields:
+
+| Field | Type | Notes |
+|---|---|---|
+| `htmlTitle` | string | Overrides the `<title>` tag only. Use when the full title would be awkward in browser tabs (e.g. "User API" instead of "User"). |
+| `sidenavTitle` | string | Overrides how the page appears in the sidebar when the full title is too long. |
+| `order` | number | Controls sort position within the parent section. Lower numbers sort first. Default is 1000 (alphabetical fallback). |
+| `route` | boolean | Set to `false` to prevent the page from being built as a URL while keeping it in the content collection for nav ordering. Use this for folder index pages that are pure navigation (no real content) -- pair with a redirect in `astro.config.ts`. |
+| `icon` | string | Path to an icon image shown in card grids (e.g. `/img/icons/my-icon.svg`). Used by `ChildCards` and `DocCard`. |
+| `darkIcon` | string | Alternate icon shown in dark mode. If omitted, `icon` is used for both modes. |
+| `cardImage` | string | Path to a header image shown at the top of a card in the `full` variant. Useful for visually distinguishing sections in card grids. |
+| `excludeFromNav` | boolean | Set to `true` to hide this page from `ChildCards` auto-discovery. The page still builds and is accessible by URL. |
+| `sectionIndex` | boolean | Set to `true` on an index page to automatically render a `ChildCards` grid after the page content. Replaces manually written `<ChildCards>` in MDX. |
+| `disableTOC` | boolean | Hides the table of contents for this page. |
+| `canonicalUrl` | string | Full canonical URL override, used when a page is a redirect target or duplicate of another page. |
+
+### Cards
+
+Docs cards are rendered using `DocCard.astro` (`astro/src/components/DocCard.astro`). Three visual variants are available:
+
+- `full` -- icon, title, and description. Used for section overview grids. This is the default variant and what `ChildCards` uses.
+- `compact` -- title only with an optional label badge. Used for dense navigation lists.
+- `quickstart` -- small icon and title, with optional `comingSoon` greyed-out treatment. Used in quickstart grids.
+
+The legacy components `ClickableCard`, `PageNavCard`, and `QuickstartCard` are thin wrappers around `DocCard` and remain importable for backward compatibility.
+
+To auto-generate a card grid from child pages, use `ChildCards`:
+
+```mdx
+import ChildCards from "src/components/ChildCards.astro";
+<ChildCards collection="docs" />
+```
+
+Or add `sectionIndex: true` to front matter and the layout will render `ChildCards` automatically after the page content.
+
+Child pages appear as cards showing their `title`, `description`, `icon`, and `cardImage` front matter fields.
+
 ### API docs
 
 - We have many APIs which return the same objects either singly (if called with an Id) or in an array (if called without an Id). If you are creating or modifying an API with this, see if you can use the -base pattern that the tenants and applications do to reduce duplicates.
@@ -258,6 +317,73 @@ Use `fa-screenshot.sh`, located under `fusionauth-site/src/`. With this script y
 ```bash
 ./fa-screenshot.sh -h # for usage info
 ```
+
+### Declarative screenshots
+
+Screenshots in the docs are generated automatically from a headless browser pointed at a local FusionAuth instance. Docker, the FusionAuth container, and a PostgreSQL database all start automatically when you run the screenshot command.
+
+#### Setup
+
+Install the screenshot dependencies once (separate from the main `astro/` dependencies):
+
+```bash
+cd astro/screenshots
+npm install
+```
+
+#### Running screenshots
+
+From the `astro/` directory:
+
+```bash
+npm run screenshots
+```
+
+This starts Docker (if not already running), waits for FusionAuth to become healthy, logs in with the kickstart credentials, captures every `<Screenshot>` component found in the source, and writes PNGs to `public/img/docs/screenshots/`. Existing files are overwritten.
+
+To regenerate a single screenshot, pass a filter matching the filename or URL:
+
+```bash
+npm run screenshots -- --filter groups
+```
+
+#### Adding a screenshot to a page
+
+Import both components at the top of the MDX file:
+
+```jsx
+import Screenshot from 'astro-better-declarative-screenshots/Screenshot.astro';
+import Highlight from 'astro-better-declarative-screenshots/Highlight.astro';
+```
+
+Then place the component where you want the screenshot to appear:
+
+```jsx
+<Screenshot url="/admin/group/" alt="The FusionAuth groups list." />
+```
+
+The `url` is the path on the local FusionAuth instance (`http://localhost:9011`). The filename is derived automatically from the URL and any highlights; pass `id="my-name"` to override it.
+
+To highlight a specific element, nest a `<Highlight>` inside the `<Screenshot>`:
+
+```jsx
+<Screenshot url="/admin/user/manage/00000000-0000-0000-0000-100000000003" alt="The user registration form." fullPage={true}>
+  <Highlight selector="[name*='preferredLanguages']" label="Languages" />
+</Screenshot>
+```
+
+`selector` is a CSS selector for the element to outline. `label` adds a small badge above the highlight. The default highlight color is `#f60`; pass `color="#f26522"` to override.
+
+Available `<Screenshot>` props:
+
+| Prop | Default | Description |
+|---|---|---|
+| `url` | required | Path on the FusionAuth instance |
+| `id` | auto-derived | Override the output filename (without `.png`) |
+| `alt` | filename | Alt text for the image |
+| `width` | 1100 | Viewport width in px |
+| `height` | 800 | Viewport height in px |
+| `fullPage` | false | Capture full scrollable height |
 
 ### Moving pictures
 

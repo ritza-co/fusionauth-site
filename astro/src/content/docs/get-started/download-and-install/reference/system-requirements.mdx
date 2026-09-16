@@ -2,7 +2,6 @@
 title: System Requirements
 description: Learn the minimum system requirements required to install and run FusionAuth.
 ---
-import Aside from 'src/components/Aside.astro';
 import ElasticsearchVersion from 'src/content/docs/_shared/_elasticsearch-version.mdx';
 import ElasticsearchRam from 'src/content/docs/_shared/_elasticsearch-ram.mdx';
 import HostsToAllowNetworkAccessFor from 'src/content/docs/_shared/_hosts-to-allow-network-access.mdx';
@@ -31,11 +30,12 @@ Docker, k8s and other container platforms are supported because the host operati
 
 FusionAuth ships with its own version of Java. The version that is contained in the bundle is the required and supported version.
 
-Currently, Java 21 is the supported major version. The versions of Java that are supported for prior versions of FusionAuth are:
+Currently, Java 25 is the supported major version. The versions of Java that are supported for prior versions of FusionAuth are:
 
 | FusionAuth Version | Java Version |
 |--------------------|--------------|
-| 1.53.0 and newer   | Java 21      |
+| 1.69.0 and newer   |  Java 25     |
+| 1.53.0 - 1.68.0    | Java 21      |
 | 1.32.0 - 1.52.1    | Java 17      |
 | 1.31.0 and earlier | Java 14      |
 
@@ -105,7 +105,7 @@ Given thousands of objects and low login volumes, `10GB` of disk space should su
 
 ## Elasticsearch
 
-Elasticsearch is optional, and may be leveraged for improving user search functionality. See the [Core Concepts - User](/docs/get-started/core-concepts/users#user-search) documentation for reference in configuration and usage.
+Elasticsearch is optional, and may be leveraged for improving user search functionality. See the [Core Concepts - User](/docs/get-started/core-concepts/types/users#user-search) documentation for reference in configuration and usage.
 
 If you will be running Elasticsearch on the same host as FusionAuth, please ensure there is adequate RAM for both services to operate normally. Elasticsearch may also protect the index by moving it to read-only if the underlying host is running low on disk space, ensure you have plenty of free storage for the Elasticsearch index.
 

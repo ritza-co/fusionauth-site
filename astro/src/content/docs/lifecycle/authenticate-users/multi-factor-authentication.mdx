@@ -3,11 +3,7 @@ title: Multi-Factor Authentication (MFA)
 description: Learn about how to use multi-factor authentication (MFA) in FusionAuth as a developer.
 tags: mfa, multi-factor, 2FA, two-factor, multi-factor authentication, two-factor-authentication 2-factor, 2 factor, multi-factor, two-factor auth, multi-factor auth
 ---
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import EnterprisePlanBlurb from 'src/content/docs/_shared/_enterprise-plan-blurb.mdx';
-import JSON from 'src/components/JSON.astro';
 import RecoveryCodesBlurb from 'src/content/docs/lifecycle/authenticate-users/_recovery-codes-blurb.mdx';
-import Aside from 'src/components/Aside.astro';
 import MfaMigration from 'src/content/docs/lifecycle/authenticate-users/_mfa-migration.mdx';
 import MfaTroubleshooting from 'src/content/docs/lifecycle/authenticate-users/_mfa-troubleshooting.mdx';
 import { YouTube } from '@astro-community/astro-embed-youtube';
@@ -49,24 +45,24 @@ In the image below, this tenant has all FusionAuth supported methods enabled:
 
 ![Configuring allowed MFA methods on the tenant.](/img/docs/lifecycle/authenticate-users/tenant-settings-mfa.png)
 
-Please see the [Tenant configuration documentation for more information](/docs/get-started/core-concepts/tenants#multi-factor).
+Please see the [Tenant configuration documentation for more information](/docs/get-started/core-concepts/types/tenants#multi-factor).
 
 For configuring [message templates (for SMS/Voice/email codes)](/docs/customize/email-and-messages/message-templates), see the Message Templates documentation.
 
-[Review tenant concepts and where MFA defaults live.](/docs/get-started/core-concepts/tenants)
+[Review tenant concepts and where MFA defaults live.](/docs/get-started/core-concepts/types/tenants)
 
 ## Application-Level MFA Settings (Overrides & requirements)
 
-<EnterprisePlanBlurb />
+<PlanBlurb plan="enterprise" />
 
 You can override some MFA configuration settings at the application level.
 For instance, if you have one application that is used by your administrators, you might want to require MFA. For another application used by your customers, you might want to disable MFA.
 
 ![Configuring allowed MFA methods on the application.](/img/docs/lifecycle/authenticate-users/application-settings-mfa.png)
 
-Please see the [Application configuration documentation for more information](/docs/get-started/core-concepts/applications#multi-factor).
+Please see the [Application configuration documentation for more information](/docs/get-started/core-concepts/types/applications#multi-factor).
 
-[See application settings that affect MFA.](/docs/get-started/core-concepts/applications)
+[See application settings that affect MFA.](/docs/get-started/core-concepts/types/applications)
 
 ## Enable MFA for a User
 

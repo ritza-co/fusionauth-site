@@ -1,23 +1,19 @@
 ---
-title: Grant API
+title: Grant
+htmlTitle: Grant API
 description: Learn about the APIs for granting and revoking permissions to entities.
 ---
-import PremiumPlanBlurb from 'src/content/docs/_shared/_premium-plan-blurb.mdx';
-import Aside from 'src/components/Aside.astro';
-import API from 'src/components/api/API.astro';
-import APIBlock from 'src/components/api/APIBlock.astro';
-import APIField from 'src/components/api/APIField.astro';
-import XFusionauthTenantIdHeaderScopedOperation from 'src/content/docs/apis/_x-fusionauth-tenant-id-header-scoped-operation.mdx';
+import XFusionauthTenantIdHeaderScopedOperation from 'src/content/docs/apis/_shared/_x-fusionauth-tenant-id-header-scoped-operation.mdx';
 import EntityGrantRequestBody from 'src/content/docs/apis/entities/_entity-grant-request-body.mdx';
-import StandardPostResponseCodes from 'src/content/docs/apis/_standard-post-response-codes.astro';
+import StandardPostResponseCodes from 'src/content/docs/apis/_shared/_standard-post-response-codes.astro';
 import EntityGrantResponseBody from 'src/content/docs/apis/entities/_entity-grant-response-body.mdx';
 import EntityGrantsResponseBody from 'src/content/docs/apis/entities/_entity-grants-response-body.mdx';
-import StandardDeleteResponseCodes from 'src/content/docs/apis/_standard-delete-response-codes.astro';
+import StandardDeleteResponseCodes from 'src/content/docs/apis/_shared/_standard-delete-response-codes.astro';
 import EntityGrantSearchRequestParameters from 'src/content/docs/apis/entities/_entity-grant-search-request-parameters.mdx';
 import EntityGrantSearchRequestBodyDatabaseExamples from 'src/content/docs/apis/entities/_entity-grant-search-request-body-database-examples.mdx';
-import StandardGetResponseCodes from 'src/content/docs/apis/_standard-get-response-codes.astro';
+import StandardGetResponseCodes from 'src/content/docs/apis/_shared/_standard-get-response-codes.astro';
 
-<PremiumPlanBlurb />
+<PlanBlurb plan="starter" />
 
 This page contains the APIs for granting and revoking permissions to Entities.
 
@@ -45,6 +41,8 @@ This is an upsert operation. If the grant to this Entity for the specified User 
     The Id of the Entity to which access is granted.
   </APIField>
 </APIBlock>
+
+#### Request Headers
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
@@ -86,6 +84,8 @@ Adding a parameter of **userId** or **recipientEntityId** filters the returned G
   </APIField>
 </APIBlock>
 
+#### Request Headers
+
 <XFusionauthTenantIdHeaderScopedOperation />
 
 ### Response
@@ -94,7 +94,11 @@ This API is used to retrieve one or all of the Grants made to this Entity. Speci
 
 <StandardPostResponseCodes />
 
+#### Response Body
+
 <EntityGrantResponseBody />
+
+#### Response Body
 
 <EntityGrantsResponseBody />
 
@@ -121,6 +125,8 @@ This API is used to delete a Grant from an Entity. This is also known as revokin
     The Id of the Entity which received the Grant. Required if a `userId` has not been specified.
   </APIField>
 </APIBlock>
+
+#### Request Headers
 
 <XFusionauthTenantIdHeaderScopedOperation />
 
@@ -161,5 +167,7 @@ This API is used to search for Entity Grants. This API may be called using the `
 The response contains the Entity Grant objects that were found as part of the lookup or search.
 
 <StandardGetResponseCodes />
+
+#### Response Body
 
 <EntityGrantsResponseBody search_result />

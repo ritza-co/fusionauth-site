@@ -2,18 +2,13 @@
 title: Connectors
 description: FusionAuth Connectors allow you to authenticate users against external data sources and optionally migrate them.
 ---
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import PremiumPlanBlurb from 'src/content/docs/_shared/_premium-plan-blurb.mdx';
 import { YouTube } from '@astro-community/astro-embed-youtube';
 
-<PremiumPlanBlurb />
+<PlanBlurb plan="starter" />
 
 <YouTube id="ks-ppMH6WXw" />
 
-<Aside type="version">
-Available since `1.18.0`
-</Aside>
+<AvailableSince since="1.18.0"/>
 
 Connectors allow you to connect other sources of user data to your FusionAuth instance. Once the connection is created, you may either:
 
@@ -22,9 +17,8 @@ Connectors allow you to connect other sources of user data to your FusionAuth in
 
 The following Connectors are available:
 
-* [Generic Connector](/docs/lifecycle/migrate-users/connectors/generic-connector)
-* [LDAP Connector](/docs/lifecycle/migrate-users/connectors/ldap-connector)
-* [FusionAuth Connector](/docs/lifecycle/migrate-users/connectors/fusionauth-connector)
+
+<ChildCards />
 
 If you're looking for a Connector not listed here, review the open feature requests in [GitHub](https://github.com/FusionAuth/fusionauth-issues/issues) and either vote or comment on an existing feature, or open a new feature request if you do not find an existing issue.
 

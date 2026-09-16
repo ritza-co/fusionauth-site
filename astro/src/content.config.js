@@ -1,6 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
-import yaml from 'js-yaml';
+import { load as yamlLoad } from 'js-yaml';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
@@ -100,6 +100,13 @@ const docsCollection = defineCollection({
     hideBgImage: z.boolean().optional(),
     rssUrl: z.string().optional(),
     enableKapa: z.boolean().optional(),
+    icon: z.string().optional(),
+    darkIcon: z.string().optional(),
+    cardImage: z.string().optional(),
+    excludeFromNav: z.boolean().default(false),
+    sectionIndex: z.boolean().default(false),
+    nextPage: z.string().optional(),
+    lastPage: z.string().optional(),
   }),
 });
 
@@ -175,7 +182,7 @@ const apiEndpoints = defineCollection({
         path.join(CACHE_DIR, 'openapi.yaml')
       );
 
-      const spec = yaml.load(file);
+      const spec = yamlLoad(file);
 
       store.set({
         id: 'base-spec',

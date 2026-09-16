@@ -2,9 +2,6 @@
 title: Anonymous Users
 description: Learn how to create anonymous or stub users in FusionAuth.
 ---
-import Aside from 'src/components/Aside.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 A "stub" user profile, also known as an **anonymous user**, is a pattern to allow your users to build up profiles gradually before requiring identifying information such as an email address or username. This is a common pattern with business to consumer or gaming applications, where you want to lower friction as much as possible.
 
@@ -213,6 +210,6 @@ For more examples of searching users, see the [Searching Users With Elasticsearc
 
 Creating anonymous users as outlined in this guide has some limitations.
 
-* Creating an anonymous user counts as a [monthly active user](/docs/get-started/core-concepts/users#what-makes-a-user-active), which may affect your cost if you have a paid plan. Any updates to a user will not trigger an MAU.
+* Creating an anonymous user counts as a [monthly active user](/docs/get-started/core-concepts/types/users#what-makes-a-user-active), which may affect your cost if you have a paid plan. Any updates to a user will not trigger an MAU.
 * If a user removes the cookie or logs in from a different device, they will not have access to the anonymous profile.
 * You may end up with a large number of stub accounts, depending on when you create them. You use the User Search APIs to find anonymous accounts that have not been updated for 30 days and delete those accounts.

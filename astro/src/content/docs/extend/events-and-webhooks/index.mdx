@@ -3,15 +3,10 @@ title: Events & Webhooks
 description: An overview of the FusionAuth Event and Webhook system.
 order: 0
 ---
-import APIBlock from 'src/components/api/APIBlock.astro';
 import APIDeprecatedRemoved from 'src/content/docs/_shared/_api-deprecated-removed.mdx';
-import APIField from 'src/components/api/APIField.astro';
 import ApplicationWebhooksWarning from 'src/content/docs/extend/events-and-webhooks/_application-webhooks-warning.mdx';
-import Aside from 'src/components/Aside.astro';
-import Icon from 'src/components/icon/Icon.astro';
 import TenantWebhooksTable from 'src/content/docs/get-started/core-concepts/_tenant-webhooks-table.mdx';
 import { YouTube } from '@astro-community/astro-embed-youtube';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 Events and Webhooks are a core architecture feature of FusionAuth. This feature provides a publish-subscribe pattern to developers and integrators of FusionAuth. In this architecture pattern, the Webhook is the subscriber and FusionAuth is the publisher.
 
@@ -25,10 +20,8 @@ See the corresponding [Webhook APIs](/docs/apis/webhooks) if you'd prefer to pro
 
 Here are the topics in this section:
 
-* [Writing a Webhook](/docs/extend/events-and-webhooks/writing-a-webhook) - Covers how to write a Webhook that will process events from FusionAuth.
-* [Securing a Webhook](/docs/extend/events-and-webhooks/securing) - Covers how to ensure your webhooks are secured properly.
-* [Signing a Webhook](/docs/extend/events-and-webhooks/signing) - Covers how to sign webhook events
-* [Events](/docs/extend/events-and-webhooks/events/) - Covers all of the event types that FusionAuth sends to Webhooks
+
+<ChildCards />
 
 Continue reading below to see how the events and webhooks are configured using the FusionAuth user interface.
 
@@ -153,9 +146,7 @@ The security settings may be used to require authentication in order to submit a
 
 
 ### Tenants
-<Aside type="version">
-Available since 1.37.0
-</Aside>
+<AvailableSince since="1.37.0"/>
 
 Here's the configuration when a webhook will be sent for all tenants.
 
@@ -188,9 +179,9 @@ The exceptions to this are the following system events which are not tenant spec
 
 These events are configured at the system level and cannot be scoped to a certain tenant.
 
-<Aside type="version" title="Available since 1.65.0">
+<AvailableSince since="1.65.0">
 When an audit log is created with a `tenantId`, the `audit-log.create` event is delivered as a tenant-scoped event.
-</Aside>
+</AvailableSince>
 
 ### Headers
 

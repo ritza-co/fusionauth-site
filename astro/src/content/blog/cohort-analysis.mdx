@@ -9,8 +9,6 @@ tags: user, analysis, retention
 excerpt_separator: "{/* more */}"
 ---
 
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
 
 Understanding users' behavior can help guide product development and improve customer retention. This article demonstrates how to use FusionAuth to track customer statistics. Understanding *why* customers stay or leave might require data from your application database. But FusionAuth login statistics can help you understand *who* your customers are, and help you sort them into cohorts (groups). Cohort analysis allows you to answer questions like:
 
@@ -140,7 +138,7 @@ The friction chart groups users by how long it takes a user to log in for the fi
 This example chart shows that nearly all users do log in (indicating high interest), but only after a month, suggesting the business should make it easier.
 
 <Aside type="note">
-FusionAuth [creates a login record at the moment of application registration](/docs/get-started/core-concepts/users#what-makes-a-user-active), so the extraction code skips the first login date for each user. Without this, every user would appear to have zero friction, since their first login would always match their registration date.
+FusionAuth [creates a login record at the moment of application registration](/docs/get-started/core-concepts/types/users#what-makes-a-user-active), so the extraction code skips the first login date for each user. Without this, every user would appear to have zero friction, since their first login would always match their registration date.
 </Aside>
 
 ### Login Frequency Chart

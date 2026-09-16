@@ -3,11 +3,8 @@ title: OAuth Issuer Validation
 description: Learn how to validate the authorization response issuer parameter (RFC 9207) to prevent mix-up attacks.
 tags: oauth, issuer, rfc 9207, mix-up attack
 ---
-import Aside from 'src/components/Aside.astro';
 
-<Aside type="version">
-  Available since `1.69.0`
-</Aside>
+<AvailableSince since="1.69.0"/>
 
 FusionAuth includes the `iss` parameter in authorization responses as defined by [RFC 9207 - OAuth 2.0 Authorization Server Issuer Identification](https://www.rfc-editor.org/rfc/rfc9207). This parameter helps clients prevent mix-up attacks when interacting with multiple authorization servers.
 
@@ -27,7 +24,7 @@ The value of the `iss` parameter is the issuer configured on the tenant. This va
 
 ## Validating the Issuer
 
-Clients should validate the `iss` parameter by comparing it against the authorization server's metadata. The expected issuer value can be obtained from the [OpenID Connect Discovery](/docs/apis/oauth#openid-configuration) endpoint at `/.well-known/openid-configuration` in the `issuer` field.
+Clients should validate the `iss` parameter by comparing it against the authorization server's metadata. The expected issuer value can be obtained from the [OpenID Connect Discovery](/docs/apis/oauth/openid-configuration) endpoint at `/.well-known/openid-configuration` in the `issuer` field.
 
 ### Validation Steps
 

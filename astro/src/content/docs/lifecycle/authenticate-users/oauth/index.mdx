@@ -4,14 +4,8 @@ description: An overview of how FusionAuth provides an OAuth 2.0 and OpenID Conn
 order: 0
 tags: machine to machine, oauth, oauth2, oauth 2.0, oauth 2
 ---
-import APIBlock from 'src/components/api/APIBlock.astro';
-import APIField from 'src/components/api/APIField.astro';
 import ApplicationOAuthSettings from 'src/content/docs/_shared/_application-oauth-settings.mdx';
-import Breadcrumb from 'src/components/Breadcrumb.astro';
-import PremiumPlanBlurb from 'src/content/docs/_shared/_premium-plan-blurb.mdx';
-import Aside from 'src/components/Aside.astro';
 import ClientCredentialsPermissionsExplanation from 'src/content/docs/lifecycle/authenticate-users/oauth/_client_credentials_permissions_explanation.mdx';
-import JSON from 'src/components/JSON.astro';
 import ClientCredentialsScopesOmitted from 'src/content/docs/lifecycle/authenticate-users/oauth/_client_credentials_scopes_omitted.mdx';
 import ClientCredentialsScopesSingleEntity from 'src/content/docs/lifecycle/authenticate-users/oauth/_client_credentials_scopes_single_entity.mdx';
 import ClientCredentialsScopesMultipleEntities from 'src/content/docs/lifecycle/authenticate-users/oauth/_client_credentials_scopes_multiple_entities.mdx';
@@ -51,7 +45,7 @@ If you have already created a FusionAuth Application for the purpose of your app
 
 In this example you will see we have created a new Application named `Pied Piper` and have filled out the fields in the <Breadcrumb>OAuth Configuration</Breadcrumb> tab. A FusionAuth application represents an authenticated resource that you will be using with FusionAuth.
 
-Additional OAuth controls can be managed through [Tenant Configuration](/docs/get-started/core-concepts/tenants#tenant-configuration).
+Additional OAuth controls can be managed through [Tenant Configuration](/docs/get-started/core-concepts/types/tenants#tenant-configuration).
 
 ![Application OAuth Configuration](/img/docs/lifecycle/authenticate-users/oauth/oauth-application.png)
 
@@ -65,9 +59,9 @@ The supported OAuth grant types that involve user interaction allow specifying a
 
 ## Configure Entities
 
-<PremiumPlanBlurb />
+<PlanBlurb plan="starter" />
 
-The Client Credentials grant takes place between two Entities. You can learn more about [Entities](/docs/get-started/core-concepts/entity-management) in the <Breadcrumb>Core Concepts</Breadcrumb> section.
+The Client Credentials grant takes place between two Entities. You can learn more about [Entities](/docs/get-started/core-concepts/types/entity-management) in the <Breadcrumb>Core Concepts</Breadcrumb> section.
 
 There are two entities which take part in a Client Credentials grant in FusionAuth: the recipient Entity and the target Entity.
 
@@ -336,7 +330,7 @@ client_id=3c219e58-ed0e-4b18-ad48-f4f92793ae32
 
 ## Example Client Credentials Grant
 
-<PremiumPlanBlurb />
+<PlanBlurb plan="starter" />
 
 Most OAuth grants are designed to allow users to delegate permissions.
 
@@ -415,7 +409,7 @@ This will redirect to the configured OAuth **redirect_uri** per the typical Auth
 The Device Authorization Grant will be considered approved when the Authorization Grant **code** has been exchanged for a token.
 
 Default values are provided for the durations that the device code and user code remain valid, as well as the user code generator settings.
-These values may be adjusted through the <Breadcrumb>Advanced</Breadcrumb> tab of [Tenant Configuration](/docs/get-started/core-concepts/tenants#advanced).
+These values may be adjusted through the <Breadcrumb>Advanced</Breadcrumb> tab of [Tenant Configuration](/docs/get-started/core-concepts/types/tenants#advanced).
 
 ### Initiate the Device Authorization Grant flow
 

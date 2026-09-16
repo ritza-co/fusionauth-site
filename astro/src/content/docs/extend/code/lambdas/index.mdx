@@ -3,9 +3,6 @@ title: Lambdas
 description: An overview of FusionAuth's lambdas, which are pluggable JavaScript code that run at various points in the user lifecycle.
 order: 0
 ---
-import AdvancedPlanBlurb from 'src/content/docs/_shared/_advanced-plan-blurb.mdx';
-import Aside from 'src/components/Aside.astro';
-import Breadcrumb from 'src/components/Breadcrumb.astro'
 import LambdaTypes from 'src/content/docs/_shared/_lambda-types.astro';
 import { YouTube } from '@astro-community/astro-embed-youtube';
 
@@ -56,7 +53,7 @@ function populate(jwt, user, registration) {
 
 ## HTTP Connect
 
-<AdvancedPlanBlurb />
+<PlanBlurb plan="essentials" />
 
 Lambda HTTP Connect makes HTTP requests from within a lambda.
 
@@ -86,9 +83,7 @@ For more information, see the [Lambda HTTP Connect documentation](/docs/extend/c
 
 ## Secrets
 
-<Aside type="version">
-  Available Since Version `1.64.0`
-</Aside>
+<AvailableSince since="1.64.0"/>
 
 Lambda secrets help you securely store secret values used in lambdas, like API keys and application passwords.
 
