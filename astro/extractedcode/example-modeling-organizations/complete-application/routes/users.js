@@ -59,7 +59,7 @@ router.get('/', checkGrantPermissions(['Admin', 'Viewer']), async function (req,
 
   const results = await request.json();
 
-  //tag::getGrantsForAllUsers[]
+  //:snippet-start: getGrantsForAllUsers
   // Get the grants for each user:
   const allPermissions = req.session.selectedGrant.entity.type.permissions
   for (let i = 0; i < results.users.length; i++) {
@@ -81,7 +81,7 @@ router.get('/', checkGrantPermissions(['Admin', 'Viewer']), async function (req,
       }
     });
   }
-  //end::getGrantsForAllUsers[]
+  //:snippet-end:
 
 
   res.render('users', {

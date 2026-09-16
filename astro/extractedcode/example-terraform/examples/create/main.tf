@@ -11,7 +11,7 @@ provider "fusionauth" {
   api_key = var.fusionauth_api_key
   host    = var.fusionauth_host
 }
-#tag::defaultDataSource[]
+# :snippet-start: defaultDataSource
 data "fusionauth_tenant" "Default" {
   name = "Default"
 }
@@ -19,8 +19,8 @@ data "fusionauth_tenant" "Default" {
 data "fusionauth_application" "FusionAuth" {
   name = "FusionAuth"
 }
-#end::defaultDataSource[]
-#tag::createForumTenant[]
+# :snippet-end:
+# :snippet-start: createForumTenant
 resource "fusionauth_tenant" "forum" {
   lifecycle {
     prevent_destroy = true
@@ -95,8 +95,8 @@ resource "fusionauth_tenant" "forum" {
     set_password_email_template_id = fusionauth_email.setup-password.id
   }
 }
-#end::createForumTenant[]
-#tag::createForumApplication[]
+# :snippet-end:
+# :snippet-start: createForumApplication
 resource "fusionauth_application" "forum" {
   tenant_id = fusionauth_tenant.forum.id
   name      = "forum"
@@ -104,8 +104,8 @@ resource "fusionauth_application" "forum" {
     access_token_id = fusionauth_key.forum-access-token.id
   }
 }
-#end::createForumApplication[]
-#tag::createForumApplicationRoles[]
+# :snippet-end:
+# :snippet-start: createForumApplicationRoles
 resource "fusionauth_application_role" "forum_admin_role" {
   application_id = fusionauth_application.forum.id
   is_default     = false
@@ -119,13 +119,13 @@ resource "fusionauth_application_role" "forum_user_role" {
   is_super_role  = false
   name           = "user"
 }
-#end::createForumApplicationRoles[]
-#tag::createKey[]
+# :snippet-end:
+# :snippet-start: createKey
 resource "fusionauth_key" "forum-access-token" {
   algorithm = "HS512"
   name      = "Forum Application Access Token Key"
 }
-#end::createKey[]
+# :snippet-end:
 
 resource "fusionauth_email" "breached-password-notification" {
   name                  = "Breached Password Notification"
@@ -135,7 +135,7 @@ resource "fusionauth_email" "breached-password-notification" {
   default_text_template = file("${path.module}/email_templates/Breached_Password_Notification.html.ftl")
   from_email            = "example@local.fusionauth.io"
 }
-#tag::createEmailTemplate[]
+# :snippet-start: createEmailTemplate
 resource "fusionauth_email" "forgot-password" {
   name                  = "Forgot Password"
   default_from_name     = "Forgot Password"
@@ -153,7 +153,7 @@ resource "fusionauth_email" "setup-password" {
   default_text_template = file("${path.module}/email_templates/Setup_Password.txt.ftl")
   from_email            = "example@local.fusionauth.io"
 }
-#end::createEmailTemplate[]
+# :snippet-end:
 resource "fusionauth_email" "confirm-child-account" {
   name                  = "Confirm Child Account"
   default_from_name     = "Confirm Child Account"

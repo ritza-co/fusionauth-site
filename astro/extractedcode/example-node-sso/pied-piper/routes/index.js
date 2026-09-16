@@ -1,4 +1,4 @@
-//tag::constants[]
+// :snippet-start: constants
 const express = require('express');
 const router = express.Router();
 const {FusionAuthClient} = require('@fusionauth/typescript-client');
@@ -30,9 +30,9 @@ const title = 'Pied Piper';
 const client = new FusionAuthClient('noapikeyneeded', fusionAuthURL);
 const loginUrl = fusionAuthURL+'/oauth2/authorize?client_id='+clientId+'&response_type=code&redirect_uri=http%3A%2F%2F'+hostName+'%3A'+port+'%2Foauth-redirect&scope=offline_access%20openid';
 const logoutUrl = fusionAuthURL+'/oauth2/logout?client_id='+clientId;
-//end::constants[]
+// :snippet-end:
 
-//tag::homepageroute[]
+// :snippet-start: homepageroute
 /* GET home page. */
 router.get('/', function (req, res, next) {
 
@@ -42,32 +42,32 @@ router.get('/', function (req, res, next) {
   }
   res.render('index', {user: req.session.user, title: title + ' App', clientId: clientId, logoutUrl: "/logout", loginUrl: loginUrl});
 });
-//end::homepageroute[]
+// :snippet-end:
 
-//tag::loginpageroute[]
+// :snippet-start: loginpageroute
 /* Login page if we aren't logged in */
 router.get('/login', function (req, res, next) {
   res.render('login', {title: title + ' Login', clientId: clientId, loginUrl: loginUrl});
 });
-//end::loginpageroute[]
+// :snippet-end:
 
-//tag::logoutpageroute[]
+// :snippet-start: logoutpageroute
 /* Logout page */
 router.get('/logout', function (req, res, next) {
   req.session.user = null;
   res.redirect(302, logoutUrl);
 });
-//end::logoutpageroute[]
+// :snippet-end:
 
-//tag::endsessionroute[]
+// :snippet-start: endsessionroute
 /* End session for global SSO logout */
 router.get('/endsession', function (req, res, next) {
   req.session.user = null;
   res.redirect(302, "/login");
 });
-//end::endsessionroute[]
+// :snippet-end:
 
-//tag::oauthredirectroute[]
+// :snippet-start: oauthredirectroute
 /* OAuth return from FusionAuth */
 router.get('/oauth-redirect', function (req, res, next) {
   // This code stores the user in a server-side session
@@ -88,6 +88,6 @@ router.get('/oauth-redirect', function (req, res, next) {
         res.redirect(302, '/');
       }).catch((err) => {console.log("in error"); console.error(JSON.stringify(err));});
 });
-//end::oauthredirectroute[]
+// :snippet-end:
 
 module.exports = router;

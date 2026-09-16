@@ -459,6 +459,39 @@ These files use `<RemoteContent>` to fetch markdown from remote files. Convert t
 - [x] sdks/swift-sdk.mdx
 - [x] sdks/vue-sdk.mdx
 
+## Blog Files with RemoteCode (24 files)
+
+These blog files use `<RemoteCode>`. Convert to use `<LocalCode>`.
+
+- [x] blog/android-end-to-end-testing.mdx
+- [x] blog/android-sdk-beta.mdx
+- [x] blog/anonymous-user.mdx
+- [x] blog/forgerock-password-storage.mdx
+- [x] blog/how-to-design-oauth-scopes.mdx
+- [x] blog/identity-verification-before-registration.mdx
+- [x] blog/swift-sdk-beta.mdx
+- [x] blog/2023-hacktoberfest.mdx (import only, no usage)
+- [x] blog/2024-hacktoberfest.mdx (import only, no usage)
+- [x] blog/dotnet-templates.mdx (import only, no usage)
+- [ ] blog/6-indicators-doing-mocking-wrong.mdx (SKIP: missing repos)
+- [ ] blog/backend-for-frontend.mdx (SKIP: missing repo)
+- [ ] blog/custom-scopes-in-third-party-applications.mdx (SKIP: missing repo)
+- [ ] blog/get-more-value-out-of-fusionauth.mdx (SKIP: missing repo)
+- [ ] blog/javascript-sdks.mdx (SKIP: missing repos)
+- [ ] blog/modeling-family-and-consents.mdx (SKIP: missing repo)
+- [ ] blog/nextjs-single-sign-on.mdx (SKIP: missing repo)
+- [ ] blog/permify-bulk-permissions-check.mdx (SKIP: missing repo)
+- [ ] blog/react-example-application.mdx (SKIP: missing repo)
+- [ ] blog/remix-demo.mdx (SKIP: missing repo)
+- [ ] blog/securing-react-native-with-oauth.mdx (SKIP: missing repo)
+- [ ] blog/spring-and-fusionauth.mdx (SKIP: missing repo)
+- [ ] blog/to-mock-or-not-mock-auth.mdx (SKIP: missing repo)
+- [ ] blog/using-identity-provider-links.mdx (SKIP: missing repo)
+
+## Docs Files with RemoteCode (1 file)
+
+- [x] docs/get-started/download-and-install/reference/docker-configuration.mdx
+
 
 ---
 

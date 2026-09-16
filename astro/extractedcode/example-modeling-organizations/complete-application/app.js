@@ -42,9 +42,9 @@ app.use(session({ secret: "TOPSECRET", resave: false, saveUninitialized: false }
 app.use(passport.initialize());
 app.use(passport.session());
 
-//tag::loadGrantsPipeline[]
+//:snippet-start: loadGrantsPipeline
 app.use(loadGrants);
-//end::loadGrantsPipeline[]
+//:snippet-end:
 app.use(function (req, res, next) {
   req.logoutURL = FUSIONAUTH_LOGOUT_URL;
   next();
@@ -92,7 +92,7 @@ passport.deserializeUser(function (user, done) {
 app.use('/', indexRouter);
 app.get("/login", passport.authenticate("oauth2"));
 
-//tag::loadGrantsPassport[]
+//:snippet-start: loadGrantsPassport
 app.get("/auth/callback",
   passport.authenticate("oauth2", { failureRedirect: "/" }), 
   loadGrants,
@@ -102,7 +102,7 @@ app.get("/auth/callback",
     res.redirect("/");
   }
 );
-//end::loadGrantsPassport[]
+//:snippet-end:
 
 app.use('/users', ensureLoggedIn('/login'), usersRouter);
 app.use('/sales', ensureLoggedIn('/login'), salesRouter);

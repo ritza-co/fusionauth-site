@@ -241,7 +241,7 @@ app.get('/logout', (req, res, next) => {
   res.redirect(302, `${fusionAuthURL}/oauth2/logout?client_id=${clientId}`);
 });
 
-//tag::endsession[]
+// :snippet-start: endsession[]
 app.get('/endsession', async (req, res, next) => {
   console.log('Ending session...')
   const refreshTokenId = req.cookies[refreshToken];
@@ -267,7 +267,7 @@ app.get('/endsession', async (req, res, next) => {
 
   res.redirect(302, '/')
 });
-//end::endsession[]
+// :snippet-end:
 
 // start the Express server
 app.listen(port, () => {

@@ -1,4 +1,4 @@
-//tag::checkGrantPermissions[]
+//:snippet-start: checkGrantPermissions
 function checkGrantPermissions(allowedPermissions) {
     return function (req, res, next) {
         const selectedGrant = req.session.selectedGrant;
@@ -17,7 +17,7 @@ function checkGrantPermissions(allowedPermissions) {
         next();
     }
 }
-//end::checkGrantPermissions[]
+//:snippet-end:
 
 module.exports = checkGrantPermissions;
 

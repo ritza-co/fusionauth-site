@@ -1,4 +1,3 @@
-# tag::starter-server
 import logging
 
 from fastmcp import FastMCP
@@ -28,4 +27,3 @@ if __name__ == "__main__":
 
     mcp_app = mcp.http_app(stateless_http=True)
     uvicorn.run(mcp_app, host="0.0.0.0", port=8000)
-# end::starter-server

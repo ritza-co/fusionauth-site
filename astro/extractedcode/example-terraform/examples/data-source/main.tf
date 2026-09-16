@@ -11,16 +11,16 @@ provider "fusionauth" {
   api_key = var.fusionauth_api_key
   host = var.fusionauth_host
 }
-#tag::defaultTenantDataSource[]
+# :snippet-start: defaultTenantDataSource
 data "fusionauth_tenant" "Default" {
   name = "Default"
 }
-#end::defaultTenantDataSource[]
-#tag::defaultApplicationDataSource[]
+# :snippet-end:
+# :snippet-start: defaultApplicationDataSource
 data "fusionauth_application" "FusionAuth" {
   name = "FusionAuth"
 }
-#end::defaultApplicationDataSource[]
+# :snippet-end:
 
 resource "fusionauth_application" "forum" {
   tenant_id = data.fusionauth_tenant.Default.id

@@ -100,9 +100,9 @@ app.use(cookieParser());
 /** Decode Form URL Encoded data */
 app.use(express.urlencoded());
 
-//tag::redirectmiddleware[]
+// :snippet-start: redirectmiddleware[]
 app.use(redirectFunction);
-//end::redirectmiddleware[]
+// :snippet-end:
 
 // Static Files
 app.use('/static', express.static(path.join(__dirname, '../static/')));
@@ -211,7 +211,7 @@ app.get('/logout', (req, res, next) => {
   res.redirect('/endsession');
 });
 
-//tag::endsession[]
+// :snippet-start: endsession[]
 app.get('/endsession', async (req, res, next) => {
   console.log('Ending session...')
   const refreshTokenId = req.cookies[refreshToken];
@@ -232,7 +232,7 @@ app.get('/endsession', async (req, res, next) => {
   // redirect back to changebank
   res.redirect(302, 'http://'+cbhostname+':'+cbport+'/account')
 });
-//end::endsession[]
+// :snippet-end:
 
 // start the Express server
 app.listen(port, () => {

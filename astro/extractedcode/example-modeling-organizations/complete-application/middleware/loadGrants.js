@@ -2,7 +2,7 @@
 const FUSIONAUTH_API_KEY = process.env.FUSIONAUTH_API_KEY;
 const FUSIONAUTH_URL = process.env.FUSIONAUTH_URL;
 
-//tag::loadGrantsMW[]
+//:snippet-start: loadGrantsMW
 async function loadGrants(req, res, next) {
     if (req.isAuthenticated()) {
         const grantsResponse = await fetch(`${FUSIONAUTH_URL}/api/entity/grant/search?userId=${req.user.user.id}`, {
@@ -15,6 +15,6 @@ async function loadGrants(req, res, next) {
     }
     next();
 };
-//end::loadGrantsMW[]
+//:snippet-end:
 
 module.exports = loadGrants;

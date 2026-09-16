@@ -1,4 +1,4 @@
-#tag::terraformProvider[]
+# :snippet-start: terraformProvider
 terraform {
   required_providers {
     fusionauth = {
@@ -12,8 +12,8 @@ provider "fusionauth" {
   api_key = var.fusionauth_api_key
   host = var.fusionauth_host
 }
-#end::terraformProvider[]
-#tag::defaultTenantImport[]
+# :snippet-end:
+# :snippet-start: defaultTenantImport
 import {
   to = fusionauth_tenant.Default
   id = "Replace-This-With-The-Existing-Default-Tenant-Id"
@@ -99,8 +99,8 @@ resource "fusionauth_tenant" "Default" {
     verify_email_when_changed           = false
   }
 }
-#end::defaultTenantImport[]
-#tag::defaultApplicationImport[]
+# :snippet-end:
+# :snippet-start: defaultApplicationImport
 import {
   to = fusionauth_application.FusionAuth
   id = "3c219e58-ed0e-4b18-ad48-f4f92793ae32"
@@ -113,7 +113,7 @@ resource "fusionauth_application" "FusionAuth" {
   tenant_id = fusionauth_tenant.Default.id
   name = "FusionAuth"
 }
-#end::defaultApplicationImport[]
+# :snippet-end:
 resource "fusionauth_application" "forum" {
   tenant_id = fusionauth_tenant.Default.id
   name      = "forum"

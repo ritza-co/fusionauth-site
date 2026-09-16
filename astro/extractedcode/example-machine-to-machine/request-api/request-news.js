@@ -12,7 +12,7 @@ const INVALID_PERMISSION = 'weather';
 
 const client = new FusionAuthClient(FUSIONAUTH_API_KEY, BASE_URL);
 
-// tag::requestAccessToken
+// :snippet-start: requestAccessToken
 function buildScope(targetEntityId, permissionString) {
   return 'target-entity:'+targetEntityId+':'+permissionString;
 }
@@ -29,7 +29,7 @@ async function requestAccessTokenSuccess() {
   }
   return access_token;
 }
-// end::requestAccessToken
+// :snippet-end:
 
 async function requestAccessTokenFailure() {
   let access_token = null;
@@ -44,7 +44,7 @@ async function requestAccessTokenFailure() {
   return access_token;
 }
 
-// tag::fetchNews
+// :snippet-start: fetchNews
 async function fetchNews(access_token) {
   try {
     const response = await fetch(API_BASE_URL + '/api/news', {
@@ -65,7 +65,7 @@ async function fetchNews(access_token) {
     console.error('Error fetching news:', error);
   }
 }
-// end::fetchNews
+// :snippet-end:
 
 
 (async () => {

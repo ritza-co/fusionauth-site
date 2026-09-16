@@ -44,7 +44,7 @@ router.post('/', checkGrantPermissions(['Admin']), async function (req, res, nex
         entity: req.body
     }
 
-    //tag::updateEntity[]
+    //:snippet-start: updateEntity
     const response = await fetch(`${FUSIONAUTH_URL}/api/entity/${entityId}`, {
         method: 'PATCH',
         headers: {
@@ -55,7 +55,7 @@ router.post('/', checkGrantPermissions(['Admin']), async function (req, res, nex
     });
     const entity = await response.json();
     req.session.selectedGrant.entity = entity.entity;
-    //end::updateEntity[]
+    //:snippet-end:
 
     if (!response.ok) {
         res.status(500).send('Error updating entity');

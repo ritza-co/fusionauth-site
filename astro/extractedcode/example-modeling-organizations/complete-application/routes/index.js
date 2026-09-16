@@ -28,7 +28,7 @@ router.get('/', function(req, res, next) {
 });
 
 
-//tag::companyPost[]
+//:snippet-start: companyPost
 router.post('/company', ensureLoggedIn('/login'), function(req, res, next) {
   const grantId = req.body.grantId;
   // find the corresponding grant: 
@@ -37,7 +37,7 @@ router.post('/company', ensureLoggedIn('/login'), function(req, res, next) {
   console.log(`Selected company: ${grantId} - ${selectedGrant.entity.name}`);
   return res.redirect('/');
 });
-//end::companyPost[]
+//:snippet-end:
 
 
 module.exports = router;

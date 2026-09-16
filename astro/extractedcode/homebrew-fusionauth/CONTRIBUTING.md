@@ -1,6 +1,6 @@
 # Contributing to FusionAuth Homebrew Tap
 <!--
-tag::forDocSiteContributing[]
+:snippet-start: forDocSiteContributing
 -->
 Thank you for your interest in contributing to FusionAuth Homebrew! This document provides guidelines and instructions for contributing to this project.
 
@@ -79,12 +79,12 @@ If you have any questions about contributing, feel free to open an issue asking 
 
 Thank you for helping to improve FusionAuth's Homebrew.
 <!--
-end::forDocSiteContributing[]
+:snippet-end:
 -->
 
 # Release
 <!--
-tag::forDocSiteRelease[]
+:snippet-start: forDocSiteRelease
 -->
 The maintainers manage the release process. If you have questions about the release process, please open an issue.
 
@@ -102,5 +102,5 @@ Without using Savant
 ./publish.sh <version>
 ```
 <!--
-end::forDocSiteRelease[]
+:snippet-end:
 -->

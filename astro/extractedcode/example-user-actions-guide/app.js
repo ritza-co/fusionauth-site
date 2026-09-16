@@ -6,11 +6,11 @@ var path = require('path');
 var logger = require('morgan');
 var dotenv = require('dotenv').config();
 
-// tag::tsClientLib[]
+// :snippet-start: tsClientLib
 const client = require('@fusionauth/typescript-client');
 const apikey = process.env.API_KEY;
 const fusionAuthURL = process.env.BASE_URL;
-// end::tsClientLib[]
+// :snippet-end:
 
 var indexRouter = require('./routes/index');
 
@@ -29,25 +29,25 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 
-// tag::intercom[]
+// :snippet-start: intercom
 app.post('/intercom', function(req, res) {
   console.log('Incoming Request to Intercom:');
   console.log(req.body);
   console.log('');
   res.sendStatus(200);
 });
-// end::intercom[]
+// :snippet-end:
 
-// tag::slack[]
+// :snippet-start: slack
 app.post('/slack', function(req, res) {
   console.log('Incoming Request to Slack:');
   console.log(req.body);
   console.log('');
   res.sendStatus(200);
 });
-// end::slack[]
+// :snippet-end:
 
-// tag::expire[]
+// :snippet-start: expire
 app.post('/expire', async function(req, res) {
   console.log('Incoming Request to PiedPiper Expiry:');
   console.log(req.body);
@@ -80,7 +80,7 @@ app.post('/expire', async function(req, res) {
   }
   res.sendStatus(200);
 });
-// end::expire[]
+// :snippet-end:
 
 app.use(function(req, res, next) {
   next(createError(404));

@@ -17,7 +17,7 @@ The following examples assume you will be installing `fusionauth-app`. And `post
 ## Prerequisites
 
 <!--
-tag::forDocSitePrerequisites[]
+:snippet-start: forDocSitePrerequisites
 -->
 FusionAuth requires a database and a search engine. The recommended database is PostgreSQL, and the recommended search engine is OpenSearch.
 
@@ -58,13 +58,13 @@ brew services info opensearch
 brew services start opensearch
 ```
 <!--
-tag::forDocSitePrerequisites[]
+:snippet-end:
 -->
 
 ## Install FusionAuth
 
 <!--
-tag::forDocSiteInstall[]
+:snippet-start: forDocSiteInstall
 -->
 To install FusionAuth using Homebrew, you can use the following commands:
 
@@ -74,13 +74,13 @@ brew trust fusionauth/fusionauth
 brew install fusionauth-app
 ```
 <!--
-end::forDocSiteInstall[]
+:snippet-end:
 -->
 
 ### Silent Configuration
 
 <!--
-tag::forDocSiteConfiguration[]
+:snippet-start: forDocSiteConfiguration
 -->
 After installing FusionAuth, you can configure it before starting the service to run a silent configuration. The configuration file is located at `$(brew --prefix)/etc/fusionauth/fusionauth.properties`.
 
@@ -99,13 +99,13 @@ echo "search.servers=http://localhost:9200" >> $(brew --prefix)/etc/fusionauth/f
 cat $(brew --prefix)/etc/fusionauth/fusionauth.properties
 ```
 <!--
-end::forDocSiteConfiguration[]
+:snippet-end:
 -->
 
 ## Manage FusionAuth
 
 <!--
-tag::forDocSiteManage[]
+:snippet-start: forDocSiteManage
 -->
 After installing and configuring FusionAuth, you can manage the service using Homebrew.
 
@@ -147,14 +147,14 @@ To stop the FusionAuth service, you can use:
 brew services stop fusionauth-app
 ```
 <!--
-end::forDocSiteManage[]
+:snippet-end:
 -->
 
 
 ## Uninstall FusionAuth
 
 <!--
-tag::forDocSiteUninstall[]
+:snippet-start: forDocSiteUninstall
 -->
 To uninstall FusionAuth, you can use the following command:
 
@@ -175,5 +175,5 @@ If you want to remove the configuration and log files as well, you can search fo
 brew untap fusionauth/fusionauth
 ```
 <!--
-end::forDocSiteUninstall[]
+:snippet-end:
 -->

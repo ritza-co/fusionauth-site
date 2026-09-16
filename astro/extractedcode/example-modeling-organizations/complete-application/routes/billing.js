@@ -26,14 +26,14 @@ router.get('/', checkGrantPermissions(['Admin', 'Billing', 'Viewer']), function 
 
 
 
-//tag::billingPost[]
+//:snippet-start: billingPost
 router.post('/', checkGrantPermissions(['Admin', 'Billing']), function (req, res, next) {
     const companyId = req.session.selectedGrant.entity.id;
     billingData[companyId].push(req.body);
     fs.writeFileSync('data/billing.json', JSON.stringify(billingData, null, 2));
     res.redirect('/billing');
 });
-//end::billingPost[]
+//:snippet-end:
 
 
 module.exports = router;

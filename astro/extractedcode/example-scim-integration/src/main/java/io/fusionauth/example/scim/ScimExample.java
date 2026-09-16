@@ -31,7 +31,7 @@ import de.captaingoldfish.scim.sdk.common.response.ListResponse;
 
 public class ScimExample {
 
-	// tag::scimConfiguration[]
+	// :snippet-start: scimConfiguration
 	// change these
 	private static final String FUSIONAUTH_HOST = "https://local.fusionauth.io";
 	private static final String SCIM_SERVER_ENTITY_ID = "70f195ba-0729-4b20-b07a-db8b6914acc4";
@@ -43,9 +43,9 @@ public class ScimExample {
 	private static final String SCIM_PERMISSIONS = "scim:user:read,scim:user:create";
 	private static final String SCIM_APPLICATION_BASE_URL = FUSIONAUTH_HOST+"/api/scim/resource/v2/";
 	private static final String DEFAULT_USER_PASSWORD = "password";
-	// end::scimConfiguration[]
+	// :snippet-end:
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String args) throws Exception {
 		String secret = "";
 		String operation = "get";
 
@@ -81,7 +81,7 @@ public class ScimExample {
 
 	}
 
-	// tag::getCredentials[]
+	// :snippet-start: getCredentials
 	private static String getCredentials(String secret) throws AuthenticationException, IOException {
 		CloseableHttpClient client = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(FUSIONAUTH_HOST+"/oauth2/token");
@@ -110,9 +110,9 @@ public class ScimExample {
 
 		return token;
 	}
-	// end::getCredentials[]
+	// :snippet-end:
 
-	// tag::createUser[]
+	// :snippet-start: createUser
 	private static void createUser(ScimRequestBuilder scimRequestBuilder, String username, String password) {
 
 		User user = User.builder().password(password).userName(username).active(true).build();
@@ -135,7 +135,7 @@ public class ScimExample {
 			System.out.println("error response: "+errorResponse);
 		}
 	}
-	// end::createUser[]
+	// :snippet-end:
 
 
 	private static void getUser(ScimRequestBuilder scimRequestBuilder, String id) {
