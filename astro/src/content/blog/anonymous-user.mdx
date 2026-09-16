@@ -9,7 +9,7 @@ categories: Education
 tags: anonymous accounts, custom login workflows, jwts, registration, friction, python, ciam
 excerpt_separator: "{/* more */}"
 ---
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 For many applications, a user is forced to register for application access. You want to know who the user is so you can provide them with individualized functionality and data.
 
@@ -99,7 +99,7 @@ This cookie can be stored as an HttpOnly, Secure cookie since only your server-s
 
 Here's an example of code that sets a JWT with a user Id, using the [FusionAuth JWT Vend API](/docs/apis/jwt/vend-a-jwt).
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-anonymous-user/main/complete-application/server.py" lang="python" tags="createJWT" />
+<LocalCode src="example-anonymous-user/complete-application/server.py.snippet.createJWT.py" lang="python" />
 
 Because you are storing information on the device, if a person accesses your site from a different browser or device, you have no way of reconciling them. This is also true if the user removes the cookie or the cookie expires. These are limitations of cookies, so there's no way around it.
 
@@ -109,7 +109,7 @@ When you convert an account, you associate the user Id stored in the cookie and 
 
 Here's an example of code that does this:
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-anonymous-user/main/complete-application/server.py" lang="python" tags="registerAnonymousUserRoute" />
+<LocalCode src="example-anonymous-user/complete-application/server.py.snippet.registerAnonymousUserRoute.py" lang="python" />
 
 ### Verifying Accounts
 
@@ -121,7 +121,7 @@ One easy way to verify ownership is to send the password reset email or text aft
 
 Then you can update the associated profile to remove anonymous account indicators. Below you can see the code to do this.
 
-<RemoteCode url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-anonymous-user/main/complete-application/server.py" lang="python" tags="cleanupAnonymousUserRoute" />
+<LocalCode src="example-anonymous-user/complete-application/server.py.snippet.cleanupAnonymousUserRoute.py" lang="python" />
 
 In FusionAuth, the easiest way to do this is via a webhook, but different systems have different mechanisms. The important point is to leave the profile untouched until ownership is proven.
 

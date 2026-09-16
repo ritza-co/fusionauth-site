@@ -10,8 +10,8 @@ excerpt_separator: "{/* more */}"
 ---
 import Aside from 'src/components/Aside.astro';
 import Breadcrumb from 'src/components/Breadcrumb.astro';
-import RemoteContent from 'src/components/RemoteContent.astro';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalMarkdown from 'src/components/LocalMarkdown.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 
 Utilizing OAuth2 with a browser popup for authentication can be challenging when implementing automated testing in an [Android Emulator](https://developer.android.com/studio/run/emulator).
 
@@ -86,8 +86,7 @@ All the relevant data for testing is defined in FusionAuth including multiple fl
 
 ### Kickstart Details
 
-<RemoteContent url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-kotlin-android-native/main/TESTING.md"
-    tags="forDocSiteKickstart" />
+<LocalMarkdown src="quickstart-kotlin-android-native/TESTING.snippet.forDocSiteKickstart.md" />
 
 #### Why 10.0.2.2
 
@@ -164,7 +163,7 @@ Depending on the build time of your app, you may see only a mobile screen for so
 
 With the test cases and test data defined and additional prerequisites for our testing environment and strategy in place, we are able to create the FullEnd2EndTest Gradle task, which we will explain in more detail below.
 
-<RemoteCode lang="kotlin" title="FullEnd2EndTest.kt" url="https://raw.githubusercontent.com/FusionAuth/fusionauth-quickstart-kotlin-android-native/main/complete-application/app/src/androidTest/java/io/fusionauth/sdk/FullEnd2EndTest.kt" />
+<LocalCode lang="kotlin" title="FullEnd2EndTest.kt" src="quickstart-kotlin-android-native/complete-application/app/src/androidTest/java/io/fusionauth/sdk/FullEnd2EndTest.kt" />
 
 #### Test Automation Setup
 
