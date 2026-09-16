@@ -1,16 +1,5 @@
 # Bluehawk Snippet Migration Tracker
 
-## CONTINUATION GUIDE FOR NEXT LLM SESSION
-
-### Current Status (as of 2026-09-16)
-- **RemoteContent → LocalMarkdown**: COMPLETE (8/8 files converted, 1 skipped)
-- **RemoteValue → LocalValue**: COMPLETE (1/1 file converted, 2 skipped)
-- **RemoteCode → LocalCode**: COMPLETE (82/82 files converted, 12 skipped in other branches)
-- **Old-style tags → Bluehawk**: COMPLETE (all source files converted)
-- **Unreferenced tags → Bluehawk**: COMPLETE (all 9 files converted)
-- **Email Templates → LocalEmailCode**: COMPLETE (28 files converted to new component)
-- **Overall**: 191/191 files converted, 15 skipped
-
 ### Key Information
 
 #### Component to Use
@@ -534,3 +523,35 @@ These files contain only tags that are NOT referenced by any documentation. Revi
 ### Preserved: astro/src/content/json/webauthn/
 - **Reason**: JSON files referenced by MDX files (different from extractedcode)
 - **References**: Used by webauthn API documentation for JSON examples
+
+## Repo Imports (2026-09-16)
+
+Imported 18 repos into `astro/extractedcode/` for blog file conversions:
+
+1. example-hostedbackend
+2. example-ruby-on-rails-custom-scopes
+3. example-dotnet-windowsform-api
+4. example-node-deeplink
+5. example-family-api
+6. example-firebase-mock-testing-vs-emulation
+7. example-nextjs-single-sign-on
+8. example-permify-bulk-check
+9. example-react-fusiondesk
+10. example-remix
+11. example-react-native-0-71
+12. example-java-spring
+13. example-to-mock-or-not-mock
+14. example-using-links-fastify
+15. quickstart-javascript-angular-web
+16. quickstart-javascript-react-web
+17. quickstart-javascript-vue-web
+18. example-mock-testing-vs-dev-server
+
+All repos:
+- Cloned from main branch
+- .git directories removed
+- repositoryUrl.txt added
+- tests/test.sh created
+- README.md updated with warning after main heading
+- Added to repo-import-mapping.md (count updated to 57 IMPORTED repos)
+
