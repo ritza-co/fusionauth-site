@@ -3,7 +3,7 @@ title: Write a Webhook
 description: Learn how to write a webhook to handle and process FusionAuth.
 ---
 import ApplicationWebhooksWarning from 'src/content/docs/extend/events-and-webhooks/_application-webhooks-warning.mdx';
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import { YouTube } from '@astro-community/astro-embed-youtube';
 import Breadcrumb from 'src/components/Breadcrumb.astro';
 import AvailableSince from 'src/components/api/AvailableSince.astro';
@@ -184,4 +184,4 @@ Here's an example of a Webhook written in Node using Express. In this example, i
 
 In this example we are also checking the HTTP Authorization header for an API key. Using an API key or some type of authentication helps secure your Webhook to prevent malicious requests. You can configure the API key via the FusionAuth Web Interface or the API using the Headers of the Webhook configuration.
 
-<RemoteCode title="Example Webhook" lang="javascript" url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-javascript-webhooks/main/simple/app.js" tags="simplewebhook" />
+<LocalCode title="Example Webhook" lang="javascript" src="example-javascript-webhooks/simple/app.js.snippet.simplewebhook.js" />

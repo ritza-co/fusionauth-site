@@ -2,7 +2,7 @@
 title: Sign Webhooks
 description: Learn how to sign your Webhook events so you can verify they were sent by FusionAuth.
 ---
-import RemoteCode from 'src/components/RemoteCode.astro';
+import LocalCode from 'astro-better-code-snippet-extractor/ExtractedCode.astro';
 import Breadcrumb from 'src/components/Breadcrumb.astro';
 import AvailableSince from 'src/components/api/AvailableSince.astro';
 
@@ -70,7 +70,7 @@ The `kid` identifies the Id of the key used to sign the JWT. JWT libraries can l
 
 The following code ([available on GitHub](https://github.com/FusionAuth/fusionauth-example-javascript-webhooks/blob/main/signature-verify/app.js)) demonstrates webhook signature verification with a simple Node server.
 
-<RemoteCode title="Example Node.js Webhook Signature Verifier" lang="javascript" url="https://raw.githubusercontent.com/FusionAuth/fusionauth-example-javascript-webhooks/main/signature-verify/app.js" />
+<LocalCode title="Example Node.js Webhook Signature Verifier" lang="javascript" src="example-javascript-webhooks/signature-verify/app.js" />
 
 ## Testing
 
