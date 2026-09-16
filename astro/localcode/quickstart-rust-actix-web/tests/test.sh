@@ -3,10 +3,11 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+LOGS_PID=""
 
 cleanup() {
   echo "Cleaning up..."
-  kill $LOGS_PID 2>/dev/null || true
+  [ -n "$LOGS_PID" ] && kill "$LOGS_PID" 2>/dev/null || true
   docker stop rust-actix 2>/dev/null || true
   cd "$PROJECT_DIR" && docker compose down -v 2>/dev/null || true
 }
@@ -17,7 +18,7 @@ cd "$PROJECT_DIR"
 docker compose -f docker-compose.yml config > /dev/null
 
 echo "Building complete-application..."
-docker run --rm -v "$PROJECT_DIR/complete-application:/app" -w /app rust:1.90 sh -c \
+docker run --rm -v "$PROJECT_DIR/complete-application:/app" -w /app rust:1.88 sh -c \
   "apt-get update -qq && apt-get install -y -qq pkg-config libssl-dev >/dev/null 2>&1 && cargo build"
 
 echo "Pulling latest FusionAuth image..."
@@ -27,7 +28,7 @@ echo "Starting FusionAuth..."
 docker compose up -d
 
 echo "Starting Rust Actix app..."
-docker run --network host --name rust-actix --rm -v "$PROJECT_DIR/complete-application":/app -w /app rust:1.90 sh -c \
+docker run --network host --name rust-actix --rm -v "$PROJECT_DIR/complete-application":/app -w /app rust:1.88 sh -c \
   "apt-get update -qq && apt-get install -y -qq pkg-config libssl-dev >/dev/null 2>&1 && ./target/debug/your-application" &
 RUST_PID=$!
 until docker inspect rust-actix > /dev/null 2>&1; do
