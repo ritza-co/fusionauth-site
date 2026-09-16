@@ -1,6 +1,11 @@
 export function register({ bluehawk }) {
   // Bluehawk 1.6.0 only includes a small built-in language set; these cover
   // common example-file extensions that otherwise warn or fail during snip/copy.
+
+  bluehawk.addLanguage(["md", "markdown"], {
+    languageId: "markdown",
+    blockComments: [[/<!--/, /-->/]],
+  });
   bluehawk.addLanguage(["mts", "cts"], {
     languageId: "typescript",
   });
@@ -40,5 +45,8 @@ export function register({ bluehawk }) {
   bluehawk.addLanguage(["dockerfile", "containerfile"], {
     languageId: "dockerfile",
     lineComments: [/#/],
+  });
+  bluehawk.addLanguage("kts", {
+    languageId: "kotlin",
   });
 }
