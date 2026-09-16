@@ -1,4 +1,3 @@
-//tag::top[]
 import FusionAuthClient from "@fusionauth/typescript-client";
 import express from 'express';
 import cookieParser from 'cookie-parser';
@@ -67,24 +66,22 @@ const userDetails = 'userDetails'; //Non Http-Only with user info (not trusted)
 
 const client = new FusionAuthClient('noapikeyneeded', fusionAuthURL);
 
-//tag::views-hbs[]
+//:snippet-start: views-hbs
 app.set('views', path.join(__dirname, '../templates'));
 app.set('view engine', 'hbs');
-//end::views-hbs[]
+//:snippet-end:
 
 app.use(cookieParser());
 /** Decode Form URL Encoded & json data */
 app.use(express.urlencoded());
 app.use(express.json());
 
-//end::top[]
-
 // Static Files
-//tag::static[]
+//:snippet-start: static
 app.use('/static', express.static(path.join(__dirname, '../static/')));
-//end::static[]
+//:snippet-end:
 
-//tag::security[]
+//:snippet-start: security
 
 async function validateUserToken(req: any, res: any, next: any) {
   const userTokenCookie = req.cookies[userToken];
@@ -95,10 +92,10 @@ async function validateUserToken(req: any, res: any, next: any) {
     next();
   }
 }
-//end::security[]
+//:snippet-end:
 
 
-//tag::get-active-devicelist[]
+//:snippet-start: get-active-devicelist
 /**
   Middleware to check if the user has exceeded the device limit. Redirects to the device-limit page if so.
  */
@@ -140,11 +137,11 @@ async function getActiveDeviceList(req: any): Promise<any> {
   }));
 
 }
-//end::get-active-devicelist[]
+//:snippet-end:
 
 
 
-//tag::homepage[]
+//:snippet-start: homepage
 app.get("/", async (req, res) => {
   const userTokenCookie = req.cookies[userToken];
   if (await validateUser(userTokenCookie)) {
@@ -157,9 +154,9 @@ app.get("/", async (req, res) => {
     res.sendFile(path.join(__dirname, '../templates/home.html'));
   }
 });
-//end::homepage[]
+//:snippet-end:
 
-//tag::login[]
+//:snippet-start: login
 app.get('/login', (req, res, next) => {
   const userSessionCookie = req.cookies[userSession];
 
@@ -171,9 +168,9 @@ app.get('/login', (req, res, next) => {
   res.redirect(302, `${fusionAuthURL}/oauth2/authorize?client_id=${clientId}&response_type=code&scope=offline_access&redirect_uri=http://localhost:${port}/oauth-redirect&state=${userSessionCookie?.stateValue}&code_challenge=${userSessionCookie?.challenge}&code_challenge_method=S256`)
   //res.redirect(302, `${fusionAuthURL}/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=http://localhost:${port}/oauth-redirect&state=${userSessionCookie?.stateValue}&code_challenge=${userSessionCookie?.challenge}&code_challenge_method=S256`);
 });
-//end::login[]
+//:snippet-end:
 
-//tag::oauth-redirect[]
+//:snippet-start: oauth-redirect
 app.get('/oauth-redirect', async (req, res, next) => {
   // Capture query params
   const stateFromFusionAuth = `${req.query?.state}`;
@@ -222,22 +219,21 @@ app.get('/oauth-redirect', async (req, res, next) => {
     }))
   }
 });
-//end::oauth-redirect[]
+//:snippet-end:
 
 
 
-//tag::account[]
+//:snippet-start: account
 app.get("/account", validateUserToken, checkDeviceLimit, async (req: any, res: any) => {
   res.sendFile(path.join(__dirname, '../templates/account.html'));
 });
-//end::account[]
+//:snippet-end:
 
-//tag::make-change[]
-//tag::make-change-check-devicelimit[]
+//:snippet-start: make-change-check-devicelimit
 app.get("/make-change", validateUserToken, checkDeviceLimit, async (req, res) => {
   res.sendFile(path.join(__dirname, '../templates/make-change.html'));
 });
-//end::make-change-check-devicelimit[]
+//:snippet-end:
 
 // This endpoint is called by Javascript as an API call, so the security is handled a bit differently,
 // as we don't want to redirect the user, we just want to block the request.
@@ -280,15 +276,14 @@ app.post("/make-change", async (req, res) => {
   }))
 
 });
-//end::make-change[]
 
-//tag::logout[]
+//:snippet-start: logout
 app.get('/logout', (req, res, next) => {
   res.redirect(302, `${fusionAuthURL}/oauth2/logout?client_id=${clientId}`);
 });
-//end::logout[]
+//:snippet-end:
 
-//tag::oauth-logout[]
+//:snippet-start: oauth-logout
 app.get('/oauth2/logout', async (req, res, next) => {
   console.log('Logging out...')
 
@@ -309,18 +304,17 @@ app.get('/oauth2/logout', async (req, res, next) => {
   res.clearCookie(userDetails);
   res.redirect(302, '/')
 });
-//end::oauth-logout[]
+//:snippet-end:
 
-//tag::device-limiting[]
-//tag::device-limiting-maxcount[]
+//:snippet-start: device-limiting-maxcount
 app.get("/device-limit", validateUserToken,  async (req, res) => {
 
     const devices = await getActiveDeviceList(req);
     res.render('device-limit', { devices, maxDeviceCount });
 });
-//end::device-limiting-maxcount[]
+//:snippet-end:
 
-//tag::device-limiting-validatetoken[]
+//:snippet-start: device-limiting-validatetoken
 app.post("/device-limit", validateUserToken, async (req, res) => {
 
   // Get the refresh token id from the form
@@ -345,12 +339,11 @@ app.post("/device-limit", validateUserToken, async (req, res) => {
 
   res.redirect('/account');
 });
-//end::device-limiting-validatetoken[]
-//end::device-limiting[]
+//:snippet-end:
 
 // start the Express server
-//tag::app[]
+//:snippet-start: app
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
 });
-//end::app[]
+//:snippet-end:
