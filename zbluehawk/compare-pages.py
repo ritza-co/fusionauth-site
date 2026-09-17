@@ -190,7 +190,7 @@ def find_mdx_files_with_local_components():
     or use Astro's content collection API. This is simpler and more reliable
     for a standalone script.
     """
-    site_root = Path(__file__).parent
+    site_root = Path(__file__).parent.parent
     pages = []
 
     # Directories/files to skip (partials, templates, not real pages)
