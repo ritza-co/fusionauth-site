@@ -27,16 +27,11 @@ Click to view on localhost:3001.
 - [To mock or not mock auth](http://localhost:3001/blog/to-mock-or-not-mock-auth)
 - [Using identity provider links](http://localhost:3001/blog/using-identity-provider-links)
 
-## Docs - APIs
+## Docs
 
+- [Email](http://localhost:3001/docs/customize/email-and-messages/email-templates-replacement-variables)
 - [WebAuthn](http://localhost:3001/docs/apis/webauthn)
-
-## Docs - Cloud
-
 - [Test](http://localhost:3001/docs/cloud/operate/test)
-
-## Docs - Extend
-
 - [Lambdas testing](http://localhost:3001/docs/extend/code/lambdas/testing)
 - [Custom password hashing](http://localhost:3001/docs/extend/code/password-hashes/custom-password-hashing)
 - [Writing a plugin](http://localhost:3001/docs/extend/code/password-hashes/writing-a-plugin)
@@ -49,36 +44,24 @@ Click to view on localhost:3001.
 - [Modeling organizations](http://localhost:3001/docs/extend/examples/modeling-organizations)
 - [Multi application dashboard](http://localhost:3001/docs/extend/examples/multi-application-dashboard)
 - [Fine grained authorization](http://localhost:3001/docs/extend/fine-grained-authorization)
-
-## Docs - Get Started - Download and Install
-
 - [MCP server](http://localhost:3001/docs/get-started/download-and-install/development/mcp-server)
 - [Docker](http://localhost:3001/docs/get-started/download-and-install/docker)
 - [Kubernetes](http://localhost:3001/docs/get-started/download-and-install/kubernetes)
 - [Docker configuration](http://localhost:3001/docs/get-started/download-and-install/reference/docker-configuration)
 
-## Docs - Quickstarts - API
+## Docs - Quickstarts
 
 - [.NET API](http://localhost:3001/docs/get-started/quickstarts/api/quickstart-dotnet-api)
 - [Golang API](http://localhost:3001/docs/get-started/quickstarts/api/quickstart-golang-api)
 - [Java Spring Boot API](http://localhost:3001/docs/get-started/quickstarts/api/quickstart-java-springboot-api)
 - [Ruby on Rails API](http://localhost:3001/docs/get-started/quickstarts/api/quickstart-ruby-on-rails-api)
-
-## Docs - Quickstarts - App
-
 - [Flutter native](http://localhost:3001/docs/get-started/quickstarts/app/quickstart-flutter-native)
 - [Java Android native](http://localhost:3001/docs/get-started/quickstarts/app/quickstart-java-android-native)
 - [Kotlin Android native](http://localhost:3001/docs/get-started/quickstarts/app/quickstart-kotlin-android-native)
 - [React Native](http://localhost:3001/docs/get-started/quickstarts/app/quickstart-react-native)
 - [Swift iOS native](http://localhost:3001/docs/get-started/quickstarts/app/quickstart-swift-ios-native)
 - [Swift iOS native AppAuth](http://localhost:3001/docs/get-started/quickstarts/app/quickstart-swift-ios-native-appauth)
-
-## Docs - Quickstarts - SPA
-
 - [React SPA](http://localhost:3001/docs/get-started/quickstarts/spa/react)
-
-## Docs - Quickstarts - Web
-
 - [Express](http://localhost:3001/docs/get-started/quickstarts/web/express)
 - [Golang web](http://localhost:3001/docs/get-started/quickstarts/web/quickstart-golang-web)
 - [JavaScript Nuxt web](http://localhost:3001/docs/get-started/quickstarts/web/quickstart-javascript-nuxt-web)
