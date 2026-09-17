@@ -12,7 +12,7 @@ This branch, draft_bluehawkAllRepos, converts every use of `RemoteCode`, `Remote
 
 ## To do
 
-- This branch was created from `main` on Monday the 14th. Changes after this date will need to be merged in carefully before this branch can be merged back to main.
+- This branch was created from `main` on Monday the 14th of September. Changes after this date will need to be merged in carefully before this branch can be merged back to main. Imported repositories should also be checked from changes after this date before the final merge, and their teams alerted.
 - All notes are kept in the folder `zbluehawk` in the root. This folder should be deleted after the final merge. Before that, it's useful to help guide review and LLM requests.
 - The snippet generation now takes 5 minutes because there are so many repos. We should investigate reducing this time. You can't use one `npx` call only though, due to how Bluehawk squashes snippet paths — unless maybe you append each tag with a unique id.
 - Snippets will not generate until Nathan accepts the pull request to remove symlinks, https://github.com/nathan-contino/astro-better-code-blocks/pull/1 (or you make the change manually locally yourself when building the project and don't update npm again to overwrite it)
