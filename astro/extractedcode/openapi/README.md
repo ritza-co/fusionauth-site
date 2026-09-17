@@ -1,9 +1,7 @@
-> [!WARNING]
-> This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/openapi). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
-
 # FusionAuth OpenAPI
 
+> [!WARNING]
+> This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/openapi). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
 
 This is an OpenAPI specification for the FusionAuth API.
 
@@ -23,7 +21,6 @@ Use this file to do all your OpenAPI related actions. For additional information
 * [Questions and support](#contributions-and-support)
 * [Contributing](#contributing)
 * [License](#license)
-
 
 ## Generate libraries
 
@@ -85,7 +82,6 @@ Here's our [Postman profile](https://www.postman.com/fusionauth) and [public wor
 * Copy over the description from a previously imported API (easiest to do it in two tabs)
 * Copy the new collection into the workspace.
 * Go to the [FusionAuth Postman homepage](https://www.postman.com/fusionauth) and edit the new collection and put the date on it.
-
 
 ## Known issues
 

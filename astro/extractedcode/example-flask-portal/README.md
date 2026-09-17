@@ -1,9 +1,7 @@
+# Flask user portal
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/example-flask-portal). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
-
-
-# Flask user portal
 
 This user portal allows you to read and update a user's registration.data field, which is an arbitrary key value store in FusionAuth.
 

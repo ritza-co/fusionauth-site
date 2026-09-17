@@ -1,8 +1,7 @@
+## FusionAuth Kickstart Examples
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/example-kickstart). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
-
-## FusionAuth Kickstart Examples
 
 This project provides a number of example Kickstart files (and any supporting files they need). To learn more about Kickstart, you can review the [Kickstart Documentation page](https://fusionauth.io/docs/v1/tech/installation-guide/kickstart).
 

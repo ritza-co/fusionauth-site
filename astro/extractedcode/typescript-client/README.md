@@ -1,10 +1,9 @@
+## FusionAuth TypeScript Client 
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/typescript-client). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
 
-
-## FusionAuth TypeScript Client 
 ![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square) [![npm](https://img.shields.io/npm/v/@fusionauth/typescript-client?style=flat-square)](https://www.npmjs.com/package/@fusionauth/typescript-client)
-
 
 If you're integrating FusionAuth with a Typescript application, this library will speed up your development time. It also works with node and browser applications as well.
 
@@ -44,7 +43,6 @@ Bug reports and pull requests are welcome on GitHub.
 ## License
 
 This code is available as open source under the terms of the [Apache v2.0 License](https://opensource.org/licenses/Apache-2.0).
-
 
 ## Upgrade Policy
 

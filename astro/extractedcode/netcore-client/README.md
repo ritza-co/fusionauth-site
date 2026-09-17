@@ -1,10 +1,9 @@
+## FusionAuth .NET Core Client
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/netcore-client). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
 
-
-## FusionAuth .NET Core Client
 ![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square)
-
 
 If you're integrating FusionAuth with a .NET Core application, this library will speed up your development time.
 
@@ -68,11 +67,9 @@ If you find an issue with syntax, etc - this is likely a bug in the template. Fe
 - [netcore.client.sync.ftl](https://github.com/FusionAuth/fusionauth-client-builder/blob/master/src/main/client/netcore.client.sync.ftl)
 - [netcore.domain.ftl](https://github.com/FusionAuth/fusionauth-client-builder/blob/master/src/main/client/netcore.domain.ftl)
 
-
 ## License
 
 The code is available as open source under the terms of the [Apache v2.0 License](https://opensource.org/licenses/Apache-2.0).
-
 
 ## Upgrade Policy
 

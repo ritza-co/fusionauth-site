@@ -1,8 +1,7 @@
+## Description
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/example-github-actions). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
-
-## Description
 
 This sample application demonstrates how to use a GitHub Action to run Playwright tests against a simple Node.js Express.js application that logs in with FusionAuth.
 
