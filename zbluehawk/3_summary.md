@@ -24,7 +24,7 @@ This branch, draft_bluehawkAllRepos, converts every use of `RemoteCode`, `Remote
 
 ## Repos that might not be referenced
 
-The following repositories are referenced in guides as URLs, but are not in snippet components, and may be deletable from `extractedcode` after careful checking:
+The following repositories are referenced in guides as URLs, but are not in snippet components, and may be deletable from `extractedcode` after careful checking. However, you might want to keep the `example`s because then we can write unit tests for them:
 
 - example-azure-ad-bulk-export
 - example-client-libraries
