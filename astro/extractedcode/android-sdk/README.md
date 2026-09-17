@@ -1,15 +1,13 @@
+# Table of Contents
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/android-sdk). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
 
 [![Latest Release Tag](https://badgen.net/github/tag/fusionauth/fusionauth-android-sdk)](https://github.com/FusionAuth/fusionauth-android-sdk/tags)
 [![Dependabot](https://badgen.net/github/dependabot/fusionauth/fusionauth-android-sdk)](https://github.com/FusionAuth/fusionauth-android-sdk/network/updates)
 [![Open PRs](https://badgen.net/github/open-prs/fusionauth/fusionauth-android-sdk)](https://github.com/FusionAuth/fusionauth-android-sdk/pulls)
 
-
 An SDK for using FusionAuth in Android Apps.
-
-# Table of Contents
 
 - [Overview](#overview)
 
