@@ -1,4 +1,3 @@
-
 # FusionAuth FGA by Permify — Bulk Permissions Check Example
 
 > [!WARNING]

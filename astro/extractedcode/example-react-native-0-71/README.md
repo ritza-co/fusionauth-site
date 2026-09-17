@@ -1,4 +1,3 @@
-
 **This repo is out of date and is archived. Check out [an updated tutorial on using FusionAuth with React Native](https://fusionauth.io/docs/quickstarts/quickstart-react-native) or [the updated GitHub repository](https://github.com/FusionAuth/fusionauth-quickstart-react-native).**
 
 

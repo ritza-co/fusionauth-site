@@ -1,4 +1,3 @@
-
 # Example FusionAuth to mock or not to mock
 
 > [!WARNING]

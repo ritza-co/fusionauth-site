@@ -1,4 +1,3 @@
-
 **This repo is out of date and is archived. Check out [an updated tutorial on using FusionAuth with Remix](https://fusionauth.io/docs/quickstarts/quickstart-javascript-remix-web) or [the updated GitHub repository](https://github.com/FusionAuth/fusionauth-quickstart-javascript-remix-web).**
 
 

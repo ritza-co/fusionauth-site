@@ -1,4 +1,3 @@
-
 # FusionAuth + Fastify: Using Links with Google & X.com (Twitter)
 
 > [!WARNING]

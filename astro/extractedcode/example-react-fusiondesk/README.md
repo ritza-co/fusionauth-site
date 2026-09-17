@@ -1,4 +1,3 @@
-
 # Fusion Desk
 
 > [!WARNING]
