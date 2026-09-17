@@ -1,8 +1,7 @@
+# Fusionauth QuickStart App
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/quickstart-app). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
-
-# Fusionauth QuickStart App
 
 This repository contains a Docker configuration for a FusionAuth instance, its dependencies, and the initial configuration you need to run a QuickStart.
 

@@ -1,8 +1,7 @@
+# Quickstart: Spring Web and Thymeleaf with FusionAuth
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/quickstart-java-springboot-web). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
-
-# Quickstart: Spring Web and Thymeleaf with FusionAuth
 
 This repository contains a SpringBoot application that works with a locally-running instance of [FusionAuth](https://fusionauth.io/), the authentication and authorization platform.
 
@@ -17,7 +16,6 @@ You will need the following things properly installed on your computer.
 * [Docker](https://www.docker.com): For standing up FusionAuth from within a Docker container. (You can [install it other ways](https://fusionauth.io/docs/v1/tech/installation-guide/), but for this example we will assume you are using Docker.)
 
 This app was built using Java 17 and the maven wrapper. If you wish to use a different version of Java you will need to update the `java.version` in the [pom file](./complete-application/pom.xml).
-
 
 ### FusionAuth Installation via Docker
 

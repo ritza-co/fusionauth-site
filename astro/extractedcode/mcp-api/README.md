@@ -1,8 +1,7 @@
+# Preview FusionAuth API MCP Server (fusionauth-mcp-api)
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/mcp-api). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
-
-# Preview FusionAuth API MCP Server (fusionauth-mcp-api)
 
 [![npm version](https://img.shields.io/npm/v/@fusionauth/mcp-api.svg)](https://www.npmjs.com/package/@fusionauth/mcp-api)
 [![License: Apache](https://img.shields.io/badge/License-Apache-yellow.svg)](https://opensource.org/license/apache-2-0)

@@ -1,11 +1,9 @@
+# FusionAuth PHP Client ![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square)
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/php-client). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
 
-
-# FusionAuth PHP Client ![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square)
-
 ## Intro
-
 
 <!-- :snippet-start: forDocSite -->
 
@@ -216,7 +214,6 @@ Note: if you want to change the `FusionAuthClient` class, you have to do it on t
 ## License
 
 This code is available as open source under the terms of the [Apache v2.0 License](https://opensource.org/blog/license/apache-2-0).
-
 
 ## Upgrade Policy
 
