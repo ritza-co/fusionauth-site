@@ -1,9 +1,8 @@
-# Local Code Component Pages
+## Local Code Component Pages
 
 All MDX files using LocalCode, LocalValue, LocalEmailCode, or LocalMarkdown.
-Click to view on localhost:3001.
 
-## Blogs
+### Blogs
 
 - [6 indicators doing mocking wrong](http://localhost:3001/blog/6-indicators-doing-mocking-wrong)
 - [Android end to end testing](http://localhost:3001/blog/android-end-to-end-testing)
@@ -27,7 +26,7 @@ Click to view on localhost:3001.
 - [To mock or not mock auth](http://localhost:3001/blog/to-mock-or-not-mock-auth)
 - [Using identity provider links](http://localhost:3001/blog/using-identity-provider-links)
 
-## Docs
+### Docs
 
 - [Email](http://localhost:3001/docs/customize/email-and-messages/email-templates-replacement-variables)
 - [WebAuthn](http://localhost:3001/docs/apis/webauthn)
@@ -49,7 +48,7 @@ Click to view on localhost:3001.
 - [Kubernetes](http://localhost:3001/docs/get-started/download-and-install/kubernetes)
 - [Docker configuration](http://localhost:3001/docs/get-started/download-and-install/reference/docker-configuration)
 
-## Docs - Quickstarts
+### Docs - Quickstarts
 
 - [.NET API](http://localhost:3001/docs/get-started/quickstarts/api/quickstart-dotnet-api)
 - [Golang API](http://localhost:3001/docs/get-started/quickstarts/api/quickstart-golang-api)
@@ -74,7 +73,7 @@ Click to view on localhost:3001.
 - [Rust Actix web](http://localhost:3001/docs/get-started/quickstarts/web/quickstart-rust-actix-web)
 - [WordPress web](http://localhost:3001/docs/get-started/quickstarts/web/quickstart-wordpress-web)
 
-## Docs - Start Here
+### Docs - Start Here
 
 - [Step 2](http://localhost:3001/docs/get-started/start-here/step-2)
 - [Step 3](http://localhost:3001/docs/get-started/start-here/step-3)
@@ -83,12 +82,12 @@ Click to view on localhost:3001.
 - [Step 6](http://localhost:3001/docs/get-started/start-here/step-6)
 - [Step 7](http://localhost:3001/docs/get-started/start-here/step-7)
 
-## Docs - Use Cases
+### Docs - Use Cases
 
 - [API consents platform](http://localhost:3001/docs/get-started/use-cases/api-consents-platform)
 - [Machine to machine](http://localhost:3001/docs/get-started/use-cases/machine-to-machine)
 
-## Docs - Lifecycle
+### Docs - Lifecycle
 
 - [Salesforce](http://localhost:3001/docs/lifecycle/authenticate-users/integrations/oidc/salesforce)
 - [Logout session management](http://localhost:3001/docs/lifecycle/authenticate-users/logout-session-management)
@@ -109,12 +108,12 @@ Click to view on localhost:3001.
 - [SCIM SDK](http://localhost:3001/docs/lifecycle/migrate-users/scim/scim-sdk)
 - [Anonymous user](http://localhost:3001/docs/lifecycle/register-users/anonymous-user)
 
-## Docs - Operate
+### Docs - Operate
 
 - [Terraform](http://localhost:3001/docs/operate/deploy/terraform)
 - [Key master](http://localhost:3001/docs/operate/secure/key-master)
 
-## Docs - SDKs
+### Docs - SDKs
 
 - [Android SDK](http://localhost:3001/docs/sdks/android-sdk)
 - [Angular SDK](http://localhost:3001/docs/sdks/angular-sdk)
