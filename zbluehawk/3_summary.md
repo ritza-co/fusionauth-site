@@ -22,6 +22,42 @@ This branch, draft_bluehawkAllRepos, converts every use of `RemoteCode`, `Remote
 - The `quickstart-express` guide uses two repositories, one of which has no `repositoryUrl.txt`. This is a bit confusing. The repos should be merged or have a note explaining what's happening here.
 - Many repositories don't belong in the docs repo because they are their own projects and not just examples, like the SDKs and client libraries, and need to use branches, which the docs repository does not support. Some repos also have their own github workflows, which need to be addressed and altered or removed before merging this branch into main. See the full list below in this article to review.
 
+## Repos that might not be referenced
+
+The following repositories are referenced in guides as URLs, but are not in snippet components, and may be deletable from `extractedcode` after careful checking:
+
+- example-azure-ad-bulk-export
+- example-client-libraries
+- example-device-grant
+- example-flask-portal
+- example-full-user-search
+- example-migrating-rails
+- example-node-multi-tenant
+- example-symfony-multitenant
+- example-theme-tailwind-daisyui
+- go-client
+- homebrew-fusionauth
+- issues
+- java-client
+- load-tests
+- localization
+- netcore-client
+- node-cli
+- openapi
+- openid-appauth-android
+- php-client
+- python-client
+- quickstart-app
+- rack-jwt
+- render-blueprint
+- ruby-client
+- terraform-provider
+- theme-helper
+- theme-history
+- theme-history-updater
+- theme-management
+- typescript-client
+
 ## Repos that possibly should not belong in docs
 
 Review each URL to see if the `LocalCode` reference can be hardcoded instead so the repository can be removed from `extractedcode`.
