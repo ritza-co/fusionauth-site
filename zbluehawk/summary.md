@@ -10,6 +10,6 @@ This branch, draft_bluehawkAllRepos, converts every use of `RemoteCode`, `Remote
 ## To do
 
 - This branch was created from `main` on Monday the 14th. Changes after this date will need to be merged in carefully before this branch can be merged back to main.
-- Snippets will not generate until Nathan accepts pull request to remove symlinks, https://github.com/nathan-contino/astro-better-code-blocks/pull/1 (or you make the change manually locally yourself when building the project and don't update npm again to overwrite it)
+- Snippets will not generate until Nathan accepts the pull request to remove symlinks, https://github.com/nathan-contino/astro-better-code-blocks/pull/1 (or you make the change manually locally yourself when building the project and don't update npm again to overwrite it)
 - The Remote components have not been deleted yet. Once merged to main and finalized, they can be.
 -
