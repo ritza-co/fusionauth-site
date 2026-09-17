@@ -1,12 +1,11 @@
+## FusionAuth Java Client ![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square)
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/java-client). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
 
-
-## FusionAuth Java Client ![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square)
 If you're integrating FusionAuth with a Java application, this library will speed up your development time.
 
 For additional information and documentation on FusionAuth refer to [https://fusionauth.io](https://fusionauth.io).
-
 
 ## Example Usage
 
@@ -86,4 +85,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/Fusion
 ## License
 
 This code is available as open source under the terms of the [Apache v2.0 License](https://opensource.org/licenses/Apache-2.0).
-

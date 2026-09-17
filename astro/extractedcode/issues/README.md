@@ -1,8 +1,8 @@
+# FusionAuth Issues
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/issues). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
 
-
-# FusionAuth Issues
 We hope you love using FusionAuth, but in case you encounter a bug or an issue with the software please do let us know.
 
 Click on the **Issues** tab or click right [here](https://github.com/FusionAuth/fusionauth-issues/issues/new/choose) to open an issue.
@@ -37,7 +37,6 @@ Our client libraries are built using a templating system, so if you find a typo 
 - https://github.com/FusionAuth/fusionauth-client-builder
   - Client templates : https://github.com/FusionAuth/fusionauth-client-builder/tree/master/src/main/client
   - JSON DSL : https://github.com/FusionAuth/fusionauth-client-builder/tree/master/src/main/api 
-
 
 ## Security disclosures
 If you find a vulnerability or other security related bug, [please report the vulnerability here](https://fusionauth.io/security) before opening a GitHub issue. This will allow us to assess the disclosure and prepare a fix prior to a public disclosure.

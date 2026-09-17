@@ -1,11 +1,9 @@
+# FusionAuth Ruby Client ![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square)
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/ruby-client). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
 
-
-# FusionAuth Ruby Client ![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square)
-
 ## Intro
-
 
 <!-- :snippet-start: forDocSite -->
 
@@ -26,7 +24,6 @@ And then execute:
 Or install it yourself as:
 
     gem install fusionauth_client
-
 
 ## Examples
 
@@ -197,7 +194,6 @@ Documentation can be found at
 
 ## Questions and support
 
-
 If you find any bugs in this library, [please open an issue](https://github.com/FusionAuth/fusionauth-ruby-client/issues). Note that changes to the `FusionAuthClient` class have to be done on the [FusionAuth Client Builder repository](https://github.com/FusionAuth/fusionauth-client-builder/blob/master/src/main/client/ruby.client.ftl), which is responsible for generating that file.
 
 But if you have a question or support issue, we'd love to hear from you.
@@ -215,7 +211,6 @@ Note: if you want to change the `FusionAuthClient` class, you have to do it on t
 ## License
 
 This code is available as open source under the terms of the [Apache v2.0 License](https://opensource.org/blog/license/apache-2-0).
-
 
 ## Upgrade Policy
 

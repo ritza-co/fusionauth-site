@@ -1,8 +1,7 @@
+# A multi-tenant Symfony application with OAuth
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/example-symfony-multitenant). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
-
-# A multi-tenant Symfony application with OAuth
 
 This github repo shows a complete symfony 5 application which integrates with an OAuth server for authentication and registration and allows users in one application to create tenants in FusionAuth that can be used by other users.
 
