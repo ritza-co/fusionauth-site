@@ -1,8 +1,7 @@
+# FusionAuth Provider
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/terraform-provider). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
-
-# FusionAuth Provider
 
 This provider is used for setting up [FusionAuth](https://fusionauth.io).
 

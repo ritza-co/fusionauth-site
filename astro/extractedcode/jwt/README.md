@@ -1,8 +1,8 @@
+## FusionAuth JWT ![semver 2.0.0 compliant](https://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square) [![Tests](https://github.com/FusionAuth/fusionauth-jwt/actions/workflows/test.yml/badge.svg)](https://github.com/FusionAuth/fusionauth-jwt/actions/workflows/test.yml)
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/jwt). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
 
-
-## FusionAuth JWT ![semver 2.0.0 compliant](https://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square) [![Tests](https://github.com/FusionAuth/fusionauth-jwt/actions/workflows/test.yml/badge.svg)](https://github.com/FusionAuth/fusionauth-jwt/actions/workflows/test.yml)
 FusionAuth JWT is intended to be fast and easy to use. FusionAuth JWT has a single external dependency on Jackson, no Bouncy Castle, Apache Commons or Guava.
 
 ## Security disclosures
@@ -205,7 +205,6 @@ JWT jwt = JWT.getTimeMachineDecoder(thePast).decode(encodedJWT, verifier);
 // Assert the subject of the JWT is as expected
 assertEquals(jwt.subject, "f1e33ab3-027f-47c5-bb07-8dd8ab37a2d3");
 ```
-
 
 ### Enable a third party JCE provider sucha s Bouncy Castle
 

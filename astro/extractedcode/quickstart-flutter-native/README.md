@@ -1,8 +1,7 @@
+# Quickstart: Flutter app with FusionAuth
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/quickstart-flutter-native). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
-
-# Quickstart: Flutter app with FusionAuth
 
 This repository contains a Flutter app that works with a public accessible FusionAuth instance or a locally running instance of [FusionAuth](https://fusionauth.io/) that has been configured to be accessible via ngrok.
 
@@ -14,7 +13,6 @@ This repository contains a Flutter app that works with a public accessible Fusio
   - (Alternatively, you can [Install FusionAuth Manually](https://fusionauth.io/docs/v1/tech/installation-guide/)).
 - [Visual Stuido Code](https://code.visualstudio.com/download): The editor for making changes to code.
   - Alternatively, You can user other editors as well.
-
 
 ### FusionAuth Installation via Docker
 
@@ -72,7 +70,6 @@ Visit https://fusionauth.io/docs/quickstarts/quickstart-flutter-native for a ste
 * I get `Error retrieving discovery document: A server with the specified hostname could not be found` when I click the Login button
 
 Ensure FusionAuth is running on a publicly accessible URL and that the `FUSIONAUTH_DOMAIN` variable in `main.dart` is set to the correct URL of your FusionAuth inastance.
-
 
 * I get `Resolving dependencies... Because flutterdemo requires SDK version >=3.0.0 <4.0.0, version solving failed.`
 

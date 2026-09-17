@@ -1,8 +1,7 @@
+# FusionAuth + Tailwind + DaisyUI
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/example-theme-tailwind-daisyui). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
-
-# FusionAuth + Tailwind + DaisyUI
 
 This repository contains an example of how to integrate [Tailwind CSS](https://tailwindcss.com), and [DaisyUI](https://daisyui.com/) into your [FusionAuth](https://fusionauth.io) theme.
 

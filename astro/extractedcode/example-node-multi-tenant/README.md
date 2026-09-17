@@ -1,8 +1,7 @@
+# FusionAuth Node.js example
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/example-node-multi-tenant). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
-
-# FusionAuth Node.js example
 
 This project is two simple example Node.js applications that illustrates how you can easily implement multi tenant applications using FusionAuth.
 
@@ -36,4 +35,3 @@ Go to `http://hooli.local:3001/` and login with the previously created user for 
 You should see 'Hello [firstname]'.
 
 Then go to `http://piedpiper.local:3000`. You will be prompted to sign in again with the different password.
-

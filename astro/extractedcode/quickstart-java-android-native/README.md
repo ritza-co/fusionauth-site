@@ -1,8 +1,8 @@
+# Quickstart: Java for Android with FusionAuth
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/quickstart-java-android-native). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
 
-
-# Quickstart: Java for Android with FusionAuth
 This project contains an Android application that works with a locally-running instance of [FusionAuth](https://fusionauth.io/), the authentication and authorization platform.
 
 ## Setup
@@ -50,4 +50,3 @@ You can log into the [FusionAuth admin UI](http://localhost:9011/admin) and look
 ### Further Information
 
 Visit https://fusionauth.io/docs/quickstarts/quickstart-android-java-native for a step-by-step guide on how to build this Android app from scratch, including more details about the tenant and application settings.
-

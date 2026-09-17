@@ -1,8 +1,7 @@
+# Theme helper
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/theme-helper). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
-
-# Theme helper
 
 This repository has tools to help with FusionAuth theme management. It offers syncing to and from your local system. It also has a tool to compare between two themes, which is useful when upgrading FusionAuth.
 

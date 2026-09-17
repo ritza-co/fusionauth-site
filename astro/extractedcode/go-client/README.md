@@ -1,12 +1,9 @@
+## FusionAuth Go Client ![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square) [![Documentation](https://godoc.org/github.com/FusionAuth/go-client?status.svg)](http://godoc.org/github.com/FusionAuth/go-client/pkg/fusionauth)
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/go-client). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
 
-
-## FusionAuth Go Client ![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square) [![Documentation](https://godoc.org/github.com/FusionAuth/go-client?status.svg)](http://godoc.org/github.com/FusionAuth/go-client/pkg/fusionauth)
-
-
 Use this client to access the FusionAuth APIs in your Go application. For additional information and documentation on FusionAuth refer to [https://fusionauth.io](https://fusionauth.io).
-
 
 ## Credits
 - [@medhir](https://github.com/medhir) Thank you for the initial commit and initial implementation of the Go client!

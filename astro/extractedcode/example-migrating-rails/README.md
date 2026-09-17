@@ -1,8 +1,7 @@
+# FusionAuth Rails Migration Examples
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/example-migrating-rails). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
-
-
-# FusionAuth Rails Migration Examples
 
 Rails-based authentication migration examples for FusionAuth. Includes Devise, OmniAuth, and Rails built-in authentication.
 
@@ -57,7 +56,6 @@ Export users in a JSON file.
 npm run export:devise
 ```
 
-
 ## OmniAuth Project
 
 The OmniAuth project in the `ruby-users-omniauth` folder uses Google OAuth 2.0 with developer fallback, and includes a UI for social login and profile management.
@@ -84,7 +82,6 @@ Export users in a JSON file.
 npm run export:omniauth
 ```
 
-
 ## Rails Built-In Authentication Project
 
 The Rails built-in authentication project in the `ruby-users-rails-auth` folder uses email-and-password authentication with `has_secure_password, and includes a UI for login, signup, password reset, and user tracking.
@@ -110,7 +107,6 @@ Export users in a JSON file.
 ```bash
 npm run export:rails-auth
 ```
-
 
 ## Test Accounts
 

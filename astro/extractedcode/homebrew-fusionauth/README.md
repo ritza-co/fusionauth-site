@@ -1,10 +1,9 @@
+# homebrew-fusionauth
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/homebrew-fusionauth). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
 
-
-# homebrew-fusionauth
 macOS [Homebrew](https://brew.sh/) tap for FusionAuth
-
 
 Easy installation of FusionAuth via Homebrew.
 
@@ -133,7 +132,6 @@ To stop the FusionAuth service, you can use:
 brew services stop fusionauth-app
 ```
 <!-- :snippet-end: -->
-
 
 ## Uninstall FusionAuth
 

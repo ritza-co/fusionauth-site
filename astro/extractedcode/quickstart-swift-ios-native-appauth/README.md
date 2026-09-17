@@ -1,8 +1,8 @@
+# Quickstart: Swift and SwiftUI for iOS with FusionAuth
+
 > [!WARNING]
 > This repository is generated from content that lives at [github.com/FusionAuth/fusionauth-site](https://github.com/FusionAuth/fusionauth-site/tree/main/astro/extractedcode/quickstart-swift-ios-native-appauth). Changes to files here _will be overwritten by that automation_. File an issue or pull request with [fusionauth-site](https://github.com/FusionAuth/fusionauth-site) instead.
 
-
-# Quickstart: Swift and SwiftUI for iOS with FusionAuth
 This project contains an iOS application built with Swift and SwiftUI that works with a locally-running instance of [FusionAuth](https://fusionauth.io/), the authentication and authorization platform.
 
 ## Setup
