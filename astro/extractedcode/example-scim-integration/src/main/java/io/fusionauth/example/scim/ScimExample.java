@@ -45,7 +45,7 @@ public class ScimExample {
 	private static final String DEFAULT_USER_PASSWORD = "password";
 	// :snippet-end:
 
-	public static void main(String args) throws Exception {
+	public static void main(String[] args) throws Exception {
 		String secret = "";
 		String operation = "get";
 
@@ -68,9 +68,9 @@ public class ScimExample {
 		headersMap.put("Authorization", "Bearer "+getCredentials(secret));
 
 		if ("get".equals(operation)) {
-			getUser(buildScimRequestBuilder(headersMap), EXISTING_USER_ID);	
+			getUser(buildScimRequestBuilder(headersMap), EXISTING_USER_ID);
 		} else if ("list".equals(operation)) {
-			listUsers(buildScimRequestBuilder(headersMap));	
+			listUsers(buildScimRequestBuilder(headersMap));
 		} else if ("create".equals(operation)) {
 			// for mutation operations only, need a different content type
 			headersMap.put("Content-type", "application/json");
@@ -93,7 +93,7 @@ public class ScimExample {
 
 		// auth using our client id and secret
 		UsernamePasswordCredentials creds = new UsernamePasswordCredentials(CLIENT_ID,secret);
-		httpPost.addHeader(new BasicScheme().authenticate(creds, httpPost, null));	    
+		httpPost.addHeader(new BasicScheme().authenticate(creds, httpPost, null));
 
 		CloseableHttpResponse response = client.execute(httpPost);
 
@@ -117,7 +117,7 @@ public class ScimExample {
 
 		User user = User.builder().password(password).userName(username).active(true).build();
 
-		String endpointPath = EndpointPaths.USERS; 
+		String endpointPath = EndpointPaths.USERS;
 		ServerResponse<User> response = scimRequestBuilder.create(User.class, endpointPath).setResource(user)
 				.sendRequest();
 		if (response.isSuccess()) {
@@ -140,10 +140,10 @@ public class ScimExample {
 
 	private static void getUser(ScimRequestBuilder scimRequestBuilder, String id) {
 
-		String endpointPath = EndpointPaths.USERS; 
+		String endpointPath = EndpointPaths.USERS;
 		ServerResponse<User> response = scimRequestBuilder.get(User.class, endpointPath, id).sendRequest();
 		System.out.println(response);
-		if (response.isSuccess()) 
+		if (response.isSuccess())
 		{
 			User returnedUser = response.getResource();
 			System.out.println(returnedUser);
@@ -160,11 +160,11 @@ public class ScimExample {
 	}
 
 	private static void listUsers(ScimRequestBuilder scimRequestBuilder) {
-		String endpointPath = EndpointPaths.USERS; 
+		String endpointPath = EndpointPaths.USERS;
 		ServerResponse<ListResponse<User>> response = scimRequestBuilder.list(User.class, endpointPath)
 				.startIndex(1).count(5).get().sendRequest();
 
-		if (response.isSuccess()) 
+		if (response.isSuccess())
 		{
 			ListResponse<User> returnedUserList = response.getResource();
 			// do something with it
@@ -186,7 +186,7 @@ public class ScimExample {
 		ScimClientConfig scimClientConfig = ScimClientConfig.builder()
 				.connectTimeout(5)
 				.requestTimeout(5)
-				.socketTimeout(5)				
+				.socketTimeout(5)
 				.hostnameVerifier((s, sslSession) -> true)
 				.httpHeaders(headersMap)
 				.build();
