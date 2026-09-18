@@ -17,7 +17,7 @@ export default async function Home() {
           <div className="content-container">
             <div style={{ marginBottom: '100px' }}>
               <h1>Welcome to Changebank</h1>
-              <LoginLink session={session} />
+              <LoginLink />
             </div>
           </div>
           <div style={{ width: '100%', maxWidth: 800 }}>

@@ -2,7 +2,7 @@
 
 import { signIn } from 'next-auth/react';
 
-export default function LoginButton({ session }: { session: any }) {
+export default function LoginLink() {
   return (
     <>
       <p>

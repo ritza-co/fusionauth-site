@@ -1,8 +1,9 @@
 'use client';
 
 import { signIn, signOut } from 'next-auth/react';
+import type { Session } from 'next-auth';
 
-export default function LoginButton({ session }: { session: any }) {
+export default function LoginButton({ session }: { session: Session | null }) {
   if (session) {
     return (
       <>
