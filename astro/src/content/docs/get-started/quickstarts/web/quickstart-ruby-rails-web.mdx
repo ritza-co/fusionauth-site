@@ -150,7 +150,7 @@ The view is welcoming, but prompts them to login. Otherwise, it shows a mock acc
 <ExtractedCode src="fusionauth-quickstart-ruby-on-rails-web/complete-app/app/views/home/index.html.erb"
 lang="erb" />
 
-Next, update the layout so the user has login or logout buttons on every page. Add the below code to `app/views/layouts/application.html.erb` just after the `<body>` tag.
+Next, update the layout so the user has login or logout buttons on every page. Replace the existing `<%= yield %>` in `app/views/layouts/application.html.erb` with the code below.
 
 <ExtractedCode src="fusionauth-quickstart-ruby-on-rails-web/application.html.snippet.applicationLayout.erb"
 lang="erb"/>

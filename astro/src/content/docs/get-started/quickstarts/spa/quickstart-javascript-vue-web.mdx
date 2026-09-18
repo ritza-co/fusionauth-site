@@ -47,8 +47,11 @@ cd fusionauth-quickstart-javascript-vue-web
 Now you are going to create a basic Vue.js application using Create Vue. While this section builds a simple Vue.js application, you can use the same configuration to integrate your existing Vue.js application with FusionAuth.
 
 ```shell-session
-npm create vue@latest -- changebank --typescript --router
+npm create vue@3.15.1 -- changebank --typescript --router
+cd changebank
 ```
+
+This command pins Create Vue to a version compatible with Node.js 18. If you use a different Node.js version, you can select a compatible Create Vue version instead.
 
 We are going to use the [Hosted Backend](/docs/apis/hosted-backend) feature of FusionAuth, so you don't need to worry about setting up a backend server.
 
