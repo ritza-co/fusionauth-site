@@ -1,6 +1,11 @@
 export function register({ bluehawk }) {
   // Bluehawk 1.6.0 only includes a small built-in language set; these cover
   // common example-file extensions that otherwise warn or fail during snip/copy.
+  bluehawk.addLanguage("mts", {
+    languageId: "typescript",
+    lineComments: [/\/\//],
+    blockComments: [[/\/\*/, /\*\//]],
+  });
   bluehawk.addLanguage(["yml"], {
     languageId: "yaml",
     lineComments: [/#/],
@@ -16,6 +21,10 @@ export function register({ bluehawk }) {
   bluehawk.addLanguage(["ini", "cfg", "conf", "env"], {
     languageId: "ini",
     lineComments: [/#/],
+  });
+  bluehawk.addLanguage("pug", {
+    languageId: "pug",
+    lineComments: [/\/\//],
   });
   bluehawk.addLanguage("toml", {
     languageId: "toml",
@@ -41,5 +50,9 @@ export function register({ bluehawk }) {
   bluehawk.addLanguage(["dockerfile", "containerfile"], {
     languageId: "dockerfile",
     lineComments: [/#/],
+  });
+  bluehawk.addLanguage("erb", {
+    languageId: "erb",
+    blockComments: [[/<%# BLUEHAWK/, /!BLUEHAWK %>/]],
   });
 }

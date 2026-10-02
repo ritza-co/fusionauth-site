@@ -28,6 +28,12 @@ total_written=0
 for repo in extractedcode/*/; do
 	output_dir="src/generated-code-snippets/$(basename "$repo")"
 	mkdir -p "$output_dir"
+	# The Start Here guide displays snippets from its actual Playwright test.
+	# Include that file while excluding the docs-only test runner.
+	test_ignore="tests"
+	if [ "$(basename "$repo")" = "example-get-started" ]; then
+		test_ignore="tests/test.sh"
+	fi
 	status=0
 	out=$(npx --yes bluehawk snip "$repo" \
 		--output "$output_dir" \
@@ -39,9 +45,12 @@ for repo in extractedcode/*/; do
 		--ignore 'package*.json' \
 		--ignore '*.lock' \
 		--ignore 'repositoryUrl.txt' \
-		--ignore 'tests' \
+		--ignore "$test_ignore" \
 		--ignore 'LICENSE' \
 		--ignore 'SECURITY.md' \
+		--ignore '*.log' \
+		--ignore 'tmp' \
+		--ignore '*.cache' \
 		2>&1) || status=$?
 	if [ $status -ne 0 ] || printf '%s\n' "$out" | grep -q 'bluehawk errors'; then
 		echo "Error: bluehawk snip failed for $repo" >&2
