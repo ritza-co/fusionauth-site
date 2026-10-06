@@ -39,7 +39,7 @@ This page describes the admin UI for creating and configuring a Tenant.
 
 To display a list of tenants, navigate to <Breadcrumb>Tenants</Breadcrumb>.
 
-![List of Tenants](/img/docs/get-started/core-concepts/tenant-configuration-list.png)
+<Screenshot id="tenant-list" url="/admin/tenant/" alt="List of Tenants" />
 
 Using the icons on this screen, you can:
 
@@ -55,14 +55,21 @@ Using the icons on this screen, you can:
 
 To create a new tenant, navigate to <Breadcrumb>Tenants</Breadcrumb>.
 
+<Screenshot id="create-tenant" url="/admin/tenant/add" alt="Create a Tenant" />
+{/*
 ![Create a Tenant.](/img/docs/get-started/core-concepts/create-tenant.png)
+*/}
 
 ### Tenant Configuration
 
 A majority of your FusionAuth configuration is managed at the Tenant-level.  Some of these configuration options act as defaults and can be overridden by the Application.
 
 ### General
+
+<Screenshot id="tenant-configuration" url="/admin/tenant/edit/d7d09513-a3f5-401c-9685-34ab6c552453" alt="Tenant Configuration - General" />
+{/*
 ![Tenant Configuration - General](/img/docs/get-started/core-concepts/tenant-configuration-general.png)
+*?}
 
 #### Form Fields
 
@@ -110,7 +117,10 @@ Enable **Append unique suffix to usernames** to allow multiple users suggest the
 
 Connectors can be enabled on a per tenant basis with a Connector policy.
 
+<Screenshot id="tenant-configuration" url="/admin/tenant/edit/d7d09513-a3f5-401c-9685-34ab6c552453" alt="Tenant Configuration - General" />
+{/*
 ![The Tenant Connector policy configuration tab.](/img/docs/get-started/core-concepts/tenant-connector-tab.png)
+*?}
 
 You can find details on adding a connector below. Full documentation on Connectors and Connector Policies can be found [here](/docs/lifecycle/migrate-users/connectors/).
 
@@ -990,3 +1000,7 @@ mail.smtp.connectiontimeout=5000
 ```
   </APIField>
 </APIBlock>
+
+
+{/*
+*/}
