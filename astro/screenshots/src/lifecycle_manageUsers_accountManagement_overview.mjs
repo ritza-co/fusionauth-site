@@ -1,0 +1,93 @@
+import { logInAsRichardHendricksViaTheHostedLoginPage, deleteRichardHendricksTwoFactorMethodsViaTheApi, computeOneTimeCodeFromBase32Secret } from './shared.mjs';
+
+export async function setup_lifecycle_manageUsers_accountManagement_overview_1(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_1') return;
+  try {
+    await page.waitForFunction(
+      () => [...document.querySelectorAll('td')].some(td => td.textContent.trim() === 'Pied Piper'),
+      { timeout: 5000 }
+    );
+    await page.evaluate(() => {
+      const cell = [...document.querySelectorAll('td')].find(td => td.textContent.trim() === 'Pied Piper');
+      cell.closest('tr').querySelector('input[type="checkbox"]')?.click();
+    });
+    await page.waitForTimeout(500);
+    await page.locator('button, a').filter({ hasText: /^View$/ }).first().click({ timeout: 5000 });
+    // wait for the Details modal to render
+    await page.getByText(/account url/i).first().waitFor({ timeout: 5000 });
+    await page.waitForTimeout(300);
+  } catch (e) {
+    throw new Error(`lifecycle_manageUsers_accountManagement_overview_1: setup failed: ${e.message}`, { cause: e });
+  }
+}
+
+export async function setup_lifecycle_manageUsers_accountManagement_overview_3(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_3') return;
+  try {
+    if (await page.$('#loginId')) await logInAsRichardHendricksViaTheHostedLoginPage(page);
+    // the login hop always returns to /account/, so navigate back to the edit screen
+    await page.goto('http://localhost:9011/account/edit?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e&tenantId=30663132-6464-6665-3032-326466613934');
+    await page.locator('label', { hasText: /change password/i }).first().click({ timeout: 5000 });
+    // the toggle reveals the password entry and confirmation fields
+    await page.waitForSelector('input[type="password"]', { timeout: 5000 });
+    await page.waitForTimeout(300);
+  } catch (e) {
+    throw new Error(`lifecycle_manageUsers_accountManagement_overview_3: setup failed: ${e.message}`, { cause: e });
+  }
+}
+
+export async function setup_lifecycle_manageUsers_accountManagement_overview_4(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_4') return;
+  try {
+    if (await page.$('#loginId')) await logInAsRichardHendricksViaTheHostedLoginPage(page);
+    await page.getByText(/manage two-factor/i).first().waitFor({ timeout: 5000 });
+    await page.waitForTimeout(300);
+  } catch (e) {
+    throw new Error(`lifecycle_manageUsers_accountManagement_overview_4: setup failed: ${e.message}`, { cause: e });
+  }
+}
+
+export async function setup_lifecycle_manageUsers_accountManagement_overview_5(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_5') return;
+  try {
+    if (await page.$('#loginId')) await logInAsRichardHendricksViaTheHostedLoginPage(page);
+    // remove any leftover method so the page shows an empty methods list
+    await deleteRichardHendricksTwoFactorMethodsViaTheApi();
+    await page.goto('http://localhost:9011/account/two-factor/?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e');
+    await page.getByText(/no methods have been configured|add two-factor/i).first().waitFor({ timeout: 5000 });
+    await page.waitForTimeout(300);
+  } catch (e) {
+    throw new Error(`lifecycle_manageUsers_accountManagement_overview_5: setup failed: ${e.message}`, { cause: e });
+  }
+}
+
+export async function setup_lifecycle_manageUsers_accountManagement_overview_6(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_6') return;
+  try {
+    if (await page.$('#loginId')) await logInAsRichardHendricksViaTheHostedLoginPage(page);
+    await deleteRichardHendricksTwoFactorMethodsViaTheApi();
+    const codeField = page.locator('input[placeholder*="one-time"], #code, [name="code"]').first();
+    if (!(await codeField.count())) {
+      await page.goto('http://localhost:9011/account/two-factor/?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e');
+      await page.locator('a, button').filter({ hasText: /add two-factor/i }).first().click({ timeout: 5000 });
+      await page.waitForLoadState('networkidle');
+    }
+    await codeField.waitFor({ timeout: 5000 });
+    // the enable page shows the Base32 secret in the instructions text
+    const secret = await page.evaluate(() => {
+      const text = document.body.innerText;
+      const named = text.match(/[Bb]ase32[^A-Z2-7]{0,40}([A-Z2-7]{16,})/) || text.match(/\b([A-Z2-7]{20,})\b/);
+      return named && named[1];
+    });
+    if (!secret) throw new Error('TOTP secret not found on the enable page');
+    await codeField.fill(await computeOneTimeCodeFromBase32Secret(secret));
+    await page.locator('button').filter({ hasText: /^Enable$/ }).first().click({ timeout: 5000 });
+    // the recovery codes render on the same page after enabling
+    await page.getByText(/recovery codes/i).first().waitFor({ timeout: 5000 });
+    // remove the method again; the codes stay rendered in the DOM for the capture
+    await deleteRichardHendricksTwoFactorMethodsViaTheApi();
+    await page.waitForTimeout(300);
+  } catch (e) {
+    throw new Error(`lifecycle_manageUsers_accountManagement_overview_6: setup failed: ${e.message}`, { cause: e });
+  }
+}
