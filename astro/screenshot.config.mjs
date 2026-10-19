@@ -555,6 +555,12 @@ export default {
       }
     }
 
+    await setup_lifecycle_manageUsers_accountManagement_overview_1(page, ctx);
+    await setup_lifecycle_manageUsers_accountManagement_overview_3(page, ctx);
+    await setup_lifecycle_manageUsers_accountManagement_overview_4(page, ctx);
+    await setup_lifecycle_manageUsers_accountManagement_overview_5(page, ctx);
+    await setup_lifecycle_manageUsers_accountManagement_overview_6(page, ctx);
+
     if (url.includes('/theme/edit/')) {
       // viewport is already set to spec.height by capture.mjs before this hook runs.
       // scroll down to reach the Add Localization button (below the fold), click it,
@@ -637,3 +643,124 @@ export default {
     }
   },
 };
+
+async function loginToSelfService(page) {
+  await page.fill('#loginId', 'richard@piedpiper.com');
+  await page.fill('#password', 'password');
+  await page.locator('#submit-button').click();
+  // the hosted login redirects back to the /account/ page that initiated it
+  await page.waitForURL(/\/account\//, { timeout: 15000 });
+  await page.waitForLoadState('networkidle');
+}
+
+async function setup_lifecycle_manageUsers_accountManagement_overview_1(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_1') return;
+  try {
+    await page.waitForFunction(
+      () => [...document.querySelectorAll('td')].some(td => td.textContent.trim() === 'Pied Piper'),
+      { timeout: 20000 }
+    );
+    await page.evaluate(() => {
+      const cell = [...document.querySelectorAll('td')].find(td => td.textContent.trim() === 'Pied Piper');
+      cell.closest('tr').querySelector('input[type="checkbox"]')?.click();
+    });
+    await page.waitForTimeout(500);
+    await page.locator('button, a').filter({ hasText: /^View$/ }).first().click({ timeout: 5000 });
+    // wait for the Details modal to render
+    await page.getByText(/account url/i).first().waitFor({ timeout: 10000 });
+    await page.waitForTimeout(300);
+  } catch (e) {
+    throw new Error(`lifecycle_manageUsers_accountManagement_overview_1: setup failed: ${e.message}`, { cause: e });
+  }
+}
+
+async function setup_lifecycle_manageUsers_accountManagement_overview_3(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_3') return;
+  try {
+    if (await page.$('#loginId')) await loginToSelfService(page);
+    await page.locator('label', { hasText: /change password/i }).first().click({ timeout: 10000 });
+    // the toggle reveals the password entry and confirmation fields
+    await page.waitForSelector('input[type="password"]', { timeout: 5000 });
+    await page.waitForTimeout(300);
+  } catch (e) {
+    throw new Error(`lifecycle_manageUsers_accountManagement_overview_3: setup failed: ${e.message}`, { cause: e });
+  }
+}
+
+async function setup_lifecycle_manageUsers_accountManagement_overview_4(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_4') return;
+  try {
+    if (await page.$('#loginId')) await loginToSelfService(page);
+    await page.getByText(/manage two-factor/i).first().waitFor({ timeout: 15000 });
+    await page.waitForTimeout(300);
+  } catch (e) {
+    throw new Error(`lifecycle_manageUsers_accountManagement_overview_4: setup failed: ${e.message}`, { cause: e });
+  }
+}
+
+async function setup_lifecycle_manageUsers_accountManagement_overview_5(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_5') return;
+  try {
+    if (await page.$('#loginId')) await loginToSelfService(page);
+    // remove any leftover method so the page shows an empty methods list
+    await clearRichardTwoFactor();
+    await page.goto('http://localhost:9011/account/two-factor/?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e');
+    await page.getByText(/no methods have been configured|add two-factor/i).first().waitFor({ timeout: 15000 });
+    await page.waitForTimeout(300);
+  } catch (e) {
+    throw new Error(`lifecycle_manageUsers_accountManagement_overview_5: setup failed: ${e.message}`, { cause: e });
+  }
+}
+
+async function setup_lifecycle_manageUsers_accountManagement_overview_6(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_6') return;
+  try {
+    if (await page.$('#loginId')) await loginToSelfService(page);
+    await clearRichardTwoFactor();
+    const codeField = page.locator('input[placeholder*="one-time"], #code, [name="code"]').first();
+    if (!(await codeField.count())) {
+      await page.goto('http://localhost:9011/account/two-factor/?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e');
+      await page.locator('a, button').filter({ hasText: /add two-factor/i }).first().click({ timeout: 10000 });
+      await page.waitForLoadState('networkidle');
+    }
+    await codeField.waitFor({ timeout: 10000 });
+    // the enable page shows the Base32 secret in the instructions text
+    const secret = await page.evaluate(() => {
+      const m = document.body.innerText.match(/Base32 encoded secret[^A-Z2-7]{0,40}([A-Z2-7]{16,})/i);
+      return m && m[1];
+    });
+    if (!secret) throw new Error('TOTP secret not found on the enable page');
+    await codeField.fill(await computeOneTimeCodeFromBase32Secret(secret));
+    await page.locator('button').filter({ hasText: /^Enable$/ }).first().click({ timeout: 5000 });
+    // the recovery codes render on the same page after enabling
+    await page.getByText(/recovery codes/i).first().waitFor({ timeout: 10000 });
+    // remove the method again; the codes stay rendered in the DOM for the capture
+    await clearRichardTwoFactor();
+    await page.waitForTimeout(300);
+  } catch (e) {
+    throw new Error(`lifecycle_manageUsers_accountManagement_overview_6: setup failed: ${e.message}`, { cause: e });
+  }
+}
+
+async function clearRichardTwoFactor() {
+  const richardId = '00000000-0000-0000-0000-100000000001';
+  await fetch(`http://localhost:9011/api/user/two-factor/${richardId}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': 'screenshot-dev-key-not-for-production' },
+  });
+}
+
+async function computeOneTimeCodeFromBase32Secret(secret) {
+  const { createHmac } = await import('node:crypto');
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let bits = '';
+  for (const c of secret.toUpperCase()) bits += alphabet.indexOf(c).toString(2).padStart(5, '0');
+  const key = Buffer.alloc(Math.floor(bits.length / 8));
+  for (let i = 0; i < key.length; i++) key[i] = parseInt(bits.slice(i * 8, i * 8 + 8), 2);
+  const counter = Buffer.alloc(8);
+  counter.writeBigUInt64BE(BigInt(Math.floor(Date.now() / 30000)));
+  const digest = createHmac('sha1', key).update(counter).digest();
+  const offset = digest[digest.length - 1] & 0xf;
+  const code = ((digest[offset] & 0x7f) << 24 | digest[offset + 1] << 16 | digest[offset + 2] << 8 | digest[offset + 3]) % 1_000_000;
+  return String(code).padStart(6, '0');
+}

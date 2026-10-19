@@ -42,6 +42,8 @@ In a real world application this link would be part of the navigation for your a
 
 ![Home Screen](/img/docs/lifecycle/manage-users/account-management/applications-home.png)
 
+<Screenshot url="/admin/application" id="lifecycle_manageUsers_accountManagement_overview_1" alt="The application details dialog showing the Account URL" />
+
 <AvailableSince since="1.69.0"/>
 
 Self-service provides a **Return to application** link at the top of the page. By default, this links to the `Referer` header of the request that brought the user to self-service. To specify a return link to your application, pass the `redirect_uri` query parameter in the self-service URL:
@@ -58,6 +60,8 @@ Before accessing the account you will be asked to log in. Make sure the user you
 
 ![Login Screen](/img/docs/lifecycle/manage-users/account-management/account-login.png)
 
+<Screenshot url="/account/?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e&prompt=login" id="lifecycle_manageUsers_accountManagement_overview_2" alt="The self-service account management login screen" />
+
 ### Update User Data and Password
 
 FusionAuth Self Service Account Management allows users to easily update their user data and passwords.  To adjust user profile data, click on the edit icon in the upper corner.  From there a user will be presented with editable fields for user data and their password. 
@@ -66,15 +70,21 @@ More information about updating user data and passwords can be found in the [Upd
 
 ![Self Service Edit Data and Password](/img/docs/lifecycle/manage-users/account-management/user-self-serve-edit-password-crop.png)
 
+<Screenshot url="/account/edit?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e&tenantId=30663132-6464-6665-3032-326466613934&prompt=login" id="lifecycle_manageUsers_accountManagement_overview_3" alt="The account edit screen with the Change password option switched on, showing password fields" />
+
 ### Enable or Disable MFA as a User
 
 ![Account Home](/img/docs/lifecycle/manage-users/account-management/account-management-index-crop.png)
+
+<Screenshot url="/account/?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e&prompt=login" id="lifecycle_manageUsers_accountManagement_overview_4" alt="The account management home page showing the user's profile" />
 
 From click on <Breadcrumb>Manage Two-Factor</Breadcrumb>
 
 On this screen you can add Two-Factor methods.
 
 ![Account Home](/img/docs/lifecycle/manage-users/account-management/2fa-home-account-crop.png)
+
+<Screenshot url="/account/two-factor/?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e&prompt=login" id="lifecycle_manageUsers_accountManagement_overview_5" alt="The two-factor authentication management page showing no configured methods" />
 
 FusionAuth supports the following types of MFA:
 
@@ -98,6 +108,8 @@ Please note that once an authenticator is enabled, users will be displayed recov
 Please encourage your users to save these in a secure location, as they can be used to recover an account, should one of their second factors fail to be available. For example, if an email or phone service is "down" and users still want to use your application, or if a user loses their phone, a recovery code allows access.
 
 ![Recovery Codes](/img/docs/lifecycle/manage-users/account-management/mfa-recovery-codes-crop.png)
+
+<Screenshot url="/account/two-factor/enable/?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e&prompt=login" id="lifecycle_manageUsers_accountManagement_overview_6" alt="The recovery codes generated when a user enables two-factor authentication" />
 
 ## Logout
 
