@@ -637,10 +637,11 @@ export default {
       }
     }
 
-    await page.evaluate(() => {
-      document.querySelectorAll('.alert, [role=alert], .notification').forEach(el => el.remove());
+    await page.evaluate((screenshotName) => {
+      const screenshotsThatNeedToShowToasts = ['lifecycle_manageUsers_accountManagement_troubleshooting_1','lifecycle_manageUsers_accountManagement_troubleshooting_2', ];
+      if (!screenshotsThatNeedToShowToasts.includes(screenshotName)) document.querySelectorAll('.alert, [role=alert], .notification').forEach(el => el.remove());
       document.activeElement?.blur();
-    });
+    }, ctx?.name);
 
     // pin run-time dates; a day over 12 shows the dd/mm order
     if (new URL(page.url()).pathname.startsWith('/admin')) {
