@@ -80,6 +80,39 @@ export async function setSelfServiceFormIdOnApplicationViaTheApi(appId, selfServ
   if (!resp.ok) throw new Error(`PATCH /api/application/${appId} ${resp.status} ${await resp.text()}`);
 }
 
+export async function getTenantEmailTwoFactorConfigurationViaTheApi(tenantId) {
+  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/tenant/${tenantId}`, { headers: FUSIONAUTH_API_HEADERS });
+  if (!resp.ok) throw new Error(`GET /api/tenant/${tenantId} ${resp.status} ${await resp.text()}`);
+  const { tenant } = await resp.json();
+  const email = tenant?.multiFactorConfiguration?.email;
+  return { enabled: email?.enabled ?? false, templateId: email?.templateId ?? null };
+}
+
+export async function setTenantEmailTwoFactorConfigurationViaTheApi(tenantId, emailConfiguration) {
+  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/tenant/${tenantId}`, {
+    method: 'PATCH',
+    headers: FUSIONAUTH_API_HEADERS,
+    body: JSON.stringify({ tenant: { multiFactorConfiguration: { email: emailConfiguration } } }),
+  });
+  if (!resp.ok) throw new Error(`PATCH /api/tenant/${tenantId} ${resp.status} ${await resp.text()}`);
+}
+
+export async function getApplicationMultiFactorDebugInfoViaTheApi(appId) {
+  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/application/${appId}`, { headers: FUSIONAUTH_API_HEADERS });
+  if (!resp.ok) throw new Error(`GET /api/application/${appId} ${resp.status} ${await resp.text()}`);
+  const { application } = await resp.json();
+  return { tenantId: application?.tenantId, multiFactorConfiguration: application?.multiFactorConfiguration ?? null };
+}
+
+export async function getDefaultTwoFactorEmailTemplateIdViaTheApi() {
+  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/email/template`, { headers: FUSIONAUTH_API_HEADERS });
+  if (!resp.ok) throw new Error(`GET /api/email/template ${resp.status} ${await resp.text()}`);
+  const { emailTemplates = [] } = await resp.json();
+  const template = emailTemplates.find(t => t.name === 'Two Factor Authentication');
+  if (!template) throw new Error('Default Two Factor Authentication email template not found');
+  return template.id;
+}
+
 export async function computeOneTimeCodeFromBase32Secret(secret) {
   const { createHmac } = await import('node:crypto');
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';

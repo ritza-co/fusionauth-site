@@ -4,7 +4,9 @@ import { dirname, join } from 'path';
 import * as lifecycle_manageUsers_accountManagement_overview from './screenshots/src/lifecycle_manageUsers_accountManagement_overview.mjs';
 import * as lifecycle_manageUsers_accountManagement_troubleshooting from './screenshots/src/lifecycle_manageUsers_accountManagement_troubleshooting.mjs';
 import * as lifecycle_manageUsers_accountManagement_twoFactorAuthenticator from './screenshots/src/lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.mjs';
+import * as lifecycle_manageUsers_accountManagement_twoFactorEmail from './screenshots/src/lifecycle_manageUsers_accountManagement_twoFactorEmail.mjs';
 import { setConstants } from './screenshots/src/shared.mjs';
+import { initializeScreenshotEnvironment } from './screenshots/src/initializeScreenshotEnvironment.mjs';
 
 // load .env from this directory for local development (no-op if file absent)
 try {
@@ -44,84 +46,30 @@ export default {
   },
 
   beforeAll: async (context) => {
-    const page = await context.newPage();
-
-    // FusionAuth's API healthcheck passes before the kickstart finishes and the
-    // login UI becomes available. Retry navigation until the login form appears.
-    const deadline = Date.now() + 150_000;
-    while (Date.now() < deadline) {
-      await page.goto('http://localhost:9011/admin/login', {
-        waitUntil: 'load',
-        timeout: 15000,
-      }).catch(() => {});
-      const ready = await page.$('#loginId');
-      if (ready) break;
-      await new Promise(r => setTimeout(r, 3000));
-    }
-
-    await page.fill('#loginId', 'richard@piedpiper.com');
-    await page.fill('#password', 'password');
-    // press Enter to submit -- more reliable than clicking a specific button selector
-    await page.keyboard.press('Enter');
-    // the login page is under /admin too, so wait until it has been left
-    await page.waitForURL(url => url.pathname.startsWith('/admin') && !url.pathname.startsWith('/admin/login'), { timeout: 30000 });
-    adminLocale = (await context.cookies('http://localhost:9011')).find(c => c.name === 'fusionauth.locale')?.value;
-    await page.close();
-
-    // Configure tenant and set up screenshot infrastructure.
     const apiKey = 'screenshot-dev-key-not-for-production';
     const tenantId = '30663132-6464-6665-3032-326466613934';
     const messengerId = '00000000-0000-0000-0000-500000000001';
-
     const appId = 'e9fdb985-9173-4e01-9d73-ac2d60d1dc8e';
     const richardId = '00000000-0000-0000-0000-100000000001';
-
     setConstants({ baseUrl, apiKey, richardHendricksUserId: richardId });
 
-    // activate license if key is provided (enables WebAuthn and other licensed features)
-    if (process.env.FUSIONAUTH_LICENSE_KEY) {
-      try {
-        const licResp = await fetch(`${baseUrl}/api/reactor`, {
-          method: 'POST',
-          headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ licenseId: process.env.FUSIONAUTH_LICENSE_KEY }),
-        });
-        // 409 = already activated, both are fine
-        if (!licResp.ok && licResp.status !== 409) {
-          throw new Error(`${licResp.status} ${await licResp.text()}`);
-        } else {
-          // poll until licensed: true (reactor activates asynchronously)
-          const licDeadline = Date.now() + 15_000;
-          while (Date.now() < licDeadline) {
-            const statusResp = await fetch(`${baseUrl}/api/reactor`, { headers: { 'Authorization': apiKey } });
-            const { status } = await statusResp.json();
-            if (status?.licensed === true) {
-              console.log('[screenshot] beforeAll: license active, webAuthn:', status.webAuthn);
-              break;
-            }
-            await new Promise(r => setTimeout(r, 1000));
-          }
-          // enable WebAuthn on the tenant (both workflows)
-          await fetch(`${baseUrl}/api/tenant/${tenantId}`, {
-            method: 'PATCH',
-            headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tenant: { webAuthnConfiguration: {
-              enabled: true,
-              bootstrapWorkflow: { enabled: true },
-              reauthenticationWorkflow: { enabled: true },
-            } } }),
-          });
-          // ensure Richard is registered with Pied Piper (idempotent -- 400 if already exists)
-          await fetch(`${baseUrl}/api/user/registration/${richardId}`, {
-            method: 'POST',
-            headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ registration: { applicationId: appId, roles: ['admin'] } }),
-          });
-        }
-      } catch (e) {
-        throw new Error(`beforeAll: license setup failed: ${e.message}`, { cause: e });
-      }
-    }
+    const args = process.argv;
+    const filterIndex = args.indexOf('--filter');
+    const filter = filterIndex >= 0 ? args[filterIndex + 1] : (args.find(arg => arg.startsWith('--filter='))?.slice('--filter='.length) ?? '');
+    const emailScreenshotNames = [
+      'lifecycle_manageUsers_accountManagement_twoFactorEmail_1',
+      'lifecycle_manageUsers_accountManagement_twoFactorEmail_2',
+    ];
+    adminLocale = await initializeScreenshotEnvironment({
+      context,
+      baseUrl,
+      apiKey,
+      tenantId,
+      appId,
+      richardId,
+      licenseKey: process.env.FUSIONAUTH_LICENSE_KEY,
+      prepareEmailMfa: !filter || emailScreenshotNames.some(name => name.includes(filter)),
+    });
 
     // ensure self-service form is configured on Pied Piper app for account management
     // the built-in "Default User Self Service" form id is generated per install; look it up by name
@@ -576,6 +524,8 @@ export default {
     await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup_lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_1(page, ctx, baseUrl, oauthTenantId);
     await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup_lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_2(page, ctx, baseUrl, oauthAppId);
     await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup_lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_3(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_twoFactorEmail.setup_lifecycle_manageUsers_accountManagement_twoFactorEmail_1(page, ctx, baseUrl, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_twoFactorEmail.setup_lifecycle_manageUsers_accountManagement_twoFactorEmail_2(page, ctx, baseUrl, oauthTenantId, oauthAppId);
 
     if (url.includes('/theme/edit/')) {
       // viewport is already set to spec.height by capture.mjs before this hook runs.
