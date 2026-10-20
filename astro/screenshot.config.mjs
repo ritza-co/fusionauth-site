@@ -5,8 +5,9 @@ import * as lifecycle_manageUsers_accountManagement_overview from './screenshots
 import * as lifecycle_manageUsers_accountManagement_troubleshooting from './screenshots/src/lifecycle_manageUsers_accountManagement_troubleshooting.mjs';
 import * as lifecycle_manageUsers_accountManagement_twoFactorAuthenticator from './screenshots/src/lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.mjs';
 import * as lifecycle_manageUsers_accountManagement_twoFactorEmail from './screenshots/src/lifecycle_manageUsers_accountManagement_twoFactorEmail.mjs';
+import * as lifecycle_manageUsers_accountManagement_twoFactorPhone from './screenshots/src/lifecycle_manageUsers_accountManagement_twoFactorPhone.mjs';
 import { setConstants } from './screenshots/src/shared.mjs';
-import { initializeScreenshotEnvironment } from './screenshots/src/initializeScreenshotEnvironment.mjs';
+import { setupScreenshotEnvironment } from './screenshots/src/setupScreenshotEnvironment.mjs';
 
 // load .env from this directory for local development (no-op if file absent)
 try {
@@ -53,23 +54,7 @@ export default {
     const richardId = '00000000-0000-0000-0000-100000000001';
     setConstants({ baseUrl, apiKey, richardHendricksUserId: richardId });
 
-    const args = process.argv;
-    const filterIndex = args.indexOf('--filter');
-    const filter = filterIndex >= 0 ? args[filterIndex + 1] : (args.find(arg => arg.startsWith('--filter='))?.slice('--filter='.length) ?? '');
-    const emailScreenshotNames = [
-      'lifecycle_manageUsers_accountManagement_twoFactorEmail_1',
-      'lifecycle_manageUsers_accountManagement_twoFactorEmail_2',
-    ];
-    adminLocale = await initializeScreenshotEnvironment({
-      context,
-      baseUrl,
-      apiKey,
-      tenantId,
-      appId,
-      richardId,
-      licenseKey: process.env.FUSIONAUTH_LICENSE_KEY,
-      prepareEmailMfa: !filter || emailScreenshotNames.some(name => name.includes(filter)),
-    });
+    adminLocale = await setupScreenshotEnvironment(context, baseUrl, apiKey, tenantId, appId, richardId, messengerId, process.env.FUSIONAUTH_LICENSE_KEY);
 
     // ensure self-service form is configured on Pied Piper app for account management
     // the built-in "Default User Self Service" form id is generated per install; look it up by name
@@ -135,21 +120,6 @@ export default {
       });
     } catch (e) {
       throw new Error(`beforeAll: message template update failed: ${e.message}`, { cause: e });
-    }
-
-    // create Generic HTTP messenger for phone OTP flow (points to sms-mock service in docker-compose)
-    try {
-      const mResp = await fetch(`${baseUrl}/api/messenger/${messengerId}`, { headers: { 'Authorization': apiKey } });
-      if (!mResp.ok) {
-        await fetch(`${baseUrl}/api/messenger/${messengerId}`, {
-          method: 'POST',
-          headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messenger: { id: messengerId, type: 'Generic', name: 'SMS Mock (screenshots)', url: 'http://sms-mock:8081/', connectTimeout: 2000, readTimeout: 2000, debug: false } }),
-        });
-        console.log('[screenshot] beforeAll: created SMS mock messenger');
-      }
-    } catch (e) {
-      throw new Error(`beforeAll: messenger setup failed: ${e.message}`, { cause: e });
     }
 
     // configure tenant email: set passwordless email template (needed for the login button to render)
@@ -526,6 +496,8 @@ export default {
     await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup_lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_3(page, ctx, baseUrl, oauthAppId, oauthTenantId);
     await lifecycle_manageUsers_accountManagement_twoFactorEmail.setup_lifecycle_manageUsers_accountManagement_twoFactorEmail_1(page, ctx, baseUrl, oauthTenantId);
     await lifecycle_manageUsers_accountManagement_twoFactorEmail.setup_lifecycle_manageUsers_accountManagement_twoFactorEmail_2(page, ctx, baseUrl, oauthTenantId, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_twoFactorPhone.setup_lifecycle_manageUsers_accountManagement_twoFactorPhone_1(page, ctx, baseUrl, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_twoFactorPhone.setup_lifecycle_manageUsers_accountManagement_twoFactorPhone_2(page, ctx, baseUrl, oauthTenantId, oauthAppId);
 
     if (url.includes('/theme/edit/')) {
       // viewport is already set to spec.height by capture.mjs before this hook runs.

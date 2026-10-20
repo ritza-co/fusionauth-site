@@ -25,7 +25,8 @@
 
     "passwordlessEmailTemplateId":  "00000000-0000-0000-0000-400000000001",
     "passwordlessMessageTemplateId":"00000000-0000-0000-0000-400000000002",
-    "twoFactorEmailTemplateId":    "00000000-0000-0000-0000-400000000003"
+    "twoFactorEmailTemplateId":    "00000000-0000-0000-0000-400000000003",
+    "twoFactorSmsTemplateId":      "00000000-0000-0000-0000-400000000004"
   },
   "apiKeys": [
     {
@@ -58,6 +59,22 @@
           "defaultSubject": "Your second factor code",
           "defaultHtmlTemplate": "<p>Your verification code is ${oneTimeCode}</p>",
           "defaultTextTemplate": "Your verification code is ${oneTimeCode}"
+        }
+      }
+    },
+
+    {
+      "method": "POST",
+      "url": "/api/message/template/#{twoFactorSmsTemplateId}",
+      "body": {
+        "messageTemplate": {
+          "name": "Default Two Factor Request",
+          "type": "SMS",
+          "defaultTemplate": "Here's your Two Factor Code: ${code}",
+          "localizedTemplates": {
+            "de": "Hier ist Ihr Zwei-Faktoren-Code: ${code}",
+            "es": "Este es su código de dos factores: ${code}"
+          }
         }
       }
     },
