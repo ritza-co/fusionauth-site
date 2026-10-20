@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import * as lifecycle_manageUsers_accountManagement_overview from './screenshots/src/lifecycle_manageUsers_accountManagement_overview.mjs';
 import * as lifecycle_manageUsers_accountManagement_troubleshooting from './screenshots/src/lifecycle_manageUsers_accountManagement_troubleshooting.mjs';
+import * as lifecycle_manageUsers_accountManagement_twoFactorAuthenticator from './screenshots/src/lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.mjs';
 import { setConstants } from './screenshots/src/shared.mjs';
 
 // load .env from this directory for local development (no-op if file absent)
@@ -572,6 +573,9 @@ export default {
     await lifecycle_manageUsers_accountManagement_troubleshooting.setup_lifecycle_manageUsers_accountManagement_troubleshooting_1(page, ctx, baseUrl, oauthAppId);
     await lifecycle_manageUsers_accountManagement_troubleshooting.setup_lifecycle_manageUsers_accountManagement_troubleshooting_2(page, ctx, baseUrl, oauthAppId);
     await lifecycle_manageUsers_accountManagement_troubleshooting.setup_lifecycle_manageUsers_accountManagement_troubleshooting_3(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup_lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_1(page, ctx, baseUrl, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup_lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_2(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup_lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_3(page, ctx, baseUrl, oauthAppId, oauthTenantId);
 
     if (url.includes('/theme/edit/')) {
       // viewport is already set to spec.height by capture.mjs before this hook runs.
