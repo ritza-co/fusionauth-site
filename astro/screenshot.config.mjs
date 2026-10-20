@@ -2,6 +2,7 @@ import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import * as lifecycle_manageUsers_accountManagement_overview from './screenshots/src/lifecycle_manageUsers_accountManagement_overview.mjs';
+import { setConstants } from './screenshots/src/shared.mjs';
 
 // load .env from this directory for local development (no-op if file absent)
 try {
@@ -71,6 +72,8 @@ export default {
 
     const appId = 'e9fdb985-9173-4e01-9d73-ac2d60d1dc8e';
     const richardId = '00000000-0000-0000-0000-100000000001';
+
+    setConstants({ baseUrl, apiKey, richardHendricksUserId: richardId });
 
     // activate license if key is provided (enables WebAuthn and other licensed features)
     if (process.env.FUSIONAUTH_LICENSE_KEY) {

@@ -7,12 +7,13 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_1(p
       () => [...document.querySelectorAll('td')].some(td => td.textContent.trim() === 'Pied Piper'),
       { timeout: 5000 }
     );
-    await page.evaluate(() => {
-      const cell = [...document.querySelectorAll('td')].find(td => td.textContent.trim() === 'Pied Piper');
-      cell.closest('tr').querySelector('input[type="checkbox"]')?.click();
-    });
+    // the row's actions live behind an el-dropdown: open it, then click the now-visible View item.
+    // two gotchas: dropdown items have no rendered text until the popover is open, and element text
+    // is whitespace-padded ("\n  View  \n"), so anchored hasText regexes need \s* tolerance.
+    const row = page.locator('tr', { has: page.locator('td', { hasText: /^\s*Pied Piper\s*$/ }) }).first();
+    await row.locator('button').first().click({ timeout: 5000 });
     await page.waitForTimeout(500);
-    await page.locator('button, a').filter({ hasText: /^View$/ }).first().click({ timeout: 5000 });
+    await page.locator('a:visible').filter({ hasText: /^\s*View\s*$/ }).first().click({ timeout: 5000 });
     // wait for the Details modal to render
     await page.getByText(/account url/i).first().waitFor({ timeout: 5000 });
     await page.waitForTimeout(300);
@@ -81,7 +82,9 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_6(p
     });
     if (!secret) throw new Error('TOTP secret not found on the enable page');
     await codeField.fill(await computeOneTimeCodeFromBase32Secret(secret));
-    await page.locator('button').filter({ hasText: /^Enable$/ }).first().click({ timeout: 5000 });
+    // the Enable button's text is whitespace-padded in the DOM, so hasText /^Enable$/ never matches;
+    // use an exact accessible-name match instead
+    await page.getByRole('button', { name: 'Enable', exact: true }).click({ timeout: 5000 });
     // the recovery codes render on the same page after enabling
     await page.getByText(/recovery codes/i).first().waitFor({ timeout: 5000 });
     // remove the method again; the codes stay rendered in the DOM for the capture

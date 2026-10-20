@@ -1,3 +1,15 @@
+let FUSIONAUTH_BASE_URL;
+let FUSIONAUTH_API_KEY;
+let FUSIONAUTH_API_HEADERS;
+let RICHARD_HENDRICKS_USER_ID;
+
+export function setConstants({ baseUrl, apiKey, richardHendricksUserId }) {
+  FUSIONAUTH_BASE_URL = baseUrl;
+  FUSIONAUTH_API_KEY = apiKey;
+  FUSIONAUTH_API_HEADERS = { 'Authorization': FUSIONAUTH_API_KEY, 'Content-Type': 'application/json' };
+  RICHARD_HENDRICKS_USER_ID = richardHendricksUserId;
+}
+
 export async function logInAsRichardHendricksViaTheHostedLoginPage(page) {
   await page.fill('#loginId', 'richard@piedpiper.com');
   await page.fill('#password', 'password');
@@ -8,11 +20,29 @@ export async function logInAsRichardHendricksViaTheHostedLoginPage(page) {
 }
 
 export async function deleteRichardHendricksTwoFactorMethodsViaTheApi() {
-  const richardId = '00000000-0000-0000-0000-100000000001';
-  await fetch(`http://localhost:9011/api/user/two-factor/${richardId}`, {
+  const userResp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/${RICHARD_HENDRICKS_USER_ID}`, { headers: FUSIONAUTH_API_HEADERS });
+  if (!userResp.ok) throw new Error(`GET /api/user/${RICHARD_HENDRICKS_USER_ID} ${userResp.status}`);
+  const { user } = await userResp.json();
+  const methods = user?.twoFactor?.methods ?? [];
+  if (!methods.length) return;
+
+  // the disable endpoint requires a verification code we cannot compute (the TOTP secret is gone by
+  // cleanup time), but a recovery code is accepted too and, per the API docs, removes ALL methods.
+  const codesResp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/two-factor/recovery-code/${RICHARD_HENDRICKS_USER_ID}`, { method: 'POST', headers: FUSIONAUTH_API_HEADERS });
+  if (!codesResp.ok) throw new Error(`POST /api/user/two-factor/recovery-code ${codesResp.status} ${await codesResp.text()}`);
+  const { recoveryCodes } = await codesResp.json();
+
+  const delResp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/two-factor/${RICHARD_HENDRICKS_USER_ID}`, {
     method: 'DELETE',
-    headers: { 'Authorization': 'screenshot-dev-key-not-for-production' },
+    headers: FUSIONAUTH_API_HEADERS,
+    body: JSON.stringify({ methodId: methods[0].id, code: recoveryCodes[0] }),
   });
+  if (!delResp.ok) throw new Error(`DELETE /api/user/two-factor ${delResp.status} ${await delResp.text()}`);
+
+  const verifyResp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/${RICHARD_HENDRICKS_USER_ID}`, { headers: FUSIONAUTH_API_HEADERS });
+  if (!verifyResp.ok) throw new Error(`GET /api/user/${RICHARD_HENDRICKS_USER_ID} ${verifyResp.status}`);
+  const { user: after } = await verifyResp.json();
+  if (after?.twoFactor?.methods?.length) throw new Error('two-factor methods still present after delete');
 }
 
 export async function computeOneTimeCodeFromBase32Secret(secret) {
