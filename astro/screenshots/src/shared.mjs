@@ -45,6 +45,41 @@ export async function deleteRichardHendricksTwoFactorMethodsViaTheApi() {
   if (after?.twoFactor?.methods?.length) throw new Error('two-factor methods still present after delete');
 }
 
+export async function getRichardHendricksRegistrationViaTheApi(appId) {
+  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/registration/${RICHARD_HENDRICKS_USER_ID}/${appId}`, { headers: FUSIONAUTH_API_HEADERS });
+  if (!resp.ok) throw new Error(`GET /api/user/registration ${resp.status} ${await resp.text()}`);
+  return (await resp.json()).registration;
+}
+
+export async function deleteRichardHendricksRegistrationViaTheApi(appId) {
+  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/registration/${RICHARD_HENDRICKS_USER_ID}/${appId}`, { method: 'DELETE', headers: FUSIONAUTH_API_HEADERS });
+  if (!resp.ok) throw new Error(`DELETE /api/user/registration ${resp.status} ${await resp.text()}`);
+}
+
+export async function createRichardHendricksRegistrationViaTheApi(appId, registration) {
+  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/registration/${RICHARD_HENDRICKS_USER_ID}/${appId}`, {
+    method: 'POST',
+    headers: FUSIONAUTH_API_HEADERS,
+    body: JSON.stringify({ registration }),
+  });
+  if (!resp.ok) throw new Error(`POST /api/user/registration ${resp.status} ${await resp.text()}`);
+}
+
+export async function getSelfServiceFormIdOnApplicationViaTheApi(appId) {
+  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/application/${appId}`, { headers: FUSIONAUTH_API_HEADERS });
+  if (!resp.ok) throw new Error(`GET /api/application/${appId} ${resp.status}`);
+  return (await resp.json()).application?.formConfiguration?.selfServiceFormId ?? '';
+}
+
+export async function setSelfServiceFormIdOnApplicationViaTheApi(appId, selfServiceFormId) {
+  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/application/${appId}`, {
+    method: 'PATCH',
+    headers: FUSIONAUTH_API_HEADERS,
+    body: JSON.stringify({ application: { formConfiguration: { selfServiceFormId } } }),
+  });
+  if (!resp.ok) throw new Error(`PATCH /api/application/${appId} ${resp.status} ${await resp.text()}`);
+}
+
 export async function computeOneTimeCodeFromBase32Secret(secret) {
   const { createHmac } = await import('node:crypto');
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';

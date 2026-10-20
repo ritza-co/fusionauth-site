@@ -2,6 +2,7 @@ import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import * as lifecycle_manageUsers_accountManagement_overview from './screenshots/src/lifecycle_manageUsers_accountManagement_overview.mjs';
+import * as lifecycle_manageUsers_accountManagement_troubleshooting from './screenshots/src/lifecycle_manageUsers_accountManagement_troubleshooting.mjs';
 import { setConstants } from './screenshots/src/shared.mjs';
 
 // load .env from this directory for local development (no-op if file absent)
@@ -15,8 +16,10 @@ try {
 
 let adminLocale;
 
+const baseUrl = 'http://localhost:9011';
+
 export default {
-  baseUrl: 'http://localhost:9011',
+  baseUrl,
   outputDir: 'public/img/docs/screenshots',
   window: { width: 1100, height: 800 },
   browser: 'webkit',
@@ -66,7 +69,6 @@ export default {
 
     // Configure tenant and set up screenshot infrastructure.
     const apiKey = 'screenshot-dev-key-not-for-production';
-    const baseUrl = 'http://localhost:9011';
     const tenantId = '30663132-6464-6665-3032-326466613934';
     const messengerId = '00000000-0000-0000-0000-500000000001';
 
@@ -562,11 +564,14 @@ export default {
     }
 
     await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_1(page, ctx);
-    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_2(page, ctx, oauthAppId, oauthTenantId);
-    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_3(page, ctx, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_2(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_3(page, ctx, baseUrl, oauthAppId, oauthTenantId);
     await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_4(page, ctx);
-    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_5(page, ctx, oauthAppId);
-    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_6(page, ctx, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_5(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_6(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_troubleshooting.setup_lifecycle_manageUsers_accountManagement_troubleshooting_1(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_troubleshooting.setup_lifecycle_manageUsers_accountManagement_troubleshooting_2(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_troubleshooting.setup_lifecycle_manageUsers_accountManagement_troubleshooting_3(page, ctx, baseUrl, oauthAppId);
 
     if (url.includes('/theme/edit/')) {
       // viewport is already set to spec.height by capture.mjs before this hook runs.
