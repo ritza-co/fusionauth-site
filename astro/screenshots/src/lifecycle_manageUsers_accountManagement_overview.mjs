@@ -22,12 +22,25 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_1(p
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_overview_3(page, ctx) {
+export async function setup_lifecycle_manageUsers_accountManagement_overview_2(page, ctx, appId, tenantId) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_2') return;
+  try {
+    // the shared browser session is already logged in, so the self-service URL would capture the
+    // account home; prompt=login on the authorize endpoint forces the login form to render instead
+    const loginUrl = `http://localhost:9011/oauth2/authorize?client_id=${appId}&redirect_uri=${encodeURIComponent(`/account/login?client_id=${appId}&tenantId=${tenantId}`)}&response_type=code&scope=offline_access&prompt=login&tenantId=${tenantId}`;
+    await page.goto(loginUrl, { waitUntil: 'networkidle' });
+    await page.waitForSelector('#loginId', { timeout: 5000 });
+  } catch (e) {
+    throw new Error(`lifecycle_manageUsers_accountManagement_overview_2: setup failed: ${e.message}`, { cause: e });
+  }
+}
+
+export async function setup_lifecycle_manageUsers_accountManagement_overview_3(page, ctx, appId, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_3') return;
   try {
     if (await page.$('#loginId')) await logInAsRichardHendricksViaTheHostedLoginPage(page);
     // the login hop always returns to /account/, so navigate back to the edit screen
-    await page.goto('http://localhost:9011/account/edit?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e&tenantId=30663132-6464-6665-3032-326466613934');
+    await page.goto(`http://localhost:9011/account/edit?client_id=${appId}&tenantId=${tenantId}`);
     await page.locator('label', { hasText: /change password/i }).first().click({ timeout: 5000 });
     // the toggle reveals the password entry and confirmation fields
     await page.waitForSelector('input[type="password"]', { timeout: 5000 });
@@ -48,13 +61,13 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_4(p
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_overview_5(page, ctx) {
+export async function setup_lifecycle_manageUsers_accountManagement_overview_5(page, ctx, appId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_5') return;
   try {
     if (await page.$('#loginId')) await logInAsRichardHendricksViaTheHostedLoginPage(page);
     // remove any leftover method so the page shows an empty methods list
     await deleteRichardHendricksTwoFactorMethodsViaTheApi();
-    await page.goto('http://localhost:9011/account/two-factor/?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e');
+    await page.goto(`http://localhost:9011/account/two-factor/?client_id=${appId}`);
     await page.getByText(/no methods have been configured|add two-factor/i).first().waitFor({ timeout: 5000 });
     await page.waitForTimeout(300);
   } catch (e) {
@@ -62,14 +75,14 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_5(p
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_overview_6(page, ctx) {
+export async function setup_lifecycle_manageUsers_accountManagement_overview_6(page, ctx, appId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_6') return;
   try {
     if (await page.$('#loginId')) await logInAsRichardHendricksViaTheHostedLoginPage(page);
     await deleteRichardHendricksTwoFactorMethodsViaTheApi();
     const codeField = page.locator('input[placeholder*="one-time"], #code, [name="code"]').first();
     if (!(await codeField.count())) {
-      await page.goto('http://localhost:9011/account/two-factor/?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e');
+      await page.goto(`http://localhost:9011/account/two-factor/?client_id=${appId}`);
       await page.locator('a, button').filter({ hasText: /add two-factor/i }).first().click({ timeout: 5000 });
       await page.waitForLoadState('networkidle');
     }

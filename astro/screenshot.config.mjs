@@ -562,10 +562,11 @@ export default {
     }
 
     await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_1(page, ctx);
-    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_3(page, ctx);
+    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_2(page, ctx, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_3(page, ctx, oauthAppId, oauthTenantId);
     await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_4(page, ctx);
-    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_5(page, ctx);
-    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_6(page, ctx);
+    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_5(page, ctx, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_6(page, ctx, oauthAppId);
 
     if (url.includes('/theme/edit/')) {
       // viewport is already set to spec.height by capture.mjs before this hook runs.
