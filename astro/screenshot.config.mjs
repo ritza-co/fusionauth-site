@@ -6,8 +6,11 @@ import * as lifecycle_manageUsers_accountManagement_troubleshooting from './scre
 import * as lifecycle_manageUsers_accountManagement_twoFactorAuthenticator from './screenshots/src/lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.mjs';
 import * as lifecycle_manageUsers_accountManagement_twoFactorEmail from './screenshots/src/lifecycle_manageUsers_accountManagement_twoFactorEmail.mjs';
 import * as lifecycle_manageUsers_accountManagement_twoFactorPhone from './screenshots/src/lifecycle_manageUsers_accountManagement_twoFactorPhone.mjs';
+import * as lifecycle_manageUsers_accountManagement_addWebAuthn from './screenshots/src/lifecycle_manageUsers_accountManagement_addWebAuthn.mjs';
+import * as lifecycle_manageUsers_accountManagement_customizingAccountManagement from './screenshots/src/lifecycle_manageUsers_accountManagement_customizingAccountManagement.mjs';
+import * as lifecycle_manageUsers_accountManagement_updatingUserData from './screenshots/src/lifecycle_manageUsers_accountManagement_updatingUserData.mjs';
 import { setConstants } from './screenshots/src/shared.mjs';
-import { setupScreenshotEnvironment } from './screenshots/src/setupScreenshotEnvironment.mjs';
+import { loginScreenshotAdmin, setupScreenshotEnvironment } from './screenshots/src/setupScreenshotEnvironment.mjs';
 
 // load .env from this directory for local development (no-op if file absent)
 try {
@@ -46,6 +49,25 @@ export default {
     },
   },
 
+  resetContextAfterScreenshots: [
+    'lifecycle_manageUsers_accountManagement_troubleshooting_2',
+    'lifecycle_manageUsers_accountManagement_troubleshooting_3',
+    'lifecycle_manageUsers_accountManagement_overview_4',
+    'lifecycle_manageUsers_accountManagement_addWebAuthn_1',
+    'lifecycle_manageUsers_accountManagement_addWebAuthn_3',
+    'lifecycle_manageUsers_accountManagement_customizingAccountManagement_4',
+    'lifecycle_manageUsers_accountManagement_customizingAccountManagement_6',
+    'lifecycle_manageUsers_accountManagement_overview_1',
+    'lifecycle_manageUsers_accountManagement_overview_6',
+  ],
+  afterBrowserContextReset: async (context, screenshot) => {
+    if (['lifecycle_manageUsers_accountManagement_addWebAuthn_1', 'lifecycle_manageUsers_accountManagement_overview_4', 'lifecycle_manageUsers_accountManagement_overview_1'].includes(screenshot?.name)) {
+      adminLocale = undefined;
+      return;
+    }
+    adminLocale = await loginScreenshotAdmin(context, baseUrl);
+  },
+
   beforeAll: async (context) => {
     const apiKey = 'screenshot-dev-key-not-for-production';
     const tenantId = '30663132-6464-6665-3032-326466613934';
@@ -54,7 +76,7 @@ export default {
     const richardId = '00000000-0000-0000-0000-100000000001';
     setConstants({ baseUrl, apiKey, richardHendricksUserId: richardId });
 
-    adminLocale = await setupScreenshotEnvironment(context, baseUrl, apiKey, tenantId, appId, richardId, messengerId, process.env.FUSIONAUTH_LICENSE_KEY);
+    await setupScreenshotEnvironment(baseUrl, apiKey, tenantId, appId, richardId, messengerId, process.env.FUSIONAUTH_LICENSE_KEY);
 
     // ensure self-service form is configured on Pied Piper app for account management
     // the built-in "Default User Self Service" form id is generated per install; look it up by name
@@ -75,6 +97,12 @@ export default {
         });
         if (!patchResp.ok) throw new Error(`${patchResp.status} ${await patchResp.text()}`);
       }
+      const verifyResp = await fetch(`${baseUrl}/api/application/${appId}`, { headers: { 'Authorization': apiKey } });
+      if (!verifyResp.ok) throw new Error(`GET /api/application/${appId} ${verifyResp.status}`);
+      const { application: verifiedApplication } = await verifyResp.json();
+      if (verifiedApplication.formConfiguration?.selfServiceFormId !== selfServiceForm.id) {
+        throw new Error(`selfServiceFormId did not persist; expected ${selfServiceForm.id}`);
+      }
     } catch (e) {
       throw new Error(`beforeAll: selfServiceFormId patch failed: ${e.message}`, { cause: e });
     }
@@ -90,6 +118,40 @@ export default {
           body: JSON.stringify({ sourceThemeId: '75a068fd-e94b-451a-9aeb-3ddb9a3b5987', theme: { id: themeId, name: 'Screenshots Theme' } }),
         });
         console.log('[screenshot] beforeAll: created Screenshots Theme');
+      }
+      const themeResp = await fetch(`${baseUrl}/api/theme/${themeId}`, { headers: { 'Authorization': apiKey } });
+      if (!themeResp.ok) throw new Error(`GET /api/theme/${themeId} ${themeResp.status}`);
+      const { theme } = await themeResp.json();
+      const marker = 'This is now modified with a birthdate field';
+      const accountIndex = theme.templates.accountIndex ?? '';
+      if (!accountIndex.includes(marker)) {
+        const birthdateTemplate = [
+          '',
+          '[#if user.data.screenshotShowBirthdate?? && user.data.screenshotShowBirthdate]',
+          '<p>This is now modified with a birthdate field</p>',
+          '<dl class="horizontal">',
+          '<dt>${theme.message("user.birthDate")}</dt>',
+          '<dd>${helpers.display(user, "birthDate")}</dd>',
+          '</dl>',
+          '[/#if]',
+        ].join('\n');
+        const patchResp = await fetch(`${baseUrl}/api/theme/${themeId}`, {
+          method: 'PATCH',
+          headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ theme: { templates: { accountIndex: accountIndex + birthdateTemplate } } }),
+        });
+        if (!patchResp.ok) throw new Error(`PATCH /api/theme/${themeId} ${patchResp.status} ${await patchResp.text()}`);
+      }
+      const tenantThemeResp = await fetch(`${baseUrl}/api/tenant/${tenantId}`, { headers: { 'Authorization': apiKey } });
+      if (!tenantThemeResp.ok) throw new Error(`GET /api/tenant/${tenantId} ${tenantThemeResp.status}`);
+      const { tenant: screenshotTenant } = await tenantThemeResp.json();
+      if (screenshotTenant.themeId !== themeId) {
+        const patchResp = await fetch(`${baseUrl}/api/tenant/${tenantId}`, {
+          method: 'PATCH',
+          headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tenant: { themeId } }),
+        });
+        if (!patchResp.ok) throw new Error(`PATCH /api/tenant/${tenantId} ${patchResp.status} ${await patchResp.text()}`);
       }
     } catch (e) {
       throw new Error(`beforeAll: Screenshots Theme creation failed: ${e.message}`, { cause: e });
@@ -146,6 +208,8 @@ export default {
       throw new Error(`beforeAll: phone PATCH failed: ${e.message}`, { cause: e });
     }
 
+    // Initialize the shared browser session only after all app and tenant setup is complete.
+    adminLocale = await loginScreenshotAdmin(context, baseUrl);
   },
 
   beforeScreenshot: async (page, ctx) => {
@@ -346,6 +410,12 @@ export default {
       const tabLabel = { email: 'Email', 'email-test': 'Email', identities: 'Identities', passwordless: 'Advanced', webauthn: 'WebAuthn' }[fragment];
       if (tabLabel) {
         try {
+          // Wait for Angular to render the tenant tab bar before selecting a tab.
+          await page.waitForFunction(
+            label => [...document.querySelectorAll('el-tab-list button')].some(button => button.textContent.trim() === label),
+            tabLabel,
+            { timeout: 15000 },
+          );
           // use JS click to handle tabs that are scrolled off the visible tab bar
           const result = await page.evaluate((label) => {
             const btns = [...document.querySelectorAll('el-tab-list button')];
@@ -357,7 +427,13 @@ export default {
           if (!result.clicked) throw new Error(`tab "${tabLabel}" not found; available: ${JSON.stringify(result.available)}`);
           await page.waitForTimeout(1000);
         } catch (e) {
-          throw new Error(`tenant/edit ${tabLabel} tab failed: ${e.message}`, { cause: e });
+          const pageState = await page.evaluate(() => ({
+            url: location.href,
+            title: document.title,
+            text: document.body.innerText.replace(/\s+/g, ' ').slice(0, 300),
+            tabs: [...document.querySelectorAll('el-tab-list button')].map(button => button.textContent.trim()),
+          })).catch(() => null);
+          throw new Error(`tenant/edit ${tabLabel} tab failed: ${e.message}; page state: ${JSON.stringify(pageState)}`, { cause: e });
         }
       }
 
@@ -498,8 +574,18 @@ export default {
     await lifecycle_manageUsers_accountManagement_twoFactorEmail.setup_lifecycle_manageUsers_accountManagement_twoFactorEmail_2(page, ctx, baseUrl, oauthTenantId, oauthAppId);
     await lifecycle_manageUsers_accountManagement_twoFactorPhone.setup_lifecycle_manageUsers_accountManagement_twoFactorPhone_1(page, ctx, baseUrl, oauthTenantId);
     await lifecycle_manageUsers_accountManagement_twoFactorPhone.setup_lifecycle_manageUsers_accountManagement_twoFactorPhone_2(page, ctx, baseUrl, oauthTenantId, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_addWebAuthn.setup_lifecycle_manageUsers_accountManagement_addWebAuthn_1(page, ctx, baseUrl, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_addWebAuthn.setup_lifecycle_manageUsers_accountManagement_addWebAuthn_2(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_addWebAuthn.setup_lifecycle_manageUsers_accountManagement_addWebAuthn_3(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_1(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_2(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_3(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_4(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_5(page, ctx, baseUrl);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_6(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_updatingUserData.setup_lifecycle_manageUsers_accountManagement_updatingUserData_1(page, ctx, baseUrl, oauthAppId, oauthTenantId);
 
-    if (url.includes('/theme/edit/')) {
+    if (url.includes('/theme/edit/') && ctx?.name === 'theme-localization-messages') {
       // viewport is already set to spec.height by capture.mjs before this hook runs.
       // scroll down to reach the Add Localization button (below the fold), click it,
       // then scroll back to top -- position:fixed dialog stays centred in the viewport.

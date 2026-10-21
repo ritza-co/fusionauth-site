@@ -212,15 +212,30 @@ async function configurePhoneMfa(baseUrl, apiKey, tenantId, appId, messengerId) 
   if (!appPatchResponse.ok) throw new Error(`PATCH /api/application/${appId} ${appPatchResponse.status} ${await appPatchResponse.text()}`);
 }
 
-export async function setupScreenshotEnvironment(context, baseUrl, apiKey, tenantId, appId, richardId, messengerId, licenseKey) {
+async function resetScreenshotBirthdateFlag(baseUrl, apiKey, richardId) {
+  const url = `${baseUrl}/api/user/${richardId}`;
+  const response = await fetch(url, { headers: { Authorization: apiKey } });
+  if (!response.ok) throw new Error(`GET /api/user/${richardId} ${response.status}`);
+  const { user } = await response.json();
+  if (user.data?.screenshotShowBirthdate === false) return;
+  const patchResponse = await fetch(url, {
+    method: 'PATCH',
+    headers: { Authorization: apiKey, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user: { data: { ...(user.data ?? {}), screenshotShowBirthdate: false } } }),
+  });
+  if (!patchResponse.ok) throw new Error(`PATCH /api/user/${richardId} ${patchResponse.status} ${await patchResponse.text()}`);
+}
+
+export async function setupScreenshotEnvironment(baseUrl, apiKey, tenantId, appId, richardId, messengerId, licenseKey) {
   await waitForKickstartApi(baseUrl, apiKey, appId);
   await activateLicense(baseUrl, apiKey, licenseKey, tenantId, appId, richardId);
   await ensureSmsMockMessenger(baseUrl, apiKey, messengerId);
   await configureEmailMfa(baseUrl, apiKey, tenantId, appId);
   await configurePhoneMfa(baseUrl, apiKey, tenantId, appId, messengerId);
+  await resetScreenshotBirthdateFlag(baseUrl, apiKey, richardId);
+}
 
-  // Only create the admin browser session after screenshot-specific MFA settings
-  // are in place; those settings affect methods offered in self-service flows.
+export async function loginScreenshotAdmin(context, baseUrl) {
   const page = await context.newPage();
   try {
     const deadline = Date.now() + 150_000;

@@ -72,12 +72,25 @@ export async function getSelfServiceFormIdOnApplicationViaTheApi(appId) {
 }
 
 export async function setSelfServiceFormIdOnApplicationViaTheApi(appId, selfServiceFormId) {
-  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/application/${appId}`, {
+  const url = `${FUSIONAUTH_BASE_URL}/api/application/${appId}`;
+  const resp = await fetch(url, {
     method: 'PATCH',
     headers: FUSIONAUTH_API_HEADERS,
     body: JSON.stringify({ application: { formConfiguration: { selfServiceFormId } } }),
   });
   if (!resp.ok) throw new Error(`PATCH /api/application/${appId} ${resp.status} ${await resp.text()}`);
+
+  const expected = selfServiceFormId ?? '';
+  let actual = '';
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const verifyResp = await fetch(url, { headers: FUSIONAUTH_API_HEADERS });
+    if (!verifyResp.ok) throw new Error(`GET /api/application/${appId} ${verifyResp.status} ${await verifyResp.text()}`);
+    const { application } = await verifyResp.json();
+    actual = application?.formConfiguration?.selfServiceFormId ?? '';
+    if (actual === expected) return;
+    await new Promise(resolve => setTimeout(resolve, 200));
+  }
+  throw new Error(`selfServiceFormId did not persist on application ${appId}: expected ${expected || '(empty)'}, received ${actual || '(empty)'}`);
 }
 
 export async function getTenantEmailTwoFactorConfigurationViaTheApi(tenantId) {

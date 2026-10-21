@@ -38,22 +38,45 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_2(p
 export async function setup_lifecycle_manageUsers_accountManagement_overview_3(page, ctx, baseUrl, appId, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_3') return;
   try {
-    if (await page.$('#loginId')) await logInAsRichardHendricksViaTheHostedLoginPage(page);
-    // the login hop always returns to /account/, so navigate back to the edit screen
-    await page.goto(`${baseUrl}/account/edit?client_id=${appId}&tenantId=${tenantId}`);
-    await page.locator('label', { hasText: /change password/i }).first().click({ timeout: 5000 });
+    // The account home is intentionally the initial URL; clear cached self-service UI state left
+    // by the earlier troubleshooting captures before starting a fresh hosted login.
+    await page.evaluate(async () => {
+      localStorage.clear();
+      sessionStorage.clear();
+      for (const registration of await navigator.serviceWorker.getRegistrations()) await registration.unregister();
+      for (const cache of await caches.keys()) await caches.delete(cache);
+    });
+    const loginUrl = `${baseUrl}/oauth2/authorize?client_id=${appId}&redirect_uri=${encodeURIComponent(`/account/login?client_id=${appId}&tenantId=${tenantId}`)}&response_type=code&scope=offline_access&prompt=login&tenantId=${tenantId}`;
+    await page.goto(loginUrl, { waitUntil: 'networkidle' });
+    await page.waitForSelector('#loginId', { timeout: 5000 });
+    await logInAsRichardHendricksViaTheHostedLoginPage(page);
+    const accountUrl = `${baseUrl}/account/?client_id=${appId}&tenantId=${tenantId}&_=${Date.now()}`;
+    await page.goto(accountUrl, { waitUntil: 'networkidle' });
+    await page.locator('a, button').filter({ hasText: /edit profile/i }).first().click({ timeout: 5000 });
+    // The current self-service UI renders this control's text outside a <label>.
+    await page.getByText(/change password/i).first().click({ timeout: 5000 });
     // the toggle reveals the password entry and confirmation fields
     await page.waitForSelector('input[type="password"]', { timeout: 5000 });
     await page.waitForTimeout(300);
   } catch (e) {
-    throw new Error(`lifecycle_manageUsers_accountManagement_overview_3: setup failed: ${e.message}`, { cause: e });
+    const pageState = await page.evaluate(() => ({
+      url: location.href,
+      text: document.body.innerText.replace(/\s+/g, ' ').slice(0, 300),
+    })).catch(() => null);
+    throw new Error(`lifecycle_manageUsers_accountManagement_overview_3: setup failed: ${e.message}; page state: ${JSON.stringify(pageState)}`, { cause: e });
   }
 }
 
 export async function setup_lifecycle_manageUsers_accountManagement_overview_4(page, ctx) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_4') return;
   try {
-    if (await page.$('#loginId')) await logInAsRichardHendricksViaTheHostedLoginPage(page);
+    if (await page.$('#loginId')) {
+      await page.fill('#loginId', 'richard@piedpiper.com');
+      await page.fill('#password', 'password');
+      await page.locator('#submit-button').click();
+      await page.waitForLoadState('networkidle');
+    }
+    await page.getByText(/edit profile/i).first().waitFor({ timeout: 10000 });
     await page.getByText(/manage two-factor/i).first().waitFor({ timeout: 5000 });
     await page.waitForTimeout(300);
   } catch (e) {
