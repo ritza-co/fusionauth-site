@@ -5,6 +5,8 @@ import {
   createAdminRichardRegistrationViaTheApi,
 } from './shared.mjs';
 
+let registrationToRestore;
+
 // unique query param so a cached page can never serve the pre-setup state
 function freshUrl(url) {
   return `${url}${url.includes('?') ? '&' : '?'}_=${Date.now()}`;
@@ -41,14 +43,12 @@ export async function setup1(page, ctx, baseUrl, appId) {
     // the banner needs a logged-in user without a registration; restoring the registration right
     // after it renders leaves the banner on screen for the capture
     const registration = await getAdminRichardRegistrationViaTheApi(appId);
-    try {
-      await deleteAdminRichardRegistrationViaTheApi(appId);
-      await page.goto(freshUrl(accountUrl), { waitUntil: 'networkidle' });
-      await page.getByText(/not registered for this application/i).filter({ visible: true }).first().waitFor({ timeout: 10000 });
-      await freezeBanner(page, 'not registered for this application');
-    } finally {
-      await createAdminRichardRegistrationViaTheApi(appId, registration);
-    }
+    if (!registration) throw new Error(`Registration not found for Admin Richard in application ${appId}`);
+    await deleteAdminRichardRegistrationViaTheApi(appId);
+    registrationToRestore = { appId, registration };
+    await page.goto(freshUrl(accountUrl), { waitUntil: 'networkidle' });
+    await page.getByText(/not registered for this application/i).filter({ visible: true }).first().waitFor({ timeout: 10000 });
+    await freezeBanner(page, 'not registered for this application');
     await page.waitForTimeout(300);
   } catch (e) {
     throw new Error(`lifecycle_manageUsers_accountManagement_troubleshooting_1: setup failed: ${e.message}`, { cause: e });
@@ -73,6 +73,13 @@ async function addConfigurationIncompleteBanner(page) {
     return true;
   });
   if (!inserted) throw new Error('Self-service account content container not found');
+}
+
+export async function cleanup1(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_troubleshooting_1' || !registrationToRestore) return;
+  const { appId, registration } = registrationToRestore;
+  await createAdminRichardRegistrationViaTheApi(appId, registration);
+  registrationToRestore = undefined;
 }
 
 export async function setup2(page, ctx, baseUrl, appId) {

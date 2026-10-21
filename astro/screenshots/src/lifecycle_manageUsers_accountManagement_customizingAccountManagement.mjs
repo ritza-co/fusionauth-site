@@ -3,6 +3,9 @@ import { logInAsAdminRichardViaTheHostedLoginPage } from './shared.mjs';
 const screenshotApiKey = 'screenshot-dev-key-not-for-production';
 const screenshotsThemeId = '00000000-0000-0000-0000-300000000001';
 const richardId = '00000000-0000-0000-0000-100000000001';
+const createdBirthdateFields = new Map();
+const setup4StateByScreenshot = new Map();
+const setup6StateByScreenshot = new Map();
 
 async function apiJson(baseUrl, path, method = 'GET', payload) {
   const response = await fetch(`${baseUrl}${path}`, {
@@ -40,6 +43,25 @@ async function setFormSteps(baseUrl, formId, steps) {
   await apiJson(baseUrl, `/api/form/${formId}`, 'PUT', {
     form: { name: form.name, type: form.type, data: form.data ?? {}, steps },
   });
+}
+
+async function deleteBirthdateField(baseUrl, fieldId) {
+  await apiJson(baseUrl, `/api/form/field/${fieldId}`, 'DELETE');
+}
+
+async function runCleanupActions(cleanupActions) {
+  const errors = [];
+  for (const cleanupAction of cleanupActions) {
+    try {
+      await cleanupAction();
+    } catch (error) {
+      errors.push(error);
+    }
+  }
+  if (errors.length) {
+    const messages = errors.map(error => error.message).join('; ');
+    throw new AggregateError(errors, `One or more screenshot cleanup actions failed: ${messages}`);
+  }
 }
 
 async function loginRichard(page, baseUrl, appId, tenantId) {
@@ -85,6 +107,7 @@ export async function setup3(page, ctx, baseUrl, appId) {
   let birthdateField;
   try {
     birthdateField = await ensureBirthdateField(baseUrl);
+    if (birthdateField.created) createdBirthdateFields.set(ctx.name, { baseUrl, fieldId: birthdateField.fieldId });
     const { formId } = await getApplicationForm(baseUrl, appId);
     await page.goto(`${baseUrl}/admin/form/edit/${formId}`, { waitUntil: 'networkidle' });
     await page.locator('a[href="/ajax/form/field/add"]').click({ timeout: 5000 });
@@ -96,25 +119,33 @@ export async function setup3(page, ctx, baseUrl, appId) {
   }
 }
 
+export async function cleanup3(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_customizingAccountManagement_3') return;
+  const createdField = createdBirthdateFields.get(ctx.name);
+  if (!createdField) return;
+  await deleteBirthdateField(createdField.baseUrl, createdField.fieldId);
+  createdBirthdateFields.delete(ctx.name);
+}
+
 export async function setup4(page, ctx, baseUrl, appId, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_customizingAccountManagement_4') return;
-  let field;
-  let form;
-  let originalBirthDate;
+  const cleanupState = { baseUrl, field: undefined, formId: undefined, originalFormSteps: undefined, originalBirthDate: undefined };
+  setup4StateByScreenshot.set(ctx.name, cleanupState);
   try {
-    field = await ensureBirthdateField(baseUrl);
+    cleanupState.field = await ensureBirthdateField(baseUrl);
     const original = await getApplicationForm(baseUrl, appId);
-    form = original.form;
-    const steps = form.steps.map((step, index) => index === 0 && !step.fields.includes(field.fieldId)
-      ? { ...step, fields: [...step.fields, field.fieldId] }
+    cleanupState.formId = original.formId;
+    cleanupState.originalFormSteps = original.form.steps;
+    const steps = original.form.steps.map((step, index) => index === 0 && !step.fields.includes(cleanupState.field.fieldId)
+      ? { ...step, fields: [...step.fields, cleanupState.field.fieldId] }
       : step,
     );
-    if (steps.some((step, index) => step.fields !== form.steps[index].fields)) {
+    if (steps.some((step, index) => step.fields !== original.form.steps[index].fields)) {
       await setFormSteps(baseUrl, original.formId, steps);
     }
 
     const { user } = await apiJson(baseUrl, `/api/user/${richardId}`);
-    originalBirthDate = user.birthDate ?? null;
+    cleanupState.originalBirthDate = user.birthDate ?? null;
     await apiJson(baseUrl, `/api/user/${richardId}`, 'PATCH', { user: { birthDate: '1981-06-04' } });
 
     await loginRichard(page, baseUrl, appId, tenantId);
@@ -123,15 +154,27 @@ export async function setup4(page, ctx, baseUrl, appId, tenantId) {
     await page.waitForTimeout(300);
   } catch (error) {
     throw new Error(`lifecycle_manageUsers_accountManagement_customizingAccountManagement_4: setup failed: ${error.message}`, { cause: error });
-  } finally {
-    if (form) {
-      const { formId } = await getApplicationForm(baseUrl, appId);
-      await setFormSteps(baseUrl, formId, form.steps);
-    }
-    if (originalBirthDate !== undefined) {
-      await apiJson(baseUrl, `/api/user/${richardId}`, 'PATCH', { user: { birthDate: originalBirthDate } });
-    }
   }
+}
+
+export async function cleanup4(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_customizingAccountManagement_4') return;
+  const cleanupState = setup4StateByScreenshot.get(ctx.name);
+  if (!cleanupState) return;
+
+  const cleanupActions = [];
+  if (cleanupState.formId && cleanupState.originalFormSteps !== undefined) {
+    cleanupActions.push(() => setFormSteps(cleanupState.baseUrl, cleanupState.formId, cleanupState.originalFormSteps));
+  }
+  if (cleanupState.originalBirthDate !== undefined) {
+    cleanupActions.push(() => apiJson(cleanupState.baseUrl, `/api/user/${richardId}`, 'PATCH', { user: { birthDate: cleanupState.originalBirthDate } }));
+  }
+  if (cleanupState.field?.created) {
+    cleanupActions.push(() => deleteBirthdateField(cleanupState.baseUrl, cleanupState.field.fieldId));
+  }
+
+  await runCleanupActions(cleanupActions);
+  setup4StateByScreenshot.delete(ctx.name);
 }
 
 export async function setup5(page, ctx, baseUrl) {
@@ -147,12 +190,15 @@ export async function setup5(page, ctx, baseUrl) {
 
 export async function setup6(page, ctx, baseUrl, appId, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_customizingAccountManagement_6') return;
-  let originalBirthDate;
-  let originalUserData;
   try {
     const { user } = await apiJson(baseUrl, `/api/user/${richardId}`);
-    originalBirthDate = user.birthDate ?? null;
-    originalUserData = user.data ?? {};
+    const originalUserData = user.data ?? {};
+    setup6StateByScreenshot.set(ctx.name, {
+      baseUrl,
+      originalBirthDate: user.birthDate ?? null,
+      originalUserData,
+      originalScreenshotShowBirthdate: originalUserData.screenshotShowBirthdate ?? false,
+    });
     await apiJson(baseUrl, `/api/user/${richardId}`, 'PATCH', {
       user: { birthDate: '1981-06-04', data: { ...originalUserData, screenshotShowBirthdate: true } },
     });
@@ -176,11 +222,21 @@ export async function setup6(page, ctx, baseUrl, appId, tenantId) {
       text: document.body.innerText.replace(/\s+/g, ' ').slice(0, 400),
     })).catch(() => null);
     throw new Error(`lifecycle_manageUsers_accountManagement_customizingAccountManagement_6: setup failed: ${error.message}; page state: ${JSON.stringify(pageState)}`, { cause: error });
-  } finally {
-    if (originalBirthDate !== undefined) {
-      await apiJson(baseUrl, `/api/user/${richardId}`, 'PATCH', {
-        user: { birthDate: originalBirthDate, data: { ...(originalUserData ?? {}), screenshotShowBirthdate: false } },
-      });
-    }
   }
+}
+
+export async function cleanup6(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_customizingAccountManagement_6') return;
+  const cleanupState = setup6StateByScreenshot.get(ctx.name);
+  if (!cleanupState) return;
+  await apiJson(cleanupState.baseUrl, `/api/user/${richardId}`, 'PATCH', {
+    user: {
+      birthDate: cleanupState.originalBirthDate,
+      data: {
+        ...cleanupState.originalUserData,
+        screenshotShowBirthdate: cleanupState.originalScreenshotShowBirthdate,
+      },
+    },
+  });
+  setup6StateByScreenshot.delete(ctx.name);
 }

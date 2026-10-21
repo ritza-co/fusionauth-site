@@ -1,5 +1,7 @@
 import { logInAsAdminRichardViaTheHostedLoginPage, deleteAdminRichardTwoFactorMethodsViaTheApi, computeOneTimeCodeFromBase32Secret } from './shared.mjs';
 
+let hasAttemptedTwoFactorEnrollment = false;
+
 export async function setup1(page, ctx) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_1') return;
   try {
@@ -120,13 +122,18 @@ export async function setup6(page, ctx, baseUrl, appId) {
     await codeField.fill(await computeOneTimeCodeFromBase32Secret(secret));
     // the Enable button's text is whitespace-padded in the DOM, so hasText /^Enable$/ never matches;
     // use an exact accessible-name match instead
+    hasAttemptedTwoFactorEnrollment = true;
     await page.getByRole('button', { name: 'Enable', exact: true }).click({ timeout: 5000 });
     // the recovery codes render on the same page after enabling
     await page.getByText(/recovery codes/i).first().waitFor({ timeout: 5000 });
-    // remove the method again; the codes stay rendered in the DOM for the capture
-    await deleteAdminRichardTwoFactorMethodsViaTheApi();
     await page.waitForTimeout(300);
   } catch (e) {
     throw new Error(`lifecycle_manageUsers_accountManagement_overview_6: setup failed: ${e.message}`, { cause: e });
   }
+}
+
+export async function cleanup6(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_6' || !hasAttemptedTwoFactorEnrollment) return;
+  await deleteAdminRichardTwoFactorMethodsViaTheApi();
+  hasAttemptedTwoFactorEnrollment = false;
 }

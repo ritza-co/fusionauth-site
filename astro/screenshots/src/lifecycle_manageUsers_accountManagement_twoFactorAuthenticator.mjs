@@ -4,6 +4,8 @@ import {
   computeOneTimeCodeFromBase32Secret,
 } from './shared.mjs';
 
+let authenticator3MayHaveCreatedTwoFactorMethod = false;
+
 async function openAuthenticatorEnrollment(page, baseUrl, appId) {
   await deleteAdminRichardTwoFactorMethodsViaTheApi();
 
@@ -60,6 +62,7 @@ export async function setup3(page, ctx, baseUrl, appId, tenantId) {
 
     const codeField = page.locator('input[placeholder*="one-time"], #code, [name="code"]').first();
     await codeField.fill(await computeOneTimeCodeFromBase32Secret(secret));
+    authenticator3MayHaveCreatedTwoFactorMethod = true;
     await page.getByRole('button', { name: 'Enable', exact: true }).click({ timeout: 5000 });
     await page.getByText(/recovery codes/i).first().waitFor({ timeout: 5000 });
 
@@ -73,7 +76,11 @@ export async function setup3(page, ctx, baseUrl, appId, tenantId) {
     await page.locator('input[placeholder*="verification code"], input[name="code"]').first().waitFor({ timeout: 5000 });
   } catch (e) {
     throw new Error(`lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_3: setup failed: ${e.message}`, { cause: e });
-  } finally {
-    await deleteAdminRichardTwoFactorMethodsViaTheApi();
   }
+}
+
+export async function cleanup3(page, ctx) {
+  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_3' || !authenticator3MayHaveCreatedTwoFactorMethod) return;
+  await deleteAdminRichardTwoFactorMethodsViaTheApi();
+  authenticator3MayHaveCreatedTwoFactorMethod = false;
 }

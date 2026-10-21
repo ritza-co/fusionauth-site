@@ -9,6 +9,7 @@ import * as lifecycle_manageUsers_accountManagement_twoFactorPhone from './scree
 import * as lifecycle_manageUsers_accountManagement_addWebAuthn from './screenshots/src/lifecycle_manageUsers_accountManagement_addWebAuthn.mjs';
 import * as lifecycle_manageUsers_accountManagement_customizingAccountManagement from './screenshots/src/lifecycle_manageUsers_accountManagement_customizingAccountManagement.mjs';
 import * as lifecycle_manageUsers_accountManagement_updatingUserData from './screenshots/src/lifecycle_manageUsers_accountManagement_updatingUserData.mjs';
+import * as lifecycle_migrateUsers_providerSpecific_createTestTenant from './screenshots/src/lifecycle_migrateUsers_providerSpecific_createTestTenant.mjs';
 import { logInAsAdminRichardViaTheAdminLoginPage, setConstants } from './screenshots/src/shared.mjs';
 import { setupScreenshotEnvironment } from './screenshots/src/initialEnvironmentSetup.mjs';
 
@@ -24,6 +25,8 @@ try {
 let adminLocale;
 
 const baseUrl = 'http://localhost:9011';
+const screenshotApiKey = 'screenshot-dev-key-not-for-production';
+const importTenantId = '25c9d123-8a79-4edd-9f76-8dd9c806b0f3';
 
 export default {
   baseUrl,
@@ -50,7 +53,7 @@ export default {
   },
 
   beforeAll: async (context) => {
-    const apiKey = 'screenshot-dev-key-not-for-production';
+    const apiKey = screenshotApiKey;
     const tenantId = '30663132-6464-6665-3032-326466613934';
     const messengerId = '00000000-0000-0000-0000-500000000001';
     const appId = 'e9fdb985-9173-4e01-9d73-ac2d60d1dc8e';
@@ -223,43 +226,8 @@ export default {
     const oauthTenantId = '30663132-6464-6665-3032-326466613934';
     const oauthLoginUrl = `${baseUrl}/oauth2/authorize?client_id=${oauthAppId}&redirect_uri=https%3A%2F%2Fexample.com&response_type=code&scope=openid`;
 
-    // the migration test tenant should only appear in the tenant list screenshot
-    const apiKey = 'screenshot-dev-key-not-for-production';
-    // matches the example Id in the guide text
-    const importTenantId = '25c9d123-8a79-4edd-9f76-8dd9c806b0f3';
-    const importTenantUrl = `${baseUrl}/api/tenant/${importTenantId}`;
-    const importTenantApi = async (method, body) => {
-      const r = await fetch(importTenantUrl, {
-        method,
-        headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
-        body: body && JSON.stringify(body),
-      });
-      if (!r.ok && !(method === 'GET' && r.status === 404)) {
-        throw new Error(`test tenant ${method} failed: ${r.status} ${await r.text()}`);
-      }
-      return r.ok;
-    };
-    const importTenantExists = await importTenantApi('GET');
-
-    if (ctx?.name === 'migration-tenant-list') {
-      if (!importTenantExists) {
-        await importTenantApi('POST', { tenant: { name: 'Import test' } });
-        await page.reload({ waitUntil: 'networkidle' });
-      }
-      await page.evaluate(id => {
-        const cell = [...document.querySelectorAll('td')].find(td => td.textContent.trim() === id);
-        if (cell) cell.setAttribute('data-hl', 'import-tenant-id');
-      }, importTenantId);
-    } else if (importTenantExists) {
-      await importTenantApi('DELETE');
-      // the admin UI caches the tenant count; two tenants adds a Tenant field to some forms
-      await page.waitForTimeout(5000);
-      await page.reload({ waitUntil: 'networkidle' });
-    }
-
-    if (ctx?.name === 'migration-tenant-add') {
-      await page.fill('#tenant_name', 'Import test');
-    }
+    await lifecycle_migrateUsers_providerSpecific_createTestTenant.setup1(page, ctx, baseUrl, screenshotApiKey, importTenantId);
+    await lifecycle_migrateUsers_providerSpecific_createTestTenant.setup2(page, ctx);
 
     // bootstrap-button: tag the "Fingerprint, device or key" link for highlighting
     if (ctx?.name === 'passkeys-bootstrap-button') {
@@ -657,5 +625,17 @@ export default {
         }
       });
     }
+  },
+
+  afterScreenshot: async (page, ctx) => {
+    await lifecycle_manageUsers_accountManagement_troubleshooting.cleanup1(page, ctx);
+    await lifecycle_manageUsers_accountManagement_overview.cleanup6(page, ctx);
+    await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.cleanup3(page, ctx);
+    await lifecycle_manageUsers_accountManagement_twoFactorEmail.cleanup1(page, ctx);
+    await lifecycle_manageUsers_accountManagement_twoFactorEmail.cleanup2(page, ctx);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.cleanup3(page, ctx);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.cleanup4(page, ctx);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.cleanup6(page, ctx);
+    await lifecycle_migrateUsers_providerSpecific_createTestTenant.cleanup1(page, ctx, baseUrl, screenshotApiKey, importTenantId);
   },
 };
