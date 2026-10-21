@@ -7,16 +7,24 @@ Please note, if you are not registered for an application, you will not be able 
 
 From the admin UI click on <Breadcrumb>Users -> Manage -> Registrations Tab -> Add registration -> Add User</Breadcrumb>.  Another option is to be programmatically added to the application through an API call.
 
-![Login Screen](/img/docs/lifecycle/manage-users/account-management/account-home-not-registered.png)
+![Login Screen](/img/docs/lifecycle/manage-users/account-management/account-home-not-registered.png) {/* TODO DELETE SCREENSHOT */}
+
+<Screenshot url="/account/?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e&prompt=login" id="lifecycle_manageUsers_accountManagement_troubleshooting_1" alt="The account home showing the warning displayed to users who are not registered for the application" />
 
 ### Registered But Configuration Needed
 
 If you see this, you have to select a form to use.
 
-![Login Screen](/img/docs/lifecycle/manage-users/account-management/configuration-incomplete-account.png)
+![Login Screen](/img/docs/lifecycle/manage-users/account-management/configuration-incomplete-account.png) {/* TODO DELETE SCREENSHOT */}
+
+<Screenshot url="/account/?client_id=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e&prompt=login" id="lifecycle_manageUsers_accountManagement_troubleshooting_2" alt="The account home showing the warning displayed when no self-service form is configured" />
 
 To set a self service form, click under <Breadcrumb>Applications -> Edit Application -> Registration</Breadcrumb>
 
-![Edit Application Screen - Registrations](/img/docs/lifecycle/manage-users/account-management/add-form-account.png)
+![Edit Application Screen - Registrations](/img/docs/lifecycle/manage-users/account-management/add-form-account.png) {/* TODO DELETE SCREENSHOT */}
+
+<Screenshot url="/admin/application/edit?applicationId=e9fdb985-9173-4e01-9d73-ac2d60d1dc8e" id="lifecycle_manageUsers_accountManagement_troubleshooting_3" clearBrowserBeforeCapture alt="The Registration tab of the application edit page with the User Self-service form selector highlighted">
+  <Highlight selector="#application_formConfiguration_selfServiceFormId-form-row" />
+</Screenshot>
 
 Select the form you would like to use. A default form is shipped with FusionAuth.

@@ -1,6 +1,17 @@
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import * as lifecycle_manageUsers_accountManagement_overview from './screenshots/src/lifecycle_manageUsers_accountManagement_overview.mjs';
+import * as lifecycle_manageUsers_accountManagement_troubleshooting from './screenshots/src/lifecycle_manageUsers_accountManagement_troubleshooting.mjs';
+import * as lifecycle_manageUsers_accountManagement_twoFactorAuthenticator from './screenshots/src/lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.mjs';
+import * as lifecycle_manageUsers_accountManagement_twoFactorEmail from './screenshots/src/lifecycle_manageUsers_accountManagement_twoFactorEmail.mjs';
+import * as lifecycle_manageUsers_accountManagement_twoFactorPhone from './screenshots/src/lifecycle_manageUsers_accountManagement_twoFactorPhone.mjs';
+import * as lifecycle_manageUsers_accountManagement_addWebAuthn from './screenshots/src/lifecycle_manageUsers_accountManagement_addWebAuthn.mjs';
+import * as lifecycle_manageUsers_accountManagement_customizingAccountManagement from './screenshots/src/lifecycle_manageUsers_accountManagement_customizingAccountManagement.mjs';
+import * as lifecycle_manageUsers_accountManagement_updatingUserData from './screenshots/src/lifecycle_manageUsers_accountManagement_updatingUserData.mjs';
+import * as lifecycle_migrateUsers_providerSpecific_createTestTenant from './screenshots/src/lifecycle_migrateUsers_providerSpecific_createTestTenant.mjs';
+import { logInAsAdminRichardViaTheAdminLoginPage, setConstants } from './screenshots/src/shared.mjs';
+import { setupScreenshotEnvironment } from './screenshots/src/initialEnvironmentSetup.mjs';
 
 // load .env from this directory for local development (no-op if file absent)
 try {
@@ -13,8 +24,12 @@ try {
 
 let adminLocale;
 
+const baseUrl = 'http://localhost:9011';
+const screenshotApiKey = 'screenshot-dev-key-not-for-production';
+const importTenantId = '25c9d123-8a79-4edd-9f76-8dd9c806b0f3';
+
 export default {
-  baseUrl: 'http://localhost:9011',
+  baseUrl,
   outputDir: 'public/img/docs/screenshots',
   window: { width: 1100, height: 800 },
   browser: 'webkit',
@@ -31,107 +46,46 @@ export default {
     compose:  'screenshots/docker-compose.yml',
     service:  'fusionauth',
     healthcheck: {
-      url:      'http://localhost:9011/api/status',
+      url:      `${baseUrl}/api/status`,
       timeout:  120000,
       interval: 3000,
     },
   },
 
   beforeAll: async (context) => {
-    const page = await context.newPage();
-
-    // FusionAuth's API healthcheck passes before the kickstart finishes and the
-    // login UI becomes available. Retry navigation until the login form appears.
-    const deadline = Date.now() + 150_000;
-    while (Date.now() < deadline) {
-      await page.goto('http://localhost:9011/admin/login', {
-        waitUntil: 'load',
-        timeout: 15000,
-      }).catch(() => {});
-      const ready = await page.$('#loginId');
-      if (ready) break;
-      await new Promise(r => setTimeout(r, 3000));
-    }
-
-    await page.fill('#loginId', 'richard@piedpiper.com');
-    await page.fill('#password', 'password');
-    // press Enter to submit -- more reliable than clicking a specific button selector
-    await page.keyboard.press('Enter');
-    // the login page is under /admin too, so wait until it has been left
-    await page.waitForURL(url => url.pathname.startsWith('/admin') && !url.pathname.startsWith('/admin/login'), { timeout: 30000 });
-    adminLocale = (await context.cookies('http://localhost:9011')).find(c => c.name === 'fusionauth.locale')?.value;
-    await page.close();
-
-    // Configure tenant and set up screenshot infrastructure.
-    const apiKey = 'screenshot-dev-key-not-for-production';
-    const baseUrl = 'http://localhost:9011';
+    const apiKey = screenshotApiKey;
     const tenantId = '30663132-6464-6665-3032-326466613934';
     const messengerId = '00000000-0000-0000-0000-500000000001';
-
     const appId = 'e9fdb985-9173-4e01-9d73-ac2d60d1dc8e';
-    const richardId = '00000000-0000-0000-0000-100000000001';
+    const adminRichardId = '00000000-0000-0000-0000-100000000001';
+    setConstants({ baseUrl, apiKey, adminRichardUserId: adminRichardId });
 
-    // activate license if key is provided (enables WebAuthn and other licensed features)
-    if (process.env.FUSIONAUTH_LICENSE_KEY) {
-      try {
-        const licResp = await fetch(`${baseUrl}/api/reactor`, {
-          method: 'POST',
-          headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ licenseId: process.env.FUSIONAUTH_LICENSE_KEY }),
-        });
-        // 409 = already activated, both are fine
-        if (!licResp.ok && licResp.status !== 409) {
-          throw new Error(`${licResp.status} ${await licResp.text()}`);
-        } else {
-          // poll until licensed: true (reactor activates asynchronously)
-          const licDeadline = Date.now() + 15_000;
-          while (Date.now() < licDeadline) {
-            const statusResp = await fetch(`${baseUrl}/api/reactor`, { headers: { 'Authorization': apiKey } });
-            const { status } = await statusResp.json();
-            if (status?.licensed === true) {
-              console.log('[screenshot] beforeAll: license active, webAuthn:', status.webAuthn);
-              break;
-            }
-            await new Promise(r => setTimeout(r, 1000));
-          }
-          // enable WebAuthn on the tenant (both workflows)
-          await fetch(`${baseUrl}/api/tenant/${tenantId}`, {
-            method: 'PATCH',
-            headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tenant: { webAuthnConfiguration: {
-              enabled: true,
-              bootstrapWorkflow: { enabled: true },
-              reauthenticationWorkflow: { enabled: true },
-            } } }),
-          });
-          // ensure Richard is registered with Pied Piper (idempotent -- 400 if already exists)
-          await fetch(`${baseUrl}/api/user/registration/${richardId}`, {
-            method: 'POST',
-            headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ registration: { applicationId: appId, roles: ['admin'] } }),
-          });
-        }
-      } catch (e) {
-        throw new Error(`beforeAll: license setup failed: ${e.message}`, { cause: e });
-      }
-    }
+    await setupScreenshotEnvironment(baseUrl, apiKey, tenantId, appId, adminRichardId, messengerId, process.env.FUSIONAUTH_LICENSE_KEY);
 
     // ensure self-service form is configured on Pied Piper app for account management
-    // selfServiceEnabled is not a real API field; the correct field is formConfiguration.selfServiceFormId
+    // the built-in "Default User Self Service" form id is generated per install; look it up by name
     try {
+      const formsResp = await fetch(`${baseUrl}/api/form`, { headers: { 'Authorization': apiKey } });
+      if (!formsResp.ok) throw new Error(`GET /api/form ${formsResp.status}`);
+      const { forms } = await formsResp.json();
+      const selfServiceForm = forms.find(f => f.name === 'Default User Self Service provided by FusionAuth');
+      if (!selfServiceForm) throw new Error('Default User Self Service form not found');
       const appResp = await fetch(`${baseUrl}/api/application/${appId}`, { headers: { 'Authorization': apiKey } });
-      if (appResp.ok) {
-        const { application } = await appResp.json();
-        if (!application.formConfiguration?.selfServiceFormId) {
-          await fetch(`${baseUrl}/api/application/${appId}`, {
-            method: 'PATCH',
-            headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ application: { formConfiguration: {
-              // '94dfe967-6fdd-499d-b2de-788ea86d151a' is the built-in "Default User Self Service" form
-              selfServiceFormId: '94dfe967-6fdd-499d-b2de-788ea86d151a',
-            } } }),
-          });
-        }
+      if (!appResp.ok) throw new Error(`GET /api/application ${appResp.status}`);
+      const { application } = await appResp.json();
+      if (application.formConfiguration?.selfServiceFormId !== selfServiceForm.id) {
+        const patchResp = await fetch(`${baseUrl}/api/application/${appId}`, {
+          method: 'PATCH',
+          headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ application: { formConfiguration: { selfServiceFormId: selfServiceForm.id } } }),
+        });
+        if (!patchResp.ok) throw new Error(`${patchResp.status} ${await patchResp.text()}`);
+      }
+      const verifyResp = await fetch(`${baseUrl}/api/application/${appId}`, { headers: { 'Authorization': apiKey } });
+      if (!verifyResp.ok) throw new Error(`GET /api/application/${appId} ${verifyResp.status}`);
+      const { application: verifiedApplication } = await verifyResp.json();
+      if (verifiedApplication.formConfiguration?.selfServiceFormId !== selfServiceForm.id) {
+        throw new Error(`selfServiceFormId did not persist; expected ${selfServiceForm.id}`);
       }
     } catch (e) {
       throw new Error(`beforeAll: selfServiceFormId patch failed: ${e.message}`, { cause: e });
@@ -148,6 +102,40 @@ export default {
           body: JSON.stringify({ sourceThemeId: '75a068fd-e94b-451a-9aeb-3ddb9a3b5987', theme: { id: themeId, name: 'Screenshots Theme' } }),
         });
         console.log('[screenshot] beforeAll: created Screenshots Theme');
+      }
+      const themeResp = await fetch(`${baseUrl}/api/theme/${themeId}`, { headers: { 'Authorization': apiKey } });
+      if (!themeResp.ok) throw new Error(`GET /api/theme/${themeId} ${themeResp.status}`);
+      const { theme } = await themeResp.json();
+      const marker = 'This is now modified with a birthdate field';
+      const accountIndex = theme.templates.accountIndex ?? '';
+      if (!accountIndex.includes(marker)) {
+        const birthdateTemplate = [
+          '',
+          '[#if user.data.screenshotShowBirthdate?? && user.data.screenshotShowBirthdate]',
+          '<p>This is now modified with a birthdate field</p>',
+          '<dl class="horizontal">',
+          '<dt>${theme.message("user.birthDate")}</dt>',
+          '<dd>${helpers.display(user, "birthDate")}</dd>',
+          '</dl>',
+          '[/#if]',
+        ].join('\n');
+        const patchResp = await fetch(`${baseUrl}/api/theme/${themeId}`, {
+          method: 'PATCH',
+          headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ theme: { templates: { accountIndex: accountIndex + birthdateTemplate } } }),
+        });
+        if (!patchResp.ok) throw new Error(`PATCH /api/theme/${themeId} ${patchResp.status} ${await patchResp.text()}`);
+      }
+      const tenantThemeResp = await fetch(`${baseUrl}/api/tenant/${tenantId}`, { headers: { 'Authorization': apiKey } });
+      if (!tenantThemeResp.ok) throw new Error(`GET /api/tenant/${tenantId} ${tenantThemeResp.status}`);
+      const { tenant: screenshotTenant } = await tenantThemeResp.json();
+      if (screenshotTenant.themeId !== themeId) {
+        const patchResp = await fetch(`${baseUrl}/api/tenant/${tenantId}`, {
+          method: 'PATCH',
+          headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tenant: { themeId } }),
+        });
+        if (!patchResp.ok) throw new Error(`PATCH /api/tenant/${tenantId} ${patchResp.status} ${await patchResp.text()}`);
       }
     } catch (e) {
       throw new Error(`beforeAll: Screenshots Theme creation failed: ${e.message}`, { cause: e });
@@ -180,21 +168,6 @@ export default {
       throw new Error(`beforeAll: message template update failed: ${e.message}`, { cause: e });
     }
 
-    // create Generic HTTP messenger for phone OTP flow (points to sms-mock service in docker-compose)
-    try {
-      const mResp = await fetch(`${baseUrl}/api/messenger/${messengerId}`, { headers: { 'Authorization': apiKey } });
-      if (!mResp.ok) {
-        await fetch(`${baseUrl}/api/messenger/${messengerId}`, {
-          method: 'POST',
-          headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messenger: { id: messengerId, type: 'Generic', name: 'SMS Mock (screenshots)', url: 'http://sms-mock:8081/', connectTimeout: 2000, readTimeout: 2000, debug: false } }),
-        });
-        console.log('[screenshot] beforeAll: created SMS mock messenger');
-      }
-    } catch (e) {
-      throw new Error(`beforeAll: messenger setup failed: ${e.message}`, { cause: e });
-    }
-
     // configure tenant email: set passwordless email template (needed for the login button to render)
     try {
       const r = await fetch(`${baseUrl}/api/tenant/${tenantId}`, {
@@ -219,6 +192,8 @@ export default {
       throw new Error(`beforeAll: phone PATCH failed: ${e.message}`, { cause: e });
     }
 
+    // Initialize the shared browser session only after all app and tenant setup is complete.
+    adminLocale = await logInAsAdminRichardViaTheAdminLoginPage(context, baseUrl);
   },
 
   beforeScreenshot: async (page, ctx) => {
@@ -227,57 +202,32 @@ export default {
     const { pathname, hash } = new URL(url);
     const fragment = hash.slice(1);
 
+    // A fresh browser context has no admin session. Sign in only when an admin URL
+    // was redirected to the login page, then revisit the requested route.
+    if (pathname.startsWith('/admin')) {
+      const currentPathname = new URL(page.url()).pathname;
+      if (!currentPathname.startsWith('/admin') || currentPathname === '/admin/login') {
+        adminLocale = await logInAsAdminRichardViaTheAdminLoginPage(page.context(), baseUrl);
+        await page.goto(url, { waitUntil: 'networkidle' });
+      }
+    }
+
     // opening an /account page resets this to en
     if (adminLocale && pathname.startsWith('/admin')) {
       const context = page.context();
-      const locale = (await context.cookies('http://localhost:9011')).find(c => c.name === 'fusionauth.locale');
+      const locale = (await context.cookies(baseUrl)).find(c => c.name === 'fusionauth.locale');
       if (locale?.value !== adminLocale) {
-        await context.addCookies([{ name: 'fusionauth.locale', value: adminLocale, url: 'http://localhost:9011' }]);
+        await context.addCookies([{ name: 'fusionauth.locale', value: adminLocale, url: baseUrl }]);
         await page.reload({ waitUntil: 'networkidle' });
       }
     }
 
     const oauthAppId = 'e9fdb985-9173-4e01-9d73-ac2d60d1dc8e';
     const oauthTenantId = '30663132-6464-6665-3032-326466613934';
-    const oauthLoginUrl = `http://localhost:9011/oauth2/authorize?client_id=${oauthAppId}&redirect_uri=https%3A%2F%2Fexample.com&response_type=code&scope=openid`;
+    const oauthLoginUrl = `${baseUrl}/oauth2/authorize?client_id=${oauthAppId}&redirect_uri=https%3A%2F%2Fexample.com&response_type=code&scope=openid`;
 
-    // the migration test tenant should only appear in the tenant list screenshot
-    const apiKey = 'screenshot-dev-key-not-for-production';
-    // matches the example Id in the guide text
-    const importTenantId = '25c9d123-8a79-4edd-9f76-8dd9c806b0f3';
-    const importTenantUrl = `http://localhost:9011/api/tenant/${importTenantId}`;
-    const importTenantApi = async (method, body) => {
-      const r = await fetch(importTenantUrl, {
-        method,
-        headers: { 'Authorization': apiKey, 'Content-Type': 'application/json' },
-        body: body && JSON.stringify(body),
-      });
-      if (!r.ok && !(method === 'GET' && r.status === 404)) {
-        throw new Error(`test tenant ${method} failed: ${r.status} ${await r.text()}`);
-      }
-      return r.ok;
-    };
-    const importTenantExists = await importTenantApi('GET');
-
-    if (ctx?.name === 'migration-tenant-list') {
-      if (!importTenantExists) {
-        await importTenantApi('POST', { tenant: { name: 'Import test' } });
-        await page.reload({ waitUntil: 'networkidle' });
-      }
-      await page.evaluate(id => {
-        const cell = [...document.querySelectorAll('td')].find(td => td.textContent.trim() === id);
-        if (cell) cell.setAttribute('data-hl', 'import-tenant-id');
-      }, importTenantId);
-    } else if (importTenantExists) {
-      await importTenantApi('DELETE');
-      // the admin UI caches the tenant count; two tenants adds a Tenant field to some forms
-      await page.waitForTimeout(5000);
-      await page.reload({ waitUntil: 'networkidle' });
-    }
-
-    if (ctx?.name === 'migration-tenant-add') {
-      await page.fill('#tenant_name', 'Import test');
-    }
+    await lifecycle_migrateUsers_providerSpecific_createTestTenant.setup1(page, ctx, baseUrl, screenshotApiKey, importTenantId);
+    await lifecycle_migrateUsers_providerSpecific_createTestTenant.setup2(page, ctx);
 
     // bootstrap-button: tag the "Fingerprint, device or key" link for highlighting
     if (ctx?.name === 'passkeys-bootstrap-button') {
@@ -306,7 +256,7 @@ export default {
         await page.fill('#password', 'password');
         await page.locator('#submit-button').click();
         try { await page.waitForURL(/example\.com/, { timeout: 8000 }); } catch {}
-        await page.goto(`http://localhost:9011/account/webauthn/?client_id=${oauthAppId}&tenantId=${oauthTenantId}`);
+        await page.goto(`${baseUrl}/account/webauthn/?client_id=${oauthAppId}&tenantId=${oauthTenantId}`);
         await page.waitForLoadState('networkidle');
         await page.waitForTimeout(500);
       } catch (e) {
@@ -419,6 +369,12 @@ export default {
       const tabLabel = { email: 'Email', 'email-test': 'Email', identities: 'Identities', passwordless: 'Advanced', webauthn: 'WebAuthn' }[fragment];
       if (tabLabel) {
         try {
+          // Wait for Angular to render the tenant tab bar before selecting a tab.
+          await page.waitForFunction(
+            label => [...document.querySelectorAll('el-tab-list button')].some(button => button.textContent.trim() === label),
+            tabLabel,
+            { timeout: 15000 },
+          );
           // use JS click to handle tabs that are scrolled off the visible tab bar
           const result = await page.evaluate((label) => {
             const btns = [...document.querySelectorAll('el-tab-list button')];
@@ -430,7 +386,13 @@ export default {
           if (!result.clicked) throw new Error(`tab "${tabLabel}" not found; available: ${JSON.stringify(result.available)}`);
           await page.waitForTimeout(1000);
         } catch (e) {
-          throw new Error(`tenant/edit ${tabLabel} tab failed: ${e.message}`, { cause: e });
+          const pageState = await page.evaluate(() => ({
+            url: location.href,
+            title: document.title,
+            text: document.body.innerText.replace(/\s+/g, ' ').slice(0, 300),
+            tabs: [...document.querySelectorAll('el-tab-list button')].map(button => button.textContent.trim()),
+          })).catch(() => null);
+          throw new Error(`tenant/edit ${tabLabel} tab failed: ${e.message}; page state: ${JSON.stringify(pageState)}`, { cause: e });
         }
       }
 
@@ -542,7 +504,7 @@ export default {
     // to land on the OTP code-entry form (FormField strategy for phone passwordless)
     if (pathname.includes('/oauth2/authorize') && fragment === 'phone-otp') {
       try {
-        await page.goto(`http://localhost:9011/oauth2/passwordless?client_id=${oauthAppId}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth-callback&response_type=code&scope=openid`);
+        await page.goto(`${baseUrl}/oauth2/passwordless?client_id=${oauthAppId}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth-callback&response_type=code&scope=openid`);
         await page.waitForLoadState('networkidle');
         // Big Head has mobilePhone in kickstart -- enter it to trigger the phone OTP flow
         await page.fill('#loginId', '+15555551234');
@@ -555,7 +517,33 @@ export default {
       }
     }
 
-    if (url.includes('/theme/edit/')) {
+    await lifecycle_manageUsers_accountManagement_overview.setup1(page, ctx);
+    await lifecycle_manageUsers_accountManagement_overview.setup2(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_overview.setup3(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_overview.setup4(page, ctx);
+    await lifecycle_manageUsers_accountManagement_overview.setup5(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_overview.setup6(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_troubleshooting.setup1(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_troubleshooting.setup2(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_troubleshooting.setup3(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup1(page, ctx, baseUrl, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup2(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup3(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_twoFactorEmail.setup1(page, ctx, baseUrl, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_twoFactorEmail.setup2(page, ctx, baseUrl, oauthTenantId, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_twoFactorPhone.setup1(page, ctx, baseUrl, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_twoFactorPhone.setup2(page, ctx, baseUrl, oauthTenantId, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_addWebAuthn.setup1(page, ctx, baseUrl, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_addWebAuthn.setup2(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup1(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup2(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup3(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup4(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup5(page, ctx, baseUrl);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup6(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_updatingUserData.setup1(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+
+    if (url.includes('/theme/edit/') && ctx?.name === 'theme-localization-messages') {
       // viewport is already set to spec.height by capture.mjs before this hook runs.
       // scroll down to reach the Add Localization button (below the fold), click it,
       // then scroll back to top -- position:fixed dialog stays centred in the viewport.
@@ -619,10 +607,11 @@ export default {
       }
     }
 
-    await page.evaluate(() => {
-      document.querySelectorAll('.alert, [role=alert], .notification').forEach(el => el.remove());
+    await page.evaluate((screenshotName) => {
+      const screenshotsThatNeedToShowToasts = ['lifecycle_manageUsers_accountManagement_troubleshooting_1','lifecycle_manageUsers_accountManagement_troubleshooting_2', ];
+      if (!screenshotsThatNeedToShowToasts.includes(screenshotName)) document.querySelectorAll('.alert, [role=alert], .notification').forEach(el => el.remove());
       document.activeElement?.blur();
-    });
+    }, ctx?.name);
 
     // pin run-time dates; a day over 12 shows the dd/mm order
     if (new URL(page.url()).pathname.startsWith('/admin')) {
@@ -635,5 +624,17 @@ export default {
         }
       });
     }
+  },
+
+  afterScreenshot: async (page, ctx) => {
+    await lifecycle_manageUsers_accountManagement_troubleshooting.cleanup1(page, ctx);
+    await lifecycle_manageUsers_accountManagement_overview.cleanup6(page, ctx);
+    await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.cleanup3(page, ctx);
+    await lifecycle_manageUsers_accountManagement_twoFactorEmail.cleanup1(page, ctx);
+    await lifecycle_manageUsers_accountManagement_twoFactorEmail.cleanup2(page, ctx);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.cleanup3(page, ctx);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.cleanup4(page, ctx);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.cleanup6(page, ctx);
+    await lifecycle_migrateUsers_providerSpecific_createTestTenant.cleanup1(page, ctx, baseUrl, screenshotApiKey, importTenantId);
   },
 };
