@@ -21,7 +21,7 @@ async function withTenantEmailTwoFactorEnabled(tenantId, callback) {
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_twoFactorEmail_1(page, ctx, baseUrl, tenantId) {
+export async function setup1(page, ctx, baseUrl, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_twoFactorEmail_1') return;
   try {
     await withTenantEmailTwoFactorEnabled(tenantId, async () => {
@@ -47,7 +47,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_twoFactorEma
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_twoFactorEmail_2(page, ctx, baseUrl, tenantId, appId) {
+export async function setup2(page, ctx, baseUrl, tenantId, appId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_twoFactorEmail_2') return;
   try {
     await withTenantEmailTwoFactorEnabled(tenantId, async () => {

@@ -1,6 +1,6 @@
 import { logInAsAdminRichardViaTheHostedLoginPage } from './shared.mjs';
 
-export async function setup_lifecycle_manageUsers_accountManagement_twoFactorPhone_1(page, ctx, baseUrl, tenantId) {
+export async function setup1(page, ctx, baseUrl, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_twoFactorPhone_1') return;
   try {
     await page.goto(`${baseUrl}/admin/tenant/edit/${tenantId}`, { waitUntil: 'networkidle' });
@@ -19,7 +19,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_twoFactorPho
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_twoFactorPhone_2(page, ctx, baseUrl, tenantId, appId) {
+export async function setup2(page, ctx, baseUrl, tenantId, appId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_twoFactorPhone_2') return;
   try {
     const twoFactorUrl = `${baseUrl}/account/two-factor/?client_id=${appId}&tenantId=${tenantId}`;

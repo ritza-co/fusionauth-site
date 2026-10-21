@@ -1,6 +1,6 @@
 import { logInAsAdminRichardViaTheHostedLoginPage, deleteAdminRichardTwoFactorMethodsViaTheApi, computeOneTimeCodeFromBase32Secret } from './shared.mjs';
 
-export async function setup_lifecycle_manageUsers_accountManagement_overview_1(page, ctx) {
+export async function setup1(page, ctx) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_1') return;
   try {
     await page.waitForFunction(
@@ -22,7 +22,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_1(p
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_overview_2(page, ctx, baseUrl, appId, tenantId) {
+export async function setup2(page, ctx, baseUrl, appId, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_2') return;
   try {
     // the shared browser session is already logged in, so the self-service URL would capture the
@@ -35,7 +35,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_2(p
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_overview_3(page, ctx, baseUrl, appId, tenantId) {
+export async function setup3(page, ctx, baseUrl, appId, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_3') return;
   try {
     // The account home is intentionally the initial URL; clear cached self-service UI state left
@@ -67,7 +67,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_3(p
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_overview_4(page, ctx) {
+export async function setup4(page, ctx) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_4') return;
   try {
     if (await page.$('#loginId')) {
@@ -84,7 +84,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_4(p
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_overview_5(page, ctx, baseUrl, appId) {
+export async function setup5(page, ctx, baseUrl, appId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_5') return;
   try {
     if (await page.$('#loginId')) await logInAsAdminRichardViaTheHostedLoginPage(page);
@@ -98,7 +98,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_5(p
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_overview_6(page, ctx, baseUrl, appId) {
+export async function setup6(page, ctx, baseUrl, appId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_6') return;
   try {
     if (await page.$('#loginId')) await logInAsAdminRichardViaTheHostedLoginPage(page);

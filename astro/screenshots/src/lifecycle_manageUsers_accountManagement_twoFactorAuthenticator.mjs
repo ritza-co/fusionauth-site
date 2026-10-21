@@ -24,7 +24,7 @@ async function openAuthenticatorEnrollment(page, baseUrl, appId) {
   await page.locator('input[placeholder*="one-time"], #code, [name="code"]').first().waitFor({ timeout: 5000 });
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_1(page, ctx, baseUrl, tenantId) {
+export async function setup1(page, ctx, baseUrl, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_1') return;
   try {
     await page.goto(`${baseUrl}/admin/tenant/edit/${tenantId}`, { waitUntil: 'networkidle' });
@@ -37,7 +37,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_twoFactorAut
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_2(page, ctx, baseUrl, appId) {
+export async function setup2(page, ctx, baseUrl, appId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_2') return;
   try {
     await openAuthenticatorEnrollment(page, baseUrl, appId);
@@ -46,7 +46,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_twoFactorAut
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_3(page, ctx, baseUrl, appId, tenantId) {
+export async function setup3(page, ctx, baseUrl, appId, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_3') return;
 
   try {

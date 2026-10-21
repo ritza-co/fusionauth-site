@@ -32,7 +32,7 @@ async function freezeBanner(page, bannerText) {
   }, bannerText);
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_troubleshooting_1(page, ctx, baseUrl, appId) {
+export async function setup1(page, ctx, baseUrl, appId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_troubleshooting_1') return;
   try {
     const accountUrl = `${baseUrl}/account/?client_id=${appId}`;
@@ -75,7 +75,7 @@ async function addConfigurationIncompleteBanner(page) {
   if (!inserted) throw new Error('Self-service account content container not found');
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_troubleshooting_2(page, ctx, baseUrl, appId) {
+export async function setup2(page, ctx, baseUrl, appId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_troubleshooting_2') return;
   try {
     const accountUrl = `${baseUrl}/account/?client_id=${appId}`;
@@ -92,7 +92,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_troubleshoot
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_troubleshooting_3(page, ctx, baseUrl, appId) {
+export async function setup3(page, ctx, baseUrl, appId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_troubleshooting_3') return;
   try {
     await page.goto(freshUrl(`${baseUrl}/admin/application/edit?applicationId=${appId}`), { waitUntil: 'networkidle' });

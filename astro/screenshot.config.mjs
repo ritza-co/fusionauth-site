@@ -549,32 +549,32 @@ export default {
       }
     }
 
-    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_1(page, ctx);
-    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_2(page, ctx, baseUrl, oauthAppId, oauthTenantId);
-    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_3(page, ctx, baseUrl, oauthAppId, oauthTenantId);
-    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_4(page, ctx);
-    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_5(page, ctx, baseUrl, oauthAppId);
-    await lifecycle_manageUsers_accountManagement_overview.setup_lifecycle_manageUsers_accountManagement_overview_6(page, ctx, baseUrl, oauthAppId);
-    await lifecycle_manageUsers_accountManagement_troubleshooting.setup_lifecycle_manageUsers_accountManagement_troubleshooting_1(page, ctx, baseUrl, oauthAppId);
-    await lifecycle_manageUsers_accountManagement_troubleshooting.setup_lifecycle_manageUsers_accountManagement_troubleshooting_2(page, ctx, baseUrl, oauthAppId);
-    await lifecycle_manageUsers_accountManagement_troubleshooting.setup_lifecycle_manageUsers_accountManagement_troubleshooting_3(page, ctx, baseUrl, oauthAppId);
-    await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup_lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_1(page, ctx, baseUrl, oauthTenantId);
-    await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup_lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_2(page, ctx, baseUrl, oauthAppId);
-    await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup_lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_3(page, ctx, baseUrl, oauthAppId, oauthTenantId);
-    await lifecycle_manageUsers_accountManagement_twoFactorEmail.setup_lifecycle_manageUsers_accountManagement_twoFactorEmail_1(page, ctx, baseUrl, oauthTenantId);
-    await lifecycle_manageUsers_accountManagement_twoFactorEmail.setup_lifecycle_manageUsers_accountManagement_twoFactorEmail_2(page, ctx, baseUrl, oauthTenantId, oauthAppId);
-    await lifecycle_manageUsers_accountManagement_twoFactorPhone.setup_lifecycle_manageUsers_accountManagement_twoFactorPhone_1(page, ctx, baseUrl, oauthTenantId);
-    await lifecycle_manageUsers_accountManagement_twoFactorPhone.setup_lifecycle_manageUsers_accountManagement_twoFactorPhone_2(page, ctx, baseUrl, oauthTenantId, oauthAppId);
-    await lifecycle_manageUsers_accountManagement_addWebAuthn.setup_lifecycle_manageUsers_accountManagement_addWebAuthn_1(page, ctx, baseUrl, oauthTenantId);
-    await lifecycle_manageUsers_accountManagement_addWebAuthn.setup_lifecycle_manageUsers_accountManagement_addWebAuthn_2(page, ctx, baseUrl, oauthAppId, oauthTenantId);
-    await lifecycle_manageUsers_accountManagement_addWebAuthn.setup_lifecycle_manageUsers_accountManagement_addWebAuthn_3(page, ctx, baseUrl, oauthAppId, oauthTenantId);
-    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_1(page, ctx, baseUrl, oauthAppId);
-    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_2(page, ctx, baseUrl, oauthAppId);
-    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_3(page, ctx, baseUrl, oauthAppId);
-    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_4(page, ctx, baseUrl, oauthAppId, oauthTenantId);
-    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_5(page, ctx, baseUrl);
-    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_6(page, ctx, baseUrl, oauthAppId, oauthTenantId);
-    await lifecycle_manageUsers_accountManagement_updatingUserData.setup_lifecycle_manageUsers_accountManagement_updatingUserData_1(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_overview.setup1(page, ctx);
+    await lifecycle_manageUsers_accountManagement_overview.setup2(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_overview.setup3(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_overview.setup4(page, ctx);
+    await lifecycle_manageUsers_accountManagement_overview.setup5(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_overview.setup6(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_troubleshooting.setup1(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_troubleshooting.setup2(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_troubleshooting.setup3(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup1(page, ctx, baseUrl, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup2(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_twoFactorAuthenticator.setup3(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_twoFactorEmail.setup1(page, ctx, baseUrl, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_twoFactorEmail.setup2(page, ctx, baseUrl, oauthTenantId, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_twoFactorPhone.setup1(page, ctx, baseUrl, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_twoFactorPhone.setup2(page, ctx, baseUrl, oauthTenantId, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_addWebAuthn.setup1(page, ctx, baseUrl, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_addWebAuthn.setup2(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_addWebAuthn.setup3(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup1(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup2(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup3(page, ctx, baseUrl, oauthAppId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup4(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup5(page, ctx, baseUrl);
+    await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup6(page, ctx, baseUrl, oauthAppId, oauthTenantId);
+    await lifecycle_manageUsers_accountManagement_updatingUserData.setup1(page, ctx, baseUrl, oauthAppId, oauthTenantId);
 
     if (url.includes('/theme/edit/') && ctx?.name === 'theme-localization-messages') {
       // viewport is already set to spec.height by capture.mjs before this hook runs.

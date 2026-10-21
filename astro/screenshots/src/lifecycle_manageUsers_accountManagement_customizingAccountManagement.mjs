@@ -55,7 +55,7 @@ async function openAccountEdit(page, baseUrl, appId, tenantId) {
   await page.locator('a, button').filter({ hasText: /edit profile/i }).first().click({ timeout: 5000 });
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_1(page, ctx) {
+export async function setup1(page, ctx) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_customizingAccountManagement_1') return;
   const marked = await page.evaluate(() => {
     const cell = [...document.querySelectorAll('td')].find(td => td.textContent.includes('Default User Self Service provided by FusionAuth'));
@@ -68,7 +68,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_customizingA
   if (!marked) throw new Error('Default User Self Service form row not found');
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_2(page, ctx, baseUrl, appId) {
+export async function setup2(page, ctx, baseUrl, appId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_customizingAccountManagement_2') return;
   try {
     const { formId } = await getApplicationForm(baseUrl, appId);
@@ -80,7 +80,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_customizingA
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_3(page, ctx, baseUrl, appId) {
+export async function setup3(page, ctx, baseUrl, appId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_customizingAccountManagement_3') return;
   let birthdateField;
   try {
@@ -96,7 +96,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_customizingA
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_4(page, ctx, baseUrl, appId, tenantId) {
+export async function setup4(page, ctx, baseUrl, appId, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_customizingAccountManagement_4') return;
   let field;
   let form;
@@ -134,7 +134,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_customizingA
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_5(page, ctx, baseUrl) {
+export async function setup5(page, ctx, baseUrl) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_customizingAccountManagement_5') return;
   try {
     await page.goto(`${baseUrl}/admin/theme/edit/${screenshotsThemeId}`, { waitUntil: 'networkidle' });
@@ -145,7 +145,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_customizingA
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_customizingAccountManagement_6(page, ctx, baseUrl, appId, tenantId) {
+export async function setup6(page, ctx, baseUrl, appId, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_customizingAccountManagement_6') return;
   let originalBirthDate;
   let originalUserData;

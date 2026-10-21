@@ -1,6 +1,6 @@
 const bootstrapSettingsSelector = 'fieldset:has(#tenant_webAuthnConfiguration_bootstrapWorkflow_enabled-form-row):not(:has(#tenant_webAuthnConfiguration_reauthenticationWorkflow_enabled-form-row))';
 
-export async function setup_lifecycle_manageUsers_accountManagement_addWebAuthn_1(page, ctx) {
+export async function setup1(page, ctx) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_addWebAuthn_1') return;
   try {
     const bootstrapSettings = page.locator(bootstrapSettingsSelector).first();
@@ -12,7 +12,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_addWebAuthn_
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_addWebAuthn_2(page, ctx, baseUrl, appId, tenantId) {
+export async function setup2(page, ctx, baseUrl, appId, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_addWebAuthn_2') return;
   try {
     const loginUrl = `${baseUrl}/oauth2/authorize?client_id=${appId}&response_type=code&redirect_uri=https%3A%2F%2Fexample.com&scope=openid&prompt=login&tenantId=${tenantId}`;
@@ -38,7 +38,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_addWebAuthn_
   }
 }
 
-export async function setup_lifecycle_manageUsers_accountManagement_addWebAuthn_3(page, ctx, baseUrl, appId, tenantId) {
+export async function setup3(page, ctx, baseUrl, appId, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_addWebAuthn_3') return;
   try {
     const loginUrl = `${baseUrl}/oauth2/authorize?client_id=${appId}&response_type=code&redirect_uri=https%3A%2F%2Fexample.com&scope=openid&prompt=login&tenantId=${tenantId}`;
