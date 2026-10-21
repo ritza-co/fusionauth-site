@@ -1,8 +1,8 @@
 import {
-  logInAsRichardHendricksViaTheHostedLoginPage,
-  getRichardHendricksRegistrationViaTheApi,
-  deleteRichardHendricksRegistrationViaTheApi,
-  createRichardHendricksRegistrationViaTheApi,
+  logInAsAdminRichardViaTheHostedLoginPage,
+  getAdminRichardRegistrationViaTheApi,
+  deleteAdminRichardRegistrationViaTheApi,
+  createAdminRichardRegistrationViaTheApi,
 } from './shared.mjs';
 
 // unique query param so a cached page can never serve the pre-setup state
@@ -37,17 +37,17 @@ export async function setup_lifecycle_manageUsers_accountManagement_troubleshoot
   try {
     const accountUrl = `${baseUrl}/account/?client_id=${appId}`;
     await page.goto(freshUrl(accountUrl), { waitUntil: 'networkidle' });
-    if (await page.$('#loginId')) await logInAsRichardHendricksViaTheHostedLoginPage(page);
+    if (await page.$('#loginId')) await logInAsAdminRichardViaTheHostedLoginPage(page);
     // the banner needs a logged-in user without a registration; restoring the registration right
     // after it renders leaves the banner on screen for the capture
-    const registration = await getRichardHendricksRegistrationViaTheApi(appId);
+    const registration = await getAdminRichardRegistrationViaTheApi(appId);
     try {
-      await deleteRichardHendricksRegistrationViaTheApi(appId);
+      await deleteAdminRichardRegistrationViaTheApi(appId);
       await page.goto(freshUrl(accountUrl), { waitUntil: 'networkidle' });
       await page.getByText(/not registered for this application/i).filter({ visible: true }).first().waitFor({ timeout: 10000 });
       await freezeBanner(page, 'not registered for this application');
     } finally {
-      await createRichardHendricksRegistrationViaTheApi(appId, registration);
+      await createAdminRichardRegistrationViaTheApi(appId, registration);
     }
     await page.waitForTimeout(300);
   } catch (e) {
@@ -80,7 +80,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_troubleshoot
   try {
     const accountUrl = `${baseUrl}/account/?client_id=${appId}`;
     await page.goto(freshUrl(accountUrl), { waitUntil: 'networkidle' });
-    if (await page.$('#loginId')) await logInAsRichardHendricksViaTheHostedLoginPage(page);
+    if (await page.$('#loginId')) await logInAsAdminRichardViaTheHostedLoginPage(page);
     // Keep the application configured in the API; reproduce the genuine warning markup locally so
     // this screenshot cannot leave stale self-service configuration in the shared browser session.
     await addConfigurationIncompleteBanner(page);

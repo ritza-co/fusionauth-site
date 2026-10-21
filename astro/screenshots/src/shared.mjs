@@ -1,16 +1,39 @@
 let FUSIONAUTH_BASE_URL;
 let FUSIONAUTH_API_KEY;
 let FUSIONAUTH_API_HEADERS;
-let RICHARD_HENDRICKS_USER_ID;
+let ADMIN_RICHARD_USER_ID;
 
-export function setConstants({ baseUrl, apiKey, richardHendricksUserId }) {
+export function sleep(delayMs) {
+  return new Promise(resolve => setTimeout(resolve, delayMs));
+}
+
+export function setConstants({ baseUrl, apiKey, adminRichardUserId }) {
   FUSIONAUTH_BASE_URL = baseUrl;
   FUSIONAUTH_API_KEY = apiKey;
   FUSIONAUTH_API_HEADERS = { 'Authorization': FUSIONAUTH_API_KEY, 'Content-Type': 'application/json' };
-  RICHARD_HENDRICKS_USER_ID = richardHendricksUserId;
+  ADMIN_RICHARD_USER_ID = adminRichardUserId;
 }
 
-export async function logInAsRichardHendricksViaTheHostedLoginPage(page) {
+export async function logInAsAdminRichardViaTheAdminLoginPage(context, baseUrl) {
+  const page = await context.newPage();
+  try {
+    const deadline = Date.now() + 150_000;
+    while (Date.now() < deadline) {
+      await page.goto(`${baseUrl}/admin/login`, { waitUntil: 'load', timeout: 15000 }).catch(() => {});
+      if (await page.$('#loginId')) break;
+      await sleep(3000);
+    }
+    await page.fill('#loginId', 'richard@piedpiper.com');
+    await page.fill('#password', 'password');
+    await page.keyboard.press('Enter');
+    await page.waitForURL(url => url.pathname.startsWith('/admin') && !url.pathname.startsWith('/admin/login'), { timeout: 30000 });
+    return (await context.cookies(baseUrl)).find(cookie => cookie.name === 'fusionauth.locale')?.value;
+  } finally {
+    await page.close();
+  }
+}
+
+export async function logInAsAdminRichardViaTheHostedLoginPage(page) {
   await page.fill('#loginId', 'richard@piedpiper.com');
   await page.fill('#password', 'password');
   await page.locator('#submit-button').click();
@@ -19,45 +42,45 @@ export async function logInAsRichardHendricksViaTheHostedLoginPage(page) {
   await page.waitForLoadState('networkidle');
 }
 
-export async function deleteRichardHendricksTwoFactorMethodsViaTheApi() {
-  const userResp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/${RICHARD_HENDRICKS_USER_ID}`, { headers: FUSIONAUTH_API_HEADERS });
-  if (!userResp.ok) throw new Error(`GET /api/user/${RICHARD_HENDRICKS_USER_ID} ${userResp.status}`);
+export async function deleteAdminRichardTwoFactorMethodsViaTheApi() {
+  const userResp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/${ADMIN_RICHARD_USER_ID}`, { headers: FUSIONAUTH_API_HEADERS });
+  if (!userResp.ok) throw new Error(`GET /api/user/${ADMIN_RICHARD_USER_ID} ${userResp.status}`);
   const { user } = await userResp.json();
   const methods = user?.twoFactor?.methods ?? [];
   if (!methods.length) return;
 
   // the disable endpoint requires a verification code we cannot compute (the TOTP secret is gone by
   // cleanup time), but a recovery code is accepted too and, per the API docs, removes ALL methods.
-  const codesResp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/two-factor/recovery-code/${RICHARD_HENDRICKS_USER_ID}`, { method: 'POST', headers: FUSIONAUTH_API_HEADERS });
+  const codesResp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/two-factor/recovery-code/${ADMIN_RICHARD_USER_ID}`, { method: 'POST', headers: FUSIONAUTH_API_HEADERS });
   if (!codesResp.ok) throw new Error(`POST /api/user/two-factor/recovery-code ${codesResp.status} ${await codesResp.text()}`);
   const { recoveryCodes } = await codesResp.json();
 
-  const delResp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/two-factor/${RICHARD_HENDRICKS_USER_ID}`, {
+  const delResp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/two-factor/${ADMIN_RICHARD_USER_ID}`, {
     method: 'DELETE',
     headers: FUSIONAUTH_API_HEADERS,
     body: JSON.stringify({ methodId: methods[0].id, code: recoveryCodes[0] }),
   });
   if (!delResp.ok) throw new Error(`DELETE /api/user/two-factor ${delResp.status} ${await delResp.text()}`);
 
-  const verifyResp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/${RICHARD_HENDRICKS_USER_ID}`, { headers: FUSIONAUTH_API_HEADERS });
-  if (!verifyResp.ok) throw new Error(`GET /api/user/${RICHARD_HENDRICKS_USER_ID} ${verifyResp.status}`);
+  const verifyResp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/${ADMIN_RICHARD_USER_ID}`, { headers: FUSIONAUTH_API_HEADERS });
+  if (!verifyResp.ok) throw new Error(`GET /api/user/${ADMIN_RICHARD_USER_ID} ${verifyResp.status}`);
   const { user: after } = await verifyResp.json();
   if (after?.twoFactor?.methods?.length) throw new Error('two-factor methods still present after delete');
 }
 
-export async function getRichardHendricksRegistrationViaTheApi(appId) {
-  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/registration/${RICHARD_HENDRICKS_USER_ID}/${appId}`, { headers: FUSIONAUTH_API_HEADERS });
+export async function getAdminRichardRegistrationViaTheApi(appId) {
+  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/registration/${ADMIN_RICHARD_USER_ID}/${appId}`, { headers: FUSIONAUTH_API_HEADERS });
   if (!resp.ok) throw new Error(`GET /api/user/registration ${resp.status} ${await resp.text()}`);
   return (await resp.json()).registration;
 }
 
-export async function deleteRichardHendricksRegistrationViaTheApi(appId) {
-  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/registration/${RICHARD_HENDRICKS_USER_ID}/${appId}`, { method: 'DELETE', headers: FUSIONAUTH_API_HEADERS });
+export async function deleteAdminRichardRegistrationViaTheApi(appId) {
+  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/registration/${ADMIN_RICHARD_USER_ID}/${appId}`, { method: 'DELETE', headers: FUSIONAUTH_API_HEADERS });
   if (!resp.ok) throw new Error(`DELETE /api/user/registration ${resp.status} ${await resp.text()}`);
 }
 
-export async function createRichardHendricksRegistrationViaTheApi(appId, registration) {
-  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/registration/${RICHARD_HENDRICKS_USER_ID}/${appId}`, {
+export async function createAdminRichardRegistrationViaTheApi(appId, registration) {
+  const resp = await fetch(`${FUSIONAUTH_BASE_URL}/api/user/registration/${ADMIN_RICHARD_USER_ID}/${appId}`, {
     method: 'POST',
     headers: FUSIONAUTH_API_HEADERS,
     body: JSON.stringify({ registration }),

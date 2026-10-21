@@ -1,4 +1,4 @@
-import { logInAsRichardHendricksViaTheHostedLoginPage } from './shared.mjs';
+import { logInAsAdminRichardViaTheHostedLoginPage } from './shared.mjs';
 
 export async function setup_lifecycle_manageUsers_accountManagement_updatingUserData_1(page, ctx, baseUrl, appId, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_updatingUserData_1') return;
@@ -6,7 +6,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_updatingUser
     const loginUrl = `${baseUrl}/oauth2/authorize?client_id=${appId}&redirect_uri=${encodeURIComponent(`/account/login?client_id=${appId}&tenantId=${tenantId}`)}&response_type=code&scope=offline_access&prompt=login&tenantId=${tenantId}`;
     await page.goto(loginUrl, { waitUntil: 'networkidle' });
     await page.waitForSelector('#loginId', { timeout: 5000 });
-    await logInAsRichardHendricksViaTheHostedLoginPage(page);
+    await logInAsAdminRichardViaTheHostedLoginPage(page);
 
     const accountUrl = `${baseUrl}/account/?client_id=${appId}&tenantId=${tenantId}&_=${Date.now()}`;
     await page.goto(accountUrl, { waitUntil: 'networkidle' });

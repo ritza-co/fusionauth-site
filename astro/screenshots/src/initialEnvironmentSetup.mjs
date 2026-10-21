@@ -1,4 +1,4 @@
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+import { sleep } from './shared.mjs';
 
 async function waitForKickstartApi(baseUrl, apiKey, appId) {
   const deadline = Date.now() + 150_000;
@@ -58,7 +58,7 @@ async function waitForKickstartApi(baseUrl, apiKey, appId) {
   throw new Error(`Timed out waiting for Reactor API readiness (${lastStatus})`);
 }
 
-async function activateLicense(baseUrl, apiKey, licenseKey, tenantId, appId, richardId) {
+async function activateLicense(baseUrl, apiKey, licenseKey, tenantId, appId, adminRichardId) {
   if (!licenseKey) return;
 
   try {
@@ -95,7 +95,7 @@ async function activateLicense(baseUrl, apiKey, licenseKey, tenantId, appId, ric
         reauthenticationWorkflow: { enabled: true },
       } } }),
     });
-    await fetch(`${baseUrl}/api/user/registration/${richardId}`, {
+    await fetch(`${baseUrl}/api/user/registration/${adminRichardId}`, {
       method: 'POST',
       headers: { Authorization: apiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({ registration: { applicationId: appId, roles: ['admin'] } }),
@@ -212,10 +212,10 @@ async function configurePhoneMfa(baseUrl, apiKey, tenantId, appId, messengerId) 
   if (!appPatchResponse.ok) throw new Error(`PATCH /api/application/${appId} ${appPatchResponse.status} ${await appPatchResponse.text()}`);
 }
 
-async function resetScreenshotBirthdateFlag(baseUrl, apiKey, richardId) {
-  const url = `${baseUrl}/api/user/${richardId}`;
+async function resetScreenshotBirthdateFlag(baseUrl, apiKey, adminRichardId) {
+  const url = `${baseUrl}/api/user/${adminRichardId}`;
   const response = await fetch(url, { headers: { Authorization: apiKey } });
-  if (!response.ok) throw new Error(`GET /api/user/${richardId} ${response.status}`);
+  if (!response.ok) throw new Error(`GET /api/user/${adminRichardId} ${response.status}`);
   const { user } = await response.json();
   if (user.data?.screenshotShowBirthdate === false) return;
   const patchResponse = await fetch(url, {
@@ -223,33 +223,15 @@ async function resetScreenshotBirthdateFlag(baseUrl, apiKey, richardId) {
     headers: { Authorization: apiKey, 'Content-Type': 'application/json' },
     body: JSON.stringify({ user: { data: { ...(user.data ?? {}), screenshotShowBirthdate: false } } }),
   });
-  if (!patchResponse.ok) throw new Error(`PATCH /api/user/${richardId} ${patchResponse.status} ${await patchResponse.text()}`);
+  if (!patchResponse.ok) throw new Error(`PATCH /api/user/${adminRichardId} ${patchResponse.status} ${await patchResponse.text()}`);
 }
 
-export async function setupScreenshotEnvironment(baseUrl, apiKey, tenantId, appId, richardId, messengerId, licenseKey) {
+export async function setupScreenshotEnvironment(baseUrl, apiKey, tenantId, appId, adminRichardId, messengerId, licenseKey) {
   await waitForKickstartApi(baseUrl, apiKey, appId);
-  await activateLicense(baseUrl, apiKey, licenseKey, tenantId, appId, richardId);
+  await activateLicense(baseUrl, apiKey, licenseKey, tenantId, appId, adminRichardId);
   await ensureSmsMockMessenger(baseUrl, apiKey, messengerId);
   await configureEmailMfa(baseUrl, apiKey, tenantId, appId);
   await configurePhoneMfa(baseUrl, apiKey, tenantId, appId, messengerId);
-  await resetScreenshotBirthdateFlag(baseUrl, apiKey, richardId);
+  await resetScreenshotBirthdateFlag(baseUrl, apiKey, adminRichardId);
 }
 
-export async function loginScreenshotAdmin(context, baseUrl) {
-  const page = await context.newPage();
-  try {
-    const deadline = Date.now() + 150_000;
-    while (Date.now() < deadline) {
-      await page.goto(`${baseUrl}/admin/login`, { waitUntil: 'load', timeout: 15000 }).catch(() => {});
-      if (await page.$('#loginId')) break;
-      await sleep(3000);
-    }
-    await page.fill('#loginId', 'richard@piedpiper.com');
-    await page.fill('#password', 'password');
-    await page.keyboard.press('Enter');
-    await page.waitForURL(url => url.pathname.startsWith('/admin') && !url.pathname.startsWith('/admin/login'), { timeout: 30000 });
-    return (await context.cookies(baseUrl)).find(cookie => cookie.name === 'fusionauth.locale')?.value;
-  } finally {
-    await page.close();
-  }
-}

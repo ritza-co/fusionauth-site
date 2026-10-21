@@ -1,16 +1,16 @@
 import {
-  logInAsRichardHendricksViaTheHostedLoginPage,
-  deleteRichardHendricksTwoFactorMethodsViaTheApi,
+  logInAsAdminRichardViaTheHostedLoginPage,
+  deleteAdminRichardTwoFactorMethodsViaTheApi,
   computeOneTimeCodeFromBase32Secret,
 } from './shared.mjs';
 
 async function openAuthenticatorEnrollment(page, baseUrl, appId) {
-  await deleteRichardHendricksTwoFactorMethodsViaTheApi();
+  await deleteAdminRichardTwoFactorMethodsViaTheApi();
 
   const twoFactorUrl = `${baseUrl}/account/two-factor/?client_id=${appId}`;
   await page.goto(twoFactorUrl, { waitUntil: 'networkidle' });
   if (await page.$('#loginId')) {
-    await logInAsRichardHendricksViaTheHostedLoginPage(page);
+    await logInAsAdminRichardViaTheHostedLoginPage(page);
     await page.goto(twoFactorUrl, { waitUntil: 'networkidle' });
   }
 
@@ -74,6 +74,6 @@ export async function setup_lifecycle_manageUsers_accountManagement_twoFactorAut
   } catch (e) {
     throw new Error(`lifecycle_manageUsers_accountManagement_twoFactorAuthenticator_3: setup failed: ${e.message}`, { cause: e });
   } finally {
-    await deleteRichardHendricksTwoFactorMethodsViaTheApi();
+    await deleteAdminRichardTwoFactorMethodsViaTheApi();
   }
 }

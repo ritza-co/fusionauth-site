@@ -1,4 +1,4 @@
-import { logInAsRichardHendricksViaTheHostedLoginPage } from './shared.mjs';
+import { logInAsAdminRichardViaTheHostedLoginPage } from './shared.mjs';
 
 export async function setup_lifecycle_manageUsers_accountManagement_twoFactorPhone_1(page, ctx, baseUrl, tenantId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_twoFactorPhone_1') return;
@@ -26,7 +26,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_twoFactorPho
     const loginUrl = `${baseUrl}/oauth2/authorize?client_id=${appId}&redirect_uri=${encodeURIComponent(`/account/login?client_id=${appId}&tenantId=${tenantId}`)}&response_type=code&scope=offline_access&prompt=login&tenantId=${tenantId}`;
     await page.goto(loginUrl, { waitUntil: 'networkidle' });
     await page.waitForSelector('#loginId', { timeout: 5000 });
-    await logInAsRichardHendricksViaTheHostedLoginPage(page);
+    await logInAsAdminRichardViaTheHostedLoginPage(page);
     await page.goto(twoFactorUrl, { waitUntil: 'networkidle' });
 
     await page.locator('a, button').filter({ hasText: /add two-factor/i }).first().click({ timeout: 5000 });

@@ -1,4 +1,4 @@
-import { logInAsRichardHendricksViaTheHostedLoginPage, deleteRichardHendricksTwoFactorMethodsViaTheApi, computeOneTimeCodeFromBase32Secret } from './shared.mjs';
+import { logInAsAdminRichardViaTheHostedLoginPage, deleteAdminRichardTwoFactorMethodsViaTheApi, computeOneTimeCodeFromBase32Secret } from './shared.mjs';
 
 export async function setup_lifecycle_manageUsers_accountManagement_overview_1(page, ctx) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_1') return;
@@ -49,7 +49,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_3(p
     const loginUrl = `${baseUrl}/oauth2/authorize?client_id=${appId}&redirect_uri=${encodeURIComponent(`/account/login?client_id=${appId}&tenantId=${tenantId}`)}&response_type=code&scope=offline_access&prompt=login&tenantId=${tenantId}`;
     await page.goto(loginUrl, { waitUntil: 'networkidle' });
     await page.waitForSelector('#loginId', { timeout: 5000 });
-    await logInAsRichardHendricksViaTheHostedLoginPage(page);
+    await logInAsAdminRichardViaTheHostedLoginPage(page);
     const accountUrl = `${baseUrl}/account/?client_id=${appId}&tenantId=${tenantId}&_=${Date.now()}`;
     await page.goto(accountUrl, { waitUntil: 'networkidle' });
     await page.locator('a, button').filter({ hasText: /edit profile/i }).first().click({ timeout: 5000 });
@@ -87,9 +87,9 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_4(p
 export async function setup_lifecycle_manageUsers_accountManagement_overview_5(page, ctx, baseUrl, appId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_5') return;
   try {
-    if (await page.$('#loginId')) await logInAsRichardHendricksViaTheHostedLoginPage(page);
+    if (await page.$('#loginId')) await logInAsAdminRichardViaTheHostedLoginPage(page);
     // remove any leftover method so the page shows an empty methods list
-    await deleteRichardHendricksTwoFactorMethodsViaTheApi();
+    await deleteAdminRichardTwoFactorMethodsViaTheApi();
     await page.goto(`${baseUrl}/account/two-factor/?client_id=${appId}`);
     await page.getByText(/no methods have been configured|add two-factor/i).first().waitFor({ timeout: 5000 });
     await page.waitForTimeout(300);
@@ -101,8 +101,8 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_5(p
 export async function setup_lifecycle_manageUsers_accountManagement_overview_6(page, ctx, baseUrl, appId) {
   if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_overview_6') return;
   try {
-    if (await page.$('#loginId')) await logInAsRichardHendricksViaTheHostedLoginPage(page);
-    await deleteRichardHendricksTwoFactorMethodsViaTheApi();
+    if (await page.$('#loginId')) await logInAsAdminRichardViaTheHostedLoginPage(page);
+    await deleteAdminRichardTwoFactorMethodsViaTheApi();
     const codeField = page.locator('input[placeholder*="one-time"], #code, [name="code"]').first();
     if (!(await codeField.count())) {
       await page.goto(`${baseUrl}/account/two-factor/?client_id=${appId}`);
@@ -124,7 +124,7 @@ export async function setup_lifecycle_manageUsers_accountManagement_overview_6(p
     // the recovery codes render on the same page after enabling
     await page.getByText(/recovery codes/i).first().waitFor({ timeout: 5000 });
     // remove the method again; the codes stay rendered in the DOM for the capture
-    await deleteRichardHendricksTwoFactorMethodsViaTheApi();
+    await deleteAdminRichardTwoFactorMethodsViaTheApi();
     await page.waitForTimeout(300);
   } catch (e) {
     throw new Error(`lifecycle_manageUsers_accountManagement_overview_6: setup failed: ${e.message}`, { cause: e });

@@ -9,8 +9,8 @@ import * as lifecycle_manageUsers_accountManagement_twoFactorPhone from './scree
 import * as lifecycle_manageUsers_accountManagement_addWebAuthn from './screenshots/src/lifecycle_manageUsers_accountManagement_addWebAuthn.mjs';
 import * as lifecycle_manageUsers_accountManagement_customizingAccountManagement from './screenshots/src/lifecycle_manageUsers_accountManagement_customizingAccountManagement.mjs';
 import * as lifecycle_manageUsers_accountManagement_updatingUserData from './screenshots/src/lifecycle_manageUsers_accountManagement_updatingUserData.mjs';
-import { setConstants } from './screenshots/src/shared.mjs';
-import { loginScreenshotAdmin, setupScreenshotEnvironment } from './screenshots/src/setupScreenshotEnvironment.mjs';
+import { logInAsAdminRichardViaTheAdminLoginPage, setConstants } from './screenshots/src/shared.mjs';
+import { setupScreenshotEnvironment } from './screenshots/src/initialEnvironmentSetup.mjs';
 
 // load .env from this directory for local development (no-op if file absent)
 try {
@@ -54,10 +54,10 @@ export default {
     const tenantId = '30663132-6464-6665-3032-326466613934';
     const messengerId = '00000000-0000-0000-0000-500000000001';
     const appId = 'e9fdb985-9173-4e01-9d73-ac2d60d1dc8e';
-    const richardId = '00000000-0000-0000-0000-100000000001';
-    setConstants({ baseUrl, apiKey, richardHendricksUserId: richardId });
+    const adminRichardId = '00000000-0000-0000-0000-100000000001';
+    setConstants({ baseUrl, apiKey, adminRichardUserId: adminRichardId });
 
-    await setupScreenshotEnvironment(baseUrl, apiKey, tenantId, appId, richardId, messengerId, process.env.FUSIONAUTH_LICENSE_KEY);
+    await setupScreenshotEnvironment(baseUrl, apiKey, tenantId, appId, adminRichardId, messengerId, process.env.FUSIONAUTH_LICENSE_KEY);
 
     // ensure self-service form is configured on Pied Piper app for account management
     // the built-in "Default User Self Service" form id is generated per install; look it up by name
@@ -190,7 +190,7 @@ export default {
     }
 
     // Initialize the shared browser session only after all app and tenant setup is complete.
-    adminLocale = await loginScreenshotAdmin(context, baseUrl);
+    adminLocale = await logInAsAdminRichardViaTheAdminLoginPage(context, baseUrl);
   },
 
   beforeScreenshot: async (page, ctx) => {
@@ -204,7 +204,7 @@ export default {
     if (pathname.startsWith('/admin')) {
       const currentPathname = new URL(page.url()).pathname;
       if (!currentPathname.startsWith('/admin') || currentPathname === '/admin/login') {
-        adminLocale = await loginScreenshotAdmin(page.context(), baseUrl);
+        adminLocale = await logInAsAdminRichardViaTheAdminLoginPage(page.context(), baseUrl);
         await page.goto(url, { waitUntil: 'networkidle' });
       }
     }

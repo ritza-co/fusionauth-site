@@ -1,4 +1,4 @@
-import { logInAsRichardHendricksViaTheHostedLoginPage } from './shared.mjs';
+import { logInAsAdminRichardViaTheHostedLoginPage } from './shared.mjs';
 
 const screenshotApiKey = 'screenshot-dev-key-not-for-production';
 const screenshotsThemeId = '00000000-0000-0000-0000-300000000001';
@@ -46,7 +46,7 @@ async function loginRichard(page, baseUrl, appId, tenantId) {
   const loginUrl = `${baseUrl}/oauth2/authorize?client_id=${appId}&redirect_uri=${encodeURIComponent(`/account/login?client_id=${appId}&tenantId=${tenantId}`)}&response_type=code&scope=offline_access&prompt=login&tenantId=${tenantId}`;
   await page.goto(loginUrl, { waitUntil: 'networkidle' });
   await page.waitForSelector('#loginId', { timeout: 5000 });
-  await logInAsRichardHendricksViaTheHostedLoginPage(page);
+  await logInAsAdminRichardViaTheHostedLoginPage(page);
 }
 
 async function openAccountEdit(page, baseUrl, appId, tenantId) {
