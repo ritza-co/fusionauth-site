@@ -43,29 +43,10 @@ export default {
     compose:  'screenshots/docker-compose.yml',
     service:  'fusionauth',
     healthcheck: {
-      url:      'http://localhost:9011/api/status',
+      url:      `${baseUrl}/api/status`,
       timeout:  120000,
       interval: 3000,
     },
-  },
-
-  resetContextAfterScreenshots: [
-    'lifecycle_manageUsers_accountManagement_troubleshooting_2',
-    'lifecycle_manageUsers_accountManagement_troubleshooting_3',
-    'lifecycle_manageUsers_accountManagement_overview_4',
-    'lifecycle_manageUsers_accountManagement_addWebAuthn_1',
-    'lifecycle_manageUsers_accountManagement_addWebAuthn_3',
-    'lifecycle_manageUsers_accountManagement_customizingAccountManagement_4',
-    'lifecycle_manageUsers_accountManagement_customizingAccountManagement_6',
-    'lifecycle_manageUsers_accountManagement_overview_1',
-    'lifecycle_manageUsers_accountManagement_overview_6',
-  ],
-  afterBrowserContextReset: async (context, screenshot) => {
-    if (['lifecycle_manageUsers_accountManagement_addWebAuthn_1', 'lifecycle_manageUsers_accountManagement_overview_4', 'lifecycle_manageUsers_accountManagement_overview_1'].includes(screenshot?.name)) {
-      adminLocale = undefined;
-      return;
-    }
-    adminLocale = await loginScreenshotAdmin(context, baseUrl);
   },
 
   beforeAll: async (context) => {
@@ -218,25 +199,35 @@ export default {
     const { pathname, hash } = new URL(url);
     const fragment = hash.slice(1);
 
+    // A fresh browser context has no admin session. Sign in only when an admin URL
+    // was redirected to the login page, then revisit the requested route.
+    if (pathname.startsWith('/admin')) {
+      const currentPathname = new URL(page.url()).pathname;
+      if (!currentPathname.startsWith('/admin') || currentPathname === '/admin/login') {
+        adminLocale = await loginScreenshotAdmin(page.context(), baseUrl);
+        await page.goto(url, { waitUntil: 'networkidle' });
+      }
+    }
+
     // opening an /account page resets this to en
     if (adminLocale && pathname.startsWith('/admin')) {
       const context = page.context();
-      const locale = (await context.cookies('http://localhost:9011')).find(c => c.name === 'fusionauth.locale');
+      const locale = (await context.cookies(baseUrl)).find(c => c.name === 'fusionauth.locale');
       if (locale?.value !== adminLocale) {
-        await context.addCookies([{ name: 'fusionauth.locale', value: adminLocale, url: 'http://localhost:9011' }]);
+        await context.addCookies([{ name: 'fusionauth.locale', value: adminLocale, url: baseUrl }]);
         await page.reload({ waitUntil: 'networkidle' });
       }
     }
 
     const oauthAppId = 'e9fdb985-9173-4e01-9d73-ac2d60d1dc8e';
     const oauthTenantId = '30663132-6464-6665-3032-326466613934';
-    const oauthLoginUrl = `http://localhost:9011/oauth2/authorize?client_id=${oauthAppId}&redirect_uri=https%3A%2F%2Fexample.com&response_type=code&scope=openid`;
+    const oauthLoginUrl = `${baseUrl}/oauth2/authorize?client_id=${oauthAppId}&redirect_uri=https%3A%2F%2Fexample.com&response_type=code&scope=openid`;
 
     // the migration test tenant should only appear in the tenant list screenshot
     const apiKey = 'screenshot-dev-key-not-for-production';
     // matches the example Id in the guide text
     const importTenantId = '25c9d123-8a79-4edd-9f76-8dd9c806b0f3';
-    const importTenantUrl = `http://localhost:9011/api/tenant/${importTenantId}`;
+    const importTenantUrl = `${baseUrl}/api/tenant/${importTenantId}`;
     const importTenantApi = async (method, body) => {
       const r = await fetch(importTenantUrl, {
         method,
@@ -297,7 +288,7 @@ export default {
         await page.fill('#password', 'password');
         await page.locator('#submit-button').click();
         try { await page.waitForURL(/example\.com/, { timeout: 8000 }); } catch {}
-        await page.goto(`http://localhost:9011/account/webauthn/?client_id=${oauthAppId}&tenantId=${oauthTenantId}`);
+        await page.goto(`${baseUrl}/account/webauthn/?client_id=${oauthAppId}&tenantId=${oauthTenantId}`);
         await page.waitForLoadState('networkidle');
         await page.waitForTimeout(500);
       } catch (e) {
@@ -545,7 +536,7 @@ export default {
     // to land on the OTP code-entry form (FormField strategy for phone passwordless)
     if (pathname.includes('/oauth2/authorize') && fragment === 'phone-otp') {
       try {
-        await page.goto(`http://localhost:9011/oauth2/passwordless?client_id=${oauthAppId}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth-callback&response_type=code&scope=openid`);
+        await page.goto(`${baseUrl}/oauth2/passwordless?client_id=${oauthAppId}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth-callback&response_type=code&scope=openid`);
         await page.waitForLoadState('networkidle');
         // Big Head has mobilePhone in kickstart -- enter it to trigger the phone OTP flow
         await page.fill('#loginId', '+15555551234');
