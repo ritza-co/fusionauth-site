@@ -38,24 +38,3 @@ export async function setup2(page, ctx, baseUrl, appId, tenantId) {
   }
 }
 
-export async function setup3(page, ctx, baseUrl, appId, tenantId) {
-  if (ctx?.name !== 'lifecycle_manageUsers_accountManagement_addWebAuthn_3') return;
-  try {
-    const loginUrl = `${baseUrl}/oauth2/authorize?client_id=${appId}&response_type=code&redirect_uri=https%3A%2F%2Fexample.com&scope=openid&prompt=login&tenantId=${tenantId}`;
-    await page.addInitScript(() => {
-      if (navigator.credentials) navigator.credentials.get = () => new Promise(() => {});
-    });
-    await page.goto(loginUrl, { waitUntil: 'networkidle' });
-    await page.waitForSelector('#loginId', { timeout: 5000 });
-    await page.locator('a, button').filter({ hasText: /Fingerprint, device or key/i }).first().click({ timeout: 5000 });
-    await page.waitForLoadState('networkidle');
-    await page.waitForSelector('#loginId', { timeout: 5000 });
-    await page.fill('#loginId', 'richard@piedpiper.com');
-    await page.getByRole('button', { name: /submit/i }).click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(800);
-  } catch (error) {
-    const pageState = await page.evaluate(() => ({ url: location.href, text: document.body.innerText.replace(/\s+/g, ' ').slice(0, 300) })).catch(() => null);
-    throw new Error(`lifecycle_manageUsers_accountManagement_addWebAuthn_3: setup failed: ${error.message}; page state: ${JSON.stringify(pageState)}`, { cause: error });
-  }
-}

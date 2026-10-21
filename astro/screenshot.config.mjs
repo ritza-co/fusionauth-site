@@ -535,7 +535,6 @@ export default {
     await lifecycle_manageUsers_accountManagement_twoFactorPhone.setup2(page, ctx, baseUrl, oauthTenantId, oauthAppId);
     await lifecycle_manageUsers_accountManagement_addWebAuthn.setup1(page, ctx, baseUrl, oauthTenantId);
     await lifecycle_manageUsers_accountManagement_addWebAuthn.setup2(page, ctx, baseUrl, oauthAppId, oauthTenantId);
-    await lifecycle_manageUsers_accountManagement_addWebAuthn.setup3(page, ctx, baseUrl, oauthAppId, oauthTenantId);
     await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup1(page, ctx, baseUrl, oauthAppId);
     await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup2(page, ctx, baseUrl, oauthAppId);
     await lifecycle_manageUsers_accountManagement_customizingAccountManagement.setup3(page, ctx, baseUrl, oauthAppId);
