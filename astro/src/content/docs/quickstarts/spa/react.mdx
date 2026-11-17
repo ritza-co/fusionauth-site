@@ -65,7 +65,7 @@ During the Docker compose process, the included `kickstart/kickstart.json` file 
 
 * Generate an API key
 * Configure [[CORS]] (<Breadcrumb>Settings -> System -> CORS</Breadcrumb>)
-* Create your app ("QuickStart App") with appropriate settings and redirect URIs (<Breadcrumb>Applications -> Edit Application</Breadcrumb>)
+* Create your app ("QuickStart App") with appropriate settings and [[redirect URIs]] (<Breadcrumb>Applications -> Edit Application</Breadcrumb>)
 * Create an admin user (admin@example.com) and register the user with your app (<Breadcrumb>Users</Breadcrumb>)
 * Create a user (richard@example.com) and register the user with your app
 * Create a custom theme ("QuickStart Theme") using `fusionauth-quickstart-react/kickstart/css/styles.css` and apply it to your [[default tenant]] (<Breadcrumb>Customizations -> Themes</Breadcrumb>)
@@ -78,7 +78,7 @@ Once Docker compose completes, open a browser window and navigate to the Admin U
 
 After authenticating, you should see the FusionAuth Admin UI, which shows information about active users, logins, registrations, and more:
 
-![The FusionAuth Admin UI.](/img/quickstarts/react/fusionauth-admin.png)
+<Screenshot id="quickstart-admin-dashboard" url="/admin/" height={420} alt="The FusionAuth Admin UI." />
 
 ## Create the React app
 
@@ -211,7 +211,7 @@ This FusionAuth configuration specifies the following values:
 * `shouldAutoFetchUserInfo`: Return data for the user as part of a successful login.  
 * `scope`: OAuth 2.0 permissions for the access token.  
 * `clientId`: ID of the application in the FusionAuth instance.  
-* `serverUrl`: Base URL for the FusionAuth authorization server.  
+* `serverUrl`: Base URL for the FusionAuth [[authorization server]].  
 * `onRedirect`: Callback that executes when a redirect occurs.
 </Aside>
 
@@ -253,7 +253,7 @@ Open `src/account.tsx` and replace the file contents with the following code to:
 
 1. Click the login button. Your browser should redirect to FusionAuth at `http://localhost:9011`.
    
-   ![The fusionauth login screen.](/img/quickstarts/react/login-fusionauth.png)
+   <Screenshot id="quickstart-login" url="/oauth2/authorize?client_id=5c8e2f4a-7b1d-4e9c-a3f6-0d2b8e7c1a94&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth-redirect&prompt=login" alt="The FusionAuth login screen." />
 
 1. Authenticate with the credentials for the user created in the `fusionauth-quickstart-react/kickstart/kickstart.json` file:
 

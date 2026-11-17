@@ -30,7 +30,20 @@ FusionAuth Applications have both an **applicationId** and a **client_id**, but 
 
 Below is a visual reminder of the relationships between FusionAuth's primary core concepts.
 
-![Diagram showing Applications used within FusionAuth](/img/docs/get-started/core-concepts/core-concepts-relationships-applications.png)
+```mermaid title="An Application belongs to a Tenant, defines Roles, and joins Users through Registrations."
+flowchart BT
+    classDef focus stroke:#ff9800,stroke-width:3px;
+    User -->|Belongs to| Tenant
+    User -->|Is in| Group
+    User -->|Assigned| Role
+    Group -->|Belongs to| Tenant
+    Group -->|Assigned| Role
+    Role -->|Defined in| Application
+    Application -->|Belongs to| Tenant
+    Registration -->|Joins| User
+    Registration -->|Joins| Application
+    class Application focus
+```
 
 ## Admin UI
 
@@ -109,7 +122,7 @@ FusionAuth builds every URL in these sections from the address you used to open 
   <APIField name="Login URL">
     A link that starts an Authorization Code grant for this Application at the [Authorize endpoint](/docs/apis/oauth/authorize). The dialog shows one Login URL for each of the Application's **Authorized redirect URLs**, or a `{your redirect URI here}` placeholder when the Application has none.
 
-    The URL contains only **`client_id`**, **`response_type`**, and **`redirect_uri`**. Add **`scope`** and **`state`**, and add **`code_challenge`** and **`code_challenge_method`** when the Application requires PKCE.
+    The URL contains only **`client_id`**, **`response_type`**, and **`redirect_uri`**. If required, add **`scope`** and **`state`**. When the Application requires PKCE, add **`code_challenge`** and **`code_challenge_method`**.
   </APIField>
   <APIField name="Registration URL">
     The same link for the registration page, at `/oauth2/register`. The dialog shows this URL only when [self-service registration](#self-service-registration) is enabled.
@@ -137,6 +150,8 @@ FusionAuth builds every URL in these sections from the address you used to open 
   </APIField>
   <APIField name="Account URL">
     A link to [self-service account management](/docs/users/account-management) for this Application. Replace `{your return URI here}` with the page in your app that the **Return to application** link opens.
+
+    <PlanBlurbApi plan="starter" feature="self-service account management" />
   </APIField>
 </APIBlock>
 
@@ -162,7 +177,7 @@ The dialog shows this section even when SAML is disabled for the Application, so
     The identity provider metadata XML. Many service providers can import this URL instead of the separate values. The metadata includes the signing certificate.
   </APIField>
   <APIField name="NameIDFormat">
-    The default NameID format, `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress`. FusionAuth uses this format when the authentication request doesn't name a format. FusionAuth also accepts the `persistent` and `unspecified` formats.
+    The default [[NameID]] format, `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress`. FusionAuth uses this format when the authentication request doesn't name a format. FusionAuth also accepts the `persistent` and `unspecified` formats.
   </APIField>
   <APIField name="Initiate login URL">
     The URL that starts an IdP-initiated login for this Application, at `/samlv2/initiate-login/{tenantId}/{clientId}`. The URL works only when **Enable IdP-initiated login** is enabled in the [Authentication Response](#authentication-response) settings.
@@ -496,7 +511,7 @@ The SAML configuration allows you to reveal FusionAuth as a SAML v2 Identity Pro
     Some service providers require a different audience (such as Zendesk). You can leave this blank if the audience is the same as the issuer.
   </APIField>
   <APIField name="Authorized redirect URLs" required>
-    One or more allowed URLs that FusionAuth may redirect to after the user has logged in via SAML v2, also known as the Assertion Consumer Service URL (ACS).
+    One or more allowed URLs that FusionAuth may redirect to after the user has logged in via SAML v2, also known as the [[Assertion Consumer Service]] URL (ACS).
   </APIField>
   <APIField name="Logout URL" optional>
     The URL that the user is redirected to after they are logged out. Usually this is the starting location of the application.
@@ -581,7 +596,7 @@ The SAML configuration allows you to reveal FusionAuth as a SAML v2 Identity Pro
   <APIField name="Logout behavior" optional since="1.25.0">
     This selector allows you to modify the behavior when logout occurs. There are two valid values:
 
-        * All session participants - This is the default behavior. Each session participant that has enabled single logout will be sent a Logout Request.
+        * All session participants - This is the default behavior. Each session participant that has enabled [[single logout]] will be sent a Logout Request.
         * Only logout request originator - no other session participants will be notified when a logout request is sent for this application.
   </APIField>
   <APIField name="Enable single logout" optional since="1.25.0">
@@ -626,7 +641,7 @@ The SAML configuration allows you to reveal FusionAuth as a SAML v2 Identity Pro
     When enabled, assertions in SAML responses will be encrypted.
   </APIField>
   <APIField name="Encryption algorithm" optional since="1.47.0">
-    The symmetric key encryption algorithm used to encrypt the SAML assertion.
+    The symmetric key encryption algorithm used to encrypt the [[SAML assertion]].
   </APIField>
   <APIField name="Key location" optional defaults="Child" since="1.47.0">
     The location that the encrypted symmetric key information will be placed in the SAML response in relation to the `EncryptedData` element containing the encrypted assertion value.
@@ -687,7 +702,7 @@ The <Breadcrumb>Security</Breadcrumb> tab contains some additional security conf
     When enabled, allow users to request login using a link sent via an email (or code sent via an SMS message). Enable this feature to display a button on the FusionAuth login form and allow usage of the Passwordless Login API.
   </APIField>
   <APIField name="Email login strategy" since="1.64.0">
-    The default login strategy by which the user will complete the passwordless login via email. The possible values are:
+    The default login strategy by which the user will complete the [[passwordless]] login via email. The possible values are:
 
     * `ClickableLink` - send the user a clickable link that they can open in a web browser to authenticate
     * `FormField` - send the user a short code that they can enter into a form field to authenticate
