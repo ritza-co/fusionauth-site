@@ -26,7 +26,11 @@ In registration verification, the use case is slightly different. A `jared@piedp
 
 Without this verification step, users may find it alarming their logins (`jared@piedpiper.com`) work for both `Not-Hotdog` and `PiperChat` (without their express consent, especially if they did not know about the parent company relationship). Furthermore, this user, `jared@piedpiper`, by completing verification, is proving they own the email address used to register for both applications.
 
-![Piper Web](/img/docs/lifecycle/manage-users/verification/application-registration-piedpiper.png)
+```mermaid title="One user, jared@piedpiper.com, registered to two Pied Piper applications."
+flowchart BT
+    User["jared@piedpiper.com"] --> PiperChat["PiperChat"]
+    User --> NotHotdog["Not-Hotdog"]
+```
 
 ## Prerequisites
 
@@ -54,7 +58,7 @@ To enable registration verification gating, do the following:
 - Configure the application to enable registration gating.
 - Optionally customize the registration verification template. FusionAuth ships with a default template.
 - Enable [[self-service registration]].
-- Configure your application with a redirect URL.
+- Configure your application with a [[redirect URL]].
 
 Let's step through each of these, but first, there are some required prerequisites.
 
@@ -103,7 +107,7 @@ Save the application configuration. You'll be returned to the list of applicatio
 
 Click on the <Breadcrumb>View</Breadcrumb> button of your application to see the details of your application.
 
-<Screenshot id="manage-verification-application-details" fullPage={true} url="/admin/application/" height={1700} alt="The application details dialog with the login and registration URLs highlighted.">
+<Screenshot id="manage-verification-application-details" url="/admin/application/" height={1700} alt="The application details dialog with the login and registration URLs highlighted.">
   <Highlight selector="[data-hl='verification-urls']" />
 </Screenshot>
 
