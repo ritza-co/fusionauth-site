@@ -20,7 +20,7 @@ Well, yes and no. This guide is different from most of the others out there beca
 
 If that sounds good to you, keep reading!
 
-## What is OAuth 2.0?
+## What Is OAuth 2.0?
 
 OAuth 2.0 is a set of specifications that allow developers to easily delegate the authentication and authorization of their users to someone else. While the specifications don't specifically cover authentication, in practice this is a core piece of OAuth, so we will cover it in depth (because that's how we roll).
 
@@ -59,7 +59,7 @@ I've included notation on a few of the items above specifying which are federate
 
 Let's discuss each mode in a bit more detail, but first, a cheat sheet.
 
-### Which OAuth Mode Is Right For You?
+### Which OAuth Mode Is Right for You?
 
 Wow, that's a lot of different ways you can use OAuth. That's the power and the danger of OAuth, to be honest with you. It is so flexible that people new to it can be overwhelmed. So, here's a handy set of questions for you to ask yourself.
 
@@ -73,7 +73,7 @@ Wow, that's a lot of different ways you can use OAuth. That's the power and the 
 
 With that overview done, let's examine each of these modes in more detail.
 
-### Local Login And Registration
+### Local Login and Registration
 
 The **Local login and registration** mode is when you are using an OAuth workflow to register or log users into your application. In this mode, you own both the OAuth server and the application. You might not have written the OAuth server (if you are using a product such as FusionAuth), but you control it. In fact, this mode usually feels like the user is signing up or logging directly into your application via **native forms** and there is no delegation at all.
 
@@ -102,7 +102,7 @@ That's it. The user feels like they are registering and logging into TWGTL direc
 
 ![I bet your login screen will be much prettier.](/img/articles/modern-guide-oauth/login-screen-local-mode.png)
 
-#### An Aside About This Mode And Mobile Applications
+#### An Aside About This Mode and Mobile Applications
 
 The details of this mode has implications for the security best practices recommended by some of the standards bodies. In particular, the [OAuth 2.0 for Native Apps](https://tools.ietf.org/html/rfc8252) Best Current Practices (BCP) recommends against using a webview:
 
@@ -112,7 +112,7 @@ This is because the "embedded user-agents", also known as webviews, are under co
 
 If you are operating in a mode where the OAuth server is under a different party's control, such as the third-party login that we'll cover next, this prohibition makes sense. But in this mode, you control everything. In that case, the chances of a malicious webview being able to do extra damage is minimal, and must be weighed against the user interface issues associated with popping out to a system browser for authentication. Additionally, with modern mobile operating systems, the system browser can be configured to look quite similar to the mobile application.
 
-### Third-party Login And Registration
+### Third-party Login and Registration
 
 The **Third-party login and registration** mode is typically implemented with the classic <Breadcrumb>Login with ...</Breadcrumb> buttons you see in many applications. These buttons let users sign up or log in to your application by logging into one of their other accounts (i.e. Facebook or Google). Here, your application sends the user over to Facebook or Google to log in.
 
@@ -165,7 +165,7 @@ You might be wondering if the **Third-party login and registration** mode can wo
 
 The nice part about this workflow is that TWGTL doesn't have to worry about integrating with Facebook (or any other provider) or reconciling the user's account. That's handled by the OAuth server. It's also possible to delegate to additional OAuth servers, easily adding "Login with Google" or "Login with Apple". You can also nest deeper than the 2 levels illustrated here.
 
-### First-party Login And Registration
+### First-party Login and Registration
 
 The **First-party login and registration** mode is the inverse of the **Third-party login and registration** mode. Basically, if you happen to be Facebook (hi Zuck!) in the examples above and your customer is TWGTL, you are providing the OAuth server to TWGTL. You are also providing a way for them to call your APIs on behalf of your users.
 
@@ -173,7 +173,7 @@ This type of setup is not just reserved for the massive social networks run by S
 
 In many cases, companies are also leveraging easily integratable auth systems like FusionAuth to provide this feature.
 
-### Enterprise Login And Registration
+### Enterprise Login and Registration
 
 The **Enterprise login and registration** mode is when your application allows users to sign up or log in with an enterprise identity provider such as a corporate Active Directory. This mode is very similar to the **Third-party login and registration** mode, but with a few salient differences.
 
@@ -225,7 +225,7 @@ The **First-party service authorization** mode is the inverse of the **Third-par
 
 With this mode, your OAuth server might display a "permission grant screen" to the user asking if they want to grant the third-party application permissions to your APIs. This isn't strictly necessary and depends on your requirements.
 
-### Machine-to-machine Authorization
+### Machine-to-Machine Authorization
 
 The **Machine-to-machine authorization** OAuth mode is different from the previous modes we've covered. This mode does not involve users at all. Rather, it allows an application to interact with another application. Normally, this is backend services communicating with each other via APIs.
 
@@ -244,7 +244,7 @@ The workflow for this mode looks like:
 1. The WUPHF microservice verifies the token by calling the OAuth server (or verifying the token itself if the token is a JWT).
 1. If the token is valid, the WUPHF microservice performs the operation.
 
-### Device Login And Registration
+### Device Login and Registration
 
 The **Device login and registration** mode is used to log in to (or register) a user's account on a device that doesn't have a rich input device like a keyboard. In this case, a user connects the device to their account, usually to ensure their account is active and the device is allowed to use it.
 
@@ -511,7 +511,7 @@ The OAuth 2.0 specification doesn't specify anything about this process. Not a w
 
 In practice though, 99.999% of OAuth servers use a standard login page that collects the user's username and password. We'll assume that the OAuth server provides a standard login page and handles the collection of the user's credentials and verification of their validity.
 
-#### Redirect And Retrieve The Tokens
+#### Redirect and Retrieve the Tokens
 
 After the user has logged in, the OAuth server redirects the **browser** back to the application. The exact location of the redirect is controlled by the `redirect_uri` parameter we passed on the URL above. In our example, this location is `https://app.twgtl.com/oauth-callback`. When the OAuth server redirects the browser back to this location, it will add a few parameters to the URL. These are:
 
@@ -753,7 +753,7 @@ JWTs have other standard claims that you should be aware of. You can review thes
 * [JWT Claims in the JSON Web Token RFC](https://tools.ietf.org/html/rfc7519#section-4)
 * [Claims in the OpenID Connect 1.0 spec](https://openid.net/specs/openid-connect-core-1_0.html#Claims)
 
-#### User And Token Information
+#### User and Token Information
 
 Before we cover how the Authorization Code grant is used for each of the OAuth modes, let's discuss two additional OAuth endpoints used to retrieve information about your users and their tokens. These endpoints are:
 
@@ -860,7 +860,7 @@ async function (accessToken) {
 }
 ```
 
-#### Local Login And Registration With The Authorization Code Grant
+#### Local Login and Registration With the Authorization Code Grant
 
 Now that we have covered the Authorization Code grant in detail, let's look at next steps for our application code.
 
@@ -875,7 +875,7 @@ For our example TWGTL application, we want to send the user to their ToDo list a
 
 Which of these methods is best depends on your requirements, but both work well in practice and are both secure if done correctly. If you recall from above, we put a placeholder function, `handleTokens`, in our code just after we received the tokens from the OAuth server. Let's fill in that code for each of the session options.
 
-##### Storing Tokens As Cookies
+##### Storing Tokens as Cookies
 
 First, let's store the tokens as cookies in the browser and redirect the user to their ToDos:
 
@@ -997,7 +997,7 @@ common.parseJWT = async (unverifiedToken, nonce) => {
 module.exports = common;
 ```
 
-##### Storing Tokens In The Session
+##### Storing Tokens in the Session
 
 Next, let's look at the alternative implementation. We'll create a server-side session and store all of the tokens there. This method also writes a cookie back to the browser, but this cookie only stores the session id. Doing so allows our server-side code to look up the user's session during each request. Sessions are generally handled by the framework you are using, so we won't go into many details here. You can read up more on server-side sessions on the web if you are interested.
 
@@ -1040,7 +1040,7 @@ common.authorizationCheck = async (req, res) => {
 
 > The only difference in this code is how we get the access token. Above the cookies provided it, and here the session does. Everything else is exactly the same.
 
-##### Refreshing The Access Token
+##### Refreshing the Access Token
 
 Finally, we need to update our code to handle refreshing the access token. The client, in this case a browser, is the right place to know when a request fails. It could fail for any number of reasons, such as network connectivity issues. But it might also fail because the access token has expired. In the browser code, we should check for errors and attempt to refresh the token if the failure was due to expiration.
 
@@ -1151,7 +1151,7 @@ common.refreshJWTs = async (refreshToken) => {
 
 By default, FusionAuth requires authenticated requests to the refresh token endpoint. In this case, the `authValue` string is a correctly formatted authentication request. Your OAuth server may have different requirements, so check your documentation.
 
-#### Third-party Login And Registration (Also Enterprise Login And Registration) With The Authorization Code Grant
+#### Third-party Login and Registration (Also Enterprise Login and Registration) With the Authorization Code Grant
 
 In the previous section we covered the **Local login and registration** process where the user is logging into our TWGTL application using an OAuth server we control such as FusionAuth. The other method that users can log in with is a third-party provider such as Facebook or an Enterprise system such as Active Directory. This process uses OAuth in the same way we described above.
 
@@ -1202,7 +1202,7 @@ If you are implementing the **Third-party login and registration** mode without 
 
 If you use an OAuth server such as FusionAuth to manage your users and provide **Local login and registration**, it will often handle both of these items for you with little configuration and no additional coding.
 
-#### Third-party Authorization With The Authorization Code Grant
+#### Third-party Authorization With the Authorization Code Grant
 
 The last mode we will cover as part of the Authorization Code grant workflow is the **Third-party authorization** mode. For the user, this mode is the same as those above, but it requires slightly different handling of the tokens received after login. Typically with this mode, the tokens we receive from the third party need to be stored in our database because we will be making additional API calls on behalf of the user to the third party. These calls may happen long after the user has logged out of our application.
 
@@ -1262,14 +1262,14 @@ router.post('/api/todos/complete/:id', function(req, res, next) {
 
 This code is just an example of how we might leverage the access and refresh tokens to call third-party APIs on behalf of the user. While this was a synchronous call, the code could also post asynchronously. For example, you could add a TWGTL feature to post all of the day's accomplishments to WUPHF every night, and the user would not have to be present, since the tokens are in the database.
 
-#### First-party Login And Registration And First-party Service Authorization
+#### First-party Login and Registration and First-party Service Authorization
 
 These scenarios won't be illustrated in this guide. But, the short version is:
 
 * First-party login and registration should be handled by an OAuth server.
 * First-party service authorization should use tokens generated by an OAuth server. These tokens should be presented to APIs written by the same party.
 
-### Implicit Grant In OAuth 2.0
+### Implicit Grant in OAuth 2.0
 
 The next grant that is defined in the OAuth 2.0 specification is the Implicit grant. If this were a normal guide, we would cover this grant in detail the same way we covered the Authorization Code grant. Except, I'm not going to. :)
 
