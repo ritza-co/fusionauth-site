@@ -75,7 +75,7 @@ With that overview done, let's examine each of these modes in more detail.
 
 ### Local Login and Registration
 
-The **Local login and registration** mode is when you are using an OAuth workflow to register or log users into your application. In this mode, you own both the OAuth server and the application. You might not have written the OAuth server (if you are using a product such as FusionAuth), but you control it. In fact, this mode usually feels like the user is signing up or logging directly into your application via **native forms** and there is no delegation at all.
+The **Local login and registration** mode is when you use an OAuth workflow to register or log users into your application. In this mode, you own both the OAuth server and the application. You might not have written the OAuth server (if you use a product such as FusionAuth), but you control it. In fact, this mode usually feels like the user is signing up or logging directly into your application via **native forms** and there is no delegation at all.
 
 What do we mean by native forms? Most developers have at one time written their own login and registration forms directly into an application. They create a table called `users` and it stores `username`s and `password`s. Then they write the registration and the login forms (HTML or some other UI). The registration form collects the `username` and `password` and checks if the user exists in the database. If they don't, the application inserts the new user into the database. The login form collects the `username` and `password` and checks if the account exists in the database and logs the user in if it does. This type of implementation is what we call native forms.
 
@@ -130,7 +130,7 @@ This mode is different from the previous mode because the user logs in but also 
 
 Social logins are the most common examples of this mode, but there are plenty of other third-party OAuth servers beyond social networks (GitHub or Discord for example).
 
-This mode is a good example of federated identity. Here, the user's identity (username and password) is stored in the third-party system. They are using that system to register or log in to your application.
+This mode is a good example of federated identity. Here, the user's identity (username and password) is stored in the third-party system. They use that system to register or log in to your application.
 
 So, how does this work in practice? Let's take a look at the steps for our TWGTL application if we want to use Facebook to register and log users in:
 
@@ -291,7 +291,7 @@ Let's take a look at how you implement this grant using a prebuilt OAuth server 
 
 #### Login/Register Buttons
 
-First, we need to add a <Breadcrumb>Login</Breadcrumb> or <Breadcrumb>My Account</Breadcrumb> link or button to our application; or if you are using one of the federated authorization modes from above (for example the **Third-party service authorization** mode), you'll add a <Breadcrumb>Connect to XYZ</Breadcrumb> link or button. There are two ways to connect this link or button to the OAuth server:
+First, we need to add a <Breadcrumb>Login</Breadcrumb> or <Breadcrumb>My Account</Breadcrumb> link or button to our application; or if you use one of the federated authorization modes from above (for example the **Third-party service authorization** mode), you'll add a <Breadcrumb>Connect to XYZ</Breadcrumb> link or button. There are two ways to connect this link or button to the OAuth server:
 
 1. Set the `href` of the link to the full URL that starts the OAuth Authorization Code grant.
 2. Set the `href` to point to application backend code that does a redirect.
@@ -340,7 +340,7 @@ This code immediately redirects the browser to the OAuth server. However, if you
 * `client_id` - this identifies the application you log into. In OAuth, this is referred to as the `client`. This value will be provided to you by the OAuth server.
 * `redirect_uri` - this is the URL in your application to which the OAuth server redirects the user to after they log in. This URL must be registered with the OAuth server and it must point to a controller in your app (rather than a static page), because your app must do additional work after this URL is called.
 * `state` - technically this parameter is optional, but it is useful for preventing various security issues. This parameter is echoed back to your application by the OAuth server. It can be anything you might need to be persisted across the OAuth workflow. If you have no other need for this parameter, I suggest setting it to a large random string. If you need to have data persisted across the workflow, I suggest URL encoding the data and appending a random string as well.
-* `response_type` - this should always be set to `code` for this grant. This tells the OAuth server you are using the Authorization Code grant.
+* `response_type` - this should always be set to `code` for this grant. This tells the OAuth server you use the Authorization Code grant.
 * `scope` - this is also an optional parameter, but in some of the above modes, this is required by the OAuth server. This parameter is a space separated list of strings. You might also need to include the `offline` scope in this list if you plan on using refresh tokens in your application (we'll refresh tokens later).
 * `code_challenge` - this an optional parameter, but provides support for PKCE. This is useful when there is not a backend that can handle the final steps of the Authorization Code grant. This is known as a "public client". There aren't many cases of applications that don't have backends, but if you have something like a mobile application and you aren't able to leverage a server-side backend for OAuth, you must implement PKCE to protect your application from security issues. The security issues surrounding PKCE are out of the scope of this guide, but you can find numerous articles online about them. PKCE is also recommended by the [OAuth 2.1 draft](/articles/oauth/differences-between-oauth-2-oauth-2-1).
 * `code_challenge_method` - this is an optional parameter, but if you implement PKCE, you must specify how your PKCE `code_challenge` parameter was created. It can either be `plain` or `S256`. We never recommend using anything except `S256` which uses SHA-256 secure hashing for PKCE.
@@ -372,7 +372,7 @@ router.get('/login', (req, res, next) => {
 
 You'll notice that we have specified the `client_id`, which was likely provided to us by the OAuth server, the `redirect_uri`, which is part of our application, and a `scope` with the values `profile`, `offline_access`, and `openid` (space separated). These are all usually hardcoded values since they rarely change. The other values change each time we make a request and are generated in the controller.
 
-The `scope` parameter is used by the OAuth server to determine what authorization the application is requesting. There are a couple of standard values that are defined as part of OpenID Connect. These include `profile`, `offline_access` and `openid`. The OAuth specification does not define any standard scopes, but most OAuth servers support different values. Consult your OAuth server documentation to determine the scopes you'll need to provide.
+The `scope` parameter is used by the OAuth server to determine what authorization the application requests. There are a couple of standard values that are defined as part of OpenID Connect. These include `profile`, `offline_access` and `openid`. The OAuth specification does not define any standard scopes, but most OAuth servers support different values. Consult your OAuth server documentation to determine the scopes you'll need to provide.
 
 Here are definitions of the standard scopes in the OpenID Connect specification:
 
@@ -528,7 +528,7 @@ Remember that the browser is going to make an HTTP `GET` request to this URL. In
 
 Let's look at how a controller accomplishes this exchange.
 
-First, we will need to know the location of the OAuth server's Token endpoint. The OAuth server provides this endpoint which will validate the authorization `code` and exchange it for tokens. We are using FusionAuth as our example OAuth server and it has a consistent location for the Token endpoint. (Other OAuth servers may have a different or varying location; consult your documentation.) In our example, that location is `https://login.twgtl.com/oauth2/token`.
+First, we will need to know the location of the OAuth server's Token endpoint. The OAuth server provides this endpoint which will validate the authorization `code` and exchange it for tokens. We use FusionAuth as our example OAuth server and it has a consistent location for the Token endpoint. (Other OAuth servers may have a different or varying location; consult your documentation.) In our example, that location is `https://login.twgtl.com/oauth2/token`.
 
 We will need to make an HTTP `POST` request to the Token endpoint using form encoded values for a number of parameters. Here are the parameters we need to send to the Token endpoint:
 
@@ -730,7 +730,7 @@ function restoreNonce(req, res) {
 
 #### Tokens
 
-Now that we've successfully exchanged the authorization `code` for tokens, let's look at the tokens we received from the OAuth server. We are going to assume that the OAuth server is using JSON Web Tokens (JWTs) for the access and Id tokens. OAuth2 doesn't define any token format, but in practice access tokens are often JWTs. OpenID Connect (OIDC), on the other hand, requires the `id_token` to be a JWT.
+Now that we've successfully exchanged the authorization `code` for tokens, let's look at the tokens we received from the OAuth server. We are going to assume that the OAuth server uses JSON Web Tokens (JWTs) for the access and Id tokens. OAuth2 doesn't define any token format, but in practice access tokens are often JWTs. OpenID Connect (OIDC), on the other hand, requires the `id_token` to be a JWT.
 
 Here are the tokens we have:
 
@@ -818,7 +818,7 @@ Here are the claims that are returned by the UserInfo endpoint:
 * `family_name`: The user's last name.
 * `middle_name`: The user's middle name.
 * `nickname`: The user's nickname (i.e. Joe for Joseph).
-* `preferred_username`: The user's preferred username that they are using with your application.
+* `preferred_username`: The user's preferred username that they use with your application.
 * `profile`: A URL that points to the user's profile page.
 * `picture`: A URL that points to an image that is the profile picture of the user.
 * `website`: A URL that points to the user's website (i.e. their blog).
@@ -999,7 +999,7 @@ module.exports = common;
 
 ##### Storing Tokens in the Session
 
-Next, let's look at the alternative implementation. We'll create a server-side session and store all of the tokens there. This method also writes a cookie back to the browser, but this cookie only stores the session id. Doing so allows our server-side code to look up the user's session during each request. Sessions are generally handled by the framework you are using, so we won't go into many details here. You can read up more on server-side sessions on the web if you are interested.
+Next, let's look at the alternative implementation. We'll create a server-side session and store all of the tokens there. This method also writes a cookie back to the browser, but this cookie only stores the session id. Doing so allows our server-side code to look up the user's session during each request. Sessions are generally handled by the framework you use, so we won't go into many details here. You can read up more on server-side sessions on the web if you are interested.
 
 Here's code that creates a server-side session and redirects the user to their ToDo list:
 
@@ -1044,7 +1044,7 @@ common.authorizationCheck = async (req, res) => {
 
 Finally, we need to update our code to handle refreshing the access token. The client, in this case a browser, is the right place to know when a request fails. It could fail for any number of reasons, such as network connectivity issues. But it might also fail because the access token has expired. In the browser code, we should check for errors and attempt to refresh the token if the failure was due to expiration.
 
-Here's the updated browser code. We are assuming the tokens are stored in cookies here. `buildAttemptRefresh` is a function that returns an error handling function. We use this construct so we can attempt a refresh any time we call the API. The `after` function is what will be called if the refresh attempt is successful. If the refresh attempt fails, we send the user back to the home page for reauthentication.
+Here's the updated browser code. We assume the tokens are stored in cookies here. `buildAttemptRefresh` is a function that returns an error handling function. We use this construct so we can attempt a refresh any time we call the API. The `after` function is what will be called if the refresh attempt is successful. If the refresh attempt fails, we send the user back to the home page for reauthentication.
 
 ```javascript
 const buildAttemptRefresh = function(after) {
@@ -1153,11 +1153,11 @@ By default, FusionAuth requires authenticated requests to the refresh token endp
 
 #### Third-party Login and Registration (Also Enterprise Login and Registration) With the Authorization Code Grant
 
-In the previous section we covered the **Local login and registration** process where the user is logging into our TWGTL application using an OAuth server we control such as FusionAuth. The other method that users can log in with is a third-party provider such as Facebook or an Enterprise system such as Active Directory. This process uses OAuth in the same way we described above.
+In the previous section we covered the **Local login and registration** process where the user logs in to our TWGTL application using an OAuth server we control such as FusionAuth. The other method that users can log in with is a third-party provider such as Facebook or an Enterprise system such as Active Directory. This process uses OAuth in the same way we described above.
 
 > Some third-party providers have hidden some of the complexity from us by providing simple JavaScript libraries that handle the entire OAuth workflow (Facebook for example). We won't cover these types of third-party systems and instead focus on traditional OAuth workflows.
 
-In most cases, the third-party OAuth server is acting in the same way as our local OAuth server. In the end, the result is that we receive tokens that we can use to make API calls to the third party. Let's update our `handleTokens` code to call a fictitious API to retrieve the user's friend list from the third party. Here we are using sessions to store the access token and other tokens.
+In most cases, the third-party OAuth server acts in the same way as our local OAuth server. In the end, the result is that we receive tokens that we can use to make API calls to the third party. Let's update our `handleTokens` code to call a fictitious API to retrieve the user's friend list from the third party. Here we use sessions to store the access token and other tokens.
 
 ```javascript
 const axios = require('axios');
@@ -1192,7 +1192,7 @@ function handleTokens(accessToken, idToken, refreshToken, req, res) {
 
 This is an example of using the access token we received from the third-party OAuth server to call an API.
 
-If you are implementing the **Third-party login and registration** mode without leveraging an OAuth server like FusionAuth, there are a couple of things to consider:
+If you implement the **Third-party login and registration** mode without leveraging an OAuth server like FusionAuth, there are a couple of things to consider:
 
 * Do you want your sessions to be the same duration as the third-party system?
   * In most cases, if you implement **Third-party login and registration** as outlined, your users will be logged into your application for as long as the access and refresh tokens from the third-party system are valid.
@@ -1459,7 +1459,7 @@ function getAccessToken() {
 }
 ```
 
-In order to verify the access token in the WUPHF microservice, we will use the Introspect endpoint. As discussed above, the Introspect endpoint takes an access token, verifies it, and then returns any claims associated with the access token. In our case, we are only using this endpoint to ensure the access token is valid. Here is the code that verifies the access token:
+In order to verify the access token in the WUPHF microservice, we will use the Introspect endpoint. As discussed above, the Introspect endpoint takes an access token, verifies it, and then returns any claims associated with the access token. In our case, we only use this endpoint to ensure the access token is valid. Here is the code that verifies the access token:
 
 ```javascript
 const axios = require('axios');
