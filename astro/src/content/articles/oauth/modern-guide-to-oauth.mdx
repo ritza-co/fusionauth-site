@@ -5,7 +5,7 @@ htmlTitle: OAuth 2.0 Simplified | What is Oauth and How Does it Work | FusionAut
 description: Learn how OAuth 2.0 works with this simplified explanation and guide. Learn what it is, why it's essential for secure authorization, and best practices for implementation.
 tags: oauth, authorization, authentication, tokens, security, access tokens, refresh tokens, identity management, api
 image: advice/modern-guide-oauth/expert-advice-the-modern-guide-to-oauth-header-image.png
-author: Brian Pontarelli, Ahmed Hashesh and Dan Moore
+author: Brian Pontarelli, Ahmed Hashesh, and Dan Moore
 section: OAuth
 date: 2021-03-26
 dateModified: 2023-07-07
@@ -734,7 +734,7 @@ Now that we've successfully exchanged the authorization `code` for tokens, let's
 
 Here are the tokens we have:
 
-* `access_token`: This is a token that contains information about the user including their id, permissions, and anything else we might need from the OAuth server. It is often, but not always, a JWT. 
+* `access_token`: This is a token that contains information about the user including their id, permissions, and anything else we might need from the OAuth server. It is often, but not always, a JWT.
 * `id_token`: This is a JWT that contains public information about the user such as their name. This token is usually safe to store in non-secure cookies or local storage because it can't be used to call APIs on behalf of the user.
 * `refresh_token`: This is an opaque token (not a JWT) that can be used to create new access tokens. Access tokens expire and might need to be renewed, depending on your requirements (for example how long you want access tokens to last versus how long you want users to stay logged in).
 
