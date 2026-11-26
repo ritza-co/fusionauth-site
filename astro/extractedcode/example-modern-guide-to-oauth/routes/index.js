@@ -65,6 +65,7 @@ router.get('/tokencheck', async (req, res, next) => {
   res.render('tokencheck', {title: 'FusionAuth Example', active: active});
 });
 
+// :snippet-start: loginRoute
 router.get('/login', (req, res, next) => {
   const state = generateAndSaveState(req, res);
   const codeChallenge = generateAndSaveCodeChallenge(req, res);
@@ -80,6 +81,7 @@ router.get('/login', (req, res, next) => {
                  `code_challenge_method=S256&` +
                  `nonce=${nonce}`);
 });
+// :snippet-end:
 
 router.get('/oauth-callback', (req, res, next) => {
   // Verify the state
