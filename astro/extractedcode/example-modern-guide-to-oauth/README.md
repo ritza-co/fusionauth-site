@@ -7,18 +7,18 @@ This project is an application that we build as part of our [Modern Guide to OAu
 
 ## Project Contents
 
-The `docker-compose.yml` file and the `kickstart` directory are used to start and configure a local FusionAuth server.
+The `docker-compose.yml` file in the `fusionauth` directory is used to start and configure a local FusionAuth server.
 
 ## Project Dependencies
 
 * Docker, for running FusionAuth
-* Node. Tested with version 20, but should work with any modern version.
+* Node. Tested with version 26, but should work with any modern version.
 
 ## Running FusionAuth
-To run FusionAuth, just stand up the docker containers using `docker compose`.
+To start FusionAuth, run the docker containers using:
 
-```shell
-docker compose up
+```shell-session
+cd fusionauth && docker compose up
 ```
 
 This will start a PostgreSQL database, and Elastic service, and the FusionAuth server.
@@ -26,12 +26,12 @@ This will start a PostgreSQL database, and Elastic service, and the FusionAuth s
 ## Running the Example App
 To run the application, first install the modules
 
-```shell
+```shell-session
 npm install
 ```
 Then start the server.
 
-```shell
+```shell-session
 npm run start
 ```
 
@@ -44,4 +44,3 @@ You can also visit the FusionAuth admin at `http://localhost:9011` and sign in u
 
 * username: admin@example.com
 * password: password
-

@@ -102,7 +102,7 @@
                 "sourceThemeId": "75a068fd-e94b-451a-9aeb-3ddb9a3b5987",
                 "theme": {
                     "name": "React theme"
-                } 
+                }
             }
         },
         {
@@ -110,8 +110,8 @@
             "url": "/api/theme/#{newThemeId}",
             "body": {
                 "theme": {
-                    "stylesheet": "@{css/styles.css}"
-                } 
+                    "stylesheet": "@{kickstart.css}"
+                }
             }
         },
         {
@@ -121,7 +121,7 @@
                 "tenant": {
                     "themeId": "#{newThemeId}",
                     "issuer": "http://localhost:9011"
-                } 
+                }
             }
         }
     ]
