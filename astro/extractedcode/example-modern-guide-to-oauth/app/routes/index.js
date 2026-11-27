@@ -2,8 +2,13 @@ import express from 'express';
 import crypto from 'crypto';
 import axios from 'axios';
 import FormData from 'form-data';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import common from './common.js';
 import config from './config.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Route and OAuth variables
 const router = express.Router();
@@ -18,7 +23,7 @@ const key = crypto.scryptSync(password, 'salt', 24);
 const iv = crypto.randomBytes(16);
 
 router.get('/', (req, res, next) => {
-  res.render('index', { title: 'FusionAuth Example' });
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 router.get('/logout', (req, res, next) => {
@@ -59,7 +64,7 @@ router.get('/tokencheck', async (req, res, next) => {
 
   const active = await common.validateToken(accessToken, config.clientId, config.clientId, config.issuer);
 
-  res.render('tokencheck', { title: 'FusionAuth Example', active: active });
+  res.send(`<h1>FusionAuth Example</h1><p>Token state: ${active}</p>`);
 });
 
 // :snippet-start: loginRoute
