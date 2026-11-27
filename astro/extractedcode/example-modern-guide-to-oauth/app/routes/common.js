@@ -6,7 +6,7 @@ import config from './config.js';
 const jwksUri = config.authServerUrl + '/.well-known/jwks.json';
 const jwksClient = createRemoteJWKSet(new URL(jwksUri));
 
-const common = {};
+const common = { todos: [] };
 
 common.parseJWT = async (unverifiedToken, nonce) => {
   try {
@@ -18,7 +18,8 @@ common.parseJWT = async (unverifiedToken, nonce) => {
       }
     }
     return payload;
-  } catch(err) {
+  }
+  catch(err) {
     console.log(err);
     throw err;
   }
@@ -38,7 +39,6 @@ common.refreshJWTs = async (refreshToken) => {
       ...form.getHeaders()
     }
   });
-
   const accessToken = response.data.access_token;
   const idToken = response.data.id_token;
   const refreshedTokens = {};
@@ -51,45 +51,36 @@ common.validateToken = async function (accessToken, clientId, expectedAud, expec
   const form = new FormData();
   form.append('token', accessToken);
   form.append('client_id', clientId); // FusionAuth requires this for authentication
-
   try {
     const response = await axios.post(config.authServerUrl + '/oauth2/introspect', form, { headers: form.getHeaders() });
     if (response.status === 200) {
       const data = response.data;
-      if (!data.active) {
-        return false; // if not active, we don't get any other claims
-      }
+      if (!data.active) return false; // if not active, we don't get any other claims
       return expectedAud === data.aud && expectedIss === data.iss;
     }
-  } catch (err) {
+  }
+  catch (err) {
     console.log(err);
   }
-
   return false;
 };
 
 common.retrieveUser = async function (accessToken) {
   const response = await axios.get(config.authServerUrl + '/oauth2/userinfo', { headers: { 'Authorization': 'Bearer ' + accessToken } });
   try {
-    if (response.status === 200) {
-      return response.data;
-    }
-
+    if (response.status === 200) return response.data;
     return null;
-  } catch (err) {
+  }
+  catch (err) {
     console.log(err);
   }
   return null;
 };
 
-common.todos = [];
-
 common.completeTodo = (id) => {
   const todosToUpdate = common.getTodos();
   todosToUpdate.forEach((oneTodo) => {
-    if (oneTodo.id === id) {
-      oneTodo.done = true;
-    }
+    if (oneTodo.id === id) oneTodo.done = true;
   });
 };
 
@@ -102,11 +93,8 @@ common.uncompleteTodo = (id) => {
 common.getTodo = (id) => {
   const todosToUpdate = common.getTodos();
   todosToUpdate.forEach((oneTodo) => {
-    if (oneTodo.id === id) {
-      return oneTodo;
-    }
+    if (oneTodo.id === id) return oneTodo;
   });
-
   return null;
 };
 
@@ -121,14 +109,12 @@ common.getTodos = () => {
 
 common.authorizationCheck = async (req, res) => {
   const accessToken = req.cookies.access_token;
-  if (!accessToken) {
-    return false;
-  }
-
+  if (!accessToken) return false;
   try {
     await common.parseJWT(accessToken);
     return true;
-  } catch (err) {
+  }
+  catch (err) {
     console.log(err);
     return false;
   }

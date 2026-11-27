@@ -3,10 +3,7 @@
     factory();
 }((function () { 'use strict';
 
-    /**
-     * The code was extracted from:
-     * https://github.com/davidchambers/Base64.js
-     */
+    // The code was extracted from:https://github.com/davidchambers/Base64.js
 
     var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
@@ -25,20 +22,14 @@
             );
         }
         for (
-            // initialize result and counters
             var bc = 0, bs, buffer, idx = 0, output = "";
-            // get next character
             (buffer = str.charAt(idx++));
-            // character found in table? initialize bit storage and add its ascii value;
             ~buffer &&
             ((bs = bc % 4 ? bs * 64 + buffer : buffer),
-                // and if not first of each 4 characters,
-                // convert the first 8 bits to one ascii character
                 bc++ % 4) ?
             (output += String.fromCharCode(255 & (bs >> ((-2 * bc) & 6)))) :
             0
         ) {
-            // try to find character in table (0-63, not found => -1)
             buffer = chars.indexOf(buffer);
         }
         return output;
@@ -91,34 +82,25 @@
     InvalidTokenError.prototype.name = "InvalidTokenError";
 
     function jwtDecode(token, options) {
-        if (typeof token !== "string") {
-            throw new InvalidTokenError("Invalid token specified");
-        }
+        if (typeof token !== "string") throw new InvalidTokenError("Invalid token specified");
 
         options = options || {};
         var pos = options.header === true ? 0 : 1;
         try {
             return JSON.parse(base64_url_decode(token.split(".")[pos]));
-        } catch (e) {
+        }
+        catch (e) {
             throw new InvalidTokenError("Invalid token specified: " + e.message);
         }
     }
 
-    /*
-     * Expose the function on the window object
-     */
-
-    //use amd or just through the window object.
     if (window) {
         if (typeof window.define == "function" && window.define.amd) {
-            window.define("jwt_decode", function() {
-                return jwtDecode;
-            });
-        } else if (window) {
+            window.define("jwt_decode", function() { return jwtDecode; });
+        }
+        else if (window) {
             window.jwt_decode = jwtDecode;
         }
     }
 
 })));
-//# sourceMappingURL=jwt-decode.js.map
-
