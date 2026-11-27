@@ -47,4 +47,16 @@ router.post('/complete/:id', (req, res, next) => {
   });
 });
 
+router.post('/uncomplete/:id', (req, res, next) => {
+  common.authorizationCheck(req, res).then((authorized) => {
+    if (!authorized) return res.sendStatus(403);
+    common.uncompleteTodo(parseInt(req.params.id));
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(common.getTodos()));
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+});
+
 export default router;

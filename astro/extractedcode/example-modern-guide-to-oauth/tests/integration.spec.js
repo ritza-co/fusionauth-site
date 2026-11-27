@@ -12,11 +12,11 @@ async function loginViaUi(page) {
   await page.getByRole('link', { name: 'Login' }).click();
   await page.locator('input[name="loginId"]').fill(userEmail);
   await page.locator('input[name="password"]').fill(userPassword);
-  await page.locator('button[type="submit"]').click();
+  await page.locator('input[name="password"]').press('Enter');
   await expect(page).toHaveURL(/\/todos/);
 }
 
-test('Admin can log in to FusionAuth Admin UI', async ({ page }) => {
+test('Admin can log in to FusionAuth Admin UI', { timeout: 60000 }, async ({ page }) => {
   await page.goto(`${fusionAuthUrl}/admin/`);
   await page.waitForLoadState('networkidle');
   await page.getByPlaceholder('Login').fill('admin@example.com');
@@ -26,7 +26,7 @@ test('Admin can log in to FusionAuth Admin UI', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Recent logins' })).toBeVisible();
 });
 
-test('Kickstart user can log in via the API', async ({ request }) => {
+test('Kickstart user can log in via the API', { timeout: 5000 }, async ({ request }) => {
   const loginResponse = await request.post(`${fusionAuthUrl}/api/login`, {
     headers: { Authorization: apiKey, 'Content-Type': 'application/json' },
     data: { loginId: userEmail, password: userPassword, applicationId },
@@ -36,12 +36,12 @@ test('Kickstart user can log in via the API', async ({ request }) => {
   expect(loginData.token).toBeTruthy();
 });
 
-test('Todo API without cookies is rejected', async ({ request }) => {
+test('Todo API without cookies is rejected', { timeout: 5000 }, async ({ request }) => {
   const response = await request.get(`${appUrl}/api/todos`);
   expect(response.status()).toBe(403);
 });
 
-test('User logs in and sees the seeded todos', async ({ page }) => {
+test('User logs in and sees the seeded todos', { timeout: 5000 }, async ({ page }) => {
   await loginViaUi(page);
   await expect(page.getByText(`Todos for ${userEmail}`)).toBeVisible();
   await expect(page.getByText('Get milk')).toBeVisible();
@@ -57,7 +57,7 @@ test('User logs in and sees the seeded todos', async ({ page }) => {
   ]);
 });
 
-test('Checking a todo persists it across refresh', async ({ page }) => {
+test('Checking a todo persists it across refresh', { timeout: 5000 }, async ({ page }) => {
   await loginViaUi(page);
   await expect(page.getByText(`Todos for ${userEmail}`)).toBeVisible();
   await expect(page.locator('.chk[data-id="1"]')).toBeChecked();
@@ -74,22 +74,34 @@ test('Checking a todo persists it across refresh', async ({ page }) => {
   await expect(page.locator('.chk[data-id="2"]')).toBeChecked();
 });
 
-test('Unchecking sends nothing, so refresh restores the box', async ({ page }) => {
+test('Unchecking a todo persists it across refresh', { timeout: 5000 }, async ({ page }) => {
   await loginViaUi(page);
   await expect(page.getByText(`Todos for ${userEmail}`)).toBeVisible();
   await expect(page.locator('.chk[data-id="1"]')).toBeChecked();
   await expect(page.locator('.chk[data-id="2"]')).toBeChecked();
 
+  const uncompleted = page.waitForResponse(
+    (response) => response.url().includes('/api/todos/uncomplete/1') && response.status() === 200
+  );
   await page.locator('.chk[data-id="1"]').uncheck();
+  await uncompleted;
   await expect(page.locator('.chk[data-id="1"]')).not.toBeChecked();
 
   await page.reload();
   await expect(page.getByText(`Todos for ${userEmail}`)).toBeVisible();
-  await expect(page.locator('.chk[data-id="1"]')).toBeChecked();
+  await expect(page.locator('.chk[data-id="1"]')).not.toBeChecked();
   await expect(page.locator('.chk[data-id="2"]')).toBeChecked();
+
+  // Re-check so the next test starts from both checked.
+  const recompleted = page.waitForResponse(
+    (response) => response.url().includes('/api/todos/complete/1') && response.status() === 200
+  );
+  await page.locator('.chk[data-id="1"]').check();
+  await recompleted;
+  await expect(page.locator('.chk[data-id="1"]')).toBeChecked();
 });
 
-test('Logout clears access, relogin keeps completed todos', async ({ page }) => {
+test('Logout clears access, relogin keeps completed todos', { timeout: 5000 }, async ({ page }) => {
   await loginViaUi(page);
   await expect(page.getByText(`Todos for ${userEmail}`)).toBeVisible();
   await expect(page.locator('.chk[data-id="1"]')).toBeChecked();

@@ -67,19 +67,18 @@ function buildClickHandler() {
     // Log the clicked element in the console
     const completed = event.target.checked
     const id = event.target.dataset.id
-    if (completed) {
-      axios.post('/api/todos/complete/'+id, {})
+    const action = completed ? 'complete' : 'uncomplete';
+    axios.post('/api/todos/'+action+'/'+id, {})
       .then(function (response) {
         console.log(response);
       })
       .catch(buildAttemptRefresh(function() {
-        axios.post('/api/todos/complete/'+id, {})
+        axios.post('/api/todos/'+action+'/'+id, {})
         .then(function (response) {
           console.log(response);
         })
         .catch(console.log);
       }));
-    }
   }, false);
 }
 

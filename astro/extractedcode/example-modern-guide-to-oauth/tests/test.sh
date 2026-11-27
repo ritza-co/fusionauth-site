@@ -3,12 +3,10 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-FUSIONAUTH_DIR="$PROJECT_DIR/../fusionauth"
+FUSIONAUTH_DIR="$PROJECT_DIR/fusionauth"
 
-LOGS_PID=""
 cleanup() {
   echo "Cleaning up..."
-  [ -n "$LOGS_PID" ] && kill "$LOGS_PID" 2>/dev/null || true
   docker stop app 2>/dev/null || true
   cd "$FUSIONAUTH_DIR" && docker compose down -v 2>/dev/null || true
 }
@@ -22,13 +20,10 @@ echo "Starting FusionAuth..."
 docker compose up -d
 
 echo "Starting app..."
-docker run --network host --name app -v "$PROJECT_DIR":/app -w /app --rm node:26 bash -c "npm install && npm run start" &
-APP_PID=$!
+docker run --network host --name app -v "$PROJECT_DIR/app":/app -w /app --rm node:26 bash -c "npm install && exec node ./bin/www.js" &
 until docker inspect app > /dev/null 2>&1; do
   sleep 1
 done
-docker logs -f app &
-LOGS_PID=$!
 
 echo "Waiting for FusionAuth to be ready..."
 timeout 480 bash -c 'until curl -sfL http://localhost:9011/admin/ 2>/dev/null | grep "<title>Login" > /dev/null; do

@@ -93,6 +93,12 @@ common.completeTodo = (id) => {
   });
 };
 
+common.uncompleteTodo = (id) => {
+  common.getTodos().forEach((oneTodo) => {
+    if (oneTodo.id === id) oneTodo.done = false;
+  });
+};
+
 common.getTodo = (id) => {
   const todosToUpdate = common.getTodos();
   todosToUpdate.forEach((oneTodo) => {
