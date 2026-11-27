@@ -1,7 +1,5 @@
 import express from 'express';
 import crypto from 'crypto';
-import axios from 'axios';
-import FormData from 'form-data';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import common from './common.js';
@@ -106,11 +104,15 @@ router.get('/oauth-callback', (req, res, next) => {
   form.append('code_verifier', codeVerifier);
   form.append('grant_type', 'authorization_code');
   form.append('redirect_uri', redirectURI);
-  axios.post(config.authServerUrl + '/oauth2/token', form, { headers: form.getHeaders() })
+  fetch(config.authServerUrl + '/oauth2/token', { method: 'POST', body: form })
     .then(async (response) => {
-      const accessToken = response.data.access_token;
-      const idToken = response.data.id_token;
-      const refreshToken = response.data.refresh_token;
+      if (!response.ok) {
+        throw new Error('token exchange failed: ' + response.status);
+      }
+      const data = await response.json();
+      const accessToken = data.access_token;
+      const idToken = data.id_token;
+      const refreshToken = data.refresh_token;
 
       // Parse and verify the ID token (it's a JWT and once verified we can just store the body)
       if (idToken) {
@@ -205,7 +207,7 @@ function handleTokens(accessToken, idToken, refreshToken, res) {
 
   // Call the third-party API
 /* this is fake, but you could replace with a real one
-  axios.post('https://api.third-party-provider.com/profile/friends', form, { headers: { 'Authorization' : 'Bearer '+accessToken } })
+  fetch('https://api.third-party-provider.com/profile/friends', { method: 'POST', body: form, headers: { 'Authorization' : 'Bearer '+accessToken } })
     .then((response) => {
       if (response.status == 200) {
         const json = JSON.parse(response.data);

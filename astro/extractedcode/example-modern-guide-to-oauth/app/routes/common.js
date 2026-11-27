@@ -1,5 +1,3 @@
-import axios from 'axios';
-import FormData from 'form-data';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import config from './config.js';
 
@@ -33,14 +31,14 @@ common.refreshJWTs = async (refreshToken) => {
   form.append('grant_type', 'refresh_token');
   form.append('refresh_token', refreshToken);
   const authValue = 'Basic ' + Buffer.from(config.clientId + ":" + config.clientSecret).toString('base64');
-  const response = await axios.post(config.authServerUrl + '/oauth2/token', form, {
-    headers: {
-      'Authorization': authValue,
-      ...form.getHeaders()
-    }
+  const response = await fetch(config.authServerUrl + '/oauth2/token', {
+    method: 'POST',
+    headers: { 'Authorization': authValue },
+    body: form
   });
-  const accessToken = response.data.access_token;
-  const idToken = response.data.id_token;
+  const data = await response.json();
+  const accessToken = data.access_token;
+  const idToken = data.id_token;
   const refreshedTokens = {};
   refreshedTokens.accessToken = accessToken;
   refreshedTokens.idToken = idToken;
@@ -52,9 +50,9 @@ common.validateToken = async function (accessToken, clientId, expectedAud, expec
   form.append('token', accessToken);
   form.append('client_id', clientId); // FusionAuth requires this for authentication
   try {
-    const response = await axios.post(config.authServerUrl + '/oauth2/introspect', form, { headers: form.getHeaders() });
+    const response = await fetch(config.authServerUrl + '/oauth2/introspect', { method: 'POST', body: form });
     if (response.status === 200) {
-      const data = response.data;
+      const data = await response.json();
       if (!data.active) return false; // if not active, we don't get any other claims
       return expectedAud === data.aud && expectedIss === data.iss;
     }
@@ -66,9 +64,9 @@ common.validateToken = async function (accessToken, clientId, expectedAud, expec
 };
 
 common.retrieveUser = async function (accessToken) {
-  const response = await axios.get(config.authServerUrl + '/oauth2/userinfo', { headers: { 'Authorization': 'Bearer ' + accessToken } });
   try {
-    if (response.status === 200) return response.data;
+    const response = await fetch(config.authServerUrl + '/oauth2/userinfo', { headers: { 'Authorization': 'Bearer ' + accessToken } });
+    if (response.status === 200) return response.json();
     return null;
   }
   catch (err) {

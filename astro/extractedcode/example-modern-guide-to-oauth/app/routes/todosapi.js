@@ -29,8 +29,8 @@ router.post('/complete/:id', (req, res, next) => {
     common.completeTodo(idToUpdate);
 
     /*
-    const wuphTokens = {}
-    axios.post('https://api.wuphf.com/send', {}, { headers: {
+    const wuphfTokens = {}
+    fetch('https://api.wuphf.com/send', { method: 'POST', headers: {
           auth: { 'bearer': wuphfTokens.accessToken, 'refresh': wuphfTokens.refreshToken }
         }
       }).then((response) => {

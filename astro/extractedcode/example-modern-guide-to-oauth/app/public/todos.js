@@ -3,8 +3,11 @@ const buildAttemptRefresh = function(after) {
     console.log("trying to refresh");
     // try to refresh if we got an error
     // we can't send the cookie, so we need to request the refresh endpoint
-    axios.post('/refresh', {})
-    .then(function (response) { 
+    fetch('/refresh', { method: 'POST' })
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error('refresh failed: ' + response.status);
+      }
       after();
     })
     .catch(function (error) {
@@ -16,17 +19,29 @@ const buildAttemptRefresh = function(after) {
 }
 
 const getTodos = function() {
-axios.get('/api/todos')
+fetch('/api/todos')
   .then(function (response) {
-    buildUI(response.data);
+    if (!response.ok) {
+      throw new Error('unauthorized: ' + response.status);
+    }
+    return response.json();
+  })
+  .then(function (todos) {
+    buildUI(todos);
     buildClickHandler();
   })
   .catch(console.log);
 }
 
-axios.get('/api/todos')
+fetch('/api/todos')
   .then(function (response) {
-    buildUI(response.data);
+    if (!response.ok) {
+      throw new Error('unauthorized: ' + response.status);
+    }
+    return response.json();
+  })
+  .then(function (todos) {
+    buildUI(todos);
     buildClickHandler();
   })
   .catch(buildAttemptRefresh(getTodos));
@@ -68,14 +83,23 @@ function buildClickHandler() {
     const completed = event.target.checked
     const id = event.target.dataset.id
     const action = completed ? 'complete' : 'uncomplete';
-    axios.post('/api/todos/'+action+'/'+id, {})
+    fetch('/api/todos/'+action+'/'+id, { method: 'POST' })
       .then(function (response) {
-        console.log(response);
+        if (!response.ok) {
+          throw new Error('save failed: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(function (todos) {
+        console.log(todos);
       })
       .catch(buildAttemptRefresh(function() {
-        axios.post('/api/todos/'+action+'/'+id, {})
+        fetch('/api/todos/'+action+'/'+id, { method: 'POST' })
         .then(function (response) {
-          console.log(response);
+          return response.json();
+        })
+        .then(function (todos) {
+          console.log(todos);
         })
         .catch(console.log);
       }));
