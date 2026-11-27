@@ -27,41 +27,30 @@ router.get('/', (req, res, next) => {
 router.get('/logout', (req, res, next) => {
   removeTokens(res);
   req.session.destroy();
-
-  // end FusionAuth session
-  res.redirect(`${config.authServerUrl}/oauth2/logout?client_id=${config.clientId}`);
+  res.redirect(`${config.authServerUrl}/oauth2/logout?client_id=${config.clientId}`);   // end FusionAuth session
 });
 
 router.post('/refresh', async (req, res, next) => {
   const refreshToken = req.cookies.refresh_token;
-  if (!refreshToken) {
-    res.sendStatus(403);
-    return;
-  }
+  if (!refreshToken) return res.sendStatus(403);
   try {
     const refreshedTokens = await common.refreshJWTs(refreshToken);
-
     const newAccessToken = refreshedTokens.accessToken;
     const newIdToken = refreshedTokens.idToken;
-
-    // update our cookies
     console.log("updating our cookies");
     res.cookie('access_token', newAccessToken, { httpOnly: true }); // use 'secure: true' when running over https
     res.cookie('id_token', newIdToken); // Not httpOnly or secure
-    res.sendStatus(200);
-    return;
-  } catch (error) {
+    return res.sendStatus(200);
+  }
+  catch (error) {
     console.log("unable to refresh");
-    res.sendStatus(403);
-    return;
+    return res.sendStatus(403);
   }
 });
 
 router.get('/tokencheck', async (req, res, next) => {
   const accessToken = req.cookies.access_token;
-
   const active = await common.validateToken(accessToken, config.clientId, config.clientId, config.issuer);
-
   res.send(`<h1>FusionAuth Example</h1><p>Token state: ${active}</p>`);
 });
 
@@ -83,15 +72,11 @@ router.get('/login', (req, res, next) => {
 });
 // :snippet-end:
 
-router.get('/oauth-callback', (req, res, next) => {
+router.get('/oauth-callback', async (req, res, next) => {
   // Verify the state
   const reqState = req.query.state;
   const state = restoreState(req, res);
-  if (reqState !== state) {
-    res.redirect('/', 302); // Start over
-    return;
-  }
-
+  if (reqState !== state) return res.redirect('/', 302); // Start over
   const code = req.query.code;
   const codeVerifier = restoreCodeVerifier(req, res);
   const nonce = restoreNonce(req, res);
@@ -104,32 +89,33 @@ router.get('/oauth-callback', (req, res, next) => {
   form.append('code_verifier', codeVerifier);
   form.append('grant_type', 'authorization_code');
   form.append('redirect_uri', redirectURI);
-  fetch(config.authServerUrl + '/oauth2/token', { method: 'POST', body: form })
-    .then(async (response) => {
-      if (!response.ok) {
-        throw new Error('token exchange failed: ' + response.status);
-      }
-      const data = await response.json();
-      const accessToken = data.access_token;
-      const idToken = data.id_token;
-      const refreshToken = data.refresh_token;
+  try {
+    const response = await fetch(config.authServerUrl + '/oauth2/token', { method: 'POST', body: form });
+    if (!response.ok) throw new Error('token exchange failed: ' + response.status);
+    const data = await response.json();
+    const accessToken = data.access_token;
+    const idToken = data.id_token;
+    const refreshToken = data.refresh_token;
 
-      // Parse and verify the ID token (it's a JWT and once verified we can just store the body)
-      if (idToken) {
-        let user = await common.parseJWT(idToken, nonce);
-        if (!user) {
-          console.log('Nonce is bad. It should be ' + nonce + ' but was ' + idToken.nonce);
-          res.redirect(302, "/"); // Start over
-          return;
-        }
-        // TODO store user object in localstorage?
+    // Parse and verify the ID token (it's a JWT and once verified we can just store the body)
+    if (idToken) {
+      let user = await common.parseJWT(idToken, nonce);
+      if (!user) {
+        console.log('Nonce is bad. It should be ' + nonce + ' but was ' + idToken.nonce);
+        return res.redirect(302, "/"); // Start over
       }
+      // TODO store user object in localstorage?
+    }
 
-      // Since the different OAuth modes handle the tokens differently, we are going to
-      // put a placeholder function here. We'll discuss this function in the following
-      // sections
-      handleTokens(accessToken, idToken, refreshToken, res);
-    }).catch((err) => { console.log("in error2"); console.error(JSON.stringify(err)); });
+    // Since the different OAuth modes handle the tokens differently, we are going to
+    // put a placeholder function here. We'll discuss this function in the following
+    // sections
+    handleTokens(accessToken, idToken, refreshToken, res);
+  }
+  catch (err) {
+    console.log("in error2");
+    console.error(JSON.stringify(err));
+  }
 });
 
 // Helper method for Base 64 encoding that is URL safe
@@ -207,16 +193,14 @@ function handleTokens(accessToken, idToken, refreshToken, res) {
 
   // Call the third-party API
 /* this is fake, but you could replace with a real one
-  fetch('https://api.third-party-provider.com/profile/friends', { method: 'POST', body: form, headers: { 'Authorization' : 'Bearer '+accessToken } })
-    .then((response) => {
-      if (response.status == 200) {
-        const json = JSON.parse(response.data);
-        req.session.friends = json.friends;
+  const friendsResponse = await fetch('https://api.third-party-provider.com/profile/friends', { method: 'POST', body: form, headers: { 'Authorization' : 'Bearer '+accessToken } });
+  if (friendsResponse.status == 200) {
+    const json = await friendsResponse.json();
+    req.session.friends = json.friends;
 
-        // Optionally store the friends list in our database
-        storeFriends(req, json.friends);
-      }
-    });
+    // Optionally store the friends list in our database
+    storeFriends(req, json.friends);
+  }
 */
 
   // Redirect to the To-do list

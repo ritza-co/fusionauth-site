@@ -3,60 +3,49 @@ import common from './common.js';
 
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-  common.authorizationCheck(req, res).then((authorized) => {
-    if (!authorized) {
-      res.sendStatus(403);
-      return;
-    }
-
+router.get('/', async (req, res, next) => {
+  try {
+    const authorized = await common.authorizationCheck(req, res);
+    if (!authorized) return res.sendStatus(403);
     const todos = common.getTodos();
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(todos));
-  }).catch((err) => {
-    console.log(err);
-  });
+  }
+  catch (err) { console.log(err); }
 });
 
-router.post('/complete/:id', (req, res, next) => {
-  common.authorizationCheck(req, res).then((authorized) => {
-    if (!authorized) {
-      res.sendStatus(403);
-      return;
-    }
-
+router.post('/complete/:id', async (req, res, next) => {
+  try {
+    const authorized = await common.authorizationCheck(req, res);
+    if (!authorized) return res.sendStatus(403);
     const idToUpdate = parseInt(req.params.id);
     common.completeTodo(idToUpdate);
-
     /*
     const wuphfTokens = {}
-    fetch('https://api.wuphf.com/send', { method: 'POST', headers: {
+    const wuphfResponse = await fetch('https://api.wuphf.com/send', { method: 'POST', headers: {
           auth: { 'bearer': wuphfTokens.accessToken, 'refresh': wuphfTokens.refreshToken }
         }
-      }).then((response) => {
-        // check for status, log if not 200
-      }
-    );
+      });
+    // check for status, log if not 200
     */
-
     const todos = common.getTodos();
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(todos));
-  }).catch((err) => {
-    console.log(err);
-  });
+  }
+  catch (err) { console.log(err); }
 });
 
-router.post('/uncomplete/:id', (req, res, next) => {
-  common.authorizationCheck(req, res).then((authorized) => {
+router.post('/uncomplete/:id', async (req, res, next) => {
+  try {
+    const authorized = await common.authorizationCheck(req, res);
     if (!authorized) return res.sendStatus(403);
-    common.uncompleteTodo(parseInt(req.params.id));
+    const idToUpdate = parseInt(req.params.id);
+    common.uncompleteTodo(idToUpdate);
+    const todos = common.getTodos();
     res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(common.getTodos()));
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+    res.end(JSON.stringify(todos));
+  }
+  catch (err) { console.log(err); }
 });
 
 export default router;
