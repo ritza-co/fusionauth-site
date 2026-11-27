@@ -1,13 +1,11 @@
-// Dependencies
-const express = require('express');
-const common = require('./common');
-const config = require('./config');
+import express from 'express';
+import common from './common.js';
+import config from './config.js';
 
-// Router & constants
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
   res.render('todos', {});
 });
 
-module.exports = router;
+export default router;

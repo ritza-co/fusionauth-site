@@ -1,13 +1,17 @@
-const createError = require('http-errors');
-const cookieParser = require('cookie-parser');
-const express = require('express');
-const expressSession = require('express-session');
-const path = require('path');
-const logger = require('morgan');
+import createError from 'http-errors';
+import cookieParser from 'cookie-parser';
+import express from 'express';
+import expressSession from 'express-session';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import logger from 'morgan';
 
-const indexRouter = require('./routes/index');
-const todosRouter = require('./routes/todos');
-const todosApiRouter = require('./routes/todosapi');
+import indexRouter from './routes/index.js';
+import todosRouter from './routes/todos.js';
+import todosApiRouter from './routes/todosapi.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -19,7 +23,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(expressSession({resave: false, saveUninitialized: false, secret: 'setec-astronomy'}));
+app.use(expressSession({ resave: false, saveUninitialized: false, secret: 'setec-astronomy' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
@@ -42,4 +46,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+export default app;

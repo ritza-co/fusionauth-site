@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
-const app = require('../app');
-const debug = require('debug')('fusionauth-modern-guide-to-oauth:server');
-const http = require('http');
+import app from '../app.js';
+import debugLib from 'debug';
+import http from 'http';
+
+const debug = debugLib('fusionauth-modern-guide-to-oauth:server');
 
 app.set('port', 3000);
 

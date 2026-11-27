@@ -1,16 +1,12 @@
-// Dependencies
-const express = require('express');
-const common = require('./common');
-const config = require('./config');
-const axios = require('axios');
+import express from 'express';
+import common from './common.js';
 
-// Router & constants
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
   common.authorizationCheck(req, res).then((authorized) => {
     if (!authorized) {
-      res.sendStatus(403); 
+      res.sendStatus(403);
       return;
     }
 
@@ -25,7 +21,7 @@ router.get('/', (req, res, next) => {
 router.post('/complete/:id', (req, res, next) => {
   common.authorizationCheck(req, res).then((authorized) => {
     if (!authorized) {
-      res.sendStatus(403); 
+      res.sendStatus(403);
       return;
     }
 
@@ -34,13 +30,13 @@ router.post('/complete/:id', (req, res, next) => {
 
     /*
     const wuphTokens = {}
-    axios.post('https://api.wuphf.com/send', {}, { headers: { 
+    axios.post('https://api.wuphf.com/send', {}, { headers: {
           auth: { 'bearer': wuphfTokens.accessToken, 'refresh': wuphfTokens.refreshToken }
         }
       }).then((response) => {
         // check for status, log if not 200
-      } 
-    );  
+      }
+    );
     */
 
     const todos = common.getTodos();
@@ -51,4 +47,4 @@ router.post('/complete/:id', (req, res, next) => {
   });
 });
 
-module.exports = router;
+export default router;
