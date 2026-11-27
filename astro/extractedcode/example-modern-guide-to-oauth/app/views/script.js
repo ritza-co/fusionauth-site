@@ -34,8 +34,12 @@ axios.get('/api/todos')
 function buildUI(data) {
   const todos = data;
   const id_token = Cookies.get('id_token');
+  if (!id_token) {
+    window.location.href = "/";
+    return;
+  }
   var decoded = jwt_decode(id_token);
-  const email = decoded.email;
+  const email = decoded.email || decoded.preferred_username || decoded.sub;
   const title = 'Todo list';
   var html = `
     <h1>${title}</h1><p>Todos for ${email}</p>

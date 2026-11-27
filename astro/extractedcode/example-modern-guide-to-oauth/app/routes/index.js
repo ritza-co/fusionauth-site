@@ -10,7 +10,7 @@ const router = express.Router();
 const clientId = config.clientId;
 const clientSecret = config.clientSecret;
 const redirectURI = encodeURI('http://localhost:3000/oauth-callback');
-const scopes = encodeURIComponent('profile offline_access openid');
+const scopes = encodeURIComponent('openid email profile offline_access');
 
 // Crypto variables
 const password = 'setec-astronomy';
@@ -43,7 +43,7 @@ router.post('/refresh', async (req, res, next) => {
 
     // update our cookies
     console.log("updating our cookies");
-    res.cookie('access_token', newAccessToken, { httpOnly: true, secure: true });
+    res.cookie('access_token', newAccessToken, { httpOnly: true }); // use 'secure: true' when running over https
     res.cookie('id_token', newIdToken); // Not httpOnly or secure
     res.sendStatus(200);
     return;
@@ -102,14 +102,14 @@ router.get('/oauth-callback', (req, res, next) => {
   form.append('grant_type', 'authorization_code');
   form.append('redirect_uri', redirectURI);
   axios.post(config.authServerUrl + '/oauth2/token', form, { headers: form.getHeaders() })
-    .then((response) => {
+    .then(async (response) => {
       const accessToken = response.data.access_token;
       const idToken = response.data.id_token;
       const refreshToken = response.data.refresh_token;
 
       // Parse and verify the ID token (it's a JWT and once verified we can just store the body)
       if (idToken) {
-        let user = common.parseJWT(idToken, nonce);
+        let user = await common.parseJWT(idToken, nonce);
         if (!user) {
           console.log('Nonce is bad. It should be ' + nonce + ' but was ' + idToken.nonce);
           res.redirect(302, "/"); // Start over
@@ -158,13 +158,13 @@ function decrypt(value) {
 
 function generateAndSaveState(req, res) {
   const state = base64URLEncode(crypto.randomBytes(64));
-  res.cookie('oauth_state', encrypt(state), { httpOnly: true });
+  res.cookie('oauth_state', encrypt(state), { httpOnly: true }); // use 'secure: true' when running over https
   return state;
 }
 
 function generateAndSaveCodeChallenge(req, res) {
   const codeVerifier = base64URLEncode(crypto.randomBytes(64));
-  res.cookie('oauth_code_verifier', encrypt(codeVerifier), { httpOnly: true });
+  res.cookie('oauth_code_verifier', encrypt(codeVerifier), { httpOnly: true }); // use 'secure: true' when running over https
   return base64URLEncode(sha256(codeVerifier));
 }
 
@@ -188,15 +188,15 @@ function restoreNonce(req, res) {
 
 function generateAndSaveNonce(req, res) {
   const nonce = base64URLEncode(crypto.randomBytes(64));
-  res.cookie('oauth_nonce', encrypt(nonce), { httpOnly: true });
+  res.cookie('oauth_nonce', encrypt(nonce), { httpOnly: true }); // use 'secure: true' when running over https
   return nonce;
 }
 
 function handleTokens(accessToken, idToken, refreshToken, res) {
   // Write the tokens as cookies
-  res.cookie('access_token', accessToken, { httpOnly: true, secure: true });
+  res.cookie('access_token', accessToken, { httpOnly: true }); // use 'secure: true' when running over https
   res.cookie('id_token', idToken); // Not httpOnly or secure
-  res.cookie('refresh_token', refreshToken, { httpOnly: true, secure: true });
+  res.cookie('refresh_token', refreshToken, { httpOnly: true }); // use 'secure: true' when running over https
 
   // Call the third-party API
 /* this is fake, but you could replace with a real one
@@ -218,9 +218,9 @@ function handleTokens(accessToken, idToken, refreshToken, res) {
 
 function removeTokens(res) {
   // remove the token cookies
-  res.cookie('access_token', null, { httpOnly: true, secure: true });
-  res.cookie('id_token', null);
-  res.cookie('refresh_token', null, { httpOnly: true, secure: true });
+  res.clearCookie('access_token');
+  res.clearCookie('id_token');
+  res.clearCookie('refresh_token');
 }
 
 export default router;
